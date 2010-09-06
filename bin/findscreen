@@ -1,0 +1,25 @@
+#!/usr/bin/perl
+
+use strict;
+
+my @lines = `screen -list`;
+my $screen;
+
+foreach my $line (@lines) {
+	if($line =~ /\s+(\d+)(\S+).*\((.*)\)$/) {
+		print "$1";
+		exit;
+		#my $status = $3;
+		#$status =~ tr/A-Z/a-z/;
+		#if($status eq "attached") {
+		#	print "-x $1";
+		#	exit;
+		#}
+		#if($status eq "detached") {
+		#	print "-r $1";
+		#	exit;
+		#}
+	}
+}
+print "";
+
