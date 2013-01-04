@@ -1,0 +1,25 @@
+# I don't much like that thing.
+startup_message off
+
+# Socket for ssh-agent authentication.
+setenv SSH_AUTH_SOCK $HOME/.screen-ssh-agent
+
+bell_msg "Bell in window %n.^G"
+hardstatus on
+hardstatus string "(%n) %t"
+defscrollback 10000
+
+# Visual bell is irritating!
+vbell off
+
+# Unset DISPLAY so programs don't hang waiting for an X server.
+unsetenv DISPLAY
+
+# This (somtimes) helps 256 colors to work.
+termcapinfo linux "ve=\E[?25h\E[?17;0;64c"
+
+# Sweet hardstatus!
+hardstatus alwayslastline
+hardstatus string '%{= kG}[ %{G}%H %{g}][%= %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B} %d/%m %{W}%c %{g}]'
+
+screen -t Local		0
