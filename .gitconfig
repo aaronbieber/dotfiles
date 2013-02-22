@@ -1,0 +1,13 @@
+[user]
+	email = aaron@aaronbieber.com
+	name = Aaron Bieber
+[alias]
+	st = status
+	ci = commit
+	co = checkout
+	br = branch
+[color]
+	branch = auto
+	diff = auto
+	interactive = auto
+	status = auto
