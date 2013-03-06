@@ -1,6 +1,6 @@
 [user]
-	email = aaron@aaronbieber.com
 	name = Aaron Bieber
+	email = aaron@aaronbieber.com
 [alias]
 	st = status
 	ci = commit
@@ -11,3 +11,5 @@
 	diff = auto
 	interactive = auto
 	status = auto
+[core]
+	editor = vim
