@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Get options.
+LNOPTS=""
+if [ $# -gt 0 ] && [ "$1" == "-f" ]; then
+	LNOPTS="-f"
+else
+	echo "Unrecognized option '$1'!"
+	exit 1
+fi
+
+# This appears to be the "best" way to get the canonicalized path to where this 
+# script is located, which is, presumably, where all of my dotfiles are.
+# Lifted from http://stackoverflow.com/a/4774063
+pushd `dirname $0` > /dev/null
+SCRIPTPATH=`pwd`
+popd > /dev/null
+
+pushd ~ > /dev/null
+for dotfile in `find /Users/airborne/dotfiles -type f -iname '.*'`; do
+	(echo -n "Linking ${dotfile##*/}... ")
+	ln -s $LNOPTS "$dotfile" "${dotfile##*/}" > /dev/null 2>&1
+	if [ $? -eq 0 ]; then
+		echo "OK"
+	else
+		echo "Failed"
+	fi
+done
+popd > /dev/null
