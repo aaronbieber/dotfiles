@@ -141,33 +141,102 @@ pwdtail () { #returns the last 2 fields of the working directory
 
 function prompt_command() {
 	if [ $? -ne 0 ]; then
-		ERRPROMPT=' $?! '
+		ERRPROMPT=' ${?}! '
 	else
 		ERRPROMPT=" "
-	fi
-
-	if [ $UID -eq 0 ]; then
-		Symbol="#"
-	else
-		Symbol="$"
 	fi
 
 	local GIT=""
 	local PATHSHORT=`pwdtail`
 	local LOAD=`uptime|awk '{min=NF-2;print $min}'`
 
-	git branch &>/dev/null;
-	if [ "$?" -eq 0 ]; then
-	  git status | grep "nothing to commit" > /dev/null 2>&1
-	  if [ "$?" -eq 0 ]; then
-		# @4 - Clean repository - nothing to commit
-		GIT=$Green$(__git_ps1 "(%s) ")$Color_Off
-	  else
-		# @5 - Changes to working tree
-		GIT=$IRed$(__git_ps1 "{%s} ")$Color_Off
-	  fi
-	fi
+	function git_status() {
+		git_status_output=$(git status 2> /dev/null) || return
 
-	export PS1=$IBlue"["$White"\u"$IWhite"@"$White"\h"$IBlack" ("$LOAD") "$White$Time12h$IBlue"]"$Red$ERRPROMPT$Color_Off"\w\n"$GIT$Symbol" "
+		branch_name() {
+			sed -n 's/# On branch //p' <<< "$git_status_output"
+		}
+
+		number_of_commits() {
+			local branch_prefix='# Your branch is '
+			local branch_suffix='by [[:digit:]]+'
+			if [[ "$git_status_output" =~ ${branch_prefix}"$1".*${branch_suffix} ]]
+			then
+				echo ${BASH_REMATCH[0]//[^0-9]/}
+			else
+				echo 0 && return 1
+			fi
+		}
+
+		match_against_status() {
+			local pattern="$1"
+			[[ "$git_status_output" =~ ${pattern} ]]
+		}
+
+		working_dir_clean() {
+			match_against_status '(working directory clean)'
+		}
+
+		local_changes() {
+			local added='# Changes to be committed'
+			local not_added='# Changes not staged for commit'
+			match_against_status "($added|$not_added)"
+		}
+
+		untracked_files() {
+			match_against_status '# Untracked files'
+		}
+
+		dashline() {
+			eval printf '%.0s-' {1..$1}
+		}
+
+		ahead_arrow() {
+			if commits_ahead=$(number_of_commits "ahead")
+			then
+				echo -e "$bold$(dashline $commits_ahead)$Color_Off> $commits_ahead ahead"
+			fi
+		}
+
+		behind_arrow() {
+			if commits_behind=$(number_of_commits "behind")
+			then
+				echo "$commits_behind behind <$bold$(dashline $commits_behind)$Color_Off"
+			fi
+		}
+
+		branch_part() {
+			local red="\033[31m"
+			local green="\033[32m"
+			local yellow="\033[33m"
+			local branch_colour=""
+
+			if untracked_files
+			then
+				branch_colour=$red
+			elif local_changes
+			then
+				branch_colour=$yellow
+			elif working_dir_clean
+			then
+				branch_colour=$green
+			fi
+			echo "$branch_colour$(branch_name)$Color_Off"
+		}
+
+		local behind_part=$(behind_arrow)
+		local ahead_part=$(ahead_arrow)
+
+		if [[ ! "$behind_part" && ! "$ahead_part" ]]
+		then
+			prompt="$(branch_part)"
+		else
+			prompt="$(branch_part) $behind_part|$ahead_part"
+		fi
+
+		echo -e $IBlue'[ '$prompt$IBlue' ]'$Color_Off
+	}
+
+	export PS1=$IBlue'['$White'\u'$IWhite'@'$White'\h'$IBlack' ('$LOAD') '$White$Time12h$IBlue']'$Red$ERRPROMPT$Color_Off'\w\n'$(git_status)'\n\$ '
 }
 PROMPT_COMMAND=prompt_command
