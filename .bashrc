@@ -126,8 +126,8 @@ On_IWhite="\[\033[0;107m\]"   # White
 # Various variables you might want for your PS1 prompt instead
 Time12h="\T"
 Time12a="\@"
-PathShort="\w"
-PathFull="\W"
+#PathFull="\w"
+PathShort="\W"
 NewLine="\n"
 Jobs="\j"
 
@@ -135,17 +135,39 @@ Jobs="\j"
 # http://allancraig.net/index.php?option=com_content&view=article&id=108:ps1-export-command-for-git&catid=45:general&Itemid=96
 # I tweaked it to work on UBUNTU 11.04 & 11.10 plus made it mo' better
 
-export PS1=$IBlack$Time12h$Color_Off'$(git branch &>/dev/null;\
-if [ $? -eq 0 ]; then \
-  echo "$(echo `git status` | grep "nothing to commit" > /dev/null 2>&1; \
-  if [ "$?" -eq "0" ]; then \
-    # @4 - Clean repository - nothing to commit
-    echo "'$Green'"$(__git_ps1 " (%s)"); \
-  else \
-    # @5 - Changes to working tree
-    echo "'$IRed'"$(__git_ps1 " {%s}"); \
-  fi) '$BBlue$PathShort$Color_Off'\$ "; \
-else \
-  # @2 - Prompt when not in GIT repo
-  echo " '$Blue$PathShort$Color_Off'\$ "; \
-fi)'
+pwdtail () { #returns the last 2 fields of the working directory
+	pwd|awk -F/ '{nlast = NF -1;print $nlast"/"$NF}'
+}
+
+function prompt_command() {
+	if [ $? -ne 0 ]; then
+		ERRPROMPT=' $?! '
+	else
+		ERRPROMPT=" "
+	fi
+
+	if [ $UID -eq 0 ]; then
+		Symbol="#"
+	else
+		Symbol="$"
+	fi
+
+	local GIT=""
+	local PATHSHORT=`pwdtail`
+	local LOAD=`uptime|awk '{min=NF-2;print $min}'`
+
+	git branch &>/dev/null;
+	if [ "$?" -eq 0 ]; then
+	  git status | grep "nothing to commit" > /dev/null 2>&1
+	  if [ "$?" -eq 0 ]; then
+		# @4 - Clean repository - nothing to commit
+		GIT=$Green$(__git_ps1 "(%s) ")$Color_Off
+	  else
+		# @5 - Changes to working tree
+		GIT=$IRed$(__git_ps1 "{%s} ")$Color_Off
+	  fi
+	fi
+
+	export PS1=$IBlue"["$White"\u"$IWhite"@"$White"\h"$IBlack" ("$LOAD") "$White$Time12h$IBlue"]"$Red$ERRPROMPT$Color_Off"\w\n"$GIT$Symbol" "
+}
+PROMPT_COMMAND=prompt_command
