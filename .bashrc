@@ -234,9 +234,9 @@ function prompt_command() {
 			prompt="$(branch_part) $behind_part|$ahead_part"
 		fi
 
-		echo -e $IBlue'[ '$prompt$IBlue' ]'$Color_Off
+		echo -e '\n'$IBlue'[ '$prompt$IBlue' ]'$Color_Off
 	}
 
-	export PS1=$IBlue'['$White'\u'$IWhite'@'$White'\h'$IBlack' ('$LOAD') '$White$Time12h$IBlue']'$Red$ERRPROMPT$Color_Off'\w\n'$(git_status)'\n\$ '
+	export PS1=$IBlue'['$White'\u'$IWhite'@'$White'\h'$IBlack' ('$LOAD') '$White$Time12h$IBlue']'$Red$ERRPROMPT$Color_Off'\w'$(git_status)'\n\$ '
 }
 PROMPT_COMMAND=prompt_command
