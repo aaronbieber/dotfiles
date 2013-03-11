@@ -2,11 +2,13 @@
 
 # Get options.
 LNOPTS=""
-if [ $# -gt 0 ] && [ "$1" == "-f" ]; then
-	LNOPTS="-f"
-else
-	echo "Unrecognized option '$1'!"
-	exit 1
+if [ $# -gt 0 ]; then
+	if [ "$1" == "-f" ]; then
+		LNOPTS="-f"
+	else
+		echo "Unrecognized option '$1'!"
+		exit 1
+	fi
 fi
 
 # This appears to be the "best" way to get the canonicalized path to where this 
@@ -17,7 +19,7 @@ SCRIPTPATH=`pwd`
 popd > /dev/null
 
 pushd ~ > /dev/null
-for dotfile in `find /Users/airborne/dotfiles -type f -iname '.*'`; do
+for dotfile in `find $SCRIPTPATH -type f -iname '.*'`; do
 	(echo -n "Linking ${dotfile##*/}... ")
 	ln -s $LNOPTS "$dotfile" "${dotfile##*/}" > /dev/null 2>&1
 	if [ $? -eq 0 ]; then
