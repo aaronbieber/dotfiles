@@ -5,14 +5,14 @@ Config { font = "xft:Inconsolata-10"
 , lowerOnStart = True
 , commands = [ Run Weather "KBOS" ["-t","<station>: <tempF>F","-L","60","-H","75","--normal","green","--high","red","--low","lightblue"] 36000
              , Run Network "eth0" ["-L","0","-H","32","--normal","green","--high","red"] 10
-             , Run Network "eth1" ["-L","0","-H","32","--normal","green","--high","red"] 10
-             , Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
-             , Run Memory ["-t","Mem: <usedratio>%"] 10
-             , Run Swap [ ] 10
+             , Run Network "wlan0" ["-L","0","-H","32","--normal","green","--high","red"] 10
+             , Run Cpu ["-L","3","-H","50","--normal","green","--high","red", "-t", "CPU <total>%"] 10
+             , Run Memory ["-t","MEM <usedratio>%"] 10
+             , Run Swap ["-t", "Swap <usedratio>%" ] 10
              , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
-             , Run BatteryP ["BAT0"] [ "-t", "<left>% / <timeleft>" ] 600
+             , Run BatteryP ["BAT0"] [ "-t", "Batt: <left>% / <timeleft>" ] 600
              ]
 , sepChar = "%"
 , alignSep = "}{"
-, template = "%cpu% | %memory% * %swap% | %eth0% | %battery% }{ %KBOS% | <fc=#ee9a00>%date%</fc>"
+, template = "%cpu% <fc=#119af0>*</fc> %memory% <fc=#119af0>*</fc> %swap% <fc=#119af0>*</fc> %eth0% <fc=#119af0>*</fc> %wlan0% <fc=#119af0>*</fc> %battery% }{ %KBOS% <fc=#119af0>*</fc> <fc=#ee9a00>%date%</fc>"
 }
