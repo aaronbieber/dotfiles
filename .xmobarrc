@@ -1,4 +1,4 @@
-Config { font = "-*-Fixed-Bold-R-Normal-*-15-*-*-*-*-*-*-*"
+Config { font = "xft:Inconsolata-10"
 , bgColor = "black"
 , fgColor = "grey"
 , position = Top
@@ -10,9 +10,9 @@ Config { font = "-*-Fixed-Bold-R-Normal-*-15-*-*-*-*-*-*-*"
              , Run Memory ["-t","Mem: <usedratio>%"] 10
              , Run Swap [ ] 10
              , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
+             , Run BatteryP ["BAT0"] [ "-t", "<left>% / <timeleft>" ] 600
              ]
 , sepChar = "%"
 , alignSep = "}{"
-, template = "%cpu% | %memory% * %swap% | %eth0% }{ %KBOS% | <fc=#ee9a00>%date%</fc>"
+, template = "%cpu% | %memory% * %swap% | %eth0% | %battery% }{ %KBOS% | <fc=#ee9a00>%date%</fc>"
 }
-
