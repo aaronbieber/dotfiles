@@ -12,12 +12,12 @@ export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
 export PATH=/opt/local/bin:$PATH
 export PATH=/opt/local/sbin:$PATH
-export PATH=/Users/airborne/bin:/Users/airborne/bin/tools:$PATH
+export PATH=$HOME/bin:$HOME/bin/tools:$PATH
 export NNTPSERVER=news.usenetserver.com
 export LESS=FRXSQ
 export CLICOLOR_FORCE=1
 export LSCOLORS=gxfxcxdxbxegedabagacad
-#export TERM=xterm-256color
+export TERM=xterm-256color
 
 # Aliases
 alias mysql=/usr/local/mysql/bin/mysql
