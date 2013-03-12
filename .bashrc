@@ -4,8 +4,8 @@ if [ -f /usr/local/etc/bash_completion.d/git-completion.bash ]; then
 fi
 
 # rbenv setup
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 if [ -d $HOME/.rbenv/bin ]; then export PATH=$HOME/.rbenv/bin:$PATH; fi
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
 # Environment variables
 export PATH=/usr/local/bin:$PATH
@@ -238,6 +238,6 @@ function prompt_command() {
 		echo -e '\n'$IBlue'[ '$prompt$IBlue' ]'$Color_Off
 	}
 
-	export PS1=$IBlue'['$White'\u'$IWhite'@'$White'\h'$IBlack' ('$LOAD') '$White$Time12h$IBlue']'$Red$ERRPROMPT$Color_Off'\w'$(git_status)'\n\$ '
+	export PS1=$IBlue'['$White'\u'$IWhite'@'$White'\h'$IBlack' ('$LOAD') '$White$Time12h$IBlue']'$Red$ERRPROMPT$IBlue'\w'$Color_Off$(git_status)'\n\$ '
 }
 PROMPT_COMMAND=prompt_command
