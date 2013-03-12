@@ -5,6 +5,7 @@ fi
 
 # rbenv setup
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+if [ -d $HOME/.rbenv/bin ]; then export PATH=$HOME/.rbenv/bin:$PATH; fi
 
 # Environment variables
 export PATH=/usr/local/bin:$PATH
