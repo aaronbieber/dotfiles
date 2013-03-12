@@ -10,7 +10,7 @@ Config { font = "xft:Inconsolata-10"
              , Run Memory ["-t","MEM <usedratio>%"] 10
              , Run Swap ["-t", "Swap <usedratio>%" ] 10
              , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
-             , Run BatteryP ["BAT0"] ["-L", "20", "-l", "red", "-H", "60", "-h", "green", "-t", "Batt: <left>% / <timeleft>" ] 600
+             , Run BatteryP ["BAT0"] ["-L", "20", "-l", "red", "-H", "60", "-h", "green", "-t", "Batt: <left>% / <timeleft> / <acstatus>" ] 600
              ]
 , sepChar = "%"
 , alignSep = "}{"
