@@ -43,6 +43,10 @@ function top() {
 	fi
 }
 
+function ssh-copy-id() {
+	cat ~/.ssh/id_rsa.pub | ssh $1 "mkdir -p ~/.ssh; touch ~/.ssh/authorized_keys; cat >> ~/.ssh/authorized_keys"
+}
+
 # BASH PROMPT STUFF
 #  Customize BASH PS1 prompt to show current GIT repository and branch.
 #  by Mike Stewart - http://MediaDoneRight.com
