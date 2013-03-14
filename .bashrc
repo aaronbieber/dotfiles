@@ -43,9 +43,20 @@ function top() {
 	fi
 }
 
-function ssh-copy-id() {
-	cat ~/.ssh/id_rsa.pub | ssh $1 "mkdir -p ~/.ssh; touch ~/.ssh/authorized_keys; cat >> ~/.ssh/authorized_keys"
-}
+# Test for the presence of the real ssh-copy-id. If it is not present, create
+# our pseudo ssh-copy-id.
+which ssh-copy-id > /dev/null
+if [ $? -gt 0 ]; then
+	function ssh-copy-id() {
+		if [ $# -eq 0 ]; then
+			echo "Usage: ssh-copy-id [user@]hostname"
+			return 92
+		else
+			# Snagged from commandlinefu.com/commands/view/188
+			cat ~/.ssh/id_rsa.pub | ssh $1 "(cat > tmp.pubkey; mkdir -p .ssh; touch .ssh/authorized_keys; sed -i.bak -e '/$(awk '{print $NF}' ~/.ssh/id_rsa.pub)/d' .ssh/authorized_keys;  cat tmp.pubkey >> .ssh/authorized_keys; rm tmp.pubkey)"
+		fi
+	}
+fi
 
 # BASH PROMPT STUFF
 #  Customize BASH PS1 prompt to show current GIT repository and branch.
