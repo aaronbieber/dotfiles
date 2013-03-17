@@ -17,7 +17,12 @@ export NNTPSERVER=news.usenetserver.com
 export LESS=FRXSQ
 export CLICOLOR_FORCE=1
 export LSCOLORS=gxfxcxdxbxegedabagacad
-export TERM=xterm-256color
+
+if [ -n "$TMUX" ]; then
+	export TERM=screen-256color
+else
+	export TERM=xterm-256color
+fi
 
 # Aliases
 alias mysql=/usr/local/mysql/bin/mysql
