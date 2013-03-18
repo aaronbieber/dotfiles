@@ -19,9 +19,10 @@ SCRIPTPATH=`pwd`
 popd > /dev/null
 
 pushd ~ > /dev/null
-for dotfile in `find $SCRIPTPATH -type f -iname '.*'`; do
+for dotfile in `find $SCRIPTPATH -iname '.*' ! -iname '.git' ! -iname '.gitignore'`; do
 	(echo -n "Linking ${dotfile##*/}... ")
-	ln -s $LNOPTS "$dotfile" "${dotfile##*/}" > /dev/null 2>&1
+	#ln -s $LNOPTS "$dotfile" "${dotfile##*/}" > /dev/null 2>&1
+	false
 	if [ $? -eq 0 ]; then
 		echo "OK"
 	else
