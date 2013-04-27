@@ -261,3 +261,10 @@ function prompt_command() {
 	export PS1=$IBlue'['$White'\u'$IWhite'@'$White'\h'$IBlack' ('$LOAD') '$White$Time12h$IBlue']'$Red$ERRPROMPT$IBlue'\w'$Color_Off$(git_status)'\n\$ '
 }
 PROMPT_COMMAND=prompt_command
+
+which fortune > /dev/null && which sed > /dev/null
+if [ "$?" == 0 ]; then
+	echo "|"
+	fortune -s | sed -e 's/^/| /'
+	echo "|"
+fi
