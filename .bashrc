@@ -24,27 +24,33 @@ else
 	export TERM=xterm-256color
 fi
 
-# Aliases
-alias mysql=/usr/local/mysql/bin/mysql
-alias mysqladmin=/usr/local/mysql/bin/mysqladmin
+# Only for work.
+if [ "$MY_LOCATION" == "work" ]; then
+	alias svnc="svn-color.py"
+	alias ack="ack-grep --pager='less'"
+	export PATH=$PATH:~/bin/svnkit-1.7.9/bin
+	export PATH=$PATH:$HOME/.vim/bundle/commit-tracker/bin
+else
+	# This is really only for OS X, so don't use it at work.
+	function top() {
+		if [ $# -eq 0 ]; then
+			/usr/bin/top -o cpu
+		else
+			/usr/bin/top "$@"
+		fi
+	}
+
+fi
 
 # Functions
-ll() { ls -G -lho "$@"; }
-la() { ls -G -lhoa "$@"; }
+ll() { ls -G -lho --color "$@"; }
+la() { ls -G -lhoa --color "$@"; }
 
 function unrar() {
 	if [ $# -eq 1 ]; then
 		/opt/local/bin/unrar x "$1"
 	else
 		/opt/local/bin/unrar "$@"
-	fi
-}
-
-function top() {
-	if [ $# -eq 0 ]; then
-		/usr/bin/top -o cpu
-	else
-		/usr/bin/top "$@"
 	fi
 }
 
