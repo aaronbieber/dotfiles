@@ -268,6 +268,7 @@ function prompt_command() {
 }
 PROMPT_COMMAND=prompt_command
 
+# Output a fortune on login if the program exists.
 which fortune > /dev/null && which sed > /dev/null
 if [ "$?" == 0 ]; then
 	echo "|"
