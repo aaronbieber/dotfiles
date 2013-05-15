@@ -16,7 +16,7 @@ run `linkall` and you're done.
 ## Usage
 Usage is straightforward.
 
-```
+```bash
 $ git clone https://github.com/aaronbieber/dotfiles.git ~/dotfiles
 $ ~/dotfiles/linkall
 ```
@@ -25,7 +25,7 @@ My `.bashrc` file is now capable of environments. To take advantage of
 environment partitions, export the `MY_LOCATION` environment variable from your 
 `.bash_profile` and then source the `.bashrc` file, like so:
 
-```
+```bash
 #!/bin/bash
 
 export MY_LOCATION=home
