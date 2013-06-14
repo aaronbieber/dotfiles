@@ -30,6 +30,7 @@ if [ "$MY_LOCATION" == "work" ]; then
 	alias ack="ack-grep --pager='less'"
 	export PATH=$PATH:~/bin/svnkit-1.7.9/bin
 	export PATH=$PATH:$HOME/.vim/bundle/commit-tracker/bin
+	export PATH=$PATH:$HOME/bin/rbstats
 else
 	# This is really only for OS X, so don't use it at work.
 	function top() {
@@ -175,7 +176,7 @@ function prompt_command() {
 
 	local GIT=""
 	local PATHSHORT=`pwdtail`
-	local LOAD=`uptime|awk '{min=NF-2;print $min}'`
+	local LOAD=`uptime | sed 's/,//g' | awk '{min=NF-2;print $min}'`
 
 	function git_status() {
 		git_status_output=$(git status 2> /dev/null) || return
