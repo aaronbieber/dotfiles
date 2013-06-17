@@ -11,6 +11,8 @@ if [ $# -gt 0 ]; then
 	fi
 fi
 
+me=`basename $0`
+
 # This appears to be the "best" way to get the canonicalized path to where this 
 # script is located, which is, presumably, where all of my dotfiles are.
 # Lifted from http://stackoverflow.com/a/4774063
@@ -19,9 +21,15 @@ SCRIPTPATH=`pwd`
 popd > /dev/null
 
 pushd ~ > /dev/null
-for dotfile in `find $SCRIPTPATH -iname '.*' ! -iname '.git' ! -iname '.gitignore'`; do
-	(echo -n "Linking ${dotfile##*/}... ")
-	ln -s $LNOPTS "$dotfile" "${dotfile##*/}" > /dev/null 2>&1
+echo "Searching in $SCRIPTPATH."
+for dotfile in `find $SCRIPTPATH -mindepth 1 -maxdepth 1 ! -iname '.git*' -and ! -iname '$me'`; do
+	if [ "${dotfile##*/}" == "bashrc" ]; then
+		linkfile=".bash_profile"
+	else
+		linkfile=".${dotfile##*/}"
+	fi
+	echo -n "Linking $dotfile -> $linkfile... "
+	ln -s $LNOPTS "$dotfile" "$linkfile" > /dev/null 2>&1
 	if [ $? -eq 0 ]; then
 		echo "OK"
 	else
