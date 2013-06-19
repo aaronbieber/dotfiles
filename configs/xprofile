@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Configure dual displays.
+xrandr --output VBOX1 --right-of VBOX0
+
+# Run the X composition manager because it makes Xmonad draw correctly in VirtualBox.
+xcompmgr &
+
+# Load the keyring daemon's stuff. This might not actually work.
+eval $(gnome-keyring-daemon --start)
+export GNOME_KEYRING_SOCKET
+export GNOME_KEYRING_PID
+
+# Start watching my filesystem for updates.
+iwatch -d -f ~/watchlist.xml
+
+eval `ssh-agent`
+gnome-terminal -e ssh-add
