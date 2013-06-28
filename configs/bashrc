@@ -70,6 +70,41 @@ if [ $? -gt 0 ]; then
 	}
 fi
 
+function vdiff() {
+	if [ $# -eq 0 ]; then
+		echo "Usage: vdiff FILENAME"
+		return 1
+	else
+		BASE_FILE="$1"
+		MINE_FILE="$1.mine"
+
+		if [ ! -f "$MINE_FILE" ]; then
+			echo "The base file given does not have a .mine variation."
+			return 1
+		fi
+
+		# Get all of the file variations and find the numbered ones.
+		read V1_FILE V2_FILE <<< $(ls -1 $1.r*)
+
+		if [ ! -f "$V1_FILE" ] || [ ! -f "$V2_FILE" ]; then
+			echo "I can't find revision variations ($1.r*)."
+			return 1
+		fi
+
+		# Re-shuffle them if they're not in numerical order.
+		if [[ "${V1_FILE##*.r}" -gt "${V2_FILE##*.r}" ]]; then
+			LEFT_FILE=$V2_FILE
+			RIGHT_FILE=$V1_FILE
+		else
+			LEFT_FILE=$V1_FILE
+			RIGHT_FILE=$V2_FILE
+		fi
+
+		echo "Starting vimdiff with $LEFT_FILE -> $MINE_FILE -> $RIGHT_FILE"
+		vim -d "$LEFT_FILE" "$MINE_FILE" "$RIGHT_FILE"
+	fi
+}
+
 # BASH PROMPT STUFF
 #  Customize BASH PS1 prompt to show current GIT repository and branch.
 #  by Mike Stewart - http://MediaDoneRight.com
