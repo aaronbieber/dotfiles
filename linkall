@@ -18,11 +18,12 @@ me=`basename $0`
 # Lifted from http://stackoverflow.com/a/4774063
 pushd `dirname $0` > /dev/null
 SCRIPTPATH=`pwd`
+SCRIPTPATH="$SCRIPTPATH/configs"
 popd > /dev/null
 
 pushd ~ > /dev/null
-echo "Searching in $SCRIPTPATH."
-for dotfile in `find $SCRIPTPATH -mindepth 1 -maxdepth 1 ! -iname '.git*' -and ! -iname '$me'`; do
+echo "Working from `pwd`."
+for dotfile in `find $SCRIPTPATH -mindepth 1 -maxdepth 1 ! -iname '.git*' -and ! -iname '$me' -and ! -iname 'README.md'`; do
 	if [ "${dotfile##*/}" == "bashrc" ]; then
 		linkfile=".bash_profile"
 	else

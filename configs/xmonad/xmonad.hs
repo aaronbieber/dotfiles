@@ -10,7 +10,7 @@ import XMonad.Actions.CycleWS
 import System.IO
 
 main = do
-    --xmproc <- spawnPipe "/usr/bin/xmobar ~/.xmobarrc"
+    xmproc <- spawnPipe "/usr/bin/xmobar ~/.xmobarrc"
     xmonad $ defaultConfig { 
           manageHook = manageDocks <+> manageHook defaultConfig
         , layoutHook = avoidStruts  $  layoutHook defaultConfig
