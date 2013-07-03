@@ -44,8 +44,14 @@ else
 fi
 
 # Functions
-ll() { ls -G -lho --color "$@"; }
-la() { ls -G -lhoa --color "$@"; }
+if [[ `uname` =~ "Darwin" ]]; then
+	lsoptions="-G -lho"
+else
+	lsoptions="--color -lho"
+fi
+
+ll() { ls ${lsoptions} "$@"; }
+la() { ls ${lsoptions}a "$@"; }
 
 function unrar() {
 	if [ $# -eq 1 ]; then
