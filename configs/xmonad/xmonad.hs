@@ -24,6 +24,7 @@ main = do
         [ ("C-=", spawn "backlight-adjust +")
         , ("C--", spawn "backlight-adjust -")
         , ("M-p", spawn "dmenu_run -i -nb '#282b57' -nf '#eeeeff' -sb '#555a9e' -fn 'Inconsolata-10'")
+		, ("S-M-g", spawn "xdg-open `xclip -o`")
         ]
         -- ++ [
         --      (otherModMasks ++ "M-" ++ [key], action tag)
