@@ -13,3 +13,5 @@
 	status = auto
 [core]
 	editor = vim
+[merge]
+	tool = vimdiff
