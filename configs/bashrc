@@ -41,6 +41,7 @@ else
 		fi
 	}
 
+	alias vim='/usr/local/Cellar/vim/7.3.861/bin/vim'
 fi
 
 # Functions
