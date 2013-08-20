@@ -14,5 +14,7 @@ export GNOME_KEYRING_PID
 # Start watching my filesystem for updates.
 iwatch -d -f ~/watchlist.xml
 
+dropbox start
+
 eval `ssh-agent`
 gnome-terminal -e ssh-add
