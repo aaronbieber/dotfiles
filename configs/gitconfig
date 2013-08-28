@@ -16,3 +16,5 @@
 	editor = vim
 [merge]
 	tool = vimdiff
+[push]
+	default = simple
