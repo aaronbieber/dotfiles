@@ -1,3 +1,4 @@
+#!/bin/bash
 # git completion
 if [ -f /usr/local/etc/bash_completion.d/git-completion.bash ]; then
 	. /usr/local/etc/bash_completion.d/git-completion.bash
@@ -5,7 +6,7 @@ fi
 
 # rbenv setup
 if [ -d $HOME/.rbenv/bin ]; then export PATH=$HOME/.rbenv/bin:$PATH; fi
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+if which rbenv > /dev/null 2>&1; then eval "$(rbenv init -)"; fi
 
 # Environment variables
 export PATH=/usr/local/bin:$PATH
@@ -43,7 +44,6 @@ else
 			/usr/bin/top "$@"
 		fi
 	}
-
 fi
 
 # Functions
@@ -53,10 +53,14 @@ else
 	lsoptions="--color -lho"
 fi
 
-ll() { ls ${lsoptions} "$@"; }
-la() { ls ${lsoptions}a "$@"; }
+# Some environments I occupy have predefined aliases and stuff. I don't want them.
+unset ll la > /dev/null 2> /dev/null
+unalias ll la > /dev/null 2> /dev/null
 
-function unrar() {
+ll () { ls ${lsoptions} "$@"; }
+la () { ls ${lsoptions}a "$@"; }
+
+function unrar () {
 	if [ $# -eq 1 ]; then
 		/opt/local/bin/unrar x "$1"
 	else
@@ -68,7 +72,7 @@ function unrar() {
 # our pseudo ssh-copy-id.
 which ssh-copy-id > /dev/null
 if [ $? -gt 0 ]; then
-	function ssh-copy-id() {
+	function ssh-copy-id () {
 		if [ $# -eq 0 ]; then
 			echo "Usage: ssh-copy-id [user@]hostname"
 			return 92
@@ -79,7 +83,7 @@ if [ $? -gt 0 ]; then
 	}
 fi
 
-function vdiff() {
+function vdiff () {
 	if [ $# -eq 0 ]; then
 		echo "Usage: vdiff FILENAME"
 		return 1
