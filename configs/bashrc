@@ -118,8 +118,9 @@ function vdiff () {
 			RIGHT_FILE=$V2_FILE
 		fi
 
-		echo "Starting vimdiff with $LEFT_FILE -> $MINE_FILE -> $RIGHT_FILE"
-		vim -d "$LEFT_FILE" "$MINE_FILE" "$RIGHT_FILE"
+		#echo "Starting vimdiff with $LEFT_FILE -> $MINE_FILE -> $RIGHT_FILE"
+		#vim -d "$LEFT_FILE" "$MINE_FILE" "$RIGHT_FILE"
+		vim "$1" -c "split $RIGHT_FILE | diffthis | vert split $MINE_FILE | diffthis | vert split $LEFT_FILE | diffthis"
 	fi
 }
 
