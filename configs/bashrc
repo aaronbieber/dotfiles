@@ -17,6 +17,7 @@ export NNTPSERVER=news.usenetserver.com
 export LESS=FRXSQ
 export CLICOLOR_FORCE=1
 export LSCOLORS=gxfxcxdxbxegedabagacad
+export EDITOR=vim
 
 # Do not use flow control.
 stty -ixon
