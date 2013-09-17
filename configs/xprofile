@@ -17,4 +17,4 @@ iwatch -d -f ~/watchlist.xml
 dropbox start
 
 eval `ssh-agent`
-gnome-terminal -e ssh-add
+xfce4-terminal -e ssh-add
