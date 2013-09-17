@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # git completion
 if [ -f /usr/local/etc/bash_completion.d/git-completion.bash ]; then
 	. /usr/local/etc/bash_completion.d/git-completion.bash
@@ -5,7 +7,7 @@ fi
 
 # rbenv setup
 if [ -d $HOME/.rbenv/bin ]; then export PATH=$HOME/.rbenv/bin:$PATH; fi
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+if which rbenv > /dev/null 2>&1; then eval "$(rbenv init -)"; fi
 
 # Environment variables
 export PATH=/usr/local/bin:$PATH
@@ -30,8 +32,11 @@ fi
 
 # Only for work.
 if [ "$MY_LOCATION" == "work" ]; then
+	if which ack-grep > /dev/null 2> /dev/null; then
+		alias ack="ack-grep --pager='less'"
+	fi
+
 	alias svnc="svn-color.py"
-	alias ack="ack-grep --pager='less'"
 	export PATH=$PATH:~/bin/svnkit-1.7.9/bin
 	export PATH=$PATH:$HOME/.vim/bundle/commit-tracker/bin
 	export PATH=$PATH:$HOME/bin/rbstats
@@ -45,6 +50,7 @@ else
 		fi
 	}
 
+	alias vim='/usr/local/Cellar/vim/7.3.861/bin/vim'
 fi
 
 # Functions
@@ -54,10 +60,14 @@ else
 	lsoptions="--color -lho"
 fi
 
-ll() { ls ${lsoptions} "$@"; }
-la() { ls ${lsoptions}a "$@"; }
+# Some environments I occupy have predefined aliases and stuff. I don't want them.
+unset ll la > /dev/null 2> /dev/null
+unalias ll la > /dev/null 2> /dev/null
 
-function unrar() {
+ll () { ls ${lsoptions} "$@"; }
+la () { ls ${lsoptions}a "$@"; }
+
+function unrar () {
 	if [ $# -eq 1 ]; then
 		/opt/local/bin/unrar x "$1"
 	else
@@ -69,7 +79,7 @@ function unrar() {
 # our pseudo ssh-copy-id.
 which ssh-copy-id > /dev/null
 if [ $? -gt 0 ]; then
-	function ssh-copy-id() {
+	function ssh-copy-id () {
 		if [ $# -eq 0 ]; then
 			echo "Usage: ssh-copy-id [user@]hostname"
 			return 92
@@ -80,7 +90,7 @@ if [ $? -gt 0 ]; then
 	}
 fi
 
-function vdiff() {
+function vdiff () {
 	if [ $# -eq 0 ]; then
 		echo "Usage: vdiff FILENAME"
 		return 1
@@ -110,8 +120,9 @@ function vdiff() {
 			RIGHT_FILE=$V2_FILE
 		fi
 
-		echo "Starting vimdiff with $LEFT_FILE -> $MINE_FILE -> $RIGHT_FILE"
-		vim -d "$LEFT_FILE" "$MINE_FILE" "$RIGHT_FILE"
+		#echo "Starting vimdiff with $LEFT_FILE -> $MINE_FILE -> $RIGHT_FILE"
+		#vim -d "$LEFT_FILE" "$MINE_FILE" "$RIGHT_FILE"
+		vim "$1" -c "split $RIGHT_FILE | diffthis | vert split $MINE_FILE | diffthis | vert split $LEFT_FILE | diffthis"
 	fi
 }
 
