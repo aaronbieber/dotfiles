@@ -77,4 +77,3 @@ function motd () {
 motd
 
 # vim: set et ts=2 sw=2 :
->>>>>>> 41cbd11737903b07f39821b7237111daa8ba8417
