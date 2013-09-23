@@ -24,13 +24,13 @@ ZSH_THEME="bbs"
 # DISABLE_LS_COLORS="true"
 
 # Uncomment following line if you want to disable autosetting terminal title.
-# DISABLE_AUTO_TITLE="true"
+DISABLE_AUTO_TITLE="true"
 
 # Uncomment following line if you want to disable command autocorrection
-# DISABLE_CORRECTION="true"
+DISABLE_CORRECTION="true"
 
 # Uncomment following line if you want red dots to be displayed while waiting for completion
-# COMPLETION_WAITING_DOTS="true"
+COMPLETION_WAITING_DOTS="true"
 
 # Uncomment following line if you want to disable marking untracked files under
 # VCS as dirty. This makes repository status check for large repositories much,
@@ -46,3 +46,35 @@ source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
 export PATH=$PATH:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/texbin:$HOME/.vim/bundle/vim-committed/bin
+
+# In case you want to see a new MOTD, you can just call this function.
+function motd () {
+  # Set up some ANSI colors real quick.
+  WHITE="\e[38;5;255m"
+  GRAY="\e[38;5;239m"
+  SILVER="\e[38;5;245m"
+
+  # Output a fortune on login if the program exists.
+  # This generates a very elaborate box. Perl is used to pad each line of fortune 
+  # with spaces so that the right edge of the box aligns. This proved to be 
+  # difficult if not impossible to do with awk/sed. I obviously hold my ASCII 
+  # boxes in very high regard.
+  which fortune > /dev/null && which sed > /dev/null
+  if [ "$?" -eq 0 ]; then
+    HEAD="╡ ${WHITE}M${SILVER}essage ${WHITE}O${SILVER}f ${WHITE}T${SILVER}he ${WHITE}D${SILVER}ay${GRAY} ╞"
+    TOP_LEN=$(( $COLUMNS - 32 ))
+    BOTTOM_LEN=$(( $COLUMNS - 10 ))
+    TOP_LINE=${(l:$TOP_LEN::═:)}
+    BOTTOM_LINE=${(l:$BOTTOM_LEN::═:)}
+
+    echo "$WHITE╒═$SILVER════$GRAY$TOP_LINE$HEAD$SILVER═$WHITE═╕"
+    fortune -s | perl -e 'my $cols=shift @ARGV; while (<>) { chomp; s/\t/    /g; print "│ ".$_.(" " x ($cols-length()-4))."│\n"; }' ${COLUMNS}
+    echo "$WHITE╘═$SILVER═$GRAY$BOTTOM_LINE$SILVER════$WHITE═╛"
+  fi
+}
+
+# Show an MOTD on login :-)
+motd
+
+# vim: set et ts=2 sw=2 :
+>>>>>>> 41cbd11737903b07f39821b7237111daa8ba8417
