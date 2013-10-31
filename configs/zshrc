@@ -33,9 +33,6 @@ plugins=(git colorize themes)
 
 source $ZSH/oh-my-zsh.sh
 
-# Configure directory names:
-WROOT=/usr/local/www/data-local
-
 # Configure actual zsh options as desired here:
 setopt AUTO_LIST        # Display completion candidates immediately.
 setopt CDABLE_VARS      # When an argument should be a dir but is not one,
@@ -133,7 +130,7 @@ if [[ "$MY_LOCATION" == "work" ]]; then
 	export PATH=$PATH:~/bin/svnkit-1.7.9/bin
 	export PATH=$PATH:$HOME/.vim/bundle/commit-tracker/bin
 	export PATH=$PATH:$HOME/bin/rbstats
-  export WROOT=/usr/local/www/data-local
+  export WROOT=/usr/local/www
 else
 	# This is really only for OS X, so don't use it at work.
 	function top() {
