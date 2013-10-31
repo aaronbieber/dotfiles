@@ -51,7 +51,7 @@ setopt MENU_COMPLETE    # On an ambiguous completion, insert the first match
                         # immediately rather than waiting for another tab.
 
 # Customize to your needs...
-export PATH=$PATH:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/texbin
+export PATH=$PATH:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/texbin:$HOME/.vim/bundle/vim-committed/bin
 
 # In case you want to see a new MOTD, you can just call this function.
 function motd () {
