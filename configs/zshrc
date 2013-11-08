@@ -46,6 +46,7 @@ setopt LIST_TYPES       # When listing files that are possible completions,
                         # indicate their types with a trailing character.
 setopt MENU_COMPLETE    # On an ambiguous completion, insert the first match
                         # immediately rather than waiting for another tab.
+unsetopt LIST_BEEP      # No bell on ambiguous completion!!
 
 # Customize to your needs...
 export PATH=$PATH:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/texbin:$HOME/.vim/bundle/vim-committed/bin
