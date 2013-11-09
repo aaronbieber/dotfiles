@@ -49,7 +49,7 @@ setopt MENU_COMPLETE    # On an ambiguous completion, insert the first match
 unsetopt LIST_BEEP      # No bell on ambiguous completion!!
 
 # Customize to your needs...
-export PATH=$PATH:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/texbin:$HOME/.vim/bundle/vim-committed/bin
+export PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/texbin:$HOME/.vim/bundle/vim-committed/bin:$PATH
 
 # Perform a visual diff of conflicted source files in vim.
 function vdiff () {
@@ -145,7 +145,7 @@ if [[ `uname` == "Darwin" ]]; then
 		fi
 	}
 
-	alias vim='/usr/local/Cellar/vim/8.3.861/bin/vim'
+	#alias vim='/usr/local/Cellar/vim/8.3.861/bin/vim'
 fi
 
 # Show an MOTD on login :-)
