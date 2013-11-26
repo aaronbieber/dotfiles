@@ -48,7 +48,9 @@ bindkey -M menuselect '^M' .accept-line
 # Customize to your needs...
 export PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/texbin:$HOME/.vim/bundle/vim-committed/bin:$PATH
 export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
+
+# Initialize rbenv if it exists.
+which rbenv > /dev/null 2>&1 && eval "$(rbenv init -)"
 
 # Perform a visual diff of conflicted source files in vim.
 function vdiff () {
