@@ -131,6 +131,9 @@ if [ $SSH_AUTH_SOCK ] && [ $SSH_AUTH_SOCK != $SOCK ]; then
   export SSH_AUTH_SOCK=$SOCK
 fi
 
+# Aliases.
+alias please="sudo !!"
+
 # Only for work.
 if [[ "$MY_LOCATION" == "work" ]]; then
 	if which ack-grep > /dev/null 2> /dev/null; then
