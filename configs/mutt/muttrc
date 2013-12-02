@@ -1,0 +1,39 @@
+# Sending (kind of important).
+set sendmail="/usr/bin/msmtp"
+set editor="vim -c 'set ft=mail'"
+auto_view text/html
+set signature="~/.signature"
+
+# Mailbox settings.
+set mbox_type = Maildir
+set folder = ~/.mail/
+set spoolfile = +private/INBOX
+mailboxes = +private/INBOX \
+  +private/Starred \
+  +private/Drafts \
+  +private/Sent \
+  +private/Trash \
+  +private/Spam \
+  +private/Archive \
+  +private/Receipts\ and\ Shipping
+
+# Macros to emulate Gmail
+macro index E "<change-folder>+private/Archive<enter><limit>~B " "search everything"
+macro index,pager e "<save-message>+private/Archive<enter>" "move message to the archive"
+macro index \# "<save-message>+private/Trash<enter>" "move message to the trash"
+macro index \! "<save-message>+private/Spam<enter>" "mark message as spam"
+bind  index c mail
+bind  pager u exit
+bind  index g first-entry
+bind  index G last-entry
+bind  index,pager v save-message  #Move to
+macro index,pager I <set-flag>O   "Mark as read"
+macro index,pager U <clear-flag>O "Mark as unread"
+
+# Address book bindings
+set query_command="goobook query '%s'"
+macro index,pager a "<pipe-message>goobook add<return>" "add sender to google contacts"
+bind editor <Tab> complete-query
+
+# Colors!
+source ~/.mutt/colors-zenburn-256.mutt
