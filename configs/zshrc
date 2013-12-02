@@ -40,6 +40,9 @@ setopt MENU_COMPLETE    # On an ambiguous completion, insert the first match
                         # immediately rather than waiting for another tab.
 setopt NO_LIST_BEEP     # No bell on ambiguous completion!!
 
+# I like my slow locomotive.
+unalias sl
+
 # Adjust widget behaviors. ####################################################
 # While selecting from menu completion, pressing enter accepts the selection 
 # and executes the command.
