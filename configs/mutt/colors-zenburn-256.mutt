@@ -22,9 +22,9 @@ color status     color144 color237
 color indicator  color108 color236
 color tree       color109 color234
 color index      color188 color234 ~A
-color index      color188 color234 ~N
+color index      color112 color234 ~N
 color index      color188 color234 ~O
-color index      color174 color234 ~F
+color index      color229 color234 ~F
 color index      color174 color234 ~D
 
 #color index_number  color116 color234
