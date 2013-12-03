@@ -125,6 +125,14 @@ function motd () {
   fi
 }
 
+# Put the SSH agent socket in a predictable location.
+SOCK="/tmp/ssh-agent-$USER-socket"
+if [ $SSH_AUTH_SOCK ] && [ $SSH_AUTH_SOCK != $SOCK ]; then
+  rm -f "/tmp/ssh-agent-$USER-socket"
+  ln -sf $SSH_AUTH_SOCK $SOCK
+  export SSH_AUTH_SOCK=$SOCK
+fi
+
 # Only for work.
 if [[ "$MY_LOCATION" == "work" ]]; then
 	if which ack-grep > /dev/null 2> /dev/null; then
