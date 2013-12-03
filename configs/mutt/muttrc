@@ -19,19 +19,24 @@ mailboxes = +INBOX \
   +Archive \
   +Receipts\ and\ Shipping
 
-# Macros and key bindings to emulate Gmail.
+# Macros and key bindings (most emulate Gmail).
+macro index,pager I <set-flag>O                          "mark message as read"
+macro index,pager U <clear-flag>O                        "mark message as unread"
 macro index E "<change-folder>+Archive<enter><limit>~B " "search everything"
-macro index,pager e "<save-message>+Archive<enter>" "move message to the archive"
-macro index,pager \# "<save-message>+Trash<enter>" "move message to the trash"
-macro index,pager \! "<save-message>+Spam<enter>" "mark message as spam"
+macro index,pager e "<save-message>+Archive<enter>"      "move message to the archive"
+macro index,pager \# "<save-message>+Trash<enter>"       "move message to the trash"
+macro index,pager \! "<save-message>+Spam<enter>"        "mark message as spam"
+macro index,pager gi "<change-folder>+INBOX<enter>"      "go to the INBOX"
+macro index,pager ms \
+  "<save-message>+Receipts<quote-char> and<quote-char> Shipping<enter>" \
+  "label Receipts and Shipping"
+
 bind  index o change-folder
 bind  index c mail
-bind  index g first-entry
+bind  index gg first-entry
 bind  index G last-entry
 bind  index,pager s flag-message  # Toggle 'important' flag
 bind  index,pager v save-message  # Move to
-macro index,pager I <set-flag>O   "Mark as read"
-macro index,pager U <clear-flag>O "Mark as unread"
 bind  pager u exit
 bind  pager d half-down
 bind  pager b previous-page
@@ -43,3 +48,5 @@ bind editor <Tab> complete-query
 
 # Colors!
 source ~/.mutt/colors-zenburn-256.mutt
+
+# vim: set et ts=2 sw=2 :
