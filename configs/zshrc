@@ -138,6 +138,8 @@ if [[ "$MY_LOCATION" == "work" ]]; then
   export WROOT=/usr/local/www
   export DATA=/usr/local/www/_data
   export RES=/usr/local/www/_resources
+  alias s="ssh -A devwebphp95"
+  alias h="ssh -p 2200 airborne@core-dev.com"
 fi
 
 # OS X things.
