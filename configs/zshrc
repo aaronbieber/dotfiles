@@ -26,19 +26,17 @@ plugins=(git colorize themes)
 source $ZSH/oh-my-zsh.sh
 
 # Configure zsh options #######################################################
-setopt AUTO_LIST        # Display completion candidates immediately.
-setopt CDABLE_VARS      # When an argument should be a dir but is not one,
-                        # expand it as if it started with ~ (see below).
-setopt AUTO_NAME_DIRS   # Any parameter that is set to an abosolute directory
-                        # name automatically becomes a name for that directory
-                        # in the form ~param.
-setopt HIST_IGNORE_DUPS # Do not record a command in the history if it is a
-                        # duplicate of the previous one.
-setopt LIST_TYPES       # When listing files that are possible completions,
-                        # indicate their types with a trailing character.
-setopt MENU_COMPLETE    # On an ambiguous completion, insert the first match
-                        # immediately rather than waiting for another tab.
-setopt NO_LIST_BEEP     # No bell on ambiguous completion!!
+setopt autolist       # Display completion candidates immediately.
+setopt cdablevars     # When an argument should be a dir but is not one,
+                      # expand it as if it started with ~ (see below).
+setopt autonamedirs   # Any parameter that is set to an abosolute directory
+                      # name automatically becomes a name for that directory
+                      # in the form ~param.
+setopt histignoredups # Do not record a command in the history if it is a
+                      # duplicate of the previous one.
+setopt listtypes      # When listing files that are possible completions,
+                      # indicate their types with a trailing character.
+setopt nolistbeep     # No bell on ambiguous completion!!
 
 # I like my slow locomotive.
 unalias sl
