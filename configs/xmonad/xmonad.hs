@@ -18,7 +18,7 @@ main = do
         , focusedBorderColor = "#ffffff"
         , normalBorderColor = "#444444"
         , focusFollowsMouse = False
-		, terminal = "xfce4-terminal"
+		, terminal = "gnome-terminal"
         }
         `additionalKeysP` (
         [ ("C-=", spawn "backlight-adjust +")
