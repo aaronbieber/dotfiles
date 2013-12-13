@@ -25,6 +25,10 @@ plugins=(git colorize themes)
 
 source $ZSH/oh-my-zsh.sh
 
+# Use VI mode.
+bindkey -v
+bindkey '^R' history-incremental-search-backward
+
 # Configure zsh options #######################################################
 setopt autolist       # Display completion candidates immediately.
 setopt cdablevars     # When an argument should be a dir but is not one,
