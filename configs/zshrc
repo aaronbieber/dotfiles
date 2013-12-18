@@ -148,9 +148,9 @@ if [[ "$MY_LOCATION" == "work" ]]; then
 	export PATH=$PATH:~/bin/svnkit-1.7.9/bin
 	export PATH=$PATH:$HOME/.vim/bundle/commit-tracker/bin
 	export PATH=$PATH:$HOME/bin/rbstats
-  export WROOT=/usr/local/www
-  export DATA=/usr/local/www/_data
-  export RES=/usr/local/www/_resources
+  export PHP=/var/www/php
+  export WWW=/var/www
+  export RES=/var/www/resources
   alias s="ssh -A devwebphp95"
   alias h="ssh -p 2200 airborne@core-dev.com"
 fi
