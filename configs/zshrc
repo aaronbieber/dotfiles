@@ -136,7 +136,10 @@ if [ $SSH_AUTH_SOCK ] && [ $SSH_AUTH_SOCK != $SOCK ]; then
 fi
 
 # Aliases.
-alias please="sudo !!"
+alias l="ls -alh --color=always"
+alias ta="tmux attach"
+alias tad="tmux attach -d"
+alias tl="tmux ls"
 
 # Only for work.
 if [[ "$MY_LOCATION" == "work" ]]; then
