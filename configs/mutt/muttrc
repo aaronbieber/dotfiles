@@ -31,15 +31,16 @@ macro index,pager ms \
   "<save-message>+Receipts<quote-char> and<quote-char> Shipping<enter>" \
   "label Receipts and Shipping"
 
-bind  index o change-folder
-bind  index c mail
-bind  index gg first-entry
-bind  index G last-entry
-bind  index,pager s flag-message  # Toggle 'important' flag
-bind  index,pager v save-message  # Move to
-bind  pager u exit
-bind  pager d half-down
-bind  pager b previous-page
+bind index o change-folder
+bind index c mail
+bind index gg first-entry
+bind index G last-entry
+bind index,pager s flag-message  # Toggle 'important' flag
+bind index,pager v save-message  # Move to
+bind pager u exit
+bind pager d half-down
+bind pager b previous-page
+bind pager V view-attachments
 
 # Address book bindings
 set query_command="goobook query '%s'"
