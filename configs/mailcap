@@ -1,2 +1,4 @@
-text/html;                      links %s; nametemplate=%s.html
-text/html;                      links -dump %s; nametemplate=%s.html; copiousoutput
+text/html;       links %s; nametemplate=%s.html
+text/html;       w3m -dump %s; nametemplate=%s.html; copiousoutput
+application/pdf; pdf2txt %s; nametemplate=%s.txt; copiousoutput
+application/vnd.openxmlformats-officedocument.wordprocessingml.document; docx2txt %s -; nametemplate=%s.txt; copiousoutput
