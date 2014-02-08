@@ -136,7 +136,6 @@ if [ $SSH_AUTH_SOCK ] && [ $SSH_AUTH_SOCK != $SOCK ]; then
 fi
 
 # Aliases.
-alias l="ls -alh --color=always"
 alias ta="tmux attach"
 alias tad="tmux attach -d"
 alias tl="tmux ls"
@@ -168,6 +167,9 @@ if [[ `uname` == "Darwin" ]]; then
 			/usr/bin/top "$@"
 		fi
 	}
+  alias l="ls -alh -G"
+else
+  alias l="ls -alh --color=always"
 fi
 
 # Show an MOTD on login :-)
