@@ -53,6 +53,8 @@ bindkey -M menuselect '^M' .accept-line
 # Customize to your needs...
 export PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/texbin:$HOME/.vim/bundle/vim-committed/bin:$PATH
 export PATH="$HOME/.rbenv/bin:$PATH"
+export PATH="$HOME/bin:$PATH"
+export PATH="/usr/local/share/npm/bin:$PATH"
 
 # Initialize rbenv if it exists.
 which rbenv > /dev/null 2>&1 && eval "$(rbenv init -)"
@@ -169,6 +171,7 @@ if [[ `uname` == "Darwin" ]]; then
 	}
   alias l="ls -alh -G"
 else
+  # Non-OS X things.
   alias l="ls -alh --color=always"
 fi
 
