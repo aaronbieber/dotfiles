@@ -4,6 +4,8 @@ set editor="vim -c 'set ft=mail'"
 set signature="~/.signature"
 set noconfirmappend
 set delete
+set from="aaron@aaronbieber.com"
+set realname="Aaron Bieber"
 auto_view text/html
 
 # Mailbox settings.
