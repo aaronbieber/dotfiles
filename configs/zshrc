@@ -139,10 +139,13 @@ if [ $SSH_AUTH_SOCK ] && [ $SSH_AUTH_SOCK != $SOCK ]; then
   export SSH_AUTH_SOCK=$SOCK
 fi
 
-# Aliases.
+# Aliases for tmux
 alias ta="tmux attach"
 alias tad="tmux attach -d"
 alias tl="tmux ls"
+
+# Aliases for ssh
+alias ssha="ssh -A"
 
 # Only for work.
 if [[ "$MY_LOCATION" == "work" ]]; then
