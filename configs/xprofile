@@ -11,9 +11,6 @@ eval $(gnome-keyring-daemon --start)
 export GNOME_KEYRING_SOCKET
 export GNOME_KEYRING_PID
 
-# Start watching my filesystem for updates.
-iwatch -d -f ~/watchlist.xml
-
 dropbox start
 
 eval `ssh-agent`
