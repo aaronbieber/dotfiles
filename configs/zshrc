@@ -16,7 +16,7 @@ DISABLE_CORRECTION="true"
 # Display red dots while waiting for completion.
 COMPLETION_WAITING_DOTS="true"
 
-# Disable marking untracked files under VCS as dirty. This makes repository 
+# Disable marking untracked files under VCS as dirty. This makes repository
 # status check for large repositories much, much faster.
 DISABLE_UNTRACKED_FILES_DIRTY="true"
 
@@ -46,17 +46,17 @@ setopt nolistbeep     # No bell on ambiguous completion!!
 unalias sl
 
 # Adjust widget behaviors. ####################################################
-# While selecting from menu completion, pressing enter accepts the selection 
+# While selecting from menu completion, pressing enter accepts the selection
 # and executes the command.
 bindkey -M menuselect '^M' .accept-line
 
 # Add locations to the $PATH that actually exist.
 PATH="/usr/local/bin:$PATH"
-[ -d "/usr/texbin:$PATH" ]              && PATH="/usr/texbin:$PATH"
-[ -d "$HOME/.rbenv/bin" ]               && PATH="$HOME/.rbenv/bin:$PATH"
-[ -d "$HOME/bin:$PATH" ]                && PATH="$HOME/bin:$PATH"
-[ -d "/usr/local/share/npm/bin:$PATH" ] && PATH="/usr/local/share/npm/bin:$PATH"
-[ -d "$HOME/PebbleSDK-2.0.0/bin" ]      && PATH="$HOME/PebbleSDK-2.0.0/bin:$PATH"
+[ -d "/usr/texbin" ]               && PATH="/usr/texbin:$PATH"
+[ -d "$HOME/.rbenv/bin" ]          && PATH="$HOME/.rbenv/bin:$PATH"
+[ -d "$HOME/bin" ]                 && PATH="$HOME/bin:$PATH"
+[ -d "/usr/local/share/npm/bin" ]  && PATH="/usr/local/share/npm/bin:$PATH"
+[ -d "$HOME/PebbleSDK-2.0.0/bin" ] && PATH="$HOME/PebbleSDK-2.0.0/bin:$PATH"
 
 # Initialize rbenv if it exists.
 which rbenv > /dev/null 2>&1 && eval "$(rbenv init -)"
@@ -131,11 +131,11 @@ function motd () {
   fi
 }
 
-# Put the SSH agent socket in a predictable location. If we have an 
-# $SSH_AUTH_SOCK value already, link to it from a known path in /tmp. If we do 
-# not have an $SSH_AUTH_SOCK value but the socket link exists in /tmp, set the 
-# value to that link. The first case typically takes place when first 
-# connecting to a remote host and the second case typically takes place when 
+# Put the SSH agent socket in a predictable location. If we have an
+# $SSH_AUTH_SOCK value already, link to it from a known path in /tmp. If we do
+# not have an $SSH_AUTH_SOCK value but the socket link exists in /tmp, set the
+# value to that link. The first case typically takes place when first
+# connecting to a remote host and the second case typically takes place when
 # re-attaching a previously detached tmux session.
 SOCK="/tmp/ssh-agent-$USER-socket"
 if [ $SSH_AUTH_SOCK ] && [ $SSH_AUTH_SOCK != $SOCK ]; then
