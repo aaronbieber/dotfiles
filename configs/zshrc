@@ -53,13 +53,23 @@ bindkey -M menuselect '^M' .accept-line
 # Add locations to the $PATH that actually exist.
 PATH="/usr/local/bin:$PATH"
 [ -d "/usr/texbin" ]               && PATH="/usr/texbin:$PATH"
-[ -d "$HOME/.rbenv/bin" ]          && PATH="$HOME/.rbenv/bin:$PATH"
-[ -d "$HOME/bin" ]                 && PATH="$HOME/bin:$PATH"
 [ -d "/usr/local/share/npm/bin" ]  && PATH="/usr/local/share/npm/bin:$PATH"
 [ -d "$HOME/PebbleSDK-2.0.0/bin" ] && PATH="$HOME/PebbleSDK-2.0.0/bin:$PATH"
 
-# Initialize rbenv if it exists.
-which rbenv > /dev/null 2>&1 && eval "$(rbenv init -)"
+# Add my scripts directory to my path if it's there.
+if [ -d "$HOME/bin" ]; then
+  PATH="$HOME/bin:$PATH"
+fi
+
+PATH="/usr/local/bin:$PATH"
+
+# Initialize rbenv if it exists on this system and isn't yet in our path.
+# This prevents path duplication in tmux when a sub-shell runs this script 
+# again.
+if [ -d $HOME/.rbenv/bin ] && [[ ! "$PATH" =~ "rbenv" ]]; then
+  export PATH="$HOME/.rbenv/bin:$PATH"
+  type rbenv >/dev/null 2>&1 && eval "$(rbenv init -)"
+fi
 
 # Perform a visual diff of conflicted source files in vim.
 function vdiff () {
