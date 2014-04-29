@@ -21,6 +21,9 @@ bind right:ctrl;cmd  push right  bar-resize:screenSizeX/3
 bind up:ctrl;cmd     push up     bar-resize:screenSizeY/2
 bind down:ctrl;cmd   push down   bar-resize:screenSizeY/2
 
+bind left:ctrl;alt   push left   bar-resize:screenSizeX/2
+bind right:ctrl;alt  push right  bar-resize:screenSizeX/2
+
 bind up:ctrl;cmd;shift    move windowTopLeftX;0 windowSizeX;screenSizeY/2
 bind down:ctrl;cmd;shift  move windowTopLeftX;screenSizeY/2+25 windowSizeX;screenSizeY/2
 bind left:ctrl;cmd;shift  nudge -windowSizeX +0
