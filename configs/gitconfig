@@ -11,7 +11,11 @@
 	lg3 = log --graph --abbrev-commit --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --all
 	lg = !"git lg1"
 	cob = "checkout -b"
+	rom = "rebase origin/master"
+	ms = "merge --squash"
+	rmorig = !"git status --porcelain | awk '/^\\?.*orig/{print $2}' | xargs rm -v"
 	rmuntracked = !"git status --porcelain | awk '/^\\?/{print $2}' | xargs rm -v"
+	todo = !"! git diff --name-only origin/master | xargs grep -i -C3 '@todo'"
 [color]
 	branch = auto
 	diff = auto
@@ -23,7 +27,7 @@
 [merge]
 	tool = vimdiff
 [push]
-	default = current
+	default = upstream
 [pull]
 	rebase = true
 [rerere]

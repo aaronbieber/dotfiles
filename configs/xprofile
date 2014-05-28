@@ -12,6 +12,9 @@ export GNOME_KEYRING_SOCKET
 export GNOME_KEYRING_PID
 
 dropbox start
+lsyncd ~/lsyncd/php_lsyncd.conf
+lsyncd ~/lsyncd/resources_lsyncd.conf
+lsyncd ~/lsyncd/templates_lsyncd.conf
 
 eval `ssh-agent`
 xfce4-terminal -e ssh-add

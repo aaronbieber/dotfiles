@@ -71,6 +71,10 @@ if [ -d $HOME/.rbenv/bin ] && [[ ! "$PATH" =~ "rbenv" ]]; then
   type rbenv >/dev/null 2>&1 && eval "$(rbenv init -)"
 fi
 
+function nicediff {
+  diff -W `tput cols` -y "$@" | colordiff | less
+}
+
 # Perform a visual diff of conflicted source files in vim.
 function vdiff () {
 	if [ $# -eq 0 ]; then
@@ -174,6 +178,7 @@ if [[ "$MY_LOCATION" == "work" ]]; then
   export PHP=/var/www/php
   export WWW=/var/www
   export RES=/var/www/resources
+  export DB=/var/www/db
   alias s="ssh -A devwebphp95"
   alias h="ssh -p 2200 airborne@core-dev.com"
 fi
@@ -188,10 +193,18 @@ if [[ `uname` == "Darwin" ]]; then
 			/usr/bin/top "$@"
 		fi
 	}
-  alias l="ls -alh -G"
+  alias l="ls -alhF --group-directories-first -G"
 else
   # Non-OS X things.
-  alias l="ls -alh --color=always"
+  alias l="ls -alhF --group-directories-first --color=always"
+fi
+
+# Load any location-specific config file if it exists. These should contain 
+# stuff that maybe shouldn't be out on github.
+#
+# For example, if $MY_LOCATION == "work", the rc should be ~/.zshworkrc
+if [ -f "$HOME/.zsh${MY_LOCATION}rc" ]; then
+  source "$HOME/.zsh${MY_LOCATION}rc"
 fi
 
 # Show an MOTD on login :-)
