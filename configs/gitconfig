@@ -12,6 +12,7 @@
 	lg = !"git lg1"
 	cob = "checkout -b"
 	rom = "rebase origin/master"
+	dom = "diff origin/master"
 	ms = "merge --squash"
 	rmorig = !"git status --porcelain | awk '/^\\?.*orig/{print $2}' | xargs rm -v"
 	rmuntracked = !"git status --porcelain | awk '/^\\?/{print $2}' | xargs rm -v"
