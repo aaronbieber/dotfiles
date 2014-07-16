@@ -1,17 +1,26 @@
 #!/bin/bash
 
+# Who am I?
+me=`basename $0`
+
 # Get options.
 LNOPTS=""
 if [ $# -gt 0 ]; then
 	if [ "$1" == "-f" ]; then
 		LNOPTS="-f"
 	else
-		echo "Unrecognized option '$1'!"
+		echo "Unrecognized option: $1"
+		cat << EOF
+Usage: $me [OPTIONS]
+
+    Options:
+    -f    Force 'ln' to create a new link, even if one already exists with the
+          same name.
+EOF
 		exit 1
 	fi
 fi
 
-me=`basename $0`
 
 # This appears to be the "best" way to get the canonicalized path to where this 
 # script is located, which is, presumably, where all of my dotfiles are.
@@ -22,8 +31,11 @@ SCRIPTPATH="$SCRIPTPATH/configs"
 popd > /dev/null
 
 pushd ~ > /dev/null
-echo "Working from `pwd`."
-for dotfile in `find $SCRIPTPATH -mindepth 1 -maxdepth 1 ! -iname '.git*' -and ! -iname '$me' -and ! -iname 'README.md'`; do
+
+echo "Creating symlinks for all configuration files in $SCRIPTPATH."
+echo ""
+
+for dotfile in `find $SCRIPTPATH -mindepth 1 -maxdepth 1`; do
 	if [ "${dotfile##*/}" == "bashrc" ]; then
 		linkfile=".bash_profile"
 	else
