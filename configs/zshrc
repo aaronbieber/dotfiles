@@ -131,7 +131,9 @@ function motd () {
   # with spaces so that the right edge of the box aligns. This proved to be
   # difficult if not impossible to do with awk/sed. I obviously hold my ASCII
   # boxes in very high regard.
-  which fortune > /dev/null && which sed > /dev/null
+  #
+  # This should really be replaced with a small ruby or python script.
+  which fortune > /dev/null 2>&1 && which sed > /dev/null 2>&1
   if (( $? == 0 )); then
     HEAD="╡ ${WHITE}M${SILVER}essage ${WHITE}O${SILVER}f ${WHITE}T${SILVER}he ${WHITE}D${SILVER}ay${GRAY} ╞"
     TOP_LEN=$(( $COLUMNS - 32 ))
@@ -198,16 +200,5 @@ else
   # Non-OS X things.
   alias l="ls -alhF --group-directories-first --color=always"
 fi
-
-# Load any location-specific config file if it exists. These should contain 
-# stuff that maybe shouldn't be out on github.
-#
-# For example, if $MY_LOCATION == "work", the rc should be ~/.zshworkrc
-if [ -f "$HOME/.zsh${MY_LOCATION}rc" ]; then
-  source "$HOME/.zsh${MY_LOCATION}rc"
-fi
-
-# Show an MOTD on login :-)
-motd
 
 # vim: set et ts=2 sw=2 tw=79 cc=+1 :
