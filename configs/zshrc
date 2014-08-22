@@ -63,6 +63,10 @@ fi
 
 PATH="/usr/local/bin:$PATH"
 
+# Settings for todo.txt
+alias t="todo -d $HOME/.todo.cfg"
+export TODOTXT_DEFAULT_ACTION=ls
+
 # Initialize rbenv if it exists on this system and isn't yet in our path.
 # This prevents path duplication in tmux when a sub-shell runs this script 
 # again.
@@ -180,6 +184,7 @@ if [[ "$MY_LOCATION" == "work" ]]; then
   export PHP=/var/www/php
   export WWW=/var/www
   export RES=/var/www/resources
+  export T=/var/www/templates
   export DB=/var/www/db
   alias s="ssh -A devwebphp95"
   alias h="ssh -p 2200 airborne@core-dev.com"
