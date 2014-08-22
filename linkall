@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env zsh
 
 # Who am I?
 me=`basename $0`
@@ -6,7 +6,7 @@ me=`basename $0`
 # Get options.
 LNOPTS=""
 if [ $# -gt 0 ]; then
-	if [ "$1" == "-f" ]; then
+	if [[ "$1" == "-f" ]]; then
 		LNOPTS="-f"
 	else
 		echo "Unrecognized option: $1"
@@ -21,6 +21,8 @@ EOF
 	fi
 fi
 
+# The system name is used to link platform-specific files.
+platform=`uname`
 
 # This appears to be the "best" way to get the canonicalized path to where this 
 # script is located, which is, presumably, where all of my dotfiles are.
@@ -36,11 +38,24 @@ echo "Creating symlinks for all configuration files in $SCRIPTPATH."
 echo ""
 
 for dotfile in `find $SCRIPTPATH -mindepth 1 -maxdepth 1`; do
-	if [ "${dotfile##*/}" == "bashrc" ]; then
+	if [[ "${dotfile##*/}" == "bashrc" ]]; then
 		linkfile=".bash_profile"
 	else
-		linkfile=".${dotfile##*/}"
+		# If the dotfile starts with an underscore-braced string, only link it if 
+		# that string matches our platform.
+		if [[ "${dotfile##*/}" =~ "_.*_" ]]; then
+			echo "Matched the thing."
+			if [[ "${dotfile##*/}" =~ "_${platform}_" ]]; then
+				linkfile=".${dotfile##*/_${platform}_}"
+			else
+				continue
+			fi
+		else
+			# This is the common case. Link the base name.
+			linkfile=".${dotfile##*/}"
+		fi
 	fi
+
 	echo -n "Linking $dotfile -> $linkfile... "
 	ln -s $LNOPTS "$dotfile" "$linkfile" > /dev/null 2>&1
 	if [ $? -eq 0 ]; then
