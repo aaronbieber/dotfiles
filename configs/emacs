@@ -1,8 +1,7 @@
 ;(load "package")
 
 ; list the packages you want
-(setq package-list '(auto-complete
-                     evil
+(setq package-list '(evil
                      evil-leader
                      evil-jumper
                      evil-surround
