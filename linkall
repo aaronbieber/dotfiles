@@ -44,7 +44,6 @@ for dotfile in `find $SCRIPTPATH -mindepth 1 -maxdepth 1`; do
 		# If the dotfile starts with an underscore-braced string, only link it if 
 		# that string matches our platform.
 		if [[ "${dotfile##*/}" =~ "_.*_" ]]; then
-			echo "Matched the thing."
 			if [[ "${dotfile##*/}" =~ "_${platform}_" ]]; then
 				linkfile=".${dotfile##*/_${platform}_}"
 			else
