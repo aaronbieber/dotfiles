@@ -1,48 +1,71 @@
-;; Use Marmalade repo and MELPA because otherwise you have essentially
-;; no packages.
-(load "package")
-(package-initialize)
-(add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+;(load "package")
 
+; list the packages you want
+(setq package-list '(auto-complete
+                     evil
+                     evil-leader
+                     evil-jumper
+                     evil-surround
+                     evil-indent-textobject
+                     fiplr
+                     php-mode
+                     php-completion
+                     php-extras
+                     projectile
+                     zenburn-theme
+                     etags-select
+                     helm))
+
+; list the repositories containing them
+(setq package-archives '(("elpa" . "http://tromey.com/elpa/")
+                         ("gnu" . "http://elpa.gnu.org/packages/")
+                         ("marmalade" . "http://marmalade-repo.org/packages/")
+                         ("melpa" . "http://melpa.milkbox.net/packages/")))
 (setq package-archive-enable-alist '(("melpa" deft magit)))
+
+; activate all the packages (in particular autoloads)
+(package-initialize)
+
+; fetch the list of packages available
+(unless (file-exists-p package-user-dir)
+  (package-refresh-contents))
+
+; install the missing packages
+(dolist (package package-list)
+  (unless (package-installed-p package)
+    (package-install package)))
+
+
+(add-to-list 'load-path "~/.emacs.d")
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+
+(require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
 
 ;; Obviously.
 (global-evil-leader-mode)
 (evil-mode 1)
 
-(add-to-list 'load-path "~/.emacs.d/")
-(require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories "~/.emacs.d//ac-dict")
-(ac-config-default)
-
 (require 'evil-surround)
+
+(ac-config-default)
 (global-evil-surround-mode 1)
+
+(global-linum-mode t)
+(setq linum-format "%4d ")
+(load-theme 'xoria256 t)
 
 (defun find-tag-no-prompt ()
   "Jump to the tag at point without prompting."
   (interactive)
   (find-tag (find-tag-default)))
 (global-set-key (kbd "C-]") 'find-tag-no-prompt)
-  
 
 (defun switch-to-previous-buffer ()
   "Switch to previously open buffer.
 Repeated invocations toggle between the two most recently open buffers."
   (interactive)
   (switch-to-buffer (other-buffer (current-buffer) 1)))
-
-;; Configure evil-leader
-(evil-leader/set-leader ",")
-(evil-leader/set-key
-  "." 'switch-to-previous-buffer
-  "b" 'helm-buffers-list)
-
-(global-linum-mode t)
-(setq linum-format "%4d ")
-(load-theme 'xoria256 t)
 
 ;; (defun indent-or-expand (arg)
 ;;   "Either indent according to mode, or expand previous word."
@@ -54,13 +77,19 @@ Repeated invocations toggle between the two most recently open buffers."
 ;;     (indent-according-to-mode)))
 ;; (defun my-tab-fix ()
 ;;   (local-set-key (kbd "TAB") 'indent-or-expand))
-;; 
+;;
 ;; (add-hook 'php-mode-hook 'my-tab-fix)
 ;; (add-hook 'emacs-lisp-mode-hook 'my-tab-fix)
 
 (add-hook 'php-mode-hook 'turn-on-eldoc-mode)
 (add-hook 'php-mode-hook 'projectile-mode)
 (define-key evil-normal-state-map (kbd "C-p") 'fiplr-find-file)
+
+;; Configure evil-leader
+(evil-leader/set-leader ",")
+(evil-leader/set-key
+  "." 'switch-to-previous-buffer
+  "b" 'helm-buffers-list)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
