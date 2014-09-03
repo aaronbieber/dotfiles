@@ -171,6 +171,7 @@ alias ta="tmux attach"
 alias tad="tmux attach -d"
 alias tl="tmux ls"
 alias urldecode='python -c "import sys, urllib as ul; print ul.unquote_plus(sys.argv[1])"'
+alias emacs="emacs -nw"
 
 if [ -f "$HOME/.zshrc_$MY_LOCATION" ]; then
   source "$HOME/.zshrc_$MY_LOCATION"
