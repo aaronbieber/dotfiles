@@ -170,24 +170,10 @@ fi
 alias ta="tmux attach"
 alias tad="tmux attach -d"
 alias tl="tmux ls"
+alias urldecode='python -c "import sys, urllib as ul; print ul.unquote_plus(sys.argv[1])"'
 
-# Only for work.
-if [[ "$MY_LOCATION" == "work" ]]; then
-	if which ack-grep > /dev/null 2> /dev/null; then
-		alias ack="ack-grep --pager='less'"
-	fi
-
-	alias svnc="svn-color.py"
-	export PATH=$PATH:~/bin/svnkit-1.7.9/bin
-	export PATH=$PATH:$HOME/.vim/bundle/commit-tracker/bin
-	export PATH=$PATH:$HOME/bin/rbstats
-  export PHP=/var/www/php
-  export WWW=/var/www
-  export RES=/var/www/resources
-  export T=/var/www/templates
-  export DB=/var/www/db
-  alias s="ssh -A devwebphp95"
-  alias h="ssh -p 2200 airborne@core-dev.com"
+if [ -f "$HOME/.zshrc_$MY_LOCATION" ]; then
+  source "$HOME/.zshrc_$MY_LOCATION"
 fi
 
 # OS X things.
