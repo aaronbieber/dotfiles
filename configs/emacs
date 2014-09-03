@@ -1,4 +1,4 @@
-;(load "package")
+;-*-Emacs-Lisp-*-
 
 ; list the packages you want
 (setq package-list '(evil
@@ -34,14 +34,14 @@
   (unless (package-installed-p package)
     (package-install package)))
 
-
 (add-to-list 'load-path "~/.emacs.d")
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
 (require 'auto-complete-config)
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
 
-;; Obviously.
+(require 'cl)
+
 (global-evil-leader-mode)
 (evil-mode 1)
 
@@ -53,6 +53,9 @@
 (global-linum-mode t)
 (setq linum-format "%4d ")
 (load-theme 'xoria256 t)
+
+(eval-after-load "vc" '(setq vc-handled-backends nil))
+(setq vc-follow-symlinks t)
 
 (defun find-tag-no-prompt ()
   "Jump to the tag at point without prompting."
@@ -81,8 +84,16 @@ Repeated invocations toggle between the two most recently open buffers."
 ;; (add-hook 'emacs-lisp-mode-hook 'my-tab-fix)
 
 (add-hook 'php-mode-hook 'turn-on-eldoc-mode)
-(add-hook 'php-mode-hook 'projectile-mode)
+;(add-hook 'php-mode-hook 'projectile-mode)
+
+(projectile-global-mode)
+(setq projectile-enable-caching t)
+(setq projectile-completion-system 'grizzl)
+
 (define-key evil-normal-state-map (kbd "C-p") 'fiplr-find-file)
+
+(add-hook 'grizzl-mode-hook (lambda ()
+  (define-key *grizzl-keymap* (kbd "C-k") 'grizzl-set-selection-1)))
 
 ;; Configure evil-leader
 (evil-leader/set-leader ",")
