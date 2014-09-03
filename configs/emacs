@@ -1,0 +1,76 @@
+;; Use Marmalade repo and MELPA because otherwise you have essentially
+;; no packages.
+(load "package")
+(package-initialize)
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+
+(setq package-archive-enable-alist '(("melpa" deft magit)))
+
+;; Obviously.
+(global-evil-leader-mode)
+(evil-mode 1)
+
+(add-to-list 'load-path "~/.emacs.d/")
+(require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories "~/.emacs.d//ac-dict")
+(ac-config-default)
+
+(require 'evil-surround)
+(global-evil-surround-mode 1)
+
+(defun find-tag-no-prompt ()
+  "Jump to the tag at point without prompting."
+  (interactive)
+  (find-tag (find-tag-default)))
+(global-set-key (kbd "C-]") 'find-tag-no-prompt)
+  
+
+(defun switch-to-previous-buffer ()
+  "Switch to previously open buffer.
+Repeated invocations toggle between the two most recently open buffers."
+  (interactive)
+  (switch-to-buffer (other-buffer (current-buffer) 1)))
+
+;; Configure evil-leader
+(evil-leader/set-leader ",")
+(evil-leader/set-key
+  "." 'switch-to-previous-buffer
+  "b" 'helm-buffers-list)
+
+(global-linum-mode t)
+(setq linum-format "%4d ")
+(load-theme 'xoria256 t)
+
+;; (defun indent-or-expand (arg)
+;;   "Either indent according to mode, or expand previous word."
+;;   (interactive "*P")
+;;   (if (and
+;;        (or (bobp) (= ?w (char-syntax (char-before))))
+;;        (or (eobp) (not (= ?w (char-syntax (char-after))))))
+;;       (dabbrev-expand arg)
+;;     (indent-according-to-mode)))
+;; (defun my-tab-fix ()
+;;   (local-set-key (kbd "TAB") 'indent-or-expand))
+;; 
+;; (add-hook 'php-mode-hook 'my-tab-fix)
+;; (add-hook 'emacs-lisp-mode-hook 'my-tab-fix)
+
+(add-hook 'php-mode-hook 'turn-on-eldoc-mode)
+(add-hook 'php-mode-hook 'projectile-mode)
+(define-key evil-normal-state-map (kbd "C-p") 'fiplr-find-file)
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes (quote ("8b30636c9a903a9fa38c7dcf779da0724a37959967b6e4c714fdc3b3fe0b8653" "4907d08a09cd6e987bb0eec7ed6cbc56fc1318b1d965d7dad176c9590aa7a7a0" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" default))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
