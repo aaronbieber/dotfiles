@@ -7,6 +7,8 @@
                      evil-surround
                      evil-indent-textobject
                      fiplr
+                     powerline
+                     powerline-evil
                      php-mode
                      php-completion
                      php-extras
@@ -37,20 +39,27 @@
 (add-to-list 'load-path "~/.emacs.d")
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
+(require 'cl)
+
 (require 'auto-complete-config)
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
 
-(require 'cl)
+(require 'powerline)
+(require 'powerline-evil)
+(powerline-evil-vim-color-theme)
+
+(load-theme 'xoria256 t)
 
 (global-evil-leader-mode)
 (evil-mode 1)
+(setq evil-want-C-u-scroll t)
+(setq evil-want-C-i-jump t)
+(load "~/.emacs.d/evil-rebellion/evil-magit-rebellion.el")
 
 (require 'evil-surround)
 
 (ac-config-default)
 (global-evil-surround-mode 1)
-
-(load-theme 'xoria256 t)
 
 ; Don't actually use VC, because it slows down loading.
 (eval-after-load "vc" '(setq vc-handled-backends nil))
@@ -100,12 +109,25 @@ Repeated invocations toggle between the two most recently open buffers."
   (define-key *grizzl-keymap* (kbd "C-k") 'grizzl-set-selection+1)
 ))
 
+; Get evil key bindings in magit modes.
+(evil-add-hjkl-bindings magit-branch-manager-mode-map 'emacs
+  "K" 'magit-discard-item
+  "L" 'magit-key-mode-popup-logging)
+(evil-add-hjkl-bindings magit-status-mode-map 'emacs
+  "K" 'magit-discard-item
+  "l" 'magit-key-mode-popup-logging
+  "h" 'magit-toggle-diff-refine-hunk)
+(evil-add-hjkl-bindings magit-log-mode-map 'emacs)
+(evil-add-hjkl-bindings magit-commit-mode-map 'emacs)
+
 ;; Configure evil-leader
 (evil-leader/set-leader ",")
 (evil-leader/set-key
   "." 'switch-to-previous-buffer
   "b" 'helm-buffers-list
-  "w" 'ido-jump-to-window)
+  "w" 'ido-jump-to-window
+  "g" 'magit-status
+  "x" 'execute-extended-command)
 
 ;; Set up relative line numbering to mimic `:set number relativenumber`
 (global-linum-mode t)
@@ -165,6 +187,23 @@ Repeated invocations toggle between the two most recently open buffers."
                                          nil))
                                   (window-list))))
       (select-window (car window-of-buffer)))))
+
+(defun minibuffer-keyboard-quit ()
+  "Abort recursive edit.
+In Delete Selection mode, if the mark is active, just deactivate it;
+then it takes a second \\[keyboard-quit] to abort the minibuffer."
+  (interactive)
+  (if (and delete-selection-mode transient-mark-mode mark-active)
+      (setq deactivate-mark  t)
+    (when (get-buffer "*Completions*") (delete-windows-on "*Completions*"))
+    (abort-recursive-edit)))
+(define-key evil-normal-state-map [escape] 'keyboard-quit)
+(define-key evil-visual-state-map [escape] 'keyboard-quit)
+(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
