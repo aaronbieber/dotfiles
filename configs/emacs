@@ -12,7 +12,6 @@
                      php-mode
                      php-completion
                      php-extras
-                     projectile
                      zenburn-theme
                      etags-select
                      helm))
@@ -50,22 +49,30 @@
 
 (load-theme 'xoria256 t)
 
+; Use evil leader keys everywhere.
 (global-evil-leader-mode)
+; This seems to allow helm-buffers-list to work right away.
+(helm-mode)
+; Always use evil mode.
 (evil-mode 1)
 (setq evil-want-C-u-scroll t)
 (setq evil-want-C-i-jump t)
+; Load additional custom evil key mappings for magit modes.
 (load "~/.emacs.d/evil-rebellion/evil-magit-rebellion.el")
 
+; Use evil surround, of course.
 (require 'evil-surround)
 
+; Use default auto-completion configuration.
 (ac-config-default)
+; Use evil surround mode in all buffers.
 (global-evil-surround-mode 1)
 
 ; Don't actually use VC, because it slows down loading.
 (eval-after-load "vc" '(setq vc-handled-backends nil))
 ; Follow symlinks to version-controlled files without argument. Just do it.
 (setq vc-follow-symlinks t)
-
+; Use spaces instead of tabs.
 (setq-default indent-tabs-mode nil)
 
 (defun find-tag-no-prompt ()
@@ -94,12 +101,8 @@ Repeated invocations toggle between the two most recently open buffers."
 ;; (add-hook 'php-mode-hook 'my-tab-fix)
 ;; (add-hook 'emacs-lisp-mode-hook 'my-tab-fix)
 
+; Eldoc displays function signatures in the minibuffer. Awesome.
 (add-hook 'php-mode-hook 'turn-on-eldoc-mode)
-;(add-hook 'php-mode-hook 'projectile-mode)
-
-(projectile-global-mode)
-(setq projectile-enable-caching t)
-(setq projectile-completion-system 'grizzl)
 
 (define-key evil-normal-state-map (kbd "C-p") 'fiplr-find-file)
 (define-key evil-normal-state-map (kbd "-") 'helm-find-files)
@@ -128,6 +131,7 @@ Repeated invocations toggle between the two most recently open buffers."
   "w" 'ido-jump-to-window
   "g" 'magit-status
   "x" 'execute-extended-command)
+(define-key evil-normal-state-map (kbd "-") 'helm-find-files)
 
 ;; Set up relative line numbering to mimic `:set number relativenumber`
 (global-linum-mode t)
@@ -175,13 +179,13 @@ Repeated invocations toggle between the two most recently open buffers."
                      (cons (cadr l) (cons (car l) (cddr l)))
                    l)))
          ;; Swaps the current buffer name with the next one along.
-         (visible-buffers (funcall swap (mapcar '(lambda (window) (buffer-name (window-buffer window))) (window-list))))
+         (visible-buffers (funcall swap (mapcar #'(lambda (window) (buffer-name (window-buffer window))) (window-list))))
          (buffer-name (ido-completing-read "Window: " visible-buffers))
          window-of-buffer)
     (if (not (member buffer-name visible-buffers))
         (error "'%s' does not have a visible window" buffer-name)
       (setq window-of-buffer
-                (delq nil (mapcar '(lambda (window)
+                (delq nil (mapcar #'(lambda (window)
                                        (if (equal buffer-name (buffer-name (window-buffer window)))
                                            window
                                          nil))
