@@ -50,12 +50,14 @@
 (ac-config-default)
 (global-evil-surround-mode 1)
 
-(global-linum-mode t)
-(setq linum-format "%4d ")
 (load-theme 'xoria256 t)
 
+; Don't actually use VC, because it slows down loading.
 (eval-after-load "vc" '(setq vc-handled-backends nil))
+; Follow symlinks to version-controlled files without argument. Just do it.
 (setq vc-follow-symlinks t)
+
+(setq-default indent-tabs-mode nil)
 
 (defun find-tag-no-prompt ()
   "Jump to the tag at point without prompting."
@@ -91,15 +93,78 @@ Repeated invocations toggle between the two most recently open buffers."
 (setq projectile-completion-system 'grizzl)
 
 (define-key evil-normal-state-map (kbd "C-p") 'fiplr-find-file)
+(define-key evil-normal-state-map (kbd "-") 'helm-find-files)
 
 (add-hook 'grizzl-mode-hook (lambda ()
-  (define-key *grizzl-keymap* (kbd "C-k") 'grizzl-set-selection-1)))
+  (define-key *grizzl-keymap* (kbd "C-j") 'grizzl-set-selection-1)
+  (define-key *grizzl-keymap* (kbd "C-k") 'grizzl-set-selection+1)
+))
 
 ;; Configure evil-leader
 (evil-leader/set-leader ",")
 (evil-leader/set-key
   "." 'switch-to-previous-buffer
-  "b" 'helm-buffers-list)
+  "b" 'helm-buffers-list
+  "w" 'ido-jump-to-window)
+
+;; Set up relative line numbering to mimic `:set number relativenumber`
+(global-linum-mode t)
+(add-hook 'linum-before-numbering-hook 'my-linum-get-format-string)
+
+(show-paren-mode 1)
+(setq show-paren-delay 0)
+
+(defun my-linum-get-format-string ()
+  (let* ((width (1+ (length (number-to-string
+                             (count-lines (point-min) (point-max))))))
+         (format (concat "%" (number-to-string width) "d ")))
+    (setq my-linum-format-string format)))
+
+(defvar my-linum-current-line-number 0)
+
+(setq linum-format 'my-linum-relative-line-numbers)
+
+(defun my-linum-relative-line-numbers (line-number)
+  (let* ( (offset (abs (- line-number my-linum-current-line-number)))
+          (linum-display-value (if (= 0 offset) 
+				   my-linum-current-line-number
+				   offset))
+        )
+    (propertize (format my-linum-format-string linum-display-value) 'face 'linum)))
+
+(defadvice linum-update (around my-linum-update)
+  (let ((my-linum-current-line-number (line-number-at-pos)))
+    ad-do-it))
+(ad-activate 'linum-update)
+
+(c-add-style
+  "wayfair"
+  '((c-basic-offset . 2)
+   )
+)
+(add-hook 'php-mode-hook (lambda () (c-set-style "wayfair")))
+
+;; This command is AMAZING. I recommend mapping it to `C-x v' or `C-x w'
+;; depending on which is easier on your keyboard.
+(defun ido-jump-to-window ()
+  (interactive)
+  (let* ((swap (lambda (l)
+                 (if (cdr l)
+                     (cons (cadr l) (cons (car l) (cddr l)))
+                   l)))
+         ;; Swaps the current buffer name with the next one along.
+         (visible-buffers (funcall swap (mapcar '(lambda (window) (buffer-name (window-buffer window))) (window-list))))
+         (buffer-name (ido-completing-read "Window: " visible-buffers))
+         window-of-buffer)
+    (if (not (member buffer-name visible-buffers))
+        (error "'%s' does not have a visible window" buffer-name)
+      (setq window-of-buffer
+                (delq nil (mapcar '(lambda (window)
+                                       (if (equal buffer-name (buffer-name (window-buffer window)))
+                                           window
+                                         nil))
+                                  (window-list))))
+      (select-window (car window-of-buffer)))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
