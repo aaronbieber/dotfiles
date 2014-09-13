@@ -1,5 +1,9 @@
 ;-*-Emacs-Lisp-*-
 
+;;; Commentary:
+
+;;; Code:
+
 ; list the packages you want
 (setq package-list '(evil
                      evil-leader
@@ -23,7 +27,7 @@
                          ("gnu" . "http://elpa.gnu.org/packages/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.milkbox.net/packages/")))
-(setq package-archive-enable-alist '(("melpa" deft magit)))
+(setq package-archive-enable-alist '(("melpa" deft magit flycheck)))
 
 ; activate all the packages (in particular autoloads)
 (package-initialize)
@@ -41,15 +45,22 @@
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
 (require 'cl)
-
-(require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
-
 (require 'powerline)
 (require 'powerline-evil)
+(require 'evil-surround)
+
+; Auto-complete, with PHP dictionary.
+(require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
+(ac-config-default)
+
 (powerline-evil-vim-color-theme)
 
 (load-theme 'xoria256 t)
+
+(add-hook 'after-init-hook #'global-flycheck-mode)
+(setq-default flycheck-disabled-checkers '(php-phpmd))
+(setq-default flycheck-phpcs-standard "CSNStores")
 
 ; Settings for evil-mode.
 (setq evil-want-C-u-scroll t)
@@ -65,11 +76,6 @@
 ; Load additional custom evil key mappings for magit modes.
 (load "~/.emacs.d/evil-rebellion/evil-magit-rebellion.el")
 
-; Use evil surround, of course.
-(require 'evil-surround)
-
-; Use default auto-completion configuration.
-(ac-config-default)
 ; Use evil surround mode in all buffers.
 (global-evil-surround-mode 1)
 
@@ -82,11 +88,11 @@
 ; Don't warn me when files are big. It's fine.
 (setq large-file-warning-threshold nil)
 
-(defun find-tag-no-prompt ()
-  "Jump to the tag at point without prompting."
-  (interactive)
-  (find-tag (find-tag-default)))
-(global-set-key (kbd "C-]") 'find-tag-no-prompt)
+;(defun find-tag-no-prompt ()
+;  "Jump to the tag at point without prompting."
+;  (interactive)
+;  (find-tag (find-tag-default)))
+;(global-set-key (kbd "C-]") 'find-tag-tag-no-prompt)
 
 (defun switch-to-previous-buffer ()
   "Switch to previously open buffer.
@@ -109,15 +115,20 @@ Repeated invocations toggle between the two most recently open buffers."
 ;; (add-hook 'emacs-lisp-mode-hook 'my-tab-fix)
 
 ; Eldoc displays function signatures in the minibuffer. Awesome.
-(add-hook 'php-mode-hook 'turn-on-eldoc-mode)
+
+(add-hook 'gtags-select-mode-hook
+          (lambda ()
+              (define-key evil-normal-state-local-map (kbd "RET") 'gtags-select-tag)
+              (define-key evil-normal-state-local-map (kbd "q") 'kill-buffer-and-window)
+              ))
 
 (define-key evil-normal-state-map (kbd "C-p") 'fiplr-find-file)
 (define-key evil-normal-state-map (kbd "-") 'helm-find-files)
+(define-key evil-normal-state-map (kbd "C-]") 'gtags-find-tag-from-here)
 
 (add-hook 'grizzl-mode-hook (lambda ()
-  (define-key *grizzl-keymap* (kbd "C-j") 'grizzl-set-selection-1)
-  (define-key *grizzl-keymap* (kbd "C-k") 'grizzl-set-selection+1)
-))
+                              (define-key *grizzl-keymap* (kbd "C-j") 'grizzl-set-selection-1)
+                              (define-key *grizzl-keymap* (kbd "C-k") 'grizzl-set-selection+1)))
 
 ; Get evil key bindings in magit modes.
 (evil-add-hjkl-bindings magit-branch-manager-mode-map 'emacs
@@ -148,9 +159,10 @@ Repeated invocations toggle between the two most recently open buffers."
 (show-paren-mode 1)
 (setq show-paren-delay 0)
 
+; Stuff for line numbers --------------------------------------------------------
 (defun my-linum-get-format-string ()
-  (let* ((width (1+ (length (number-to-string
-                             (count-lines (point-min) (point-max))))))
+  (let* ((width (max 3 (1+ (length (number-to-string
+                             (count-lines (point-min) (point-max)))))))
          (format (concat "%" (number-to-string width) "d ")))
     (setq my-linum-format-string format)))
 
@@ -171,12 +183,15 @@ Repeated invocations toggle between the two most recently open buffers."
     ad-do-it))
 (ad-activate 'linum-update)
 
+; Configure things for PHP usage ------------------------------------------------
 (c-add-style
   "wayfair"
-  '((c-basic-offset . 2)
-   )
-)
-(add-hook 'php-mode-hook (lambda () (c-set-style "wayfair")))
+  '((c-basic-offset . 2)))
+(add-hook 'php-mode-hook (lambda ()
+                           (require 'gtags)
+                           (gtags-mode t)
+                           (c-set-style "wayfair")
+                           (eldoc-mode)))
 
 (defun find-functions ()
   (save-excursion
