@@ -4,7 +4,7 @@
 
 ;;; Code:
 
-; list the packages you want
+; List the packages you want.
 (setq package-list '(evil
                      evil-leader
                      evil-jumper
@@ -12,6 +12,7 @@
                      evil-indent-textobject
                      fiplr
                      flycheck
+                     helm
                      ido-vertical-mode
                      magit
                      powerline
@@ -19,25 +20,24 @@
                      php-mode
                      php-completion
                      php-extras
-                     zenburn-theme
-                     etags-select
-                     helm))
+                     yasnippet
+                     zenburn-theme))
 
-; list the repositories containing them
+; List the repositories containing them.
 (setq package-archives '(("elpa" . "http://tromey.com/elpa/")
                          ("gnu" . "http://elpa.gnu.org/packages/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.milkbox.net/packages/")))
 (setq package-archive-enable-alist '(("melpa" magit flycheck)))
 
-; activate all the packages (in particular autoloads)
+; Activate all the packages (in particular autoloads).
 (package-initialize)
 
-; fetch the list of packages available
+; Fetch the list of packages available.
 (unless (file-exists-p package-user-dir)
   (package-refresh-contents))
 
-; install the missing packages
+; Install the missing packages.
 (dolist (package package-list)
   (unless (package-installed-p package)
     (package-install package)))
@@ -76,6 +76,22 @@
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (setq-default flycheck-disabled-checkers '(php-phpmd))
 (setq-default flycheck-phpcs-standard "CSNStores")
+
+; Get evil key bindings in magit modes.
+(evil-add-hjkl-bindings magit-branch-manager-mode-map 'emacs
+  "K" 'magit-discard-item
+  "L" 'magit-key-mode-popup-logging)
+(evil-add-hjkl-bindings magit-status-mode-map 'emacs
+  (kbd "O") 'magit-jump-to-unstaged
+  "K" 'magit-discard-item
+  "l" 'magit-key-mode-popup-logging
+  "h" 'magit-toggle-diff-refine-hunk)
+(evil-add-hjkl-bindings magit-log-mode-map 'emacs)
+(evil-add-hjkl-bindings magit-commit-mode-map 'emacs)
+
+(add-hook 'magit-status-mode-hook 
+          (lambda () 
+            (define-key magit-status-mode-map (kbd "O") 'magit-jump-to-unstaged)))
 
 ; Settings for evil-mode.
 (setq evil-want-C-u-scroll t)
@@ -133,9 +149,9 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (add-hook 'gtags-select-mode-hook
           (lambda ()
-              (define-key evil-normal-state-local-map (kbd "RET") 'gtags-select-tag)
-              (define-key evil-normal-state-local-map (kbd "q") 'kill-buffer-and-window)
-              ))
+            (define-key evil-normal-state-local-map (kbd "RET") 'gtags-select-tag)
+            (define-key evil-normal-state-local-map (kbd "q") 'kill-buffer-and-window)
+            ))
 
 (define-key evil-normal-state-map (kbd "C-p") 'fiplr-find-file)
 (define-key evil-normal-state-map (kbd "-") 'helm-find-files)
@@ -144,17 +160,6 @@ Repeated invocations toggle between the two most recently open buffers."
 (add-hook 'grizzl-mode-hook (lambda ()
                               (define-key *grizzl-keymap* (kbd "C-j") 'grizzl-set-selection-1)
                               (define-key *grizzl-keymap* (kbd "C-k") 'grizzl-set-selection+1)))
-
-; Get evil key bindings in magit modes.
-(evil-add-hjkl-bindings magit-branch-manager-mode-map 'emacs
-  "K" 'magit-discard-item
-  "L" 'magit-key-mode-popup-logging)
-(evil-add-hjkl-bindings magit-status-mode-map 'emacs
-  "K" 'magit-discard-item
-  "l" 'magit-key-mode-popup-logging
-  "h" 'magit-toggle-diff-refine-hunk)
-(evil-add-hjkl-bindings magit-log-mode-map 'emacs)
-(evil-add-hjkl-bindings magit-commit-mode-map 'emacs)
 
 ;; Configure evil-leader
 (evil-leader/set-leader ",")
