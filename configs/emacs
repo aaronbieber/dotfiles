@@ -7,6 +7,7 @@
                      evil-surround
                      evil-indent-textobject
                      fiplr
+                     ido-vertical-mode
                      magit
                      powerline
                      powerline-evil
@@ -59,6 +60,8 @@
 (global-evil-leader-mode)
 ; This seems to allow helm-buffers-list to work right away.
 (helm-mode)
+; This is helpful for things like function and filenames.
+(ido-vertical-mode)
 ; Load additional custom evil key mappings for magit modes.
 (load "~/.emacs.d/evil-rebellion/evil-magit-rebellion.el")
 
@@ -132,8 +135,9 @@ Repeated invocations toggle between the two most recently open buffers."
 (evil-leader/set-key
   "." 'switch-to-previous-buffer
   "b" 'helm-buffers-list
-  "w" 'ido-jump-to-window
+  "f" 'jump-to-function
   "g" 'magit-status
+  "w" 'ido-jump-to-window
   "x" 'execute-extended-command)
 (define-key evil-normal-state-map (kbd "-") 'helm-find-files)
 
@@ -174,23 +178,29 @@ Repeated invocations toggle between the two most recently open buffers."
 )
 (add-hook 'php-mode-hook (lambda () (c-set-style "wayfair")))
 
-
-
 (defun find-functions ()
-  (interactive)
   (save-excursion
     (goto-char (point-min))
     (let (res)
       (save-match-data
-        (while (re-search-forward  "\\(public \\|private \\|static \\)*?function \\([a-z_]+\\)" nil t)
-          (let* ((fn-name (save-match-data (match-string-no-properties 2))))
+        (while (re-search-forward  "^ *\\(public \\|private \\|static \\)*?function \\([^{]+\\)" nil t)
+          (let* ((fn-name (save-match-data (match-string-no-properties 2)))
+                 (fn-location (save-match-data (match-beginning 0))))
             (setq res
                   (append res
-                          (list fn-name)))
-            (message fn-name)
-            )))
+                          (list `(,fn-name . ,fn-location)))))))
       res)))
 
+(defun jump-to-function ()
+  (interactive)
+  (let* ((search-results (find-functions))
+         (function-names (mapcar #'(lambda (search-result) (car search-result)) search-results))
+         (selected-function (ido-completing-read "Function: " function-names)))
+    (goto-char (car (delq nil (mapcar #'(lambda (search-result) 
+                                     (if (equal selected-function (car search-result))
+                                         (cdr search-result)
+                                       nil) )
+                                 search-results))))))
 
 ;; This command is AMAZING. I recommend mapping it to `C-x v' or `C-x w'
 ;; depending on which is easier on your keyboard.
