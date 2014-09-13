@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # Path to your oh-my-zsh configuration.
 ZSH=$HOME/.oh-my-zsh
 
@@ -43,7 +45,7 @@ setopt listtypes      # When listing files that are possible completions,
 setopt nolistbeep     # No bell on ambiguous completion!!
 
 # I like my slow locomotive.
-unalias sl
+unalias sl > /dev/null 2>&1
 
 # Adjust widget behaviors. ####################################################
 # While selecting from menu completion, pressing enter accepts the selection
