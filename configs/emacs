@@ -7,6 +7,7 @@
                      evil-surround
                      evil-indent-textobject
                      fiplr
+                     magit
                      powerline
                      powerline-evil
                      php-mode
@@ -49,14 +50,15 @@
 
 (load-theme 'xoria256 t)
 
+; Settings for evil-mode.
+(setq evil-want-C-u-scroll t)
+(setq evil-want-C-i-jump t)
+; Always use evil mode.
+(evil-mode 1)
 ; Use evil leader keys everywhere.
 (global-evil-leader-mode)
 ; This seems to allow helm-buffers-list to work right away.
 (helm-mode)
-; Always use evil mode.
-(evil-mode 1)
-(setq evil-want-C-u-scroll t)
-(setq evil-want-C-i-jump t)
 ; Load additional custom evil key mappings for magit modes.
 (load "~/.emacs.d/evil-rebellion/evil-magit-rebellion.el")
 
@@ -68,12 +70,14 @@
 ; Use evil surround mode in all buffers.
 (global-evil-surround-mode 1)
 
+; Use spaces instead of tabs.
+(setq-default indent-tabs-mode nil)
 ; Don't actually use VC, because it slows down loading.
 (eval-after-load "vc" '(setq vc-handled-backends nil))
 ; Follow symlinks to version-controlled files without argument. Just do it.
 (setq vc-follow-symlinks t)
-; Use spaces instead of tabs.
-(setq-default indent-tabs-mode nil)
+; Don't warn me when files are big. It's fine.
+(setq large-file-warning-threshold nil)
 
 (defun find-tag-no-prompt ()
   "Jump to the tag at point without prompting."
@@ -170,6 +174,24 @@ Repeated invocations toggle between the two most recently open buffers."
 )
 (add-hook 'php-mode-hook (lambda () (c-set-style "wayfair")))
 
+
+
+(defun find-functions ()
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (let (res)
+      (save-match-data
+        (while (re-search-forward  "\\(public \\|private \\|static \\)*?function \\([a-z_]+\\)" nil t)
+          (let* ((fn-name (save-match-data (match-string-no-properties 2))))
+            (setq res
+                  (append res
+                          (list fn-name)))
+            (message fn-name)
+            )))
+      res)))
+
+
 ;; This command is AMAZING. I recommend mapping it to `C-x v' or `C-x w'
 ;; depending on which is easier on your keyboard.
 (defun ido-jump-to-window ()
@@ -221,3 +243,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+; Visit the tags table in "./TAGS" if it exists.
+(if (file-exists-p "./TAGS")
+    (visit-tags-table "./TAGS"))
