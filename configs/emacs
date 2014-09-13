@@ -11,6 +11,7 @@
                      evil-surround
                      evil-indent-textobject
                      fiplr
+                     flycheck
                      ido-vertical-mode
                      magit
                      powerline
@@ -27,7 +28,7 @@
                          ("gnu" . "http://elpa.gnu.org/packages/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.milkbox.net/packages/")))
-(setq package-archive-enable-alist '(("melpa" deft magit flycheck)))
+(setq package-archive-enable-alist '(("melpa" magit flycheck)))
 
 ; activate all the packages (in particular autoloads)
 (package-initialize)
