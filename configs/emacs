@@ -50,12 +50,26 @@
 (require 'powerline-evil)
 (require 'evil-surround)
 
+; YAsnippet
+(require 'yasnippet)
+(setq-default yas-snippet-dirs '("~/.emacs.d/snippets"
+                                 "~/.emacs.d/remote-snippets"))
+(yas-global-mode 1)
+(define-key yas-minor-mode-map (kbd "<tab>") nil)
+(define-key yas-minor-mode-map (kbd "TAB") nil)
+(define-key yas-minor-mode-map (kbd "C-l") 'yas-expand)
+
 ; Auto-complete, with PHP dictionary.
 (require 'auto-complete-config)
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
 (ac-config-default)
+(ac-set-trigger-key "TAB")
+(ac-set-trigger-key "<tab>")
+(setq ac-source-yasnippet nil)
 
 (powerline-evil-vim-color-theme)
+
+;(yas-global-mode 1)
 
 (load-theme 'xoria256 t)
 
@@ -262,7 +276,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes (quote ("8b30636c9a903a9fa38c7dcf779da0724a37959967b6e4c714fdc3b3fe0b8653" "4907d08a09cd6e987bb0eec7ed6cbc56fc1318b1d965d7dad176c9590aa7a7a0" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" default))))
+ '(custom-safe-themes (quote ("8b30636c9a903a9fa38c7dcf779da0724a37959967b6e4c714fdc3b3fe0b8653" "4907d08a09cd6e987bb0eec7ed6cbc56fc1318b1d965d7dad176c9590aa7a7a0" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" default)))
+ '(safe-local-variable-values (quote ((require-final-newline)))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
