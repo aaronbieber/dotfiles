@@ -1,0 +1,8 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: variable
+# key: var
+# --
+/**
+ * @var ${3:bool} ${4:Description}
+ */
+${1:$$(yas-choose-value '("public " "private " "protected "))}\$${2:variable}$0;
