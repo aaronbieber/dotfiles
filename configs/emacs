@@ -158,8 +158,9 @@ Repeated invocations toggle between the two most recently open buffers."
 (evil-leader/set-key
   "." 'switch-to-previous-buffer
   "b" 'helm-buffers-list
-  "f" 'jump-to-function
+  "f" 'jump-to-php-function
   "g" 'magit-status
+  "r" 'font-lock-fontify-buffer
   "w" 'ido-jump-to-window
   "x" 'execute-extended-command)
 (define-key evil-normal-state-map (kbd "-") 'helm-find-files)
@@ -206,7 +207,7 @@ Repeated invocations toggle between the two most recently open buffers."
                            ; Eldoc displays function signatures in the minibuffer.
                            (eldoc-mode)))
 
-(defun find-functions-in-current-buffer ()
+(defun find-php-functions-in-current-buffer ()
   "Find lines that appear to be PHP functions in the buffer.
 
 This function performs a regexp forward search from the top
@@ -228,9 +229,16 @@ is the buffer location at which the function was found."
                           (list `(,fn-name . ,fn-location)))))))
       res)))
 
-(defun jump-to-function ()
+(defun jump-to-php-function ()
+  "Jump to the selected function in the current buffer.
+
+This function will display a list with completing read
+of the PHP function declarations in the current buffer,
+found by find-php-functions-in-current-buffer. Selecting
+a function name from the list will set point to the line
+where that function is defined."
   (interactive)
-  (let* ((search-results (find-functions-in-current-buffer))
+  (let* ((search-results (find-php-functions-in-current-buffer))
          (function-names (mapcar #'(lambda (search-result) (car search-result)) search-results))
          (selected-function (if (> (length function-names) 0)
                                 (completing-read "Function: " function-names)
