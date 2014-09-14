@@ -1,8 +1,15 @@
 ;-*-Emacs-Lisp-*-
 
 ;;; Commentary:
-
+;;
+;; I have nothing substantial to say here.
+;;
 ;;; Code:
+
+; Avoid compiler warnings about assigning free variables.
+(defvar package-list)
+(defvar package-archives)
+(defvar package-archive-enable-alist)
 
 ; List the packages you want.
 (setq package-list '(evil
@@ -45,7 +52,9 @@
 (add-to-list 'load-path "~/.emacs.d")
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
-(require 'cl)
+(menu-bar-mode -1)
+
+;(require 'cl)
 (require 'powerline)
 (require 'powerline-evil)
 (require 'evil-surround)
@@ -58,6 +67,11 @@
 (define-key yas-minor-mode-map (kbd "<tab>") nil)
 (define-key yas-minor-mode-map (kbd "TAB") nil)
 (define-key yas-minor-mode-map (kbd "C-l") 'yas-expand)
+
+(require 'dropdown-list)
+(setq yas-prompt-functions '(yas-completing-prompt
+                             yas-dropdown-prompt
+                             yas-ido-prompt))
 
 ; Auto-complete, with PHP dictionary.
 (require 'auto-complete-config)
@@ -204,13 +218,13 @@ Repeated invocations toggle between the two most recently open buffers."
 (ad-activate 'linum-update)
 
 ; Configure things for PHP usage ------------------------------------------------
-(c-add-style
-  "wayfair"
-  '((c-basic-offset . 2)))
 (add-hook 'php-mode-hook (lambda ()
+                           (c-add-style
+                            "wayfair"
+                            '((c-basic-offset . 2)))
+                           (c-set-style "wayfair")
                            (require 'gtags)
                            (gtags-mode t)
-                           (c-set-style "wayfair")
                            (eldoc-mode)))
 
 (defun find-functions ()
@@ -218,7 +232,7 @@ Repeated invocations toggle between the two most recently open buffers."
     (goto-char (point-min))
     (let (res)
       (save-match-data
-        (while (re-search-forward  "^ *\\(public \\|private \\|static \\)*?function \\([^{]+\\)" nil t)
+        (while (re-search-forward  "^ *\\(public \\|private \\|protected \\|static \\)*?function \\([^{]+\\)" nil t)
           (let* ((fn-name (save-match-data (match-string-no-properties 2)))
                  (fn-location (save-match-data (match-beginning 0))))
             (setq res
@@ -230,12 +244,16 @@ Repeated invocations toggle between the two most recently open buffers."
   (interactive)
   (let* ((search-results (find-functions))
          (function-names (mapcar #'(lambda (search-result) (car search-result)) search-results))
-         (selected-function (ido-completing-read "Function: " function-names)))
-    (goto-char (car (delq nil (mapcar #'(lambda (search-result) 
-                                     (if (equal selected-function (car search-result))
-                                         (cdr search-result)
-                                       nil) )
-                                 search-results))))))
+         (selected-function (if (> (length function-names) 0)
+                                (completing-read "Function: " function-names)
+                              nil)))
+    (if selected-function
+        (goto-char (car (delq nil (mapcar #'(lambda (search-result) 
+                                              (if (equal selected-function (car search-result))
+                                                  (cdr search-result)
+                                                nil) )
+                                          search-results))))
+      (message "%s" (propertize "No functions found." 'face '(:foreground "red"))))))
 
 ;; This command is AMAZING. I recommend mapping it to `C-x v' or `C-x w'
 ;; depending on which is easier on your keyboard.
@@ -281,7 +299,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes (quote ("8b30636c9a903a9fa38c7dcf779da0724a37959967b6e4c714fdc3b3fe0b8653" "4907d08a09cd6e987bb0eec7ed6cbc56fc1318b1d965d7dad176c9590aa7a7a0" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" default)))
+ '(custom-safe-themes (quote ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "8b30636c9a903a9fa38c7dcf779da0724a37959967b6e4c714fdc3b3fe0b8653" "4907d08a09cd6e987bb0eec7ed6cbc56fc1318b1d965d7dad176c9590aa7a7a0" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" default)))
  '(safe-local-variable-values (quote ((require-final-newline)))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -293,3 +311,6 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 ; Visit the tags table in "./TAGS" if it exists.
 (if (file-exists-p "./TAGS")
     (visit-tags-table "./TAGS"))
+
+(provide 'emacs)
+;;; emacs ends here
