@@ -133,33 +133,11 @@
 ; Don't warn me when files are big. It's fine.
 (setq large-file-warning-threshold nil)
 
-;(defun find-tag-no-prompt ()
-;  "Jump to the tag at point without prompting."
-;  (interactive)
-;  (find-tag (find-tag-default)))
-;(global-set-key (kbd "C-]") 'find-tag-tag-no-prompt)
-
 (defun switch-to-previous-buffer ()
   "Switch to previously open buffer.
 Repeated invocations toggle between the two most recently open buffers."
   (interactive)
   (switch-to-buffer (other-buffer (current-buffer) 1)))
-
-;; (defun indent-or-expand (arg)
-;;   "Either indent according to mode, or expand previous word."
-;;   (interactive "*P")
-;;   (if (and
-;;        (or (bobp) (= ?w (char-syntax (char-before))))
-;;        (or (eobp) (not (= ?w (char-syntax (char-after))))))
-;;       (dabbrev-expand arg)
-;;     (indent-according-to-mode)))
-;; (defun my-tab-fix ()
-;;   (local-set-key (kbd "TAB") 'indent-or-expand))
-;;
-;; (add-hook 'php-mode-hook 'my-tab-fix)
-;; (add-hook 'emacs-lisp-mode-hook 'my-tab-fix)
-
-; Eldoc displays function signatures in the minibuffer. Awesome.
 
 (add-hook 'gtags-select-mode-hook
           (lambda ()
@@ -225,9 +203,19 @@ Repeated invocations toggle between the two most recently open buffers."
                            (c-set-style "wayfair")
                            (require 'gtags)
                            (gtags-mode t)
+                           ; Eldoc displays function signatures in the minibuffer.
                            (eldoc-mode)))
 
-(defun find-functions ()
+(defun find-functions-in-current-buffer ()
+  "Find lines that appear to be PHP functions in the buffer.
+
+This function performs a regexp forward search from the top
+(point-min) of the buffer to the end, looking for lines that
+appear to be PHP function declarations.
+
+The return value of this function is a list of cons in which
+the car of each cons is the bare function name and the cdr
+is the buffer location at which the function was found."
   (save-excursion
     (goto-char (point-min))
     (let (res)
@@ -242,7 +230,7 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (defun jump-to-function ()
   (interactive)
-  (let* ((search-results (find-functions))
+  (let* ((search-results (find-functions-in-current-buffer))
          (function-names (mapcar #'(lambda (search-result) (car search-result)) search-results))
          (selected-function (if (> (length function-names) 0)
                                 (completing-read "Function: " function-names)
