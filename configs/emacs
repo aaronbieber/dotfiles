@@ -169,7 +169,7 @@ Repeated invocations toggle between the two most recently open buffers."
   "g" 'magit-status
   "r" 'font-lock-fontify-buffer
   "w" 'ido-jump-to-window
-  "x" 'execute-extended-command)
+  "x" 'helm-M-x)
 (define-key evil-normal-state-map (kbd "-") 'helm-find-files)
 
 ;; Set up relative line numbering to mimic `:set number relativenumber`
