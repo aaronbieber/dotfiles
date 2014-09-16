@@ -12,7 +12,8 @@
 (defvar package-archive-enable-alist)
 
 ; List the packages you want.
-(setq package-list '(evil
+(setq package-list '(ag
+                     evil
                      evil-leader
                      evil-jumper
                      evil-surround
@@ -68,10 +69,9 @@
 (define-key yas-minor-mode-map (kbd "TAB") nil)
 (define-key yas-minor-mode-map (kbd "C-l") 'yas-expand)
 
-(require 'dropdown-list)
 (setq yas-prompt-functions '(yas-completing-prompt
-                             yas-dropdown-prompt
-                             yas-ido-prompt))
+                             yas-ido-prompt
+                             yas-dropdown-prompt))
 
 ; Auto-complete, with PHP dictionary.
 (require 'auto-complete-config)
@@ -102,6 +102,10 @@
   "h" 'magit-toggle-diff-refine-hunk)
 (evil-add-hjkl-bindings magit-log-mode-map 'emacs)
 (evil-add-hjkl-bindings magit-commit-mode-map 'emacs)
+(evil-add-hjkl-bindings ag-mode-map 'normal
+  "n" 'evil-search-next
+  "N" 'evil-search-previous
+  "RET" 'compile-goto-error)
 
 (add-hook 'magit-status-mode-hook 
           (lambda () 
@@ -132,6 +136,8 @@
 (setq vc-follow-symlinks t)
 ; Don't warn me when files are big. It's fine.
 (setq large-file-warning-threshold nil)
+; Never "sensibly" split windows vertically.
+(setq split-width-threshold nil)
 
 (defun switch-to-previous-buffer ()
   "Switch to previously open buffer.
@@ -157,8 +163,9 @@ Repeated invocations toggle between the two most recently open buffers."
 (evil-leader/set-leader ",")
 (evil-leader/set-key
   "." 'switch-to-previous-buffer
+  "a" 'ag-project
   "b" 'helm-buffers-list
-  "f" 'jump-to-php-function
+  "f" 'helm-semantic-or-imenu
   "g" 'magit-status
   "r" 'font-lock-fontify-buffer
   "w" 'ido-jump-to-window
