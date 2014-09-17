@@ -6,12 +6,12 @@
 ;;
 ;;; Code:
 
-; Avoid compiler warnings about assigning free variables.
+;;; Avoid compiler warnings about assigning free variables.
 (defvar package-list)
 (defvar package-archives)
 (defvar package-archive-enable-alist)
 
-; List the packages you want.
+;;; List the packages you want.
 (setq package-list '(ag
                      evil
                      evil-leader
@@ -31,21 +31,21 @@
                      yasnippet
                      zenburn-theme))
 
-; List the repositories containing them.
+;;; List the repositories containing them.
 (setq package-archives '(("elpa" . "http://tromey.com/elpa/")
                          ("gnu" . "http://elpa.gnu.org/packages/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.milkbox.net/packages/")))
 (setq package-archive-enable-alist '(("melpa" magit flycheck)))
 
-; Activate all the packages (in particular autoloads).
+;;; Activate all the packages (in particular autoloads).
 (package-initialize)
 
-; Fetch the list of packages available.
+;;; Fetch the list of packages available.
 (unless (file-exists-p package-user-dir)
   (package-refresh-contents))
 
-; Install the missing packages.
+;;; Install the missing packages.
 (dolist (package package-list)
   (unless (package-installed-p package)
     (package-install package)))
@@ -54,13 +54,15 @@
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
 (menu-bar-mode -1)
+(show-paren-mode 1)
+(setq show-paren-delay 0)
 
 ;(require 'cl)
 (require 'powerline)
 (require 'powerline-evil)
 (require 'evil-surround)
 
-; YAsnippet
+;;; YAsnippet
 (require 'yasnippet)
 (setq-default yas-snippet-dirs '("~/.emacs.d/snippets"
                                  "~/.emacs.d/remote-snippets"))
@@ -73,7 +75,7 @@
                              yas-ido-prompt
                              yas-dropdown-prompt))
 
-; Auto-complete, with PHP dictionary.
+;;; Auto-complete, with PHP dictionary.
 (require 'auto-complete-config)
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
 (ac-config-default)
@@ -83,15 +85,13 @@
 
 (powerline-evil-vim-color-theme)
 
-;(yas-global-mode 1)
-
 (load-theme 'xoria256 t)
 
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (setq-default flycheck-disabled-checkers '(php-phpmd))
 (setq-default flycheck-phpcs-standard "CSNStores")
 
-; Get evil key bindings in magit modes.
+;;; Get evil key bindings in magit modes.
 (evil-add-hjkl-bindings magit-branch-manager-mode-map 'emacs
   "K" 'magit-discard-item
   "L" 'magit-key-mode-popup-logging)
@@ -111,32 +111,32 @@
           (lambda () 
             (define-key magit-status-mode-map (kbd "O") 'magit-jump-to-unstaged)))
 
-; Settings for evil-mode.
+;;; Settings for evil-mode.
 (setq evil-want-C-u-scroll t)
 (setq evil-want-C-i-jump t)
-; Always use evil mode.
+;;; Always use evil mode.
 (evil-mode 1)
-; Use evil leader keys everywhere.
+;;; Use evil leader keys everywhere.
 (global-evil-leader-mode)
-; This seems to allow helm-buffers-list to work right away.
+;;; This seems to allow helm-buffers-list to work right away.
 (helm-mode)
-; This is helpful for things like function and filenames.
+;;; This is helpful for things like function and filenames.
 (ido-vertical-mode)
-; Load additional custom evil key mappings for magit modes.
+;;; Load additional custom evil key mappings for magit modes.
 (load "~/.emacs.d/evil-rebellion/evil-magit-rebellion.el")
 
-; Use evil surround mode in all buffers.
+;;; Use evil surround mode in all buffers.
 (global-evil-surround-mode 1)
 
-; Use spaces instead of tabs.
+;;; Use spaces instead of tabs.
 (setq-default indent-tabs-mode nil)
-; Don't actually use VC, because it slows down loading.
+;;; Don't actually use VC, because it slows down loading.
 (eval-after-load "vc" '(setq vc-handled-backends nil))
-; Follow symlinks to version-controlled files without argument. Just do it.
+;;; Follow symlinks to version-controlled files without argument. Just do it.
 (setq vc-follow-symlinks t)
-; Don't warn me when files are big. It's fine.
+;;; Don't warn me when files are big. It's fine.
 (setq large-file-warning-threshold nil)
-; Never "sensibly" split windows vertically.
+;;; Never "sensibly" split windows vertically.
 (setq split-width-threshold nil)
 
 (defun switch-to-previous-buffer ()
@@ -159,7 +159,7 @@ Repeated invocations toggle between the two most recently open buffers."
                               (define-key *grizzl-keymap* (kbd "C-j") 'grizzl-set-selection-1)
                               (define-key *grizzl-keymap* (kbd "C-k") 'grizzl-set-selection+1)))
 
-;; Configure evil-leader
+;;; Configure evil-leader
 (evil-leader/set-leader ",")
 (evil-leader/set-key
   "." 'switch-to-previous-buffer
@@ -172,14 +172,11 @@ Repeated invocations toggle between the two most recently open buffers."
   "x" 'helm-M-x)
 (define-key evil-normal-state-map (kbd "-") 'helm-find-files)
 
-;; Set up relative line numbering to mimic `:set number relativenumber`
+;;; Set up relative line numbering to mimic `:set number relativenumber`.
 (global-linum-mode t)
 (add-hook 'linum-before-numbering-hook 'my-linum-get-format-string)
 
-(show-paren-mode 1)
-(setq show-paren-delay 0)
-
-; Stuff for line numbers --------------------------------------------------------
+;;; Stuff for line numbers.
 (defun my-linum-get-format-string ()
   (let* ((width (max 3 (1+ (length (number-to-string
                              (count-lines (point-min) (point-max)))))))
@@ -203,16 +200,26 @@ Repeated invocations toggle between the two most recently open buffers."
     ad-do-it))
 (ad-activate 'linum-update)
 
-; Configure things for PHP usage ------------------------------------------------
+;;; Configure things for PHP usage.
 (add-hook 'php-mode-hook (lambda ()
+                           ;; Create a custom style for PHP.
                            (c-add-style
-                            "wayfair"
+                            "sensible"
                             '((c-basic-offset . 2)))
-                           (c-set-style "wayfair")
+                           ;; Use that style.
+                           (c-set-style "sensible")
+                           ;; Use gtags because it's fast.
                            (require 'gtags)
                            (gtags-mode t)
-                           ; Eldoc displays function signatures in the minibuffer.
-                           (eldoc-mode)))
+                           ;; Eldoc displays function signatures in the minibuffer.
+                           (eldoc-mode)
+                           ;; 120 columns is quite enough.
+                           (set-fill-column 120)
+                           ;; Do comments the right way.
+                           (require 'newcomment)
+                           (setq comment-auto-fill-only-comments 1)
+                           (setq auto-fill-function 'do-auto-fill)
+                           (auto-fill-mode 1)))
 
 (defun find-php-functions-in-current-buffer ()
   "Find lines that appear to be PHP functions in the buffer.
@@ -258,8 +265,8 @@ where that function is defined."
                                           search-results))))
       (message "%s" (propertize "No functions found." 'face '(:foreground "red"))))))
 
-;; This command is AMAZING. I recommend mapping it to `C-x v' or `C-x w'
-;; depending on which is easier on your keyboard.
+;;; This command is AMAZING. I recommend mapping it to `C-x v' or `C-x w'
+;;; depending on which is easier on your keyboard.
 (defun ido-jump-to-window ()
   (interactive)
   (let* ((swap (lambda (l)
@@ -311,7 +318,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
  ;; If there is more than one, they won't work right.
  )
 
-; Visit the tags table in "./TAGS" if it exists.
+;; Visit the tags table in "./TAGS" if it exists.
 (if (file-exists-p "./TAGS")
     (visit-tags-table "./TAGS"))
 
