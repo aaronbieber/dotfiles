@@ -13,6 +13,7 @@
 
 ;;; List the packages you want.
 (setq package-list '(ag
+                     color-theme-sanityinc-tomorrow
                      evil
                      evil-leader
                      evil-jumper
@@ -30,6 +31,8 @@
                      php-mode
                      php-completion
                      php-extras
+                     twilight-bright-theme
+                     twilight-anti-bright-theme
                      yasnippet
                      zenburn-theme))
 
@@ -53,6 +56,7 @@
     (package-install package)))
 
 (add-to-list 'load-path "~/.emacs.d")
+(add-to-list 'load-path "~/.emacs.d/themes") ;; "Tomorrow" requires base code.
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
 (menu-bar-mode -1)
@@ -353,7 +357,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes (quote ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "8b30636c9a903a9fa38c7dcf779da0724a37959967b6e4c714fdc3b3fe0b8653" "4907d08a09cd6e987bb0eec7ed6cbc56fc1318b1d965d7dad176c9590aa7a7a0" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" default)))
+ '(custom-safe-themes (quote ("e6d83e70d2955e374e821e6785cd661ec363091edf56a463d0018dc49fbc92dd" "cea6d15a8333e0c78e1e15a0524000de69aac2afa7bb6cf9d043a2627327844e" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "cf08ae4c26cacce2eebff39d129ea0a21c9d7bf70ea9b945588c1c66392578d1" "5ee12d8250b0952deefc88814cf0672327d7ee70b16344372db9460e9a0e3ffc" "7f1263c969f04a8e58f9441f4ba4d7fb1302243355cb9faecb55aec878a06ee9" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "8b30636c9a903a9fa38c7dcf779da0724a37959967b6e4c714fdc3b3fe0b8653" "4907d08a09cd6e987bb0eec7ed6cbc56fc1318b1d965d7dad176c9590aa7a7a0" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" default)))
  '(safe-local-variable-values (quote ((require-final-newline)))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
