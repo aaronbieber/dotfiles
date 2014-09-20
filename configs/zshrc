@@ -63,18 +63,13 @@ if [ -d "$HOME/bin" ]; then
   PATH="$HOME/bin:$PATH"
 fi
 
-PATH="/usr/local/bin:$PATH"
-
-# Settings for todo.txt
-alias t="todo -d $HOME/.todo.cfg"
-export TODOTXT_DEFAULT_ACTION=ls
-
 # Initialize rbenv if it exists on this system and isn't yet in our path.
 # This prevents path duplication in tmux when a sub-shell runs this script 
 # again.
 if [ -d $HOME/.rbenv/bin ] && [[ ! "$PATH" =~ "rbenv" ]]; then
   export PATH="$HOME/.rbenv/bin:$PATH"
-  type rbenv >/dev/null 2>&1 && eval "$(rbenv init -)"
+  type rbenv >/dev/null 2>&1
+  [ "$?" = 0 ] && eval "$(rbenv init -)"
 fi
 
 function nicediff {
@@ -168,12 +163,18 @@ elif [ -h $SOCK ] && [ ! $SSH_AUTH_SOCK ]; then
   export SSH_AUTH_SOCK=$SOCK
 fi
 
-# Aliases.
+### Aliases.
+## Tmux:
 alias ta="tmux attach"
 alias tad="tmux attach -d"
 alias tl="tmux ls"
 alias urldecode='python -c "import sys, urllib as ul; print ul.unquote_plus(sys.argv[1])"'
-alias emacs="emacs -nw"
+## Emacs:
+alias e="emacs -nw"     # Preferred
+alias emacs="emacs -nw" # Failsafe
+## Todo:
+alias t="todo -d $HOME/.todo.cfg"
+export TODOTXT_DEFAULT_ACTION=ls
 
 if [ -f "$HOME/.zshrc_$MY_LOCATION" ]; then
   source "$HOME/.zshrc_$MY_LOCATION"
@@ -195,5 +196,19 @@ else
   # Non-OS X things.
   alias l="ls -alhF --group-directories-first --color=always"
 fi
+
+# Finally, remove duplicate PATH entries.
+typeset -a paths result
+paths=($path)
+
+while [[ ${#paths} -gt 0 ]]; do
+  p="${paths[1]}"
+  shift paths
+  [[ -z ${paths[(r)$p]} ]] && result+="$p"
+done
+
+clean_path=${(j+:+)result}
+export PATH
+export PATH=$clean_path
 
 # vim: set et ts=2 sw=2 tw=79 cc=+1 :
