@@ -20,6 +20,7 @@
                      evil-indent-textobject
                      fiplr
                      flycheck
+                     gtags
                      helm
                      ido-vertical-mode
                      magit
@@ -64,6 +65,7 @@
 (require 'powerline)
 (require 'powerline-evil)
 (require 'evil-surround)
+(require 'gtags)
 
 ;;; YAsnippet
 (require 'yasnippet)
@@ -110,8 +112,8 @@
   "N" 'evil-search-previous
   "RET" 'compile-goto-error)
 
-(add-hook 'magit-status-mode-hook 
-          (lambda () 
+(add-hook 'magit-status-mode-hook
+          (lambda ()
             (define-key magit-status-mode-map (kbd "O") 'magit-jump-to-unstaged)))
 
 ;;; Settings for evil-mode.
@@ -185,6 +187,7 @@ Repeated invocations toggle between the two most recently open buffers."
   "p"  'ag-project
   "r"  'font-lock-fontify-buffer
   "S"  'delete-trailing-whitespace
+  "t"  'gtags-reindex
   "w"  'ido-jump-to-window
   "x"  'helm-M-x)
 (define-key evil-normal-state-map (kbd "-") 'helm-find-files)
@@ -206,7 +209,7 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (defun my-linum-relative-line-numbers (line-number)
   (let* ( (offset (abs (- line-number my-linum-current-line-number)))
-          (linum-display-value (if (= 0 offset) 
+          (linum-display-value (if (= 0 offset)
 				   my-linum-current-line-number
 				   offset))
         )
@@ -237,33 +240,10 @@ Repeated invocations toggle between the two most recently open buffers."
   (auto-fill-mode 1)
   ;; Delete trailing whitespace on save.
   (add-to-list 'write-file-functions 'delete-trailing-whitespace)
-
-  ;; GNU Global (gtags) is very fast, but entering gtags-mode when there
-  ;; is no tags file causes elisp to abort mission, so only start it if
-  ;; it's there.
-  (if (file-exists-p "./GTAGS")
-      ((require 'gtags)
-       (gtags-mode t))))
+  ;; Use gtags mode.
+  (gtags-mode t))
 
 (add-hook 'php-mode-hook 'configure-php-mode)
-;                           ;; Create a custom style for PHP.
-;                           (c-add-style
-;                            "sensible"
-;                            '((c-basic-offset . 2)))
-;                           ;; Use that style.
-;                           (c-set-style "sensible")
-;                           ;; Use gtags because it's fast.
-;                           (require 'gtags)
-;                           (gtags-mode t)
-;                           ;; Eldoc displays function signatures in the minibuffer.
-;                           (eldoc-mode)
-;                           ;; 120 columns is quite enough.
-;                           (set-fill-column 120)
-;                           ;; Do comments the right way.
-;                           (require 'newcomment)
-;                           (setq comment-auto-fill-only-comments 1)
-;                           (setq auto-fill-function 'do-auto-fill)
-;                           (auto-fill-mode 1)))
 
 (defun find-php-functions-in-current-buffer ()
   "Find lines that appear to be PHP functions in the buffer.
@@ -302,7 +282,7 @@ where that function is defined."
                                 (completing-read "Function: " function-names)
                               nil)))
     (if selected-function
-        (goto-char (car (delq nil (mapcar #'(lambda (search-result) 
+        (goto-char (car (delq nil (mapcar #'(lambda (search-result)
                                               (if (equal selected-function (car search-result))
                                                   (cdr search-result)
                                                 nil) )
@@ -362,9 +342,40 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
  ;; If there is more than one, they won't work right.
  )
 
-;; Visit the tags table in "./TAGS" if it exists.
-;(if (file-exists-p "./TAGS")
-;    (visit-tags-table "./TAGS"))
+;;; Load up my copy of the fiplr-find-root stuff, which I use to process GTAGS.
+(autoload 'project-root "project-root")
+
+(defun gtags-reindex ()
+  "Kick off gtags reindexing.
+
+This function finds the root directory of the project by looking around for
+VCS marker files or directories and then runs gtags there, sending the
+output to a new buffer. All of the real work is done by 
+gtags-reindex-process."
+  (interactive)
+  (let* ((root-path (project-root))
+         (gtags-path (concat root-path "GTAGS")))
+    (if (file-exists-p gtags-path)
+        (gtags-reindex-process root-path)
+      (message "I have not found GTAGS."))))
+
+(defun gtags-reindex-process (path)
+  "Run gtags on the given path and show output in a new buffer."
+  (with-current-buffer (get-buffer-create "*Gtags*")
+    (display-buffer (current-buffer))
+    (widen)
+    (kill-all-local-variables)
+    (let ((inhibit-read-only t) (erase-buffer)))
+    (let ((cmd (concat "cd " (shell-quote-argument path) " && "
+                       "find . -type f -iname '*php' | "
+                       "gtags -v -f - &"))
+          (map (make-sparse-keymap)))
+      (shell-command cmd (current-buffer))
+      (set-keymap-parent map (current-local-map))
+      (define-key map "q" #'(lambda () (interactive) (kill-buffer (current-buffer))))
+      (use-local-map map)
+      (if (fboundp 'evil-normal-state)
+          (evil-normal-state)))))
 
 (provide 'emacs)
 ;;; emacs ends here
