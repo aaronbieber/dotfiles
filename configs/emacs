@@ -220,14 +220,19 @@ Repeated invocations toggle between the two most recently open buffers."
     ad-do-it))
 (ad-activate 'linum-update)
 
+;; Create a custom style that indents things like a normal human should.
+(c-add-style
+ "sensible"
+ '((c-basic-offset . 2)))
+
+(add-hook 'sh-mode-hook (lambda ()
+                          (setq sh-basic-offset 2)
+                          (setq sh-indentation 2)))
+
 ;;; Configure things for PHP usage.
 (defun configure-php-mode ()
   (message "Configuring PHP mode...")
-  ;; Create a custom style for PHP.
-  (c-add-style
-   "sensible"
-   '((c-basic-offset . 2)))
-  ;; Use that style.
+  ;; Use a normal indenting style.
   (c-set-style "sensible")
   ;; Eldoc displays function signatures in the minibuffer.
   (eldoc-mode)
