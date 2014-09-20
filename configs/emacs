@@ -22,10 +22,11 @@
                      flycheck
                      gtags
                      helm
-                     ido-vertical-mode
+                     helm-projectile
                      magit
                      powerline
                      powerline-evil
+                     projectile
                      php-mode
                      php-completion
                      php-extras
@@ -56,12 +57,13 @@
 
 (menu-bar-mode -1)
 (show-paren-mode 1)
+(color-theme-approximate-on)
 (defvar show-paren-delay
   "Delay (in seconds) before matching paren is highlighted.")
 (setq show-paren-delay 0)
 (setq-default left-fringe-width 100)
+(setq make-backup-files nil)
 
-;(require 'cl)
 (require 'powerline)
 (require 'powerline-evil)
 (require 'evil-surround)
@@ -122,11 +124,11 @@
 ;;; Always use evil mode.
 (evil-mode 1)
 ;;; Use evil leader keys everywhere.
+(setq evil-leader/in-all-states 1)
 (global-evil-leader-mode)
-;;; This seems to allow helm-buffers-list to work right away.
-(helm-mode)
-;;; This is helpful for things like function and filenames.
-(ido-vertical-mode)
+;;; Use Helm all the time.
+(setq helm-buffers-fuzzy-matching t)
+(helm-mode 1)
 ;;; Load additional custom evil key mappings for magit modes.
 (load "~/.emacs.d/evil-rebellion/evil-magit-rebellion.el")
 
@@ -151,22 +153,11 @@ Repeated invocations toggle between the two most recently open buffers."
   (interactive)
   (switch-to-buffer (other-buffer (current-buffer) 1)))
 
-;;; Bind some useful keys in the gtags select buffer that evil overrides.
-(add-hook 'gtags-select-mode-hook
-          (lambda ()
-            (define-key evil-normal-state-local-map (kbd "RET") 'gtags-select-tag)
-            (define-key evil-normal-state-local-map (kbd "q") 'kill-buffer-and-window)
-            ))
-
 ;;; Give me more awesome key bindings that I miss from Vim.
-(define-key evil-normal-state-map (kbd "C-p") 'fiplr-find-file)
+;(define-key evil-normal-state-map (kbd "C-p") 'fiplr-find-file)
+(define-key evil-normal-state-map (kbd "C-p") 'helm-projectile)
 (define-key evil-normal-state-map (kbd "-") 'helm-find-files)
 (define-key evil-normal-state-map (kbd "C-]") 'gtags-find-tag-from-here)
-
-;;; Let me move the selection like a normal human in the Grizzl results buffer.
-(add-hook 'grizzl-mode-hook (lambda ()
-                              (define-key *grizzl-keymap* (kbd "C-j") 'grizzl-set-selection-1)
-                              (define-key *grizzl-keymap* (kbd "C-k") 'grizzl-set-selection+1)))
 
 ;;; This is bound to a leader key below.
 (defun my-align-single-equals ()
@@ -181,13 +172,14 @@ Repeated invocations toggle between the two most recently open buffers."
 (evil-leader/set-key
   "."  'switch-to-previous-buffer
   "a=" 'my-align-single-equals
-  "b"  'helm-buffers-list
+  "b"  'helm-mini
   "f"  'helm-semantic-or-imenu
   "g"  'magit-status
   "p"  'ag-project
   "r"  'font-lock-fontify-buffer
   "S"  'delete-trailing-whitespace
   "t"  'gtags-reindex
+  "T"  'gtags-find-tag
   "w"  'ido-jump-to-window
   "x"  'helm-M-x)
 (define-key evil-normal-state-map (kbd "-") 'helm-find-files)
@@ -225,30 +217,49 @@ Repeated invocations toggle between the two most recently open buffers."
  "sensible"
  '((c-basic-offset . 2)))
 
-(add-hook 'sh-mode-hook (lambda ()
-                          (setq sh-basic-offset 2)
-                          (setq sh-indentation 2)))
-
 ;;; Configure things for PHP usage.
 (defun configure-php-mode ()
   (message "Configuring PHP mode...")
   ;; Use a normal indenting style.
   (c-set-style "sensible")
   ;; Eldoc displays function signatures in the minibuffer.
-  (eldoc-mode)
-  ;; 120 columns is quite enough.
-  (set-fill-column 120)
+  (turn-on-eldoc-mode)
   ;; Do comments the right way.
   (require 'newcomment)
   (setq comment-auto-fill-only-comments 1)
   (setq auto-fill-function 'do-auto-fill)
-  (auto-fill-mode 1)
+  ;; Use auto-fill (wrap lines at a max. column).
+  (turn-on-auto-fill)
+  ;; 120 columns is quite enough.
+  (set-fill-column 120)
   ;; Delete trailing whitespace on save.
   (add-to-list 'write-file-functions 'delete-trailing-whitespace)
   ;; Use gtags mode.
   (gtags-mode t))
 
 (add-hook 'php-mode-hook 'configure-php-mode)
+
+;;; SH mode:
+(add-hook 'sh-mode-hook (lambda ()
+                          (setq sh-basic-offset 2)
+                          (setq sh-indentation 2)))
+
+;;; Bind some useful keys in the gtags select buffer that evil overrides.
+(add-hook 'gtags-select-mode-hook
+          (lambda ()
+            (define-key evil-normal-state-local-map (kbd "RET") 'gtags-select-tag)
+            (define-key evil-normal-state-local-map (kbd "q") 'kill-buffer-and-window)
+            ))
+
+;;; Let me move the selection like a normal human in the Grizzl results buffer.
+(add-hook 'grizzl-mode-hook (lambda ()
+                              (define-key *grizzl-keymap* (kbd "C-j") 'grizzl-set-selection-1)
+                              (define-key *grizzl-keymap* (kbd "C-k") 'grizzl-set-selection+1)))
+
+;;; Javascript mode:
+(add-hook 'javascript-mode-hook (lambda ()
+                                  (setq js-indent-level 2)))
+
 
 (defun find-php-functions-in-current-buffer ()
   "Find lines that appear to be PHP functions in the buffer.
@@ -315,6 +326,10 @@ where that function is defined."
                                          nil))
                                   (window-list))))
       (select-window (car window-of-buffer)))))
+
+(defun helm-project-files ()
+  (interactive)
+  (helm-other-buffer '(helm-c-source-projectile-files-list) "*Project Files*"))
 
 (defun minibuffer-keyboard-quit ()
   "Abort recursive edit.
