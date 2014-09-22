@@ -130,11 +130,11 @@
 ;;; Settings for evil-mode.
 (setq evil-want-C-u-scroll t)
 (setq evil-want-C-i-jump t)
-;;; Always use evil mode.
-(evil-mode 1)
 ;;; Use evil leader keys everywhere.
 (setq evil-leader/in-all-states 1)
 (global-evil-leader-mode)
+;;; Always use evil mode.
+(evil-mode 1)
 ;;; Use Helm all the time.
 (setq helm-buffers-fuzzy-matching t)
 (helm-mode 1)
@@ -167,6 +167,7 @@ Repeated invocations toggle between the two most recently open buffers."
 (define-key evil-normal-state-map (kbd "C-p") 'helm-projectile)
 (define-key evil-normal-state-map (kbd "-") 'helm-find-files)
 (define-key evil-normal-state-map (kbd "C-]") 'gtags-find-tag-from-here)
+(evil-define-key 'normal global-map "col" 'whitespace-mode)
 
 ;;; This is bound to a leader key below.
 (defun my-align-single-equals ()
