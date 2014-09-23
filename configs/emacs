@@ -20,6 +20,7 @@
                      evil-jumper
                      evil-surround
                      evil-indent-textobject
+                     fill-column-indicator
                      fiplr
                      flycheck
                      gtags
@@ -60,8 +61,8 @@
   (unless (package-installed-p package)
     (package-install package)))
 
-(add-to-list 'load-path "~/.emacs.d")
 (add-to-list 'load-path "~/.emacs.d/themes") ;; "Tomorrow" requires base code.
+(add-to-list 'load-path "~/.emacs.d/project-root")
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
 (menu-bar-mode -1)
@@ -77,6 +78,9 @@
 (require 'powerline-evil)
 (require 'evil-surround)
 (require 'gtags)
+
+(setq-default fci-rule-character 9474)
+(setq-default fci-rule-character-color "color-52")
 
 ;;; YAsnippet
 (require 'yasnippet)
@@ -270,6 +274,11 @@ Repeated invocations toggle between the two most recently open buffers."
 (add-hook 'javascript-mode-hook (lambda ()
                                   (setq js-indent-level 2)))
 
+;;; Markdown mode:
+(add-hook 'markdown-mode-hook (lambda ()
+                                (turn-on-auto-fill)
+                                (fci-mode)
+                                (set-fill-column 80)))
 
 (defun find-php-functions-in-current-buffer ()
   "Find lines that appear to be PHP functions in the buffer.
