@@ -171,7 +171,6 @@ Repeated invocations toggle between the two most recently open buffers."
 (define-key evil-normal-state-map (kbd "C-p") 'helm-projectile)
 (define-key evil-normal-state-map (kbd "-") 'helm-find-files)
 (define-key evil-normal-state-map (kbd "C-]") 'gtags-find-tag-from-here)
-(evil-define-key 'normal global-map "col" 'whitespace-mode)
 
 ;;; This is bound to a leader key below.
 (defun my-align-single-equals ()
@@ -189,6 +188,7 @@ Repeated invocations toggle between the two most recently open buffers."
   "b"  'helm-mini
   "f"  'helm-semantic-or-imenu
   "g"  'magit-status
+  "l"  'whitespace-mode
   "p"  'ag-project
   "r"  'font-lock-fontify-buffer
   "S"  'delete-trailing-whitespace
