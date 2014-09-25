@@ -73,6 +73,7 @@
 (setq show-paren-delay 0)
 (setq-default left-fringe-width 100)
 (setq make-backup-files nil)
+(setq projectile-enable-caching t)
 
 (require 'powerline)
 (require 'powerline-evil)
@@ -101,6 +102,7 @@
 (ac-config-default)
 (ac-set-trigger-key "TAB")
 (ac-set-trigger-key "<tab>")
+;; Don't try to auto-complete snippet names, it's busted.
 (setq ac-source-yasnippet nil)
 
 (powerline-evil-vim-color-theme)
@@ -123,9 +125,14 @@
 (evil-add-hjkl-bindings magit-log-mode-map 'emacs)
 (evil-add-hjkl-bindings magit-commit-mode-map 'emacs)
 (evil-add-hjkl-bindings ag-mode-map 'normal
-  "n" 'evil-search-next
-  "N" 'evil-search-previous
+  "n"   'evil-search-next
+  "N"   'evil-search-previous
   "RET" 'compile-goto-error)
+(evil-add-hjkl-bindings occur-mode-map 'emacs
+  (kbd "/")       'evil-search-forward
+  (kbd "n")       'evil-search-next
+  (kbd "N")       'evil-search-previous
+  (kbd "C-w C-w") 'other-window)
 
 (add-hook 'magit-status-mode-hook
           (lambda ()
@@ -389,7 +396,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 
 This function finds the root directory of the project by looking around for
 VCS marker files or directories and then runs gtags there, sending the
-output to a new buffer. All of the real work is done by 
+output to a new buffer. All of the real work is done by
 gtags-reindex-process."
   (interactive)
   (let* ((root-path (project-root))
