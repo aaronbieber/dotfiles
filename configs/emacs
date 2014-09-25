@@ -63,6 +63,7 @@
 
 (add-to-list 'load-path "~/.emacs.d/themes") ;; "Tomorrow" requires base code.
 (add-to-list 'load-path "~/.emacs.d/project-root")
+(add-to-list 'load-path "~/.emacs.d/auto-complete")
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
 (menu-bar-mode -1)
