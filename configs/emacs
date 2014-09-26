@@ -73,8 +73,11 @@
   "Delay (in seconds) before matching paren is highlighted.")
 (setq show-paren-delay 0)
 (setq-default left-fringe-width 100)
-(setq make-backup-files nil)
 (setq projectile-enable-caching t)
+
+(defvar backup-dir "~/.emacs.d/backups/")
+(setq backup-directory-alist (list (cons "." backup-dir)))
+(setq make-backup-files nil)
 
 (require 'powerline)
 (require 'powerline-evil)
@@ -165,7 +168,19 @@
 ;;; Don't warn me when files are big. It's fine.
 (setq large-file-warning-threshold nil)
 ;;; Never "sensibly" split windows vertically.
-(setq split-width-threshold nil)
+(setq split-width-threshold 120)
+
+(defun occur-last-search ()
+  "Run `occur` with the last evil search term."
+  (interactive)
+  ;; Use the appropriate search term based on regexp setting.
+  (let ((term (if evil-regexp-search
+                  (car-safe regexp-search-ring)
+                (car-safe search-ring))))
+    ;; If a search term exists, execute `occur` on it.
+    (if (> (length term) 0)
+        (occur term)
+      (message "No term to search for."))))
 
 ;;; Switch to the previous buffer (bound to a leader key elsewhere in this file).
 (defun switch-to-previous-buffer ()
@@ -179,6 +194,7 @@ Repeated invocations toggle between the two most recently open buffers."
 (define-key evil-normal-state-map (kbd "C-p") 'helm-projectile)
 (define-key evil-normal-state-map (kbd "-") 'helm-find-files)
 (define-key evil-normal-state-map (kbd "C-]") 'gtags-find-tag-from-here)
+(define-key evil-normal-state-map (kbd "g/") 'occur-last-search)
 
 ;;; This is bound to a leader key below.
 (defun my-align-single-equals ()
