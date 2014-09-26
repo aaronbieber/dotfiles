@@ -170,8 +170,8 @@ alias tad="tmux attach -d"
 alias tl="tmux ls"
 alias urldecode='python -c "import sys, urllib as ul; print ul.unquote_plus(sys.argv[1])"'
 ## Emacs:
-alias e="emacs -nw"     # Preferred
-alias emacs="emacs -nw" # Failsafe
+alias e="emacs -nw"             # Preferred
+alias emacs="`which emacs` -nw" # Failsafe
 ## Todo:
 alias t="todo -d $HOME/.todo.cfg"
 alias tw="todo | grep @work"
