@@ -1,12 +1,12 @@
 # -*- mode: snippet; require-final-newline: nil -*-
-# name: fun
-# key: fun
+# name: function
+# key: fu
 # --
 /**
  * Documentation
- * 
+ *
  * @return void
  */
-${1:$$(yas-choose-value '("public " "private " "protected "))}${2:static }function ${3:new_function} (${4:$args}) {
+${1:$$(yas-choose-value '("public " "private " "protected "))}${2:static }function ${3:new_function}(${4:$args}) {
   $0
 }
