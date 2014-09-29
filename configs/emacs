@@ -175,7 +175,7 @@
 ;;; Don't warn me when files are big. It's fine.
 (setq large-file-warning-threshold nil)
 ;;; Never "sensibly" split windows vertically.
-(setq split-width-threshold 120)
+(setq split-width-threshold nil)
 
 (defun occur-last-search ()
   "Run `occur` with the last evil search term."
