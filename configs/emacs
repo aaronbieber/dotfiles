@@ -267,23 +267,18 @@ Repeated invocations toggle between the two most recently open buffers."
 ;;; Configure things for PHP usage.
 (defun configure-php-mode ()
   (message "Configuring PHP mode...")
-  ;; Use a normal indenting style.
-  (c-set-style "sensible")
-  ;; Eldoc displays function signatures in the minibuffer.
-  (turn-on-eldoc-mode)
-  ;; Highlight matching symbols.
-  (highlight-symbol-mode)
-  ;; Do comments the right way.
   (require 'newcomment)
   (setq comment-auto-fill-only-comments 1)
   (setq auto-fill-function 'do-auto-fill)
-  ;; Use auto-fill (wrap lines at a max. column).
+
+  (c-set-style "sensible")
+  (turn-on-eldoc-mode)
+  (highlight-symbol-mode)
+
   (turn-on-auto-fill)
-  ;; 120 columns is quite enough.
   (set-fill-column 120)
-  ;; Delete trailing whitespace on save.
+  (fci-mode)
   (add-to-list 'write-file-functions 'delete-trailing-whitespace)
-  ;; Use gtags mode.
   (gtags-mode t))
 
 (add-hook 'php-mode-hook 'configure-php-mode)
