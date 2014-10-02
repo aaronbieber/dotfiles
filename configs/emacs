@@ -259,10 +259,16 @@ Repeated invocations toggle between the two most recently open buffers."
     ad-do-it))
 (ad-activate 'linum-update)
 
-;; Create a custom style that indents things like a normal human should.
-(c-add-style
- "sensible"
- '((c-basic-offset . 2)))
+(defun my-php-lineup-arglist-intro (langelem)
+  (save-excursion
+  (goto-char (cdr langelem))
+  (vector (+ (current-column) (* 2 c-basic-offset)))))
+
+;;; Provide a style based on "php" that changes a couple of indent behaviors.
+(c-add-style "wf-php"
+             '("php"
+               (c-basic-offset . 2)
+               (c-offsets-alist . ((arglist-intro . my-php-lineup-arglist-intro)))))
 
 ;;; Configure things for PHP usage.
 (defun configure-php-mode ()
@@ -271,7 +277,7 @@ Repeated invocations toggle between the two most recently open buffers."
   (setq comment-auto-fill-only-comments 1)
   (setq auto-fill-function 'do-auto-fill)
 
-  (c-set-style "sensible")
+  (c-set-style "wf-php")
   (turn-on-eldoc-mode)
   (highlight-symbol-mode)
 
