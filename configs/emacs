@@ -261,14 +261,21 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (defun my-php-lineup-arglist-intro (langelem)
   (save-excursion
-  (goto-char (cdr langelem))
-  (vector (+ (current-column) (* 2 c-basic-offset)))))
+    (goto-char (cdr langelem))
+    (vector (+ (current-column) (* 2 c-basic-offset)))))
+
+(defun my-php-lineup-arglist-close (langelem)
+  (save-excursion
+    (goto-char (cdr langelem))
+    (vector (current-column))))
 
 ;;; Provide a style based on "php" that changes a couple of indent behaviors.
 (c-add-style "wf-php"
              '("php"
                (c-basic-offset . 2)
-               (c-offsets-alist . ((arglist-intro . my-php-lineup-arglist-intro)))))
+               (c-offsets-alist . (
+                                   (arglist-intro . my-php-lineup-arglist-intro)
+                                   (arglist-close . my-php-lineup-arglist-close)))))
 
 ;;; Configure things for PHP usage.
 (defun configure-php-mode ()
