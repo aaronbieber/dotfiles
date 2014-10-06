@@ -11,20 +11,20 @@ import System.IO
 
 main = do
     xmproc <- spawnPipe "/usr/bin/xmobar ~/.xmobarrc"
-    xmonad $ defaultConfig { 
+    xmonad $ defaultConfig {
           manageHook = manageDocks <+> manageHook defaultConfig
         , layoutHook = avoidStruts  $  layoutHook defaultConfig
         , borderWidth = 2
         , focusedBorderColor = "#ffffff"
         , normalBorderColor = "#444444"
         , focusFollowsMouse = False
-		, terminal = "gnome-terminal"
+        , terminal = "gnome-terminal"
         }
         `additionalKeysP` (
         [ ("C-=", spawn "backlight-adjust +")
         , ("C--", spawn "backlight-adjust -")
         , ("M-p", spawn "dmenu_run -i -nb '#282b57' -nf '#eeeeff' -sb '#555a9e' -fn 'Inconsolata-10'")
-		, ("S-M-g", spawn "xdg-open `xclip -o`")
+        , ("S-M-g", spawn "xdg-open `xclip -o`")
         ]
         -- ++ [
         --      (otherModMasks ++ "M-" ++ [key], action tag)

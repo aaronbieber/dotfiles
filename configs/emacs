@@ -305,6 +305,12 @@ Repeated invocations toggle between the two most recently open buffers."
   "d" 'org-deadline
   "a" 'org-agenda)
 
+(add-hook 'org-mode-hook 
+          (lambda ()
+            (auto-fill-mode)
+            (turn-on-fci-mode)))
+          
+
 ;;; Emacs Lisp mode:
 (add-hook 'emacs-lisp-mode-hook
           (lambda ()
