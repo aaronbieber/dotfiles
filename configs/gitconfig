@@ -11,6 +11,7 @@
 	lg3 = log --graph --abbrev-commit --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --all
 	lg = !"git lg1"
 	cob = "checkout -b"
+        rb = "!MERGE_BASE=$(git merge-base origin/master HEAD); git diff -M --full-index $MERGE_BASE HEAD"
 	rom = "rebase origin/master"
 	dom = "diff origin/master"
 	ms = "merge --squash"
