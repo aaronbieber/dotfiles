@@ -113,6 +113,7 @@
 (ac-set-trigger-key "<tab>")
 ;; Don't try to auto-complete snippet names, it's busted.
 (setq ac-source-yasnippet nil)
+(define-key ac-completing-map (kbd "[escape]") 'ac-stop)
 
 (powerline-evil-vim-color-theme)
 
@@ -126,11 +127,12 @@
 (evil-add-hjkl-bindings magit-branch-manager-mode-map 'emacs
   "K" 'magit-discard-item
   "L" 'magit-key-mode-popup-logging)
-(evil-add-hjkl-bindings magit-status-mode-map 'emacs
-  (kbd "O") 'magit-jump-to-unstaged
+(evil-add-hjkl-bindings magit-status-mode-map 'motion
+  "O" 'magit-jump-to-unstaged
   "K" 'magit-discard-item
   "l" 'magit-key-mode-popup-logging
-  "h" 'magit-toggle-diff-refine-hunk)
+  "h" 'magit-toggle-diff-refine-hunk
+  "?" 'magit-key-mode-popup-dispatch)
 (evil-add-hjkl-bindings magit-log-mode-map 'emacs)
 (evil-add-hjkl-bindings magit-commit-mode-map 'emacs)
 (evil-add-hjkl-bindings ag-mode-map 'normal
@@ -144,10 +146,8 @@
   (kbd "C-d")     'evil-scroll-down
   (kbd "C-u")     'evil-scroll-up
   (kbd "C-w C-w") 'other-window)
-
-(add-hook 'magit-status-mode-hook
-          (lambda ()
-            (define-key magit-status-mode-map (kbd "O") 'magit-jump-to-unstaged)))
+(evil-add-hjkl-bindings org-agenda-mode-map 'emacs
+  "RET" 'org-agenda-switch-to)
 
 ;;; Settings for evil-mode.
 (setq evil-want-C-u-scroll t)
@@ -213,6 +213,15 @@ Repeated invocations toggle between the two most recently open buffers."
    (region-beginning) (region-end)
    "\\(\\s-*\\)=" 1 1 nil))
 
+;;; Helpers for narrowing.
+(defun narrow-and-set-normal ()
+  "Narrow to the region and, if in a visual mode, set normal mode."
+  (interactive)
+  (narrow-to-region (region-beginning) (region-end))
+  (if (string= evil-state "visual")
+      (progn (evil-normal-state nil)
+             (evil-goto-first-line))))
+
 ;;; Configure evil-leader
 (evil-leader/set-leader ",")
 (evil-leader/set-key
@@ -222,12 +231,14 @@ Repeated invocations toggle between the two most recently open buffers."
   "f"  'helm-semantic-or-imenu
   "g"  'magit-status
   "l"  'whitespace-mode
+  "nw" 'widen
+  "nn" 'narrow-and-set-normal
   "p"  'ag-project
   "r"  'font-lock-fontify-buffer
   "S"  'delete-trailing-whitespace
   "t"  'gtags-reindex
   "T"  'gtags-find-tag
-  "w"  'ido-jump-to-window
+  "w"  'save-buffer
   "x"  'helm-M-x)
 (define-key evil-normal-state-map (kbd "-") 'helm-find-files)
 
@@ -279,7 +290,6 @@ Repeated invocations toggle between the two most recently open buffers."
 
 ;;; Configure things for PHP usage.
 (defun configure-php-mode ()
-  (message "Configuring PHP mode...")
   (require 'newcomment)
   (setq comment-auto-fill-only-comments 1)
   (setq auto-fill-function 'do-auto-fill)
@@ -290,7 +300,7 @@ Repeated invocations toggle between the two most recently open buffers."
 
   (turn-on-auto-fill)
   (set-fill-column 120)
-  (fci-mode)
+  (turn-on-fci-mode)
   (add-to-list 'write-file-functions 'delete-trailing-whitespace)
   (gtags-mode t))
 
@@ -303,12 +313,12 @@ Repeated invocations toggle between the two most recently open buffers."
          (interactive)
          (org-insert-property-drawer))
   "d" 'org-deadline
-  "a" 'org-agenda)
+  "a" 'org-agenda
+  "ns" 'org-narrow-to-subtree)
 
 (add-hook 'org-mode-hook
           (lambda ()
-            (auto-fill-mode)
-            (turn-on-fci-mode)))
+            (auto-fill-mode)))
 
 ;;; Emacs Lisp mode:
 (add-hook 'emacs-lisp-mode-hook
@@ -340,7 +350,7 @@ Repeated invocations toggle between the two most recently open buffers."
 ;;; Markdown mode:
 (add-hook 'markdown-mode-hook (lambda ()
                                 (turn-on-auto-fill)
-                                (fci-mode)
+                                (turn-on-fci-mode)
                                 (set-fill-column 80)))
 
 (defun find-php-functions-in-current-buffer ()
@@ -435,8 +445,12 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes (quote ("e6d83e70d2955e374e821e6785cd661ec363091edf56a463d0018dc49fbc92dd" "cea6d15a8333e0c78e1e15a0524000de69aac2afa7bb6cf9d043a2627327844e" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "cf08ae4c26cacce2eebff39d129ea0a21c9d7bf70ea9b945588c1c66392578d1" "5ee12d8250b0952deefc88814cf0672327d7ee70b16344372db9460e9a0e3ffc" "7f1263c969f04a8e58f9441f4ba4d7fb1302243355cb9faecb55aec878a06ee9" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "8b30636c9a903a9fa38c7dcf779da0724a37959967b6e4c714fdc3b3fe0b8653" "4907d08a09cd6e987bb0eec7ed6cbc56fc1318b1d965d7dad176c9590aa7a7a0" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" default)))
- '(org-agenda-files (quote ("~/Dropbox/org/todo.org")))
+ '(custom-safe-themes
+   (quote
+    ("e6d83e70d2955e374e821e6785cd661ec363091edf56a463d0018dc49fbc92dd" "cea6d15a8333e0c78e1e15a0524000de69aac2afa7bb6cf9d043a2627327844e" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "cf08ae4c26cacce2eebff39d129ea0a21c9d7bf70ea9b945588c1c66392578d1" "5ee12d8250b0952deefc88814cf0672327d7ee70b16344372db9460e9a0e3ffc" "7f1263c969f04a8e58f9441f4ba4d7fb1302243355cb9faecb55aec878a06ee9" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "8b30636c9a903a9fa38c7dcf779da0724a37959967b6e4c714fdc3b3fe0b8653" "4907d08a09cd6e987bb0eec7ed6cbc56fc1318b1d965d7dad176c9590aa7a7a0" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" default)))
+ '(org-agenda-files
+   (quote
+    ("~/Dropbox/org/todo.org_archive" "~/Dropbox/org/todo.org")))
  '(org-directory "~/Dropbox/org")
  '(org-mobile-directory "~/Dropbox/org/mobile")
  '(org-mobile-inbox-for-pull "~/Dropbox/org/mobile/capture.org")
@@ -467,21 +481,27 @@ gtags-reindex-process."
 
 (defun gtags-reindex-process (path)
   "Run gtags on the given path and show output in a new buffer."
-  (with-current-buffer (get-buffer-create "*Gtags*")
-    (display-buffer (current-buffer))
-    (widen)
-    (kill-all-local-variables)
-    (let ((inhibit-read-only t) (erase-buffer)))
-    (let ((cmd (concat "cd " (shell-quote-argument path) " && "
-                       "find . -type f -iname '*php' | "
-                       "gtags -v -f - &"))
-          (map (make-sparse-keymap)))
-      (shell-command cmd (current-buffer))
-      (set-keymap-parent map (current-local-map))
-      (define-key map "q" #'(lambda () (interactive) (kill-buffer (current-buffer))))
-      (use-local-map map)
-      (if (fboundp 'evil-normal-state)
-          (evil-normal-state)))))
+  (let ((gtags-buffer (get-buffer-create "*Gtags*")))
+    (with-current-buffer gtags-buffer
+      (display-buffer gtags-buffer)
+      (setq gtags-window (get-buffer-window gtags-buffer))
+      (with-selected-window gtags-window
+        (if (> (window-size) 10)
+            (shrink-window (- (window-size) 10))
+          (enlarge-window (- 10 (window-size)))))
+      (widen)
+      (kill-all-local-variables)
+      (let ((inhibit-read-only t) (erase-buffer)))
+      (let ((cmd (concat "cd " (shell-quote-argument path) " && "
+                         "find . -type f -iname '*php' | "
+                         "gtags -v -f - &"))
+            (map (make-sparse-keymap)))
+        (shell-command cmd (current-buffer))
+        (set-keymap-parent map (current-local-map))
+        (define-key map "q" #'(lambda () (interactive) (kill-buffer (current-buffer))))
+        (use-local-map map)
+        (if (fboundp 'evil-normal-state)
+            (evil-normal-state))))))
 
 ;; handle tmux's xterm-keys
 ;; put the following line in your ~/.tmux.conf:
@@ -577,3 +597,4 @@ gtags-reindex-process."
 
 (provide 'emacs)
 ;;; emacs ends here
+(put 'narrow-to-region 'disabled nil)
