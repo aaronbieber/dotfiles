@@ -46,7 +46,6 @@
 ;; with potentially old releases. So leave it like this until I find the ones
 ;; that can't be found, then slowly add those to package-archive-enable-alist.
 (setq package-archives '(("elpa" . "http://tromey.com/elpa/")
-                         ;;("gnu" . "http://elpa.gnu.org/packages/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.milkbox.net/packages/")))
 (setq package-archive-enable-alist '(("marmalade" gtags)))
@@ -72,11 +71,11 @@
 (menu-bar-mode -1)
 (show-paren-mode 1)
 (color-theme-approximate-on)
-(defvar show-paren-delay
+(defvar show-paren-delay 0
   "Delay (in seconds) before matching paren is highlighted.")
-(setq show-paren-delay 0)
 (setq-default left-fringe-width 100)
-(setq projectile-enable-caching t)
+(defvar projectile-enable-caching t
+  "Tell Projectile to cache project file lists.")
 
 (defvar backup-dir "~/.emacs.d/backups/")
 (setq backup-directory-alist (list (cons "." backup-dir)))
@@ -91,6 +90,10 @@
 (setq-default highlight-symbol-idle-delay .5)
 (setq-default fci-rule-character 9474)
 (setq-default fci-rule-character-color "color-52")
+
+;(load-theme 'xoria256 t)
+(load-theme 'tomorrow-night t)
+(powerline-evil-vim-color-theme)
 
 ;;; YAsnippet
 (require 'yasnippet)
@@ -114,10 +117,6 @@
 ;; Don't try to auto-complete snippet names, it's busted.
 (setq ac-source-yasnippet nil)
 (define-key ac-completing-map (kbd "[escape]") 'ac-stop)
-
-(powerline-evil-vim-color-theme)
-
-(load-theme 'xoria256 t)
 
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (setq-default flycheck-disabled-checkers '(php-phpmd))
@@ -196,6 +195,15 @@ Repeated invocations toggle between the two most recently open buffers."
   (interactive)
   (switch-to-buffer (other-buffer (current-buffer) 1)))
 
+;;; Functions for working with the X clipboard, which is very handy.
+(defun yank-to-x-clipboard ()
+  (interactive)
+  (shell-command-on-region (region-beginning) (region-end) "xsel -i"))
+
+(defun put-from-x-clipboard ()
+  (interactive)
+  (insert (shell-command-to-string "xsel -o"))))
+
 ;;; Give me more awesome key bindings that I miss from Vim.
 (define-key evil-normal-state-map (kbd "C-p") 'helm-projectile)
 (define-key evil-normal-state-map (kbd "-") 'helm-find-files)
@@ -231,15 +239,17 @@ Repeated invocations toggle between the two most recently open buffers."
   "f"  'helm-semantic-or-imenu
   "g"  'magit-status
   "l"  'whitespace-mode
-  "nw" 'widen
-  "nn" 'narrow-and-set-normal
-  "p"  'ag-project
+  "nn" 'narrow-and-set-normal      ;; "narrow normal"
+  "nw" 'widen                      ;; "narrow widen"
+  "p"  'put-from-x-clipboard
+  "s"  'ag-project                 ;; "search"
   "r"  'font-lock-fontify-buffer
   "S"  'delete-trailing-whitespace
   "t"  'gtags-reindex
   "T"  'gtags-find-tag
   "w"  'save-buffer
-  "x"  'helm-M-x)
+  "x"  'helm-M-x
+  "y"  'yank-to-x-clipboard)
 (define-key evil-normal-state-map (kbd "-") 'helm-find-files)
 
 ;;; Set up relative line numbering to mimic `:set number relativenumber`.
@@ -280,13 +290,19 @@ Repeated invocations toggle between the two most recently open buffers."
     (goto-char (cdr langelem))
     (vector (current-column))))
 
+(defun my-php-lineup-arglist-cont-nonempty (langelem)
+  "Align continued arglist lines to two times the basic offset from langelem."
+  (save-excursion
+    (goto-char (cdr langelem))
+    (vector (+ (current-column) (* 2 c-basic-offset)))))
+
 ;;; Provide a style based on "php" that changes a couple of indent behaviors.
 (c-add-style "wf-php"
              '("php"
                (c-basic-offset . 2)
-               (c-offsets-alist . (
-                                   (arglist-intro . my-php-lineup-arglist-intro)
-                                   (arglist-close . my-php-lineup-arglist-close)))))
+               (c-offsets-alist . ((arglist-intro . my-php-lineup-arglist-intro)
+                                   (arglist-close . my-php-lineup-arglist-close)
+                                   (arglist-cont-nonempty . my-php-lineup-arglist-cont-nonempty)))))
 
 ;;; Configure things for PHP usage.
 (defun configure-php-mode ()
@@ -447,7 +463,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("e6d83e70d2955e374e821e6785cd661ec363091edf56a463d0018dc49fbc92dd" "cea6d15a8333e0c78e1e15a0524000de69aac2afa7bb6cf9d043a2627327844e" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "cf08ae4c26cacce2eebff39d129ea0a21c9d7bf70ea9b945588c1c66392578d1" "5ee12d8250b0952deefc88814cf0672327d7ee70b16344372db9460e9a0e3ffc" "7f1263c969f04a8e58f9441f4ba4d7fb1302243355cb9faecb55aec878a06ee9" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "8b30636c9a903a9fa38c7dcf779da0724a37959967b6e4c714fdc3b3fe0b8653" "4907d08a09cd6e987bb0eec7ed6cbc56fc1318b1d965d7dad176c9590aa7a7a0" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" default)))
+    ("1157a4055504672be1df1232bed784ba575c60ab44d8e6c7b3800ae76b42f8bd" "e6d83e70d2955e374e821e6785cd661ec363091edf56a463d0018dc49fbc92dd" "cea6d15a8333e0c78e1e15a0524000de69aac2afa7bb6cf9d043a2627327844e" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "cf08ae4c26cacce2eebff39d129ea0a21c9d7bf70ea9b945588c1c66392578d1" "5ee12d8250b0952deefc88814cf0672327d7ee70b16344372db9460e9a0e3ffc" "7f1263c969f04a8e58f9441f4ba4d7fb1302243355cb9faecb55aec878a06ee9" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "8b30636c9a903a9fa38c7dcf779da0724a37959967b6e4c714fdc3b3fe0b8653" "4907d08a09cd6e987bb0eec7ed6cbc56fc1318b1d965d7dad176c9590aa7a7a0" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" default)))
  '(org-agenda-files
    (quote
     ("~/Dropbox/org/todo.org_archive" "~/Dropbox/org/todo.org")))
