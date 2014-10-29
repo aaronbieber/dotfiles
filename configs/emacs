@@ -198,11 +198,13 @@ Repeated invocations toggle between the two most recently open buffers."
 ;;; Functions for working with the X clipboard, which is very handy.
 (defun yank-to-x-clipboard ()
   (interactive)
-  (shell-command-on-region (region-beginning) (region-end) "xsel -i"))
+  ;; Force the command to output everything to the default output buffer and don't show it.
+  (shell-command-on-region (region-beginning) (region-end) "xsel --clipboard -i > /dev/null" nil nil nil nil)
+  (deactivate-mark))
 
 (defun put-from-x-clipboard ()
   (interactive)
-  (insert (shell-command-to-string "xsel -o")))
+  (insert (shell-command-to-string "xsel --clipboard")))
 
 ;;; Give me more awesome key bindings that I miss from Vim.
 (define-key evil-normal-state-map (kbd "C-p") 'helm-projectile)
@@ -236,6 +238,7 @@ Repeated invocations toggle between the two most recently open buffers."
   "."  'switch-to-previous-buffer
   "a=" 'my-align-single-equals
   "b"  'helm-mini
+  "d"  (lambda () (interactive) (evil-ex-call-command nil "bdelete" nil))
   "f"  'helm-semantic-or-imenu
   "g"  'magit-status
   "l"  'whitespace-mode
