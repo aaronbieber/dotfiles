@@ -70,7 +70,11 @@
 (setq inhibit-splash-screen t)
 (menu-bar-mode -1)
 (show-paren-mode 1)
+
+;;; Seamlessly degrade color themes to terminal colors.
+(autoload 'color-theme-approximate-on "color-theme-approximate")
 (color-theme-approximate-on)
+
 (defvar show-paren-delay 0
   "Delay (in seconds) before matching paren is highlighted.")
 (setq-default left-fringe-width 100)
@@ -91,8 +95,6 @@
 (setq-default fci-rule-character 9474)
 (setq-default fci-rule-character-color "color-52")
 
-;(load-theme 'xoria256 t)
-(load-theme 'tomorrow-night t)
 (powerline-evil-vim-color-theme)
 
 ;;; YAsnippet
@@ -231,6 +233,16 @@ Repeated invocations toggle between the two most recently open buffers."
   (if (string= evil-state "visual")
       (progn (evil-normal-state nil)
              (evil-goto-first-line))))
+
+(defun open-current-line-in-codebase-search ()
+  "Go to the current file's current line on the codebase site."
+  (interactive)
+  (let* ((line-num (number-to-string (line-number-at-pos)))
+         (file-path (replace-regexp-in-string (project-root) "" (buffer-file-name)))
+         (args (concat "http://dox.csnzoo.com/php/" file-path "#L" line-num)))
+    ;;;(call-process "xdg-open" nil nil nil args)
+    (message args)
+    ))
 
 ;;; Configure evil-leader
 (evil-leader/set-leader ",")
@@ -614,6 +626,8 @@ gtags-reindex-process."
       )
   )
 
+(put 'narrow-to-region 'disabled nil)
+(load-theme 'xoria256 t)
+
 (provide 'emacs)
 ;;; emacs ends here
-(put 'narrow-to-region 'disabled nil)
