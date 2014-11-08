@@ -171,7 +171,7 @@ alias tl="tmux ls"
 alias urldecode='python -c "import sys, urllib as ul; print ul.unquote_plus(sys.argv[1])"'
 
 ## Emacs:
-alias e="emacsclient -t"             # Preferred
+alias e="emacsclient -t"        # Preferred
 alias emacs="`which emacs` -nw" # Failsafe
 export EDITOR="emacsclient -t"
 export ALTERNATE_EDITOR=""
