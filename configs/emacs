@@ -216,6 +216,7 @@ Repeated invocations toggle between the two most recently open buffers."
 (define-key evil-normal-state-map (kbd "-") 'helm-find-files)
 (define-key evil-normal-state-map (kbd "C-]") 'gtags-find-tag-from-here)
 (define-key evil-normal-state-map (kbd "g/") 'occur-last-search)
+(define-key helm-find-files-map (kbd "C-k") 'helm-find-files-up-one-level)
 (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle)
 (evil-define-key 'normal org-mode-map (kbd "C-\\") 'org-insert-heading)
 (evil-define-key 'insert org-mode-map (kbd "C-\\") 'org-insert-heading)
@@ -269,7 +270,6 @@ Repeated invocations toggle between the two most recently open buffers."
   "w"  'save-buffer
   "x"  'helm-M-x
   "y"  'yank-to-x-clipboard)
-(define-key evil-normal-state-map (kbd "-") 'helm-find-files)
 
 ;;; Set up relative line numbering to mimic `:set number relativenumber`.
 (global-linum-mode t)
@@ -380,6 +380,7 @@ Repeated invocations toggle between the two most recently open buffers."
 
 ;;; Javascript mode:
 (add-hook 'javascript-mode-hook (lambda ()
+                                  (setq c-basic-offset 2)
                                   (setq js-indent-level 2)))
 
 ;;; Markdown mode:
