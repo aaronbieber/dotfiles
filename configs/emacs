@@ -256,6 +256,7 @@ Repeated invocations toggle between the two most recently open buffers."
   "l"  'whitespace-mode
   "nn" 'narrow-and-set-normal      ;; "narrow normal"
   "nw" 'widen                      ;; "narrow widen"
+  "o"  'delete-other-windows
   "p"  'put-from-x-clipboard
   "s"  'ag-project                 ;; "search"
   "r"  'font-lock-fontify-buffer
