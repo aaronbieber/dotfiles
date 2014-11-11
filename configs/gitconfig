@@ -19,6 +19,7 @@
 	rmorig = !"git status --porcelain | awk '/^\\?.*orig/{print $2}' | xargs rm -v"
 	rmuntracked = !"git status --porcelain | awk '/^\\?/{print $2}' | xargs rm -v"
 	todo = !"git diff --name-only origin/master | xargs grep -i -C3 '@todo'"
+        rmtrains = !"git branch | grep 'deploy_' | xargs git branch -D"
 	trains = !"echo -n 'Fetching...' && git fetch -q && echo ' DONE' && git for-each-ref --count=5 --sort=-committerdate --format='%(committerdate:relative) %09 %(refname:short)' refs/remotes/origin/deploy_*"
 	train = !"git fetch -q && git for-each-ref --count=1 --sort=-committerdate --format='%(refname:short)' refs/remotes/origin/deploy_*"
         board = !"git train | xargs git checkout -t"
