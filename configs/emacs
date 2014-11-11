@@ -94,7 +94,7 @@
 (require 'gtags)
 (require 'highlight-symbol)
 
-(setq-default highlight-symbol-idle-delay .5)
+(setq-default highlight-symbol-idle-delay 1.5)
 (setq-default fci-rule-character 9474)
 (setq-default fci-rule-character-color "color-52")
 
@@ -116,16 +116,16 @@
 ;;; Auto-complete, with PHP dictionary.
 (require 'auto-complete-config)
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
-(ac-config-default)
-(ac-set-trigger-key "TAB")
-(ac-set-trigger-key "<tab>")
-;; Don't try to auto-complete snippet names, it's busted.
-(setq ac-source-yasnippet nil)
+(ac-config-default)            ;; Use default config.
+(setq ac-auto-start nil)       ;; Don't start completing automatically.
+(ac-set-trigger-key "TAB")     ;; Use tab to start completing.
+(setq ac-source-yasnippet nil) ;; Don't try to auto-complete snippet names, it's busted.
 (define-key ac-completing-map (kbd "[escape]") 'ac-stop)
 
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (setq-default flycheck-disabled-checkers '(php-phpmd))
 (setq-default flycheck-phpcs-standard "CSNStores")
+(projectile-global-mode)
 
 ;;; Get evil key bindings in magit modes.
 (evil-add-hjkl-bindings magit-branch-manager-mode-map 'emacs
@@ -243,26 +243,26 @@ Repeated invocations toggle between the two most recently open buffers."
   (interactive)
   (let* ((line-num (number-to-string (line-number-at-pos)))
          (file-path (replace-regexp-in-string (project-root) "" (buffer-file-name)))
-         (args (concat "http://dox.csnzoo.com/php/" file-path "#L" line-num)))
-    ;;;(call-process "xdg-open" nil nil nil args)
-    (message args)
-    ))
+         (args (concat "http://dox.wayfair.com/source/xref/php/" file-path "#" line-num)))
+    (call-process "xdg-open" nil nil nil args)))
 
 ;;; Configure evil-leader
 (evil-leader/set-leader ",")
 (evil-leader/set-key
   "."  'switch-to-previous-buffer
+  "aa" 'align-regexp
   "a=" 'my-align-single-equals
   "b"  'helm-mini
   "d"  (lambda () (interactive) (evil-ex-call-command nil "bdelete" nil))
+  "D"  'open-current-line-in-codebase-search
   "f"  'helm-semantic-or-imenu
   "g"  'magit-status
   "l"  'whitespace-mode
-  "nn" 'narrow-and-set-normal      ;; "narrow normal"
-  "nw" 'widen                      ;; "narrow widen"
+  "nn" 'narrow-and-set-normal ;; "narrow normal"
+  "nw" 'widen                 ;; "narrow widen"
   "o"  'delete-other-windows
   "p"  'put-from-x-clipboard
-  "s"  'ag-project                 ;; "search"
+  "s"  'ag-project            ;; "search"
   "r"  'font-lock-fontify-buffer
   "S"  'delete-trailing-whitespace
   "t"  'gtags-reindex
