@@ -67,9 +67,12 @@
 (add-to-list 'load-path "~/.emacs.d/auto-complete")
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
-(setq inhibit-splash-screen t)
+(setq inhibit-splash-screen t
+      inhibit-startup-message t
+      inhibit-startup-echo-area-message t)
 (menu-bar-mode -1)
 (show-paren-mode 1)
+(visual-line-mode)
 
 ;;; Seamlessly degrade color themes to terminal colors.
 (autoload 'color-theme-approximate-on "color-theme-approximate")
