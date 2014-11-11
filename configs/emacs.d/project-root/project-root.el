@@ -43,4 +43,5 @@
                   (file-exists-p (concat dir marker)))
                 root-markers)))
 
+(provide 'project-root)
 ;;; project-root.el ends here
