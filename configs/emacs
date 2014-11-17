@@ -74,6 +74,11 @@
 (show-paren-mode 1)
 (visual-line-mode)
 
+;;; Evil leader must be loaded before evil (as documented).
+(global-evil-leader-mode)
+;;; Always use evil mode.
+(evil-mode 1)
+
 ;;; Seamlessly degrade color themes to terminal colors.
 (autoload 'color-theme-approximate-on "color-theme-approximate")
 (color-theme-approximate-on)
@@ -87,12 +92,6 @@
 (defvar backup-dir "~/.emacs.d/backups/")
 (setq backup-directory-alist (list (cons "." backup-dir)))
 (setq make-backup-files nil)
-
-(require 'powerline)
-(require 'powerline-evil)
-(require 'evil-surround)
-(require 'gtags)
-(require 'highlight-symbol)
 
 (setq-default highlight-symbol-idle-delay 1.5)
 (setq-default fci-rule-character 9474)
@@ -114,13 +113,13 @@
                              yas-dropdown-prompt))
 
 ;;; Auto-complete, with PHP dictionary.
-(require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
-(ac-config-default)            ;; Use default config.
-(setq ac-auto-start nil)       ;; Don't start completing automatically.
-(ac-set-trigger-key "TAB")     ;; Use tab to start completing.
-(setq ac-source-yasnippet nil) ;; Don't try to auto-complete snippet names, it's busted.
-(define-key ac-completing-map (kbd "[escape]") 'ac-stop)
+;;;(require 'auto-complete-config)
+;;;(add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
+;;;(ac-config-default)            ;; Use default config.
+;;;(setq ac-auto-start nil)       ;; Don't start completing automatically.
+;;;(ac-set-trigger-key "TAB")     ;; Use tab to start completing.
+;;;(setq ac-source-yasnippet nil) ;; Don't try to auto-complete snippet names, it's busted.
+;;;(define-key ac-completing-map (kbd "[escape]") 'ac-stop)
 
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (setq-default flycheck-disabled-checkers '(php-phpmd))
@@ -157,10 +156,6 @@
 (setq evil-want-C-u-scroll t)
 (setq evil-leader/in-all-states 1)
 (setq-default evil-want-C-i-jump nil)
-(global-evil-leader-mode)
-;;; Always use evil mode.
-(require 'evil)
-(evil-mode 1)
 ;;; Use Helm all the time.
 (setq helm-buffers-fuzzy-matching t)
 (helm-mode 1)
@@ -380,7 +375,9 @@ Repeated invocations toggle between the two most recently open buffers."
 
 ;;; Javascript mode:
 (add-hook 'javascript-mode-hook (lambda ()
-                                  (setq c-basic-offset 2)
+                                  (message "IAM RUNNIGN IN UR HOOKS")
+                                  (set-fill-column 120)
+                                  (turn-on-auto-fill)
                                   (setq js-indent-level 2)))
 
 ;;; Markdown mode:
