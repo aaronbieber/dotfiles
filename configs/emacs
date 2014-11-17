@@ -15,6 +15,7 @@
 (setq package-list '(ag
                      color-theme-sanityinc-tomorrow
                      color-theme-approximate
+                     company
                      evil
                      evil-leader
                      evil-jumper
@@ -85,7 +86,7 @@
 
 (defvar show-paren-delay 0
   "Delay (in seconds) before matching paren is highlighted.")
-(setq-default left-fringe-width 100)
+(setq-default left-fringe-width 10)
 (defvar projectile-enable-caching t
   "Tell Projectile to cache project file lists.")
 
