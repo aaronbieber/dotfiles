@@ -7,6 +7,6 @@
  *
  * @return void
  */
-${1:$$(yas-choose-value '("public " "private " "protected "))}${2:static }function ${3:new_function}(${4:$args}) {
+${1:$$(yas-choose-value '("public " "public static " "private " "private static " "protected " "protected static "))}function ${3:new_function}(${4:$args}) {
   $0
 }
