@@ -9,7 +9,7 @@ Config { font = "xft:Inconsolata-13"
              , Run Cpu ["-L","3","-H","50","--normal","green","--high","red", "-t", "CPU <total>%"] 10
              , Run Memory ["-t","MEM <usedratio>%"] 10
              , Run Swap ["-t", "Swap <usedratio>%" ] 10
-             , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
+             , Run Date "%a %b %d, %Y %l:%M:%S" "date" 10
              , Run BatteryP ["BAT0"] ["-L", "20", "-l", "red", "-H", "60", "-h", "green", "-t", "Batt: <left>% / <acstatus>" ] 600
              ]
 , sepChar = "%"
