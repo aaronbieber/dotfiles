@@ -13,6 +13,7 @@
 
 ;;; List the packages you want.
 (setq package-list '(ag
+                     auto-complete
                      color-theme-sanityinc-tomorrow
                      color-theme-approximate
                      evil
@@ -63,7 +64,6 @@
 
 (add-to-list 'load-path "~/.emacs.d/themes") ;; "Tomorrow" requires base code.
 (add-to-list 'load-path "~/.emacs.d/project-root")
-(add-to-list 'load-path "~/.emacs.d/auto-complete")
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
 (setq inhibit-splash-screen t
@@ -79,7 +79,7 @@
 (global-evil-leader-mode)
 ;;; Always use evil mode.
 (evil-mode 1)
-(auto-complete-mode t)
+(global-auto-complete-mode t)
 
 ;;; Seamlessly degrade color themes to terminal colors.
 (autoload 'color-theme-approximate-on "color-theme-approximate")
@@ -158,6 +158,7 @@
 (setq evil-want-C-u-scroll t)
 (setq evil-leader/in-all-states 1)
 (setq-default evil-want-C-i-jump nil)
+(evil-set-initial-state 'twittering-edit-mode 'insert)
 ;;; Use Helm all the time.
 (setq helm-buffers-fuzzy-matching t)
 (helm-mode 1)
