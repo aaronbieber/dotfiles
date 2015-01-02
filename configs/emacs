@@ -115,15 +115,6 @@
                              yas-ido-prompt
                              yas-dropdown-prompt))
 
-;;; Auto-complete, with PHP dictionary.
-;;;(require 'auto-complete-config)
-;;;(add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
-;;;(ac-config-default)            ;; Use default config.
-;;;(setq ac-auto-start nil)       ;; Don't start completing automatically.
-;;;(ac-set-trigger-key "TAB")     ;; Use tab to start completing.
-;;;(setq ac-source-yasnippet nil) ;; Don't try to auto-complete snippet names, it's busted.
-;;;(define-key ac-completing-map (kbd "[escape]") 'ac-stop)
-
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (setq-default flycheck-disabled-checkers '(php-phpmd))
 (setq-default flycheck-phpcs-standard "CSNStores")
