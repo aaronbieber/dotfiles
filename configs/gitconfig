@@ -17,6 +17,7 @@
 	ms = "merge --squash"
 	comp = !"git co master && git pull"
 	rmorig = !"git status --porcelain | awk '/^\\?.*orig/{print $2}' | xargs rm -v"
+        rmpound = !"git status --porcelain | awk '/^\\??.*\\/#[^\\/]*#$/{print $2}' | xargs rm -v"
 	rmuntracked = !"git status --porcelain | awk '/^\\?/{print $2}' | xargs rm -v"
 	todo = !"git diff --name-only origin/master | xargs grep -i -C3 '@todo'"
         rmtrains = !"git branch | grep 'deploy_' | xargs git branch -D"
