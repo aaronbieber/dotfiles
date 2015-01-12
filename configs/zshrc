@@ -186,6 +186,15 @@ alias t="todo -d $HOME/.todo.cfg"
 alias tw="todo | grep @work"
 export TODOTXT_DEFAULT_ACTION=ls
 
+function stock () {
+  if [ -z "$1" ]; then
+    echo "Supply a ticker symbol as the only argument, e.g. stock GOOG."
+    return
+  fi
+
+  curl -s "http://download.finance.yahoo.com/d/quotes.csv\?s\=$1\&f\=l1"
+}
+
 if [ -f "$HOME/.zshrc_$MY_LOCATION" ]; then
   source "$HOME/.zshrc_$MY_LOCATION"
 fi
