@@ -332,6 +332,11 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (add-hook 'php-mode-hook 'configure-php-mode)
 
+;;; Flycheck mode:
+(add-hook 'flycheck-mode-hook (lambda ()
+  (define-key flycheck-mode-map (kbd "]e") 'flycheck-next-error)
+  (define-key flycheck-mode-map (kbd "[e") 'flycheck-previous-error)))
+
 ;;; Org mode:
 (evil-leader/set-key-for-mode 'org-mode
   "t" 'org-set-tags
