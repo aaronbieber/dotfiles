@@ -45,9 +45,9 @@
 ;; ones from Marmalade that I absolutely need to have and am willing to put up
 ;; with potentially old releases. So leave it like this until I find the ones
 ;; that can't be found, then slowly add those to package-archive-enable-alist.
-(setq package-archives '(("elpa" . "http://tromey.com/elpa/")
+(setq package-archives '(("elpa" .      "http://elpa.gnu.org/packages/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")
-                         ("melpa" . "http://melpa.milkbox.net/packages/")))
+                         ("melpa" .     "http://melpa.milkbox.net/packages/")))
 (setq package-archive-enable-alist '(("marmalade" gtags)))
 
 ;;; Activate all the packages (in particular autoloads).
