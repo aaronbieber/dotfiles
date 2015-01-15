@@ -379,7 +379,7 @@ Repeated invocations toggle between the two most recently open buffers."
 
 ;;; Twittering mode:
 (add-hook 'twittering-mode-hook (lambda ()
-                                  (define-key twittering-mode-map (kbd ",b") 'helm-mini))
+                                  (define-key twittering-mode-map (kbd ",b") 'helm-mini)))
 
 ;;; Bind some useful keys in the gtags select buffer that evil overrides.
 (add-hook 'gtags-select-mode-hook
