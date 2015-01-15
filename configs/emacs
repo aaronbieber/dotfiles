@@ -202,6 +202,18 @@ Repeated invocations toggle between the two most recently open buffers."
   (interactive)
   (insert (shell-command-to-string "xsel --clipboard")))
 
+(defun selective-display-increase ()
+  (interactive)
+  (set-selective-display
+   (if selective-display (+ selective-display 2) 1)))
+
+(defun selective-display-decrease ()
+    (interactive)
+    (set-selective-display
+     (if (< (- selective-display 2) 1)
+         0
+       (- selective-display 2))))
+
 ;;; Give me more awesome key bindings that I miss from Vim.
 (define-key evil-normal-state-map (kbd "C-p") 'helm-projectile)
 (define-key evil-normal-state-map (kbd "-") 'helm-find-files)
@@ -328,7 +340,12 @@ Repeated invocations toggle between the two most recently open buffers."
   (set-fill-column 120)
   (turn-on-fci-mode)
   (add-to-list 'write-file-functions 'delete-trailing-whitespace)
-  (gtags-mode t))
+  (gtags-mode t)
+
+  (message "Disabling undo-tree-mode.")
+  (undo-tree-mode nil)
+  (define-key evil-normal-state-map (kbd "_") 'selective-display-decrease)
+  (define-key evil-normal-state-map (kbd "+") 'selective-display-increase))
 
 (add-hook 'php-mode-hook 'configure-php-mode)
 
