@@ -71,10 +71,13 @@
       inhibit-startup-echo-area-message t)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
-(scroll-bar-mode -1)
 (show-paren-mode 1)
 (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
 (visual-line-mode 1)
+
+;;; Turn off scroll bar mode if it exists (GUI only)
+(when (boundp 'scroll-bar-mode)
+  (scroll-bar-mode -1))
 
 ;;; Evil leader must be loaded before evil (as documented).
 (global-evil-leader-mode)
