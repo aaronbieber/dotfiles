@@ -65,6 +65,7 @@
 (add-to-list 'load-path "~/.emacs.d/themes") ;; "Tomorrow" requires base code.
 (add-to-list 'load-path "~/.emacs.d/project-root")
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+(add-to-list 'exec-path "/usr/local/bin")
 
 (setq inhibit-splash-screen t
       inhibit-startup-message t
@@ -407,9 +408,10 @@ Repeated invocations toggle between the two most recently open buffers."
 
 ;;; Markdown mode:
 (add-hook 'markdown-mode-hook (lambda ()
+                                (set-fill-column 80)
                                 (turn-on-auto-fill)
                                 (turn-on-fci-mode)
-                                (set-fill-column 80)))
+                                (flyspell-mode)))
 
 (defun find-php-functions-in-current-buffer ()
   "Find lines that appear to be PHP functions in the buffer.
