@@ -3,3 +3,4 @@ configs/emacs.d/*
 !configs/emacs.d/evil-rebellion
 !configs/emacs.d/project-root
 !configs/xmonad/xmonad.hs
+*.elc
