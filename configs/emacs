@@ -260,6 +260,7 @@ Repeated invocations toggle between the two most recently open buffers."
   "aa" 'align-regexp
   "a=" 'my-align-single-equals
   "b"  'helm-mini
+  "B"  'magit-blame-mode
   "d"  (lambda () (interactive) (evil-ex-call-command nil "bdelete" nil))
   "D"  'open-current-line-in-codebase-search
   "f"  'helm-semantic-or-imenu
