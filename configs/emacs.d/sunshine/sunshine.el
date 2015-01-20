@@ -89,15 +89,14 @@ forecast results."
   "Pad or truncate STRING to fit in COLUMN-WIDTH.
 Optionally, add PAD spaces before and after STRING, and if STRING exceeds the
 available width, truncate it to fit, optionally appending TRUNC-STRING."
-  (let* ((actual-width (- column-width (if pad (* pad 2) 0) (if trunc-string (length trunc-string) 0)))
+  (let* ((actual-width (- column-width (if pad (* pad 2) 0)))
          (display-string (if (> (length string) actual-width)
                              ;; If string exceeds size, truncate.
-                             (substring string 0 actual-width)
+                             (concat (substring string 0 (- actual-width (if trunc-string (length trunc-string) 0))) trunc-string)
                            ;; Otherwise, pad.
                            (concat string (make-string (- actual-width (length string)) ? )))))
     (concat (if pad (make-string pad ? ))
             display-string
-            (if trunc-string trunc-string "")
             (if pad (make-string pad ? )))))
 
 (provide 'sunshine)
