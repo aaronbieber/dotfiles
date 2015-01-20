@@ -44,5 +44,38 @@ forecast results."
             (cons 'pressure (cdr (assoc 'pressure day))))
            ))
 
+(defun sunshine-open-forecast-window ()
+  "Display the forecast."
+  (let ((buf (get-buffer-create "*Forecast*")))
+    (pop-to-buffer buf)
+    (erase-buffer)))
+
+(defun sunshine-forecast ()
+  "The main entry into Sunshine; display the forecast in a window."
+  (interactive)
+  (sunshine-open-forecast-window)
+  (sunshine-draw-forecast
+    (sunshine-get-forecast "Brookline,MA")))
+
+(defun sunshine-draw-forecast (forecast)
+  "Draw FORECAST in pretty ASCII."
+  (let ((hline (concat "+"
+                       (mapconcat 'identity
+                                  (cl-loop for i from 1 to 5 collect
+                                           (concat (make-string 18 ?-)
+                                                   "+")) "")
+                       "\n")))
+
+    (insert (concat hline "| "))
+    (while forecast
+      (let* ((day (car forecast))
+             (date (cdr (assoc 'date day))))
+        (insert date)
+        (if (< (length date) 16)
+            (insert (make-string (- 16 (length date)) ? )))
+        (insert " | "))
+      (setq forecast (cdr forecast)))
+    (insert (concat "\n" hline))))
+
 (provide 'sunshine)
 ;;; sunshine.el ends here
