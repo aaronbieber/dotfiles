@@ -48,8 +48,7 @@ forecast results."
             (cons 'date (format-time-string "%A %h %e" (seconds-to-time (cdr (assoc 'dt day)))))
             (cons 'desc (cdr (assoc 'main (elt (cdr (assoc 'weather day)) 0))))
             (cons 'temp (cdr (assoc 'temp day)))
-            (cons 'pressure (cdr (assoc 'pressure day))))
-           ))
+            (cons 'pressure (cdr (assoc 'pressure day))))))
 
 (defun sunshine-open-forecast-window ()
   "Display the forecast."
@@ -72,15 +71,17 @@ forecast results."
                                            (concat (make-string 18 ?-)
                                                    "+")) "")
                        "\n")))
-
-    (insert (concat hline "| "))
+    (insert (concat hline "|"))
     (while forecast
       (let* ((day (car forecast))
-             (date (cdr (assoc 'date day))))
-        (insert date)
-        (if (< (length date) 16)
-            (insert (make-string (- 16 (length date)) ? )))
-        (insert " | "))
+             (date (cdr (assoc 'date day)))
+             (desc (cdr (assoc 'desc day)))
+             (high (cdr (assoc 'max (cdr (assoc 'temp day)))))
+             (low (cdr (assoc 'min (cdr (assoc 'temp day))))))
+        (insert (sunshine-pad-or-trunc date 18 1 "\u22EF") "|\n"
+                (sunshine-pad-or-trunc desc 18 1 "\u22EF") "|\n"
+                (number-to-string low) "\n"
+                (number-to-string high) "|\n"))
       (setq forecast (cdr forecast)))
     (insert (concat "\n" hline))))
 
