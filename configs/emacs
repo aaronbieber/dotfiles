@@ -188,7 +188,21 @@
         (occur term)
       (message "No term to search for."))))
 
-;;; Switch to the previous buffer (bound to a leader key elsewhere in this file).
+(defun show-first-occurrence ()
+  "Display the location of the word at point's first occurrence in the buffer."
+  (interactive)
+  (save-excursion
+    (let ((search-word (thing-at-point 'word t)))
+      (goto-char 1)
+      (re-search-forward search-word)
+      (message (concat
+                "L" (number-to-string (line-number-at-pos)) ": "
+                (replace-regexp-in-string
+                 "[ \t\n]*\\'"
+                 ""
+                 (thing-at-point 'line t)
+                 ))))))
+
 (defun switch-to-previous-buffer ()
   "Switch to previously open buffer.
 Repeated invocations toggle between the two most recently open buffers."
@@ -224,6 +238,7 @@ Repeated invocations toggle between the two most recently open buffers."
 (define-key evil-normal-state-map (kbd "-") 'helm-find-files)
 (define-key evil-normal-state-map (kbd "C-]") 'gtags-find-tag-from-here)
 (define-key evil-normal-state-map (kbd "g/") 'occur-last-search)
+(define-key evil-normal-state-map (kbd "[i") 'show-first-occurrence)
 (define-key helm-find-files-map (kbd "C-k") 'helm-find-files-up-one-level)
 (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle)
 (evil-define-key 'normal org-mode-map (kbd "C-\\") 'org-insert-heading)
