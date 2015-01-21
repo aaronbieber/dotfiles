@@ -28,6 +28,13 @@ Provide the buffer as BUF."
     (prog1 (json-read)
       (kill-buffer))))
 
+(defvar sunshine-mode-map
+  (let ((map (make-sparse-keymap)))
+    (suppress-keymap map)
+    (define-key map "q" 'sunshine-key-quit)
+    map)
+  "Get the keymap for the Sunshine window.")
+
 (defun sunshine-get-forecast (query &optional units)
   "Get forecast data from OpenWeatherMap's API.
 Provide a location as QUERY and optionally the preferred unit
@@ -50,18 +57,35 @@ forecast results."
             (cons 'temp (cdr (assoc 'temp day)))
             (cons 'pressure (cdr (assoc 'pressure day))))))
 
+(defun sunshine-key-quit ()
+  "Destroy the Sunshine buffer."
+  (interactive)
+  (kill-buffer (get-buffer "*Sunshine*")))
+
+(defun sunshine-mode ()
+  "A major mode for the Sunshine window."
+  (interactive)
+  (kill-all-local-variables)
+  (setq major-mode 'sunshine-mode)
+  (setq mode-name "Sunshine")
+  (use-local-map sunshine-mode-map))
+
 (defun sunshine-open-forecast-window ()
   "Display the forecast."
-  (let ((buf (get-buffer-create "*Forecast*")))
+  (let ((buf (get-buffer-create "*Sunshine*")))
     (pop-to-buffer buf)
-    (erase-buffer)))
+    (erase-buffer)
+    (font-lock-mode)
+    (sunshine-mode)))
 
 (defun sunshine-forecast ()
   "The main entry into Sunshine; display the forecast in a window."
   (interactive)
   (sunshine-open-forecast-window)
   (sunshine-draw-forecast
-    (sunshine-get-forecast "Brookline,MA")))
+   (sunshine-get-forecast "Brookline,MA"))
+  (fit-window-to-buffer)
+  (goto-char 0))
 
 (defun sunshine-draw-forecast (forecast)
   "Draw FORECAST in pretty ASCII."
@@ -81,7 +105,6 @@ forecast results."
                                                (cons "descs" descs)
                                                (cons "highs" highs)
                                                (cons "lows" lows))))))
-    (insert "\n")
     (while output-rows
       (let* ((wholerow (car output-rows))
              (type (car wholerow))
@@ -95,8 +118,13 @@ forecast results."
 
 (defun sunshine-row-type-propertize (string type)
   "Return STRING with face properties appropriate for TYPE."
-  (if (equal type "dates")
-      (propertize string 'font-lock-face '(:underline t))
+  (or (cond ((equal type "dates") (propertize
+                                  string
+                                  'font-lock-face
+                                  '(:underline t :weight "ultra-bold" :foreground "selectedControlColor")))
+            ((equal type "descs") string)
+            ((equal type "highs") string)
+            ((equal type "lows") string))
       string))
 
 (defun sunshine-pad-or-trunc (string column-width &optional pad trunc-string)
