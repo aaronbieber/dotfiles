@@ -19,6 +19,12 @@
 (require 'time-date)
 (require 'json)
 
+;;; Options available for customization.
+(defcustom sunshine-buffer-name "*Sunshine*"
+  "Name for the Sunshine buffer."
+  :group 'sunshine
+  :type 'string)
+
 ;;; Declaring this is polite, though this var is created later by url-http.
 (defvar url-http-end-of-headers)
 
@@ -82,26 +88,24 @@ The following keys are available in `sunshine-mode':
 ;;;  (kill-all-local-variables)
 ;;;  (use-local-map sunshine-mode-map))
 
-(defun sunshine-open-forecast-window ()
-  "Display the forecast."
-  (let ((buf (get-buffer-create "*Sunshine*")))
+(defun sunshine-create-window ()
+  "Create the window and buffer used to display the forecast."
+  (let ((buf (get-buffer-create sunshine-buffer-name)))
     (pop-to-buffer buf)
-    (erase-buffer)
     (view-buffer buf)
     (set-window-dedicated-p (get-buffer-window buf) t)
     (font-lock-mode)
-    ))
+    (sunshine-mode)
+    buf))
 
 (defun sunshine-forecast ()
   "The main entry into Sunshine; display the forecast in a window."
   (interactive)
-  (sunshine-open-forecast-window)
-  (setq buffer-read-only nil)
-  (sunshine-draw-forecast
-   (sunshine-get-forecast "Brookline,MA"))
-  (setq buffer-read-only t)
-  (fit-window-to-buffer)
-  (goto-char 0))
+  (let ((buf (sunshine-create-window)))
+    (sunshine-draw-forecast (sunshine-get-forecast "Brookline,MA"))
+    (setq buffer-read-only t)
+    (goto-char 0)
+    (fit-window-to-buffer)))
 
 (defun sunshine-draw-forecast (forecast)
   "Draw FORECAST in pretty ASCII."
@@ -121,6 +125,7 @@ The following keys are available in `sunshine-mode':
                                                (cons "descs" descs)
                                                (cons "highs" highs)
                                                (cons "lows" lows))))))
+    (setq buffer-read-only nil)
     (while output-rows
       (let* ((wholerow (car output-rows))
              (type (car wholerow))
@@ -130,7 +135,8 @@ The following keys are available in `sunshine-mode':
                   (if (/= 1 (length row)) "|" ""))
           (setq row (cdr row)))
         (insert "\n")
-      (setq output-rows (cdr output-rows))))))
+        (setq output-rows (cdr output-rows))))
+    (setq buffer-read-only t)))
 
 (defun sunshine-row-type-propertize (string type)
   "Return STRING with face properties appropriate for TYPE."
