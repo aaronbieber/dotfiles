@@ -4,11 +4,13 @@
 ;; Use OpenWeatherMap's API to provide current weather and forecast information within Emacs!
 ;;
 ;; THINGS TO DO:
+;; * Create a key map (related to above?), at least for quit. Stupid thing works then doesn't.
+;; * Add icons.
+;;
+;; THINGS ALREADY DONE.
 ;; * Build the full week's worth of weather data in the output.
 ;; * Format it with some propertization.
 ;; * Make the new buffer uneditable.
-;; * Create a key map (related to above?), at least for quit.
-;; * Add icons.
 ;;
 ;;; Code:
 (require 'cl-macs)
@@ -30,7 +32,7 @@ Provide the buffer as BUF."
 
 (defvar sunshine-mode-map
   (let ((map (make-sparse-keymap)))
-    (suppress-keymap map)
+    ;;(suppress-keymap map)
     (define-key map "q" 'sunshine-key-quit)
     map)
   "Get the keymap for the Sunshine window.")
@@ -62,28 +64,42 @@ forecast results."
   (interactive)
   (kill-buffer (get-buffer "*Sunshine*")))
 
-(defun sunshine-mode ()
-  "A major mode for the Sunshine window."
-  (interactive)
-  (kill-all-local-variables)
-  (setq major-mode 'sunshine-mode)
-  (setq mode-name "Sunshine")
-  (use-local-map sunshine-mode-map))
+(define-minor-mode sunshine-mode
+  "Toggle Sunshine Mode.
+
+The following keys are available in `sunshine-mode':
+
+  \\{sunshine-mode-map}"
+
+  nil               ; Init value
+  " Sunshine"       ; Lighter
+  sunshine-mode-map ; keymap
+  )
+
+;;;(defun sunshine-mode ()
+;;;  "A major mode for the Sunshine window."
+;;;  (interactive)
+;;;  (kill-all-local-variables)
+;;;  (use-local-map sunshine-mode-map))
 
 (defun sunshine-open-forecast-window ()
   "Display the forecast."
   (let ((buf (get-buffer-create "*Sunshine*")))
     (pop-to-buffer buf)
     (erase-buffer)
+    (view-buffer buf)
+    (set-window-dedicated-p (get-buffer-window buf) t)
     (font-lock-mode)
-    (sunshine-mode)))
+    ))
 
 (defun sunshine-forecast ()
   "The main entry into Sunshine; display the forecast in a window."
   (interactive)
   (sunshine-open-forecast-window)
+  (setq buffer-read-only nil)
   (sunshine-draw-forecast
    (sunshine-get-forecast "Brookline,MA"))
+  (setq buffer-read-only t)
   (fit-window-to-buffer)
   (goto-char 0))
 
@@ -121,7 +137,7 @@ forecast results."
   (or (cond ((equal type "dates") (propertize
                                   string
                                   'font-lock-face
-                                  '(:underline t :weight "ultra-bold" :foreground "selectedControlColor")))
+                                  '(:underline t :weight "ultra-bold" :foreground "DodgerBlue")))
             ((equal type "descs") string)
             ((equal type "highs") string)
             ((equal type "lows") string))
