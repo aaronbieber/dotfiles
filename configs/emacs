@@ -62,10 +62,12 @@
   (unless (package-installed-p package)
     (package-install package)))
 
-(add-to-list 'load-path "~/.emacs.d/themes") ;; "Tomorrow" requires base code.
-(add-to-list 'load-path "~/.emacs.d/project-root")
+(add-to-list 'load-path "~/.emacs.d/themes")       ;; "Tomorrow" requires base code.
+(add-to-list 'load-path "~/.emacs.d/project-root") ;; My pkg for finding proj. roots.
+(add-to-list 'load-path "~/.emacs.d/sunshine")     ;; My pkg for displaying weather data.
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 (add-to-list 'exec-path "/usr/local/bin")
+(load "sunshine")
 
 (setq inhibit-splash-screen t
       inhibit-startup-message t
@@ -427,6 +429,9 @@ Repeated invocations toggle between the two most recently open buffers."
                                 (turn-on-auto-fill)
                                 (turn-on-fci-mode)
                                 (flyspell-mode)))
+
+(add-hook 'sunshine-mode-hook (lambda ()
+                                (define-key evil-normal-state-map (kbd "q") 'sunshine-key-quit)))
 
 (defun find-php-functions-in-current-buffer ()
   "Find lines that appear to be PHP functions in the buffer.
