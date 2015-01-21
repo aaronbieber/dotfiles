@@ -70,20 +70,34 @@ forecast results."
                                   (cl-loop for i from 1 to 5 collect
                                            (concat (make-string 18 ?-)
                                                    "+")) "")
-                       "\n")))
-    (insert (concat hline "|"))
-    (while forecast
-      (let* ((day (car forecast))
-             (date (cdr (assoc 'date day)))
-             (desc (cdr (assoc 'desc day)))
-             (high (cdr (assoc 'max (cdr (assoc 'temp day)))))
-             (low (cdr (assoc 'min (cdr (assoc 'temp day))))))
-        (insert (sunshine-pad-or-trunc date 18 1 "\u22EF") "|\n"
-                (sunshine-pad-or-trunc desc 18 1 "\u22EF") "|\n"
-                (number-to-string low) "\n"
-                (number-to-string high) "|\n"))
-      (setq forecast (cdr forecast)))
-    (insert (concat "\n" hline))))
+                       "\n"))
+        (output-rows (cl-loop for day in forecast
+                              collect (cdr (assoc 'date day)) into dates
+                              collect (cdr (assoc 'desc day)) into descs
+                              collect (format "high: %s" (number-to-string (cdr (assoc 'max (cdr (assoc 'temp day)))))) into highs
+                              collect (format "low:  %s" (number-to-string (cdr (assoc 'min (cdr (assoc 'temp day)))))) into lows
+                              finally (return (list
+                                               (cons "dates" dates)
+                                               (cons "descs" descs)
+                                               (cons "highs" highs)
+                                               (cons "lows" lows))))))
+    (insert "\n")
+    (while output-rows
+      (let* ((wholerow (car output-rows))
+             (type (car wholerow))
+             (row (cdr wholerow)))
+        (while row
+          (insert (sunshine-row-type-propertize (sunshine-pad-or-trunc (car row) 18 1) type)
+                  (if (/= 1 (length row)) "|" ""))
+          (setq row (cdr row)))
+        (insert "\n")
+      (setq output-rows (cdr output-rows))))))
+
+(defun sunshine-row-type-propertize (string type)
+  "Return STRING with face properties appropriate for TYPE."
+  (if (equal type "dates")
+      (propertize string 'font-lock-face '(:underline t))
+      string))
 
 (defun sunshine-pad-or-trunc (string column-width &optional pad trunc-string)
   "Pad or truncate STRING to fit in COLUMN-WIDTH.
