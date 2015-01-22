@@ -430,8 +430,9 @@ Repeated invocations toggle between the two most recently open buffers."
                                 (turn-on-fci-mode)
                                 (flyspell-mode)))
 
+;;; Sunshine mode:
 (add-hook 'sunshine-mode-hook (lambda ()
-                                (define-key evil-normal-state-map (kbd "q") 'sunshine-key-quit)))
+                                (when (fboundp 'turn-off-evil-mode) (turn-off-evil-mode))))
 
 (defun find-php-functions-in-current-buffer ()
   "Find lines that appear to be PHP functions in the buffer.
