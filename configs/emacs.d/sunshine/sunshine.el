@@ -25,6 +25,12 @@
   :group 'sunshine
   :type 'string)
 
+(defcustom sunshine-mode-hook nil
+  "Hook to run upon entering `sunshine-mode'.
+See `run-hooks'."
+  :group 'sunshine
+  :type 'hook)
+
 ;;; Declaring this is polite, though this var is created later by url-http.
 (defvar url-http-end-of-headers)
 
@@ -70,31 +76,40 @@ forecast results."
   (interactive)
   (kill-buffer (get-buffer "*Sunshine*")))
 
-(define-minor-mode sunshine-mode
-  "Toggle Sunshine Mode.
+;;;(define-minor-mode sunshine-mode
+;;;  "Toggle Sunshine Mode.
+;;;
+;;;The following keys are available in `sunshine-mode':
+;;;
+;;;  \\{sunshine-mode-map}"
+;;;
+;;;  nil               ; Init value
+;;;  " Sunshine"       ; Lighter
+;;;  sunshine-mode-map ; keymap
+;;;  )
+
+(defun sunshine-mode ()
+  "A major mode for the Sunshine window.
 
 The following keys are available in `sunshine-mode':
 
   \\{sunshine-mode-map}"
-
-  nil               ; Init value
-  " Sunshine"       ; Lighter
-  sunshine-mode-map ; keymap
-  )
-
-;;;(defun sunshine-mode ()
-;;;  "A major mode for the Sunshine window."
-;;;  (interactive)
-;;;  (kill-all-local-variables)
-;;;  (use-local-map sunshine-mode-map))
+  (interactive)
+  (use-local-map sunshine-mode-map)
+  (setq mode-name "Sunshine")
+  (setq major-mode 'sunshine-mode)
+  (run-mode-hooks 'sunshine-mode-hook))
 
 (defun sunshine-create-window ()
   "Create the window and buffer used to display the forecast."
   (let ((buf (get-buffer-create sunshine-buffer-name)))
-    (pop-to-buffer buf)
-    (view-buffer buf)
+    (split-window-vertically)
+    (other-window 1)
+    (switch-to-buffer buf t t)
+    (kill-all-local-variables)
     (set-window-dedicated-p (get-buffer-window buf) t)
-    (font-lock-mode)
+    ;;(pop-to-buffer buf)
+    ;;(view-buffer buf)
     (sunshine-mode)
     buf))
 
@@ -103,7 +118,6 @@ The following keys are available in `sunshine-mode':
   (interactive)
   (let ((buf (sunshine-create-window)))
     (sunshine-draw-forecast (sunshine-get-forecast "Brookline,MA"))
-    (setq buffer-read-only t)
     (goto-char 0)
     (fit-window-to-buffer)))
 
