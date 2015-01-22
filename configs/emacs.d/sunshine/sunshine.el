@@ -4,13 +4,18 @@
 ;; Use OpenWeatherMap's API to provide current weather and forecast information within Emacs!
 ;;
 ;; THINGS TO DO:
-;; * Create a key map (related to above?), at least for quit. Stupid thing works then doesn't.
+;; * Cache the HTTP response for a while.
+;; * Try to resize windows more politely (fit-window-to-buffer expands the window below;
+;;   it should try to shrink it to compensate, maybe).
 ;; * Add icons.
 ;;
 ;; THINGS ALREADY DONE.
 ;; * Build the full week's worth of weather data in the output.
 ;; * Format it with some propertization.
 ;; * Make the new buffer uneditable.
+;; * Create a key map (related to above?), at least for quit. Stupid thing works then doesn't.
+;; ** Created a major mode; this actually works, but Evil shadows all of the keys. Created
+;;    a hook in my own config to disable Evil while in Sunshine.
 ;;
 ;;; Code:
 (require 'cl-macs)
