@@ -1,23 +1,50 @@
 ;;; sunshine.el --- Provide weather and forecast information.
+
+;; Author: Aaron Bieber
+
+;; Version 0.1
+
+;; This file is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 2, or (at your option)
+;; any later version.
+
+;; This file is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with GNU Emacs; see the file COPYING.  If not, write to
+;; the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+;; Boston, MA 02111-1307, USA.
+
 ;;; Commentary:
+
+;; 1) Copy this file somewhere in your Emacs `load-path'.  To see what
+;;    your `load-path' is, run inside emacs: C-h v load-path<RET>
 ;;
-;; Use OpenWeatherMap's API to provide current weather and forecast information within Emacs!
+;; 2) Add the following to your .emacs file:
 ;;
-;; THINGS TO DO:
+;;    (require 'sunshine)
+;;
+;; 3) Configure your location by setting the variable
+;;    `sunshine-location'.  You can provide a string, like "New York,
+;;    NY" or a ZIP code, like "90210".  This variable is available
+;;    through the Customize facility.
+;;
+;; 4) To display the forecast for your location, call
+;;    `sunshine-forecast'.
+
+;;; Open issues:
+
 ;; * Cache the HTTP response for a while.
 ;; * Try to resize windows more politely (fit-window-to-buffer expands the window below;
 ;;   it should try to shrink it to compensate, maybe).
 ;; * Add icons.
-;;
-;; THINGS ALREADY DONE.
-;; * Build the full week's worth of weather data in the output.
-;; * Format it with some propertization.
-;; * Make the new buffer uneditable.
-;; * Create a key map (related to above?), at least for quit. Stupid thing works then doesn't.
-;; ** Created a major mode; this actually works, but Evil shadows all of the keys. Created
-;;    a hook in my own config to disable Evil while in Sunshine.
-;;
+
 ;;; Code:
+
 (require 'cl-macs)
 (require 'url)
 (require 'url-cache)
@@ -35,6 +62,11 @@
 See `run-hooks'."
   :group 'sunshine
   :type 'hook)
+
+(defcustom sunshine-location "New York, NY"
+  "The default location for which to retrieve weather."
+  :group 'sunshine
+  :type 'string)
 
 ;;; Declaring this is polite, though this var is created later by url-http.
 (defvar url-http-end-of-headers)
