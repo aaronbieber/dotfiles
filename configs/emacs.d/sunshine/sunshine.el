@@ -104,27 +104,31 @@ of measurement as UNITS (e.g. 'metric' or 'imperial')."
                       (url-encode-url location)
                       "&mode=json&units=imperial&cnt=5")))
   (if (sunshine-cache-expired url)
-      (url-retrieve url 'sunshine-retrieved)
+      (progn
+        (message "Sunshine: Cache expired. Retrieving from website.")
+        (url-retrieve url 'sunshine-retrieved))
 
     ;;(weather-json-buffer (url-retrieve-synchronously url)))
-    (apply 'sunshine-retrieved
-           (with-temp-buffer
-             (mm-disable-multibyte)
-             (url-cache-extract (url-cache-create-filename url))
-             ;;(sunshine-build-simple-forecast
-             ;;(sunshine-extract-response weather-json-buffer))))
-             )))))
+    (progn
+      (message "Sunhine: Retrieving from cache.")
+      (apply 'sunshine-retrieved
+             (with-temp-buffer
+               (mm-disable-multibyte)
+               (url-cache-extract (url-cache-create-filename url))
+               ;;(sunshine-build-simple-forecast
+               ;;(sunshine-extract-response weather-json-buffer))))
+               ))))))
 
 (defun sunshine-retrieved (status)
   "Process the retrieved data; receives STATUS."
   (let ((buf (get-buffer-create sunshine-buffer-name))
-        (fc (sunshine-extract-response)))
+        (forecast (sunshine-extract-response)))
     (url-store-in-cache (current-buffer))
     (with-current-buffer buf
       (progn
         (sunshine-draw-forecast
-         (sunshine-build-simple-forecast fc))
-        (fit-window-to-buffer)))))
+         (sunshine-build-simple-forecast forecast))
+        (fit-window-to-buffer (get-buffer-window buf))))))
 
 (defun sunshine-cache-expired (url)
   "Check cache for URL."
@@ -206,7 +210,7 @@ forecast results."
   (or (cond ((equal type "dates") (propertize
                                   string
                                   'font-lock-face
-                                  '(:underline t :weight "ultra-bold" :foreground "DodgerBlue")))
+                                  '(:underline t :weight "extra-bold" :foreground "DodgerBlue")))
             ((equal type "descs") string)
             ((equal type "highs") string)
             ((equal type "lows") string))
@@ -234,6 +238,7 @@ The following keys are available in `sunshine-mode':
   \\{sunshine-mode-map}"
   (interactive)
   (use-local-map sunshine-mode-map)
+  (setq truncate-lines t)
   (setq mode-name "Sunshine")
   (setq major-mode 'sunshine-mode)
   (run-mode-hooks 'sunshine-mode-hook))
