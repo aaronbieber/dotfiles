@@ -68,16 +68,13 @@ See `run-hooks'."
   :group 'sunshine
   :type 'string)
 
+(defcustom sunshine-cache-ttl (seconds-to-time 900)
+  "How long to keep forecast data cached; sorry, it is a time value."
+  :group 'sunshine
+  :type '(repeat integer))
+
 ;;; Declaring this is polite, though this var is created later by url-http.
 (defvar url-http-end-of-headers)
-
-(defun sunshine-extract-response (buf)
-  "Extract the JSON response from the buffer returned by url-http.
-Provide the buffer as BUF."
-  (with-current-buffer buf
-    (goto-char url-http-end-of-headers)
-    (prog1 (json-read)
-      (kill-buffer))))
 
 (defvar sunshine-mode-map
   (let ((map (make-sparse-keymap)))
@@ -86,16 +83,61 @@ Provide the buffer as BUF."
     map)
   "Get the keymap for the Sunshine window.")
 
-(defun sunshine-get-forecast (query &optional units)
+(defun sunshine-forecast ()
+  "The main entry into Sunshine; display the forecast in a window."
+  (interactive)
+  (sunshine-get-forecast sunshine-location))
+
+(defun sunshine-extract-response ()
+  "Extract the JSON response from the buffer returned by url-http.
+Provide the buffer as BUF."
+  (goto-char url-http-end-of-headers)
+  (prog1 (json-read)
+    (kill-buffer)))
+
+(defun sunshine-get-forecast (location &optional units)
   "Get forecast data from OpenWeatherMap's API.
-Provide a location as QUERY and optionally the preferred unit
+Provide a LOCATION and optionally the preferred unit
 of measurement as UNITS (e.g. 'metric' or 'imperial')."
+  (sunshine-prepare-window)
   (let* ((url (concat "http://api.openweathermap.org/data/2.5/forecast/daily?q="
-                      query
-                      "&mode=json&units=imperial&cnt=5"))
-         (weather-json-buffer (url-retrieve-synchronously url)))
-    (sunshine-build-simple-forecast
-     (sunshine-extract-response weather-json-buffer))))
+                      (url-encode-url location)
+                      "&mode=json&units=imperial&cnt=5")))
+  (if (sunshine-cache-expired url)
+      (url-retrieve url 'sunshine-retrieved)
+
+    ;;(weather-json-buffer (url-retrieve-synchronously url)))
+    (apply 'sunshine-retrieved
+           (with-temp-buffer
+             (mm-disable-multibyte)
+             (url-cache-extract (url-cache-create-filename url))
+             ;;(sunshine-build-simple-forecast
+             ;;(sunshine-extract-response weather-json-buffer))))
+             )))))
+
+(defun sunshine-retrieved (status)
+  "Process the retrieved data; receives STATUS."
+  (let ((buf (get-buffer-create sunshine-buffer-name))
+        (fc (sunshine-extract-response)))
+    (url-store-in-cache (current-buffer))
+    (with-current-buffer buf
+      (progn
+        (sunshine-draw-forecast
+         (sunshine-build-simple-forecast fc))
+        (fit-window-to-buffer)))))
+
+(defun sunshine-cache-expired (url)
+  "Check cache for URL."
+  (cond (url-standalone-mode
+         (not (file-exists-p (url-cache-create-filename url))))
+        (t (let ((cache-time (url-is-cached url)))
+             (if cache-time
+                 (time-less-p
+                  (time-add
+                   cache-time
+                   sunshine-cache-ttl)
+                  (current-time))
+               t)))))
 
 (defun sunshine-build-simple-forecast (fc-data)
   "Build a simple, legible forecast from FC-DATA.
@@ -113,69 +155,38 @@ forecast results."
   (interactive)
   (kill-buffer (get-buffer "*Sunshine*")))
 
-;;;(define-minor-mode sunshine-mode
-;;;  "Toggle Sunshine Mode.
-;;;
-;;;The following keys are available in `sunshine-mode':
-;;;
-;;;  \\{sunshine-mode-map}"
-;;;
-;;;  nil               ; Init value
-;;;  " Sunshine"       ; Lighter
-;;;  sunshine-mode-map ; keymap
-;;;  )
-
-(defun sunshine-mode ()
-  "A major mode for the Sunshine window.
-
-The following keys are available in `sunshine-mode':
-
-  \\{sunshine-mode-map}"
-  (interactive)
-  (use-local-map sunshine-mode-map)
-  (setq mode-name "Sunshine")
-  (setq major-mode 'sunshine-mode)
-  (run-mode-hooks 'sunshine-mode-hook))
-
-(defun sunshine-create-window ()
+(defun sunshine-prepare-window ()
   "Create the window and buffer used to display the forecast."
-  (let ((buf (get-buffer-create sunshine-buffer-name)))
-    (split-window-vertically)
-    (other-window 1)
-    (switch-to-buffer buf t t)
-    (kill-all-local-variables)
-    (set-window-dedicated-p (get-buffer-window buf) t)
-    ;;(pop-to-buffer buf)
-    ;;(view-buffer buf)
-    (sunshine-mode)
-    buf))
-
-(defun sunshine-forecast ()
-  "The main entry into Sunshine; display the forecast in a window."
-  (interactive)
-  (let ((buf (sunshine-create-window)))
-    (sunshine-draw-forecast (sunshine-get-forecast "Brookline,MA"))
-    (goto-char 0)
-    (fit-window-to-buffer)))
+  (let* ((buf (get-buffer-create sunshine-buffer-name))
+         (win (split-window-vertically)))
+    (set-window-buffer win buf)
+    (with-current-buffer buf
+      (erase-buffer)
+      (kill-all-local-variables)
+      (set-window-dedicated-p (get-buffer-window buf) t)
+      (sunshine-mode)
+      (insert "Loading..."))))
 
 (defun sunshine-draw-forecast (forecast)
   "Draw FORECAST in pretty ASCII."
+  (erase-buffer)
   (let ((hline (concat "+"
                        (mapconcat 'identity
                                   (cl-loop for i from 1 to 5 collect
                                            (concat (make-string 18 ?-)
                                                    "+")) "")
                        "\n"))
-        (output-rows (cl-loop for day in forecast
-                              collect (cdr (assoc 'date day)) into dates
-                              collect (cdr (assoc 'desc day)) into descs
-                              collect (format "high: %s" (number-to-string (cdr (assoc 'max (cdr (assoc 'temp day)))))) into highs
-                              collect (format "low:  %s" (number-to-string (cdr (assoc 'min (cdr (assoc 'temp day)))))) into lows
-                              finally (return (list
-                                               (cons "dates" dates)
-                                               (cons "descs" descs)
-                                               (cons "highs" highs)
-                                               (cons "lows" lows))))))
+        (output-rows
+         (cl-loop for day in forecast
+                  collect (cdr (assoc 'date day)) into dates
+                  collect (cdr (assoc 'desc day)) into descs
+                  collect (format "high: %s" (number-to-string (cdr (assoc 'max (cdr (assoc 'temp day)))))) into highs
+                  collect (format "low:  %s" (number-to-string (cdr (assoc 'min (cdr (assoc 'temp day)))))) into lows
+                  finally (return (list
+                                   (cons "dates" dates)
+                                   (cons "descs" descs)
+                                   (cons "highs" highs)
+                                   (cons "lows" lows))))))
     (setq buffer-read-only nil)
     (while output-rows
       (let* ((wholerow (car output-rows))
@@ -187,6 +198,7 @@ The following keys are available in `sunshine-mode':
           (setq row (cdr row)))
         (insert "\n")
         (setq output-rows (cdr output-rows))))
+    (goto-char 0)
     (setq buffer-read-only t)))
 
 (defun sunshine-row-type-propertize (string type)
@@ -213,6 +225,18 @@ available width, truncate it to fit, optionally appending TRUNC-STRING."
     (concat (if pad (make-string pad ? ))
             display-string
             (if pad (make-string pad ? )))))
+
+(defun sunshine-mode ()
+  "A major mode for the Sunshine window.
+
+The following keys are available in `sunshine-mode':
+
+  \\{sunshine-mode-map}"
+  (interactive)
+  (use-local-map sunshine-mode-map)
+  (setq mode-name "Sunshine")
+  (setq major-mode 'sunshine-mode)
+  (run-mode-hooks 'sunshine-mode-hook))
 
 (provide 'sunshine)
 ;;; sunshine.el ends here
