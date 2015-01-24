@@ -52,7 +52,7 @@
 
 ;;; Options available for customization.
 (defcustom sunshine-buffer-name "*Sunshine*"
-  "Name for the Sunshine buffer."
+  "Name for the Sunshine buffer.  You probably don't need to change this."
   :group 'sunshine
   :type 'string)
 
@@ -63,17 +63,16 @@ See `run-hooks'."
   :type 'hook)
 
 (defcustom sunshine-location "New York, NY"
-  "The default location for which to retrieve weather."
+  "The default location for which to retrieve weather.
+You can use a city/state value like \"New York, NY\" or a ZIP code like \"06032\"."
   :group 'sunshine
   :type 'string)
 
 (defcustom sunshine-cache-ttl (seconds-to-time 900)
-  "How long to keep forecast data cached; sorry, it is a time value."
+  "How long to keep forecast data cached; sorry, it is a time value.
+The default value is 15 minutes (900 seconds)."
   :group 'sunshine
   :type '(repeat integer))
-
-;;; Declaring this is polite, though this var is created later by url-http.
-(defvar url-http-end-of-headers)
 
 (defvar sunshine-mode-map
   (let ((map (make-sparse-keymap)))
