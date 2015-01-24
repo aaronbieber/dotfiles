@@ -106,13 +106,15 @@ of measurement as UNITS (e.g. 'metric' or 'imperial')."
   (let* ((url (sunshine-make-url location)))
     (if (sunshine-cache-expired url)
         (url-retrieve url 'sunshine-retrieved)
+      ;; Cache is not expired; pull out the cached data.
       (with-temp-buffer
         (mm-disable-multibyte)
         (url-cache-extract (url-cache-create-filename url))
+        ;; Use a fake status value; we don't use it anyway.
         (sunshine-retrieved "status")))))
 
 (defun sunshine-retrieved (status)
-  "Process the retrieved data; receives STATUS."
+  "Process the retrieved data; receives STATUS, which we discard."
   (url-store-in-cache (current-buffer))
   (let ((buf (get-buffer-create sunshine-buffer-name))
         (forecast (sunshine-extract-response)))
@@ -122,6 +124,15 @@ of measurement as UNITS (e.g. 'metric' or 'imperial')."
          (sunshine-build-simple-forecast forecast))
         (fit-window-to-buffer (get-buffer-window buf))
         (select-window (get-buffer-window sunshine-buffer-name))))))
+
+(defun sunshine-get-cached-time (&optional format)
+  "Return the last modified time of the Sunshine cache, if it exists.
+If provided, FORMAT is used as an argument to `format-time-string'.
+If omitted, or nil, a date object is returned."
+  (let ((cache-time (url-is-cached (sunshine-make-url sunshine-location))))
+    (if format
+        (format-time-string format cache-time)
+      cache-time)))
 
 (defun sunshine-cache-expired (url)
   "Check cache for URL."
@@ -177,7 +188,7 @@ forecast results."
 
 (defun sunshine-draw-forecast (forecast)
   "Draw FORECAST in pretty ASCII."
-  (let* (
+  (let* ((cached (sunshine-get-cached-time "%b. %e at %l:%M %p"))
          (location (cdr (assoc 'location forecast)))
          (days (cdr (assoc 'days forecast)))
          (output-rows
@@ -213,25 +224,26 @@ forecast results."
              (row (cdr wholerow)))
         (while row
           (insert (sunshine-row-type-propertize (sunshine-pad-or-trunc (car row) 20 1) type)
-                  (if (and
-                       ;; This is not the last column
-                       (/= 1 (length row))
-                       ;; This is not the dates row
-                       (not (equal type "dates")))
+                  (if (/= 1 (length row))
                       (propertize "\u2502" 'font-lock-face '(:foreground "gray50"))
                     " "))
           (setq row (cdr row)))
         (insert (sunshine-newline-propertize type))
         (setq output-rows (cdr output-rows))))
+    (insert (concat " Last updated " cached
+                    (propertize "\n"
+                                'line-height 1.5)))
     (goto-char 0)
     (setq buffer-read-only t)))
 
 (defun sunshine-newline-propertize (type)
   "Output a newline appropriate for a line of TYPE."
-  (if (equal type "dates")
-      (propertize "\n"
-                  'line-spacing .5)
-    "\n"))
+  "\n"
+  ;;(if (equal type "dates")
+  ;;    (propertize "\n"
+  ;;                'line-spacing .5)
+  ;;  "\n"))
+  )
 
 (defun sunshine-row-type-propertize (string type)
   "Return STRING with face properties appropriate for TYPE."
