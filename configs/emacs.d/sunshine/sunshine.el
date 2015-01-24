@@ -89,41 +89,36 @@ See `run-hooks'."
   (sunshine-get-forecast sunshine-location))
 
 (defun sunshine-extract-response ()
-  "Extract the JSON response from the buffer returned by url-http.
-Provide the buffer as BUF."
-  (goto-char url-http-end-of-headers)
-  (prog1 (json-read)
-    (kill-buffer)))
+  "Extract the JSON response from the buffer returned by url-http."
+  (when (re-search-forward "^HTTP/.+ 200 OK$" (line-end-position) t)
+    (when (search-forward "\n\n" nil t)
+      (prog1 (json-read)
+        (kill-buffer)))))
+
+(defun sunshine-make-url (location)
+  "Make a URL suitable for retrieving the weather for LOCATION."
+  (concat "http://api.openweathermap.org/data/2.5/forecast/daily?q="
+                      (url-encode-url location)
+                      "&mode=json&units=imperial&cnt=5"))
 
 (defun sunshine-get-forecast (location &optional units)
   "Get forecast data from OpenWeatherMap's API.
 Provide a LOCATION and optionally the preferred unit
 of measurement as UNITS (e.g. 'metric' or 'imperial')."
   (sunshine-prepare-window)
-  (let* ((url (concat "http://api.openweathermap.org/data/2.5/forecast/daily?q="
-                      (url-encode-url location)
-                      "&mode=json&units=imperial&cnt=5")))
-  (if (sunshine-cache-expired url)
-      (progn
-        (message "Sunshine: Cache expired. Retrieving from website.")
-        (url-retrieve url 'sunshine-retrieved))
-
-    ;;(weather-json-buffer (url-retrieve-synchronously url)))
-    (progn
-      (message "Sunhine: Retrieving from cache.")
-      (apply 'sunshine-retrieved
-             (with-temp-buffer
-               (mm-disable-multibyte)
-               (url-cache-extract (url-cache-create-filename url))
-               ;;(sunshine-build-simple-forecast
-               ;;(sunshine-extract-response weather-json-buffer))))
-               ))))))
+  (let* ((url (sunshine-make-url location)))
+    (if (sunshine-cache-expired url)
+        (url-retrieve url 'sunshine-retrieved)
+      (with-temp-buffer
+        (mm-disable-multibyte)
+        (url-cache-extract (url-cache-create-filename url))
+        (sunshine-retrieved "status")))))
 
 (defun sunshine-retrieved (status)
   "Process the retrieved data; receives STATUS."
+  (url-store-in-cache (current-buffer))
   (let ((buf (get-buffer-create sunshine-buffer-name))
         (forecast (sunshine-extract-response)))
-    (url-store-in-cache (current-buffer))
     (with-current-buffer buf
       (progn
         (sunshine-draw-forecast
@@ -149,7 +144,7 @@ FC-DATA is the raw forecast data resulting from calling json-read on the
 forecast results."
   (cl-loop for day across (cdr (assoc 'list fc-data)) collect
            (list
-            (cons 'date (format-time-string "%A %h %e" (seconds-to-time (cdr (assoc 'dt day)))))
+            (cons 'date (format-time-string "%A, %h. %e" (seconds-to-time (cdr (assoc 'dt day)))))
             (cons 'desc (cdr (assoc 'main (elt (cdr (assoc 'weather day)) 0))))
             (cons 'temp (cdr (assoc 'temp day)))
             (cons 'pressure (cdr (assoc 'pressure day))))))
@@ -162,18 +157,20 @@ forecast results."
 (defun sunshine-prepare-window ()
   "Create the window and buffer used to display the forecast."
   (let* ((buf (get-buffer-create sunshine-buffer-name))
-         (win (split-window-vertically)))
+         (win (or (get-buffer-window sunshine-buffer-name)
+                  (split-window-vertically))))
     (set-window-buffer win buf)
     (with-current-buffer buf
+      (setq buffer-read-only nil)
       (erase-buffer)
       (kill-all-local-variables)
       (set-window-dedicated-p (get-buffer-window buf) t)
       (sunshine-mode)
-      (insert "Loading..."))))
+      (insert "Loading...")
+      (setq buffer-read-only t))))
 
 (defun sunshine-draw-forecast (forecast)
   "Draw FORECAST in pretty ASCII."
-  (erase-buffer)
   (let ((hline (concat "+"
                        (mapconcat 'identity
                                   (cl-loop for i from 1 to 5 collect
@@ -184,33 +181,47 @@ forecast results."
          (cl-loop for day in forecast
                   collect (cdr (assoc 'date day)) into dates
                   collect (cdr (assoc 'desc day)) into descs
-                  collect (format "high: %s" (number-to-string (cdr (assoc 'max (cdr (assoc 'temp day)))))) into highs
-                  collect (format "low:  %s" (number-to-string (cdr (assoc 'min (cdr (assoc 'temp day)))))) into lows
+                  collect (format "High: %s" (number-to-string (cdr (assoc 'max (cdr (assoc 'temp day)))))) into highs
+                  collect (format "Low:  %s" (number-to-string (cdr (assoc 'min (cdr (assoc 'temp day)))))) into lows
                   finally (return (list
                                    (cons "dates" dates)
                                    (cons "descs" descs)
                                    (cons "highs" highs)
                                    (cons "lows" lows))))))
     (setq buffer-read-only nil)
+    (erase-buffer)
     (while output-rows
       (let* ((wholerow (car output-rows))
              (type (car wholerow))
              (row (cdr wholerow)))
         (while row
-          (insert (sunshine-row-type-propertize (sunshine-pad-or-trunc (car row) 18 1) type)
-                  (if (/= 1 (length row)) "|" ""))
+          (insert (sunshine-row-type-propertize (sunshine-pad-or-trunc (car row) 20 1) type)
+                  (if (and
+                       ;; This is not the last column
+                       (/= 1 (length row))
+                       ;; This is not the dates row
+                       (not (equal type "dates")))
+                      (propertize "\u2502" 'font-lock-face '(:foreground "gray50"))
+                    " "))
           (setq row (cdr row)))
-        (insert "\n")
+        (insert (sunshine-newline-propertize type))
         (setq output-rows (cdr output-rows))))
     (goto-char 0)
     (setq buffer-read-only t)))
 
+(defun sunshine-newline-propertize (type)
+  "Output a newline appropriate for a line of TYPE."
+  (if (equal type "dates")
+      (propertize "\n"
+                  'line-spacing .5)
+    "\n"))
+
 (defun sunshine-row-type-propertize (string type)
   "Return STRING with face properties appropriate for TYPE."
   (or (cond ((equal type "dates") (propertize
-                                  string
-                                  'font-lock-face
-                                  '(:underline t :weight "extra-bold" :foreground "DodgerBlue")))
+                                   string
+                                   'font-lock-face
+                                   '(:weight ultra-bold :foreground "DodgerBlue")))
             ((equal type "descs") string)
             ((equal type "highs") string)
             ((equal type "lows") string))
