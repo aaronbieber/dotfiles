@@ -76,7 +76,6 @@ The default value is 15 minutes (900 seconds)."
 
 (defvar sunshine-mode-map
   (let ((map (make-sparse-keymap)))
-    ;;(suppress-keymap map)
     (define-key map "q" 'sunshine-key-quit)
     map)
   "Get the keymap for the Sunshine window.")
@@ -156,7 +155,7 @@ forecast results."
 (defun sunshine-key-quit ()
   "Destroy the Sunshine buffer."
   (interactive)
-  (kill-buffer (get-buffer "*Sunshine*")))
+  (kill-buffer (get-buffer sunshine-buffer-name)))
 
 (defun sunshine-prepare-window ()
   "Create the window and buffer used to display the forecast."
@@ -182,11 +181,17 @@ forecast results."
          (location (cdr (assoc 'location forecast)))
          (days (cdr (assoc 'days forecast)))
          (output-rows
+          ;; This loop collects each forecast data element into
+          ;; separate lists, effectively "pivoting" the data so that
+          ;; we can draw it by looping over each list, one list per
+          ;; screen line.
           (cl-loop for day in days
                    collect (cdr (assoc 'date day)) into dates
                    collect (cdr (assoc 'desc day)) into descs
                    collect (format "High: %s" (number-to-string (cdr (assoc 'max (cdr (assoc 'temp day)))))) into highs
                    collect (format "Low:  %s" (number-to-string (cdr (assoc 'min (cdr (assoc 'temp day)))))) into lows
+                   ;; This new list now contains one list for each
+                   ;; screen line.
                    finally (return (list
                                     (cons "dates" dates)
                                     (cons "descs" descs)
