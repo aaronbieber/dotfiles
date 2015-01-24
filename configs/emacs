@@ -67,7 +67,9 @@
 (add-to-list 'load-path "~/.emacs.d/sunshine")     ;; My pkg for displaying weather data.
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 (add-to-list 'exec-path "/usr/local/bin")
-(load "sunshine")
+
+(require 'sunshine)
+(setq sunshine-location "Brookline, MA")
 
 (setq inhibit-splash-screen t
       inhibit-startup-message t
