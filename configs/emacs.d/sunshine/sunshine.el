@@ -160,6 +160,7 @@ forecast results."
                          (list
                           (cons 'date (format-time-string "%A, %h. %e" (seconds-to-time (cdr (assoc 'dt day)))))
                           (cons 'desc (cdr (assoc 'main (elt (cdr (assoc 'weather day)) 0))))
+                          (cons 'icon (cdr (assoc 'icon (elt (cdr (assoc 'weather day)) 0))))
                           (cons 'temp (cdr (assoc 'temp day)))
                           (cons 'pressure (cdr (assoc 'pressure day)))))))))
 
@@ -198,6 +199,7 @@ forecast results."
           ;; screen line.
           (cl-loop for day in days
                    collect (cdr (assoc 'date day)) into dates
+                   collect (cdr (assoc 'icon day)) into icons
                    collect (cdr (assoc 'desc day)) into descs
                    collect (format "High: %s" (number-to-string (cdr (assoc 'max (cdr (assoc 'temp day)))))) into highs
                    collect (format "Low:  %s" (number-to-string (cdr (assoc 'min (cdr (assoc 'temp day)))))) into lows
@@ -205,6 +207,7 @@ forecast results."
                    ;; screen line.
                    finally (return (list
                                     (cons "dates" dates)
+                                    ;;(cons "icons" icons)
                                     (cons "descs" descs)
                                     (cons "highs" highs)
                                     (cons "lows" lows))))))
@@ -221,12 +224,14 @@ forecast results."
     (while output-rows
       (let* ((wholerow (car output-rows))
              (type (car wholerow))
-             (row (cdr wholerow)))
+             (row (cdr wholerow))
+             (col 1))
         (while row
-          (insert (sunshine-row-type-propertize (sunshine-pad-or-trunc (car row) 20 1) type)
+          (insert (sunshine-row-type-propertize (sunshine-pad-or-trunc (car row) 20 1) type col)
                   (if (/= 1 (length row))
                       (propertize "\u2502" 'font-lock-face '(:foreground "gray50"))
                     " "))
+          (setq col (1+ col))
           (setq row (cdr row)))
         (insert (sunshine-newline-propertize type))
         (setq output-rows (cdr output-rows))))
@@ -245,15 +250,18 @@ forecast results."
   ;;  "\n"))
   )
 
-(defun sunshine-row-type-propertize (string type)
-  "Return STRING with face properties appropriate for TYPE."
+(defun sunshine-row-type-propertize (string type col)
+  "Return STRING with face properties appropriate for TYPE in column COL."
   (or (cond ((equal type "dates") (propertize
                                    string
                                    'font-lock-face
                                    '(:weight ultra-bold :foreground "white")))
             ((equal type "descs") string)
             ((equal type "highs") string)
-            ((equal type "lows") string))
+            ((equal type "lows") string)
+            ((equal type "icons") (propertize
+                                   string
+                                   'icon col)))
       string))
 
 (defun sunshine-pad-or-trunc (string column-width &optional pad trunc-string)
