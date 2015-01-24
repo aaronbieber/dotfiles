@@ -138,16 +138,21 @@ of measurement as UNITS (e.g. 'metric' or 'imperial')."
                   (current-time))
                t)))))
 
-(defun sunshine-build-simple-forecast (fc-data)
-  "Build a simple, legible forecast from FC-DATA.
-FC-DATA is the raw forecast data resulting from calling json-read on the
+(defun sunshine-build-simple-forecast (forecast)
+  "Build a simple, legible forecast from FORECAST.
+FORECAST is the raw forecast data resulting from calling json-read on the
 forecast results."
-  (cl-loop for day across (cdr (assoc 'list fc-data)) collect
-           (list
-            (cons 'date (format-time-string "%A, %h. %e" (seconds-to-time (cdr (assoc 'dt day)))))
-            (cons 'desc (cdr (assoc 'main (elt (cdr (assoc 'weather day)) 0))))
-            (cons 'temp (cdr (assoc 'temp day)))
-            (cons 'pressure (cdr (assoc 'pressure day))))))
+  (let* ((citylist (cdr (assoc 'city forecast)))
+         (city (cdr (assoc 'name citylist)))
+         (country (cdr (assoc 'country citylist))))
+    (list
+     (cons 'location (concat city ", " country))
+     (cons 'days (cl-loop for day across (cdr (assoc 'list forecast)) collect
+                         (list
+                          (cons 'date (format-time-string "%A, %h. %e" (seconds-to-time (cdr (assoc 'dt day)))))
+                          (cons 'desc (cdr (assoc 'main (elt (cdr (assoc 'weather day)) 0))))
+                          (cons 'temp (cdr (assoc 'temp day)))
+                          (cons 'pressure (cdr (assoc 'pressure day)))))))))
 
 (defun sunshine-key-quit ()
   "Destroy the Sunshine buffer."
@@ -171,25 +176,30 @@ forecast results."
 
 (defun sunshine-draw-forecast (forecast)
   "Draw FORECAST in pretty ASCII."
-  (let ((hline (concat "+"
-                       (mapconcat 'identity
-                                  (cl-loop for i from 1 to 5 collect
-                                           (concat (make-string 18 ?-)
-                                                   "+")) "")
-                       "\n"))
-        (output-rows
-         (cl-loop for day in forecast
-                  collect (cdr (assoc 'date day)) into dates
-                  collect (cdr (assoc 'desc day)) into descs
-                  collect (format "High: %s" (number-to-string (cdr (assoc 'max (cdr (assoc 'temp day)))))) into highs
-                  collect (format "Low:  %s" (number-to-string (cdr (assoc 'min (cdr (assoc 'temp day)))))) into lows
-                  finally (return (list
-                                   (cons "dates" dates)
-                                   (cons "descs" descs)
-                                   (cons "highs" highs)
-                                   (cons "lows" lows))))))
+  (let* (
+         (location (cdr (assoc 'location forecast)))
+         (days (cdr (assoc 'days forecast)))
+         (output-rows
+          (cl-loop for day in days
+                   collect (cdr (assoc 'date day)) into dates
+                   collect (cdr (assoc 'desc day)) into descs
+                   collect (format "High: %s" (number-to-string (cdr (assoc 'max (cdr (assoc 'temp day)))))) into highs
+                   collect (format "Low:  %s" (number-to-string (cdr (assoc 'min (cdr (assoc 'temp day)))))) into lows
+                   finally (return (list
+                                    (cons "dates" dates)
+                                    (cons "descs" descs)
+                                    (cons "highs" highs)
+                                    (cons "lows" lows))))))
     (setq buffer-read-only nil)
     (erase-buffer)
+    (insert (concat " "
+                    ;; Heading, in tall text.
+                    (propertize (concat "Forecast for " location)
+                                    'font-lock-face '(:foreground "navajo white" :height 1.5))
+                    ;; Newline, providing extra space below.
+                    (propertize
+                     "\n"
+                     'line-spacing .5)))
     (while output-rows
       (let* ((wholerow (car output-rows))
              (type (car wholerow))
@@ -221,7 +231,7 @@ forecast results."
   (or (cond ((equal type "dates") (propertize
                                    string
                                    'font-lock-face
-                                   '(:weight ultra-bold :foreground "DodgerBlue")))
+                                   '(:weight ultra-bold :foreground "white")))
             ((equal type "descs") string)
             ((equal type "highs") string)
             ((equal type "lows") string))
