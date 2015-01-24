@@ -38,7 +38,6 @@
 
 ;;; Open issues:
 
-;; * Cache the HTTP response for a while.
 ;; * Try to resize windows more politely (fit-window-to-buffer expands the window below;
 ;;   it should try to shrink it to compensate, maybe).
 ;; * Add icons.
@@ -123,7 +122,8 @@ of measurement as UNITS (e.g. 'metric' or 'imperial')."
       (progn
         (sunshine-draw-forecast
          (sunshine-build-simple-forecast forecast))
-        (fit-window-to-buffer (get-buffer-window buf))))))
+        (fit-window-to-buffer (get-buffer-window buf))
+        (select-window (get-buffer-window sunshine-buffer-name))))))
 
 (defun sunshine-cache-expired (url)
   "Check cache for URL."
