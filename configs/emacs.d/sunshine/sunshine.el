@@ -74,6 +74,12 @@ The default value is 15 minutes (900 seconds)."
   :group 'sunshine
   :type '(repeat integer))
 
+(defcustom sunshine-icon-cache-ttl (days-to-time 1)
+  "How long to keep icon data cached; sorry, it is a time value.
+The default value is one day (86400 seconds)."
+  :group 'sunshine
+  :type '(repeat integer))
+
 (defcustom sunshine-show-icons t
   "Whether to display icons in the forecast."
   :group 'sunshine
@@ -139,7 +145,7 @@ Provide a LOCATION and optionally the preferred unit
 of measurement as UNITS (e.g. 'metric' or 'imperial')."
   (sunshine-prepare-window)
   (let* ((url (sunshine-make-url location)))
-    (if (sunshine-cache-expired url)
+    (if (sunshine-forecast-cache-expired url)
         (url-retrieve url 'sunshine-retrieved)
       ;; Cache is not expired; pull out the cached data.
       (with-temp-buffer
@@ -187,8 +193,16 @@ If omitted, or nil, a date object is returned."
         (format-time-string format cache-time)
       cache-time)))
 
-(defun sunshine-cache-expired (url)
-  "Check cache for URL."
+(defun sunshine-forecast-cache-expired (url)
+  "Return t if the forecast cache for URL is expired."
+  (sunshine-cache-expired url sunshine-cache-ttl))
+
+(defun sunshine-icon-cache-expired (url)
+  "Return t if the icon cache for URL is expired."
+  (sunshine-cache-expired url sunshine-icon-cache-ttl))
+
+(defun sunshine-cache-expired (url ttl)
+  "Return t if the cache for URL is older than TTL."
   (cond (url-standalone-mode
          (not (file-exists-p (url-cache-create-filename url))))
         (t (let ((cache-time (url-is-cached url)))
@@ -196,7 +210,7 @@ If omitted, or nil, a date object is returned."
                  (time-less-p
                   (time-add
                    cache-time
-                   sunshine-cache-ttl)
+                   ttl)
                   (current-time))
                t)))))
 
@@ -317,10 +331,23 @@ Pivot it into a dataset like:
 (defun sunshine-get-icons ()
   "Trigger downloads of any weather icons in the buffer."
   (cl-loop for col from 1 upto 5 do
-           (let ((icon-point (sunshine-seek-to-icon-marker col)))
-             (when icon-point
+           (let* ((icon-point (sunshine-seek-to-icon-marker col))
+                  (icon-code (if icon-point
+                           (save-excursion
+                             (progn (goto-char icon-point)
+                                    (thing-at-point 'word)))))
+                  (icon-url (if icon-code
+                                (sunshine-make-icon-url icon-code))))
+             (when (and icon-point icon-url)
                (goto-char icon-point)
-               (url-retrieve (sunshine-make-icon-url (thing-at-point 'word)) 'sunshine-icon-retrieved (list col))))))
+               (if (sunshine-icon-cache-expired icon-url)
+                   ;; Live download.
+                   (url-retrieve icon-url 'sunshine-icon-retrieved (list col))
+                 ;; Use cache.
+                 (with-temp-buffer
+                   (mm-disable-multibyte)
+                   (url-cache-extract (url-cache-create-filename icon-url))
+                   (sunshine-icon-retrieved "status" (list col))))))))
 
 (defun sunshine-extract-icon ()
   "Extract icon image data from the current buffer.
@@ -336,15 +363,18 @@ Expected to be used by the callback from `url-retrieve'."
 (defun sunshine-icon-retrieved (status number)
   "Callback from `url-retrieve' that places icon NUMBER into the buffer."
   (let ((image-desc (sunshine-extract-icon)))
-    (with-current-buffer sunshine-buffer-name
-      (sunshine-seek-to-icon-marker number)
-      (setq buffer-read-only nil)
-      ;; Make room!
-      (delete-region (point) (+ (round (car (image-size image-desc))) (point)))
-      (insert-image image-desc)
-      (setq buffer-read-only t)
-      (fit-window-to-buffer)
-      (goto-char 0))))
+    (if image-desc
+        (progn
+          (url-store-in-cache (current-buffer))
+          (with-current-buffer sunshine-buffer-name
+            (sunshine-seek-to-icon-marker number)
+            (setq buffer-read-only nil)
+            ;; Make room!
+            (delete-region (point) (+ (round (car (image-size image-desc))) (point)))
+            (insert-image image-desc)
+            (setq buffer-read-only t)
+            (fit-window-to-buffer)
+            (goto-char 0))))))
 
 (defun sunshine-make-icon-url (icon-name)
   "Make the URL pointing to the icon file for ICON-NAME."
