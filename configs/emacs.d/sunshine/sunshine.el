@@ -82,13 +82,43 @@ The default value is 15 minutes (900 seconds)."
 (defvar sunshine-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map "q" 'sunshine-key-quit)
+    (define-key map "i" 'sunshine-key-toggle-icons)
     map)
   "Get the keymap for the Sunshine window.")
+
+;;; INTERACTIVE FUNCTIONS (COMMANDS):
+
+(defun sunshine-mode ()
+  "A major mode for the Sunshine window.
+
+The following keys are available in `sunshine-mode':
+
+  \\{sunshine-mode-map}"
+  (interactive)
+  (use-local-map sunshine-mode-map)
+  (setq truncate-lines t)
+  (setq mode-name "Sunshine")
+  (setq major-mode 'sunshine-mode)
+  (run-mode-hooks 'sunshine-mode-hook))
 
 (defun sunshine-forecast ()
   "The main entry into Sunshine; display the forecast in a window."
   (interactive)
   (sunshine-get-forecast sunshine-location))
+
+(defun sunshine-key-quit ()
+  "Destroy the Sunshine buffer."
+  (interactive)
+  (kill-buffer (get-buffer sunshine-buffer-name)))
+
+(defun sunshine-key-toggle-icons ()
+  "Turn Sunshine icons on or off."
+  (interactive)
+  (progn
+    (setq sunshine-show-icons (not sunshine-show-icons))
+    (sunshine-forecast)))
+
+;;; INTERNAL FUNCTIONS:
 
 (defun sunshine-extract-response ()
   "Extract the JSON response from the buffer returned by url-http."
@@ -169,11 +199,6 @@ forecast results."
                           (cons 'temp (cdr (assoc 'temp day)))
                           (cons 'pressure (cdr (assoc 'pressure day)))))))))
 
-(defun sunshine-key-quit ()
-  "Destroy the Sunshine buffer."
-  (interactive)
-  (kill-buffer (get-buffer sunshine-buffer-name)))
-
 (defun sunshine-prepare-window ()
   "Create the window and buffer used to display the forecast."
   (let* ((buf (get-buffer-create sunshine-buffer-name))
@@ -192,30 +217,46 @@ forecast results."
       (insert "Loading...")
       (setq buffer-read-only t))))
 
+(defun sunshine-pivot-forecast-rows (forecast)
+  "Pivot FORECAST rows of days into rows of elements from each day.
+This puts the elements in display order.
+
+Given a forecast dataset like:
+
+  (((date . date1)
+    (high . high1)
+    (low  . low1))
+   ((date . date2)
+    (high . high2)
+    (low  . low2)))
+
+Pivot it into a dataset like:
+
+  ((dates . (date1 date2))
+   (highs . (high1 high2))
+   (lows  . (low1 low2)))"
+  (let ((days (cdr (assoc 'days forecast))))
+    (cl-loop for day in days
+             collect (cdr (assoc 'date day)) into dates
+             collect (cdr (assoc 'icon day)) into icons
+             collect (cdr (assoc 'desc day)) into descs
+             collect (format "High: %s" (number-to-string (cdr (assoc 'max (cdr (assoc 'temp day)))))) into highs
+             collect (format "Low:  %s" (number-to-string (cdr (assoc 'min (cdr (assoc 'temp day)))))) into lows
+             ;; This new list now contains one list for each
+             ;; screen line.
+             finally (return (list
+                              (cons "icons" icons)
+                              (cons "dates" dates)
+                              (cons "descs" descs)
+                              (cons "highs" highs)
+                              (cons "lows" lows))))))
+
 (defun sunshine-draw-forecast (forecast)
   "Draw FORECAST in pretty ASCII."
   (let* ((cached (sunshine-get-cached-time "%b. %e at %l:%M %p"))
          (location (cdr (assoc 'location forecast)))
          (days (cdr (assoc 'days forecast)))
-         (output-rows
-          ;; This loop collects each forecast data element into
-          ;; separate lists, effectively "pivoting" the data so that
-          ;; we can draw it by looping over each list, one list per
-          ;; screen line.
-          (cl-loop for day in days
-                   collect (cdr (assoc 'date day)) into dates
-                   collect (cdr (assoc 'icon day)) into icons
-                   collect (cdr (assoc 'desc day)) into descs
-                   collect (format "High: %s" (number-to-string (cdr (assoc 'max (cdr (assoc 'temp day)))))) into highs
-                   collect (format "Low:  %s" (number-to-string (cdr (assoc 'min (cdr (assoc 'temp day)))))) into lows
-                   ;; This new list now contains one list for each
-                   ;; screen line.
-                   finally (return (list
-                                    (cons "icons" icons)
-                                    (cons "dates" dates)
-                                    (cons "descs" descs)
-                                    (cons "highs" highs)
-                                    (cons "lows" lows))))))
+         (output-rows (sunshine-pivot-forecast-rows forecast)))
     (setq buffer-read-only nil)
     (erase-buffer)
     (insert (concat " "
@@ -223,20 +264,20 @@ forecast results."
                     (propertize (concat "Forecast for " location)
                                     'font-lock-face '(:foreground "navajo white" :height 1.5))
                     ;; Newline, providing extra space below.
-                    (propertize
-                     "\n"
-                     'line-spacing .5)))
+                    (propertize "\n" 'line-spacing .5)))
     (while output-rows
       (let* ((wholerow (car output-rows))
              (type (car wholerow))
              (row (cdr wholerow))
              (col 1))
         (while row
-          (insert (sunshine-pad-or-trunc (sunshine-row-type-propertize (car row) type col) 20 1)
-                  (if (and (/= 1 (length row))
-                           (not (equal type "icons")))
-                      (propertize "\u2502" 'font-lock-face '(:foreground "gray50"))
-                    " "))
+          (if (or sunshine-show-icons
+                  (not (equal type "icons")))
+              (insert (sunshine-pad-or-trunc (sunshine-row-type-propertize (car row) type col) 20 1)
+                      (if (and (/= 1 (length row))
+                               (not (equal type "icons")))
+                          (propertize "\u2502" 'font-lock-face '(:foreground "gray50"))
+                        " ")))
           (setq col (1+ col))
           (setq row (cdr row)))
         (insert (sunshine-newline-propertize type))
@@ -294,8 +335,10 @@ Expected to be used by the callback from `url-retrieve'."
 (defun sunshine-newline-propertize (type)
   "Output a newline appropriate for a line of TYPE."
   (if (equal type "icons")
-      (propertize "\n"
-                  'line-spacing .5)
+      (if sunshine-show-icons
+        (propertize "\n"
+                    'line-spacing .5)
+        "")
     "\n"))
 
 (defun sunshine-row-type-propertize (string type col)
@@ -325,19 +368,6 @@ available width, truncate it to fit, optionally appending TRUNC-STRING."
     (concat (if pad (make-string pad ? ))
             display-string
             (if pad (make-string pad ? )))))
-
-(defun sunshine-mode ()
-  "A major mode for the Sunshine window.
-
-The following keys are available in `sunshine-mode':
-
-  \\{sunshine-mode-map}"
-  (interactive)
-  (use-local-map sunshine-mode-map)
-  (setq truncate-lines t)
-  (setq mode-name "Sunshine")
-  (setq major-mode 'sunshine-mode)
-  (run-mode-hooks 'sunshine-mode-hook))
 
 (provide 'sunshine)
 ;;; sunshine.el ends here
