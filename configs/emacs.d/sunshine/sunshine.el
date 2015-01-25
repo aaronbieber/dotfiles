@@ -74,6 +74,11 @@ The default value is 15 minutes (900 seconds)."
   :group 'sunshine
   :type '(repeat integer))
 
+(defcustom sunshine-show-icons t
+  "Whether to display icons in the forecast."
+  :group 'sunshine
+  :type 'boolean)
+
 (defvar sunshine-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map "q" 'sunshine-key-quit)
@@ -206,8 +211,8 @@ forecast results."
                    ;; This new list now contains one list for each
                    ;; screen line.
                    finally (return (list
+                                    (cons "icons" icons)
                                     (cons "dates" dates)
-                                    ;;(cons "icons" icons)
                                     (cons "descs" descs)
                                     (cons "highs" highs)
                                     (cons "lows" lows))))))
@@ -227,8 +232,9 @@ forecast results."
              (row (cdr wholerow))
              (col 1))
         (while row
-          (insert (sunshine-row-type-propertize (sunshine-pad-or-trunc (car row) 20 1) type col)
-                  (if (/= 1 (length row))
+          (insert (sunshine-pad-or-trunc (sunshine-row-type-propertize (car row) type col) 20 1)
+                  (if (and (/= 1 (length row))
+                           (not (equal type "icons")))
                       (propertize "\u2502" 'font-lock-face '(:foreground "gray50"))
                     " "))
           (setq col (1+ col))
@@ -239,16 +245,58 @@ forecast results."
                     (propertize "\n"
                                 'line-height 1.5)))
     (goto-char 0)
-    (setq buffer-read-only t)))
+    (setq buffer-read-only t)
+    (if sunshine-show-icons
+        (sunshine-get-icons))))
+
+(defun sunshine-seek-to-icon-marker (number)
+  "Move point to the location of the icon marker for icon NUMBER."
+  (let ((icon-point (text-property-any (point-min) (point-max) 'icon number)))
+    (when icon-point
+      (goto-char icon-point))))
+
+(defun sunshine-get-icons ()
+  "Trigger downloads of any weather icons in the buffer."
+  (cl-loop for col from 1 upto 5 do
+           (let ((icon-point (sunshine-seek-to-icon-marker col)))
+             (when icon-point
+               (goto-char icon-point)
+               (url-retrieve (sunshine-make-icon-url (thing-at-point 'word)) 'sunshine-icon-retrieved (list col))))))
+
+(defun sunshine-extract-icon ()
+  "Extract icon image data from the current buffer.
+Expected to be used by the callback from `url-retrieve'."
+  (create-image
+   (save-excursion
+     (goto-char (point-min))
+     (when (re-search-forward "^HTTP/.+ 200 OK$" nil (line-end-position))
+       (when (search-forward "\n\n" nil t)
+         (buffer-substring (point) (point-max)))))
+   'png t))
+
+(defun sunshine-icon-retrieved (status number)
+  "Callback from `url-retrieve' that places icon NUMBER into the buffer."
+  (let ((image-desc (sunshine-extract-icon)))
+    (with-current-buffer sunshine-buffer-name
+      (sunshine-seek-to-icon-marker number)
+      (setq buffer-read-only nil)
+      ;; Make room!
+      (delete-region (point) (+ (round (car (image-size image-desc))) (point)))
+      (insert-image image-desc)
+      (setq buffer-read-only t)
+      (fit-window-to-buffer)
+      (goto-char 0))))
+
+(defun sunshine-make-icon-url (icon-name)
+  "Make the URL pointing to the icon file for ICON-NAME."
+  (concat "http://openweathermap.org/img/w/" (url-encode-url icon-name) ".png"))
 
 (defun sunshine-newline-propertize (type)
   "Output a newline appropriate for a line of TYPE."
-  "\n"
-  ;;(if (equal type "dates")
-  ;;    (propertize "\n"
-  ;;                'line-spacing .5)
-  ;;  "\n"))
-  )
+  (if (equal type "icons")
+      (propertize "\n"
+                  'line-spacing .5)
+    "\n"))
 
 (defun sunshine-row-type-propertize (string type col)
   "Return STRING with face properties appropriate for TYPE in column COL."
