@@ -150,15 +150,33 @@ of measurement as UNITS (e.g. 'metric' or 'imperial')."
 
 (defun sunshine-retrieved (status)
   "Process the retrieved data; receives STATUS, which we discard."
-  (url-store-in-cache (current-buffer))
   (let ((buf (get-buffer-create sunshine-buffer-name))
         (forecast (sunshine-extract-response)))
-    (with-current-buffer buf
+    (if forecast
+        (progn
+          (url-store-in-cache (current-buffer))
+          (with-current-buffer buf
+            (progn
+              (sunshine-draw-forecast
+               (sunshine-build-simple-forecast forecast))
+              (fit-window-to-buffer (get-buffer-window buf))
+              (select-window (get-buffer-window sunshine-buffer-name)))))
+      (sunshine-display-error))))
+
+(defun sunshine-display-error ()
+  "Display an error in the Sunshine window."
+  (let ((quit-key (key-description (where-is-internal 'sunshine-key-quit sunshine-mode-map t))))
+    (with-current-buffer sunshine-buffer-name
       (progn
-        (sunshine-draw-forecast
-         (sunshine-build-simple-forecast forecast))
-        (fit-window-to-buffer (get-buffer-window buf))
-        (select-window (get-buffer-window sunshine-buffer-name))))))
+        (setq buffer-read-only nil)
+        (erase-buffer)
+        (insert (propertize "\u26A0\n" 'font-lock-face '(:foreground "gold" :height 3.0))
+                "There was an error retrieving weather data.\n"
+                "Please try again in a while; this response was not cached.\n\n"
+                "  Press " quit-key " to quit.")
+        (setq buffer-read-only t)
+        (select-window (get-buffer-window (current-buffer)))
+        (goto-char 3)))))
 
 (defun sunshine-get-cached-time (&optional format)
   "Return the last modified time of the Sunshine cache, if it exists.
