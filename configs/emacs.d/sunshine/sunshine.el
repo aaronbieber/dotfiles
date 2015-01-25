@@ -38,9 +38,9 @@
 
 ;;; Open issues:
 
+;; * Cache icons (and use a much longer TTL).
 ;; * Try to resize windows more politely (fit-window-to-buffer expands the window below;
 ;;   it should try to shrink it to compensate, maybe).
-;; * Add icons.
 
 ;;; Code:
 
