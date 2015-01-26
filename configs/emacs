@@ -128,19 +128,27 @@
 (setq-default flycheck-phpcs-standard "CSNStores")
 (projectile-global-mode)
 
+(add-hook 'magit-mode-hook (lambda ()
+                             (when (fboundp 'turn-off-evil-mode) (turn-off-evil-mode))))
+
+;;; I'm holding off on these for a while because evil shadows too many
+;;; really useful keys in magit and learning basic motions isn't a big
+;;; deal.
+;;;
 ;;; Get evil key bindings in magit modes.
-(evil-add-hjkl-bindings magit-branch-manager-mode-map 'emacs
-  "K" 'magit-discard-item
-  "L" 'magit-key-mode-popup-logging)
-(evil-add-hjkl-bindings magit-status-mode-map 'motion
-  "O" 'magit-jump-to-unstaged
-  "K" 'magit-discard-item
-  "l" 'magit-key-mode-popup-logging
-  "h" 'magit-toggle-diff-refine-hunk
-  "R" 'magit-rebase-step
-  "?" 'magit-key-mode-popup-dispatch)
-(evil-add-hjkl-bindings magit-log-mode-map 'emacs)
-(evil-add-hjkl-bindings magit-commit-mode-map 'emacs)
+;;(evil-add-hjkl-bindings magit-branch-manager-mode-map 'emacs
+;;  "K" 'magit-discard-item
+;;  "L" 'magit-key-mode-popup-logging)
+;;(evil-add-hjkl-bindings magit-status-mode-map 'motion
+;;  "O" 'magit-jump-to-unstaged
+;;  "K" 'magit-discard-item
+;;  "l" 'magit-key-mode-popup-logging
+;;  "h" 'magit-toggle-diff-refine-hunk
+;;  "R" 'magit-rebase-step
+;;  "?" 'magit-key-mode-popup-dispatch)
+;;(evil-add-hjkl-bindings magit-log-mode-map 'emacs)
+;;(evil-add-hjkl-bindings magit-commit-mode-map 'emacs)
+
 (evil-add-hjkl-bindings ag-mode-map 'normal
   "n"   'evil-search-next
   "N"   'evil-search-previous
@@ -163,8 +171,6 @@
 ;;; Use Helm all the time.
 (setq helm-buffers-fuzzy-matching t)
 (helm-mode 1)
-;;; Load additional custom evil key mappings for magit modes.
-(load "~/.emacs.d/evil-rebellion/evil-magit-rebellion.el")
 
 ;;; Use evil surround mode in all buffers.
 (global-evil-surround-mode 1)
