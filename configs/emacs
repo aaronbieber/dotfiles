@@ -248,7 +248,7 @@ Repeated invocations toggle between the two most recently open buffers."
 (define-key evil-normal-state-map (kbd "-") 'helm-find-files)
 (define-key evil-normal-state-map (kbd "C-]") 'gtags-find-tag-from-here)
 (define-key evil-normal-state-map (kbd "g/") 'occur-last-search)
-(define-key evil-normal-state-map (kbd "[i") 'show-first-occurrence)
+(evil-define-key 'normal global-map (kbd "[i") 'show-first-occurrence)
 (define-key helm-find-files-map (kbd "C-k") 'helm-find-files-up-one-level)
 (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle)
 (evil-define-key 'normal org-mode-map (kbd "C-\\") 'org-insert-heading)
@@ -380,8 +380,8 @@ Repeated invocations toggle between the two most recently open buffers."
 
 ;;; Flycheck mode:
 (add-hook 'flycheck-mode-hook (lambda ()
-  (define-key flycheck-mode-map (kbd "]e") 'flycheck-next-error)
-  (define-key flycheck-mode-map (kbd "[e") 'flycheck-previous-error)))
+  (evil-define-key 'normal flycheck-mode-map (kbd "]e") 'flycheck-next-error)
+  (evil-define-key 'normal flycheck-mode-map (kbd "[e") 'flycheck-previous-error)))
 
 ;;; Org mode:
 (evil-leader/set-key-for-mode 'org-mode
