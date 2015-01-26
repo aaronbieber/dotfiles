@@ -202,7 +202,7 @@
   "Display the location of the word at point's first occurrence in the buffer."
   (interactive)
   (save-excursion
-    (let ((search-word (thing-at-point 'word t)))
+    (let ((search-word (thing-at-point 'symbol t)))
       (goto-char 1)
       (re-search-forward search-word)
       (message (concat
