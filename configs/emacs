@@ -29,6 +29,7 @@
                      helm-projectile
                      highlight-symbol
                      magit
+                     markdown-mode
                      powerline
                      powerline-evil
                      projectile
