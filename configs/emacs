@@ -128,6 +128,9 @@
 (setq-default flycheck-phpcs-standard "CSNStores")
 (projectile-global-mode)
 
+;;; Magit
+(evil-set-initial-state 'magit-log-edit-mode 'insert)
+(evil-set-initial-state 'git-commit-mode 'insert)
 (add-hook 'magit-mode-hook (lambda ()
                              (when (fboundp 'turn-off-evil-mode) (turn-off-evil-mode))))
 
