@@ -70,7 +70,6 @@
 (add-to-list 'exec-path "/usr/local/bin")
 
 (require 'sunshine)
-(setq sunshine-location "Brookline, MA")
 
 (setq inhibit-splash-screen t
       inhibit-startup-message t
@@ -413,6 +412,7 @@ Repeated invocations toggle between the two most recently open buffers."
                           (setq sh-indentation 2)))
 
 ;;; Twittering mode:
+(setq twittering-use-master-password t)
 (add-hook 'twittering-mode-hook (lambda ()
                                   (define-key twittering-mode-map (kbd ",b") 'helm-mini)))
 
@@ -516,6 +516,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
  '(org-mobile-directory "~/Dropbox/org/mobile")
  '(org-mobile-inbox-for-pull "~/Dropbox/org/mobile/capture.org")
  '(safe-local-variable-values (quote ((require-final-newline))))
+ '(sunshine-location "Brookline, MA")
+ '(sunshine-show-icons t)
  '(vc-annotate-background "#222222")
  '(vc-annotate-color-map
    (quote
@@ -537,7 +539,13 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
      (320 . "#62b6ea")
      (340 . "#94bff3")
      (360 . "#e353b9"))))
- '(vc-annotate-very-old-color "#e353b9"))
+ '(vc-annotate-very-old-color "#e353b9")
+ '(web-mode-attr-indent-offset 2)
+ '(web-mode-code-indent-offset 2)
+ '(web-mode-css-indent-offset 2)
+ '(web-mode-indent-style 2)
+ '(web-mode-markup-indent-offset 2)
+ '(web-mode-sql-indent-offset 2))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
