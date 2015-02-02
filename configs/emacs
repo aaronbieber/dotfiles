@@ -36,6 +36,7 @@
                      php-extras
                      twilight-bright-theme
                      twilight-anti-bright-theme
+                     twittering-mode
                      window-numbering
                      yasnippet
                      zenburn-theme))
