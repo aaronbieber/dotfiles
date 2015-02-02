@@ -1,7 +1,6 @@
 configs/xmonad/*
 configs/emacs.d/*
 *.elc
-!configs/emacs.d/sunshine
 !configs/emacs.d/evil-rebellion
 !configs/emacs.d/project-root
 !configs/xmonad/xmonad.hs
