@@ -360,6 +360,8 @@ Repeated invocations toggle between the two most recently open buffers."
                                    (arglist-cont-nonempty . my-php-lineup-arglist-cont-nonempty)))))
 
 ;;; Configure things for PHP usage.
+;;; We can bring back fci-mode if we use @purcell's workaround found here:
+;;; https://github.com/alpaker/Fill-Column-Indicator/issues/21
 (defun configure-php-mode ()
   (require 'newcomment)
   (setq comment-auto-fill-only-comments 1)
