@@ -101,8 +101,6 @@
 (defvar show-paren-delay 0
   "Delay (in seconds) before matching paren is highlighted.")
 (setq-default left-fringe-width 10)
-(defvar projectile-enable-caching t
-  "Tell Projectile to cache project file lists.")
 
 (defvar backup-dir "~/.emacs.d/backups/")
 (setq backup-directory-alist (list (cons "." backup-dir)))
@@ -130,7 +128,12 @@
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (setq-default flycheck-disabled-checkers '(php-phpmd))
 (setq-default flycheck-phpcs-standard "CSNStores")
+
+(defvar projectile-enable-caching t
+  "Tell Projectile to cache project file lists.")
 (projectile-global-mode)
+;; This appears to be necessary only in Linux?
+(require 'helm-projectile)
 
 ;;; Magit
 (evil-set-initial-state 'magit-log-edit-mode 'insert)
