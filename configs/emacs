@@ -21,6 +21,7 @@
                      evil-jumper
                      evil-surround
                      evil-indent-textobject
+                     exec-path-from-shell
                      fiplr
                      flycheck
                      gtags
@@ -62,6 +63,9 @@
 (dolist (package package-list)
   (unless (package-installed-p package)
     (package-install package)))
+
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
 
 (add-to-list 'load-path "~/.emacs.d/themes")       ;; "Tomorrow" requires base code.
 (add-to-list 'load-path "~/.emacs.d/project-root") ;; My pkg for finding proj. roots.
@@ -234,6 +238,7 @@ Repeated invocations toggle between the two most recently open buffers."
 (define-key evil-normal-state-map (kbd "C-]") 'gtags-find-tag-from-here)
 (define-key evil-normal-state-map (kbd "g/")  'occur-last-search)
 (define-key evil-normal-state-map (kbd "[i")  'show-first-occurrence)
+(define-key evil-normal-state-map (kbd "<s-return>") 'toggle-frame-fullscreen)
 
 ;;; This is bound to a leader key below.
 (defun my-align-single-equals ()
