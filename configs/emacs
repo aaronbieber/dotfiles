@@ -134,24 +134,6 @@
 (add-hook 'magit-mode-hook (lambda ()
                              (when (fboundp 'turn-off-evil-mode) (turn-off-evil-mode))))
 
-;;; I'm holding off on these for a while because evil shadows too many
-;;; really useful keys in magit and learning basic motions isn't a big
-;;; deal.
-;;;
-;;; Get evil key bindings in magit modes.
-;;(evil-add-hjkl-bindings magit-branch-manager-mode-map 'emacs
-;;  "K" 'magit-discard-item
-;;  "L" 'magit-key-mode-popup-logging)
-;;(evil-add-hjkl-bindings magit-status-mode-map 'motion
-;;  "O" 'magit-jump-to-unstaged
-;;  "K" 'magit-discard-item
-;;  "l" 'magit-key-mode-popup-logging
-;;  "h" 'magit-toggle-diff-refine-hunk
-;;  "R" 'magit-rebase-step
-;;  "?" 'magit-key-mode-popup-dispatch)
-;;(evil-add-hjkl-bindings magit-log-mode-map 'emacs)
-;;(evil-add-hjkl-bindings magit-commit-mode-map 'emacs)
-
 (evil-add-hjkl-bindings ag-mode-map 'normal
   "n"   'evil-search-next
   "N"   'evil-search-previous
@@ -246,16 +228,12 @@ Repeated invocations toggle between the two most recently open buffers."
          nil
        (- selective-display 1)))))
 
-;;; Give me more awesome key bindings that I miss from Vim.
+;;; Global key bindings wherever Evil is used (almost everywhere)
 (define-key evil-normal-state-map (kbd "C-p") 'helm-projectile)
-(define-key evil-normal-state-map (kbd "-") 'helm-find-files)
+(define-key evil-normal-state-map (kbd "-")   'helm-find-files)
 (define-key evil-normal-state-map (kbd "C-]") 'gtags-find-tag-from-here)
-(define-key evil-normal-state-map (kbd "g/") 'occur-last-search)
-(evil-define-key 'normal global-map (kbd "[i") 'show-first-occurrence)
-(define-key helm-find-files-map (kbd "C-k") 'helm-find-files-up-one-level)
-(evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle)
-(evil-define-key 'normal org-mode-map (kbd "C-\\") 'org-insert-heading)
-(evil-define-key 'insert org-mode-map (kbd "C-\\") 'org-insert-heading)
+(define-key evil-normal-state-map (kbd "g/")  'occur-last-search)
+(define-key evil-normal-state-map (kbd "[i")  'show-first-occurrence)
 
 ;;; This is bound to a leader key below.
 (defun my-align-single-equals ()
@@ -384,7 +362,13 @@ Repeated invocations toggle between the two most recently open buffers."
   (evil-define-key 'normal flycheck-mode-map (kbd "]e") 'flycheck-next-error)
   (evil-define-key 'normal flycheck-mode-map (kbd "[e") 'flycheck-previous-error)))
 
+;;; Helm mode:
+(define-key helm-find-files-map (kbd "C-k") 'helm-find-files-up-one-level)
+
 ;;; Org mode:
+(evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle)
+(evil-define-key 'normal org-mode-map (kbd "C-\\") 'org-insert-heading)
+(evil-define-key 'insert org-mode-map (kbd "C-\\") 'org-insert-heading)
 (evil-leader/set-key-for-mode 'org-mode
   "t" 'org-set-tags
   "p" '(lambda ()
