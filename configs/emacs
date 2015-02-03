@@ -233,6 +233,7 @@ Repeated invocations toggle between the two most recently open buffers."
        (- selective-display 1)))))
 
 ;;; Global key bindings wherever Evil is used (almost everywhere)
+(define-key evil-normal-state-map (kbd "C-S-P") 'helm-projectile-switch-project)
 (define-key evil-normal-state-map (kbd "C-p") 'helm-projectile)
 (define-key evil-normal-state-map (kbd "-")   'helm-find-files)
 (define-key evil-normal-state-map (kbd "C-]") 'gtags-find-tag-from-here)
