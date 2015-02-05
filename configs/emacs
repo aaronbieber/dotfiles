@@ -182,6 +182,10 @@ Repeated invocations toggle between the two most recently open buffers."
          nil
        (- selective-display 1)))))
 
+;; Eval after merge resolution.
+(define-key global-map (kbd "C-c t w") (lambda () (interactive) (find-file "~/Dropbox/org/work.org")))
+(define-key global-map (kbd "C-c t h") (lambda () (interactive) (find-file "~/Dropbox/org/home.org")))
+
 (when (memq window-system '(mac ns))
   (define-key global-map (kbd "<s-return>") 'toggle-frame-fullscreen))
 
@@ -345,7 +349,6 @@ Repeated invocations toggle between the two most recently open buffers."
 (add-hook 'markdown-mode-hook (lambda ()
                                 (set-fill-column 80)
                                 (turn-on-auto-fill)
-                                (turn-on-fci-mode)
                                 (flyspell-mode)))
 
 (defun find-php-functions-in-current-buffer ()
@@ -429,7 +432,8 @@ is the buffer location at which the function was found."
  '(web-mode-css-indent-offset 2)
  '(web-mode-indent-style 2)
  '(web-mode-markup-indent-offset 2)
- '(web-mode-sql-indent-offset 2))
+ '(web-mode-sql-indent-offset 2)
+ '(web-mode-style-padding 0))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
