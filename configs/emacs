@@ -436,7 +436,7 @@ Repeated invocations toggle between the two most recently open buffers."
 
 ;;; Sunshine mode:
 (add-hook 'sunshine-mode-hook (lambda ()
-                                (when (fboundp 'turn-off-evil-mode) (turn-off-evil-mode))))
+                                (if (fboundp 'turn-off-evil-mode) (turn-off-evil-mode))))
 
 (defun find-php-functions-in-current-buffer ()
   "Find lines that appear to be PHP functions in the buffer.
