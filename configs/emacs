@@ -25,6 +25,7 @@
                      fiplr
                      flycheck
                      gtags
+                     guide-key
                      helm
                      helm-projectile
                      highlight-symbol
@@ -93,6 +94,10 @@
 ;;; Always use evil mode.
 (evil-mode 1)
 (global-auto-complete-mode t)
+
+(guide-key-mode 1)
+(setq guide-key/guide-key-sequence t)
+(setq guide-key/idle-delay 0.5)
 
 ;;; Seamlessly degrade color themes to terminal colors.
 (autoload 'color-theme-approximate-on "color-theme-approximate")
