@@ -11,65 +11,101 @@
 (defvar package-archives)
 (defvar package-archive-enable-alist)
 
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+
 ;;; List the packages you want.
-(setq package-list '(ag
-                     auto-complete
-                     color-theme-sanityinc-tomorrow
-                     color-theme-approximate
-                     evil
-                     evil-leader
-                     evil-jumper
-                     evil-surround
-                     evil-indent-textobject
-                     exec-path-from-shell
-                     fiplr
-                     flycheck
-                     gtags
-                     guide-key
-                     helm
-                     helm-projectile
-                     highlight-symbol
-                     magit
-                     markdown-mode
-                     powerline
-                     powerline-evil
-                     projectile
-                     php-mode
-                     php-extras
-                     twilight-bright-theme
-                     twilight-anti-bright-theme
-                     twittering-mode
-                     window-numbering
-                     yasnippet
-                     zenburn-theme))
+;;(setq package-list '(ag
+;;                     auto-complete
+;;                     color-theme-sanityinc-tomorrow
+;;                     color-theme-approximate
+;;                     evil
+;;                     evil-leader
+;;                     evil-jumper
+;;                     evil-surround
+;;                     evil-indent-textobject
+;;                     exec-path-from-shell
+;;                     fiplr
+;;                     flycheck
+;;                     gtags
+;;                     guide-key
+;;                     helm
+;;                     helm-projectile
+;;                     highlight-symbol
+;;                     magit
+;;                     markdown-mode
+;;                     powerline
+;;                     powerline-evil
+;;                     projectile
+;;                     php-mode
+;;                     php-extras
+;;                     twilight-bright-theme
+;;                     twilight-anti-bright-theme
+;;                     twittering-mode
+;;                     window-numbering
+;;                     yasnippet
+;;                     zenburn-theme))
 
 ;;; List the repositories containing them.
 ;; For the record, I want to allow any package from ELPA or MELPA, but only the
 ;; ones from Marmalade that I absolutely need to have and am willing to put up
 ;; with potentially old releases. So leave it like this until I find the ones
 ;; that can't be found, then slowly add those to package-archive-enable-alist.
-(setq package-archives '(("elpa" .      "http://elpa.gnu.org/packages/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")
-                         ("melpa" .     "http://melpa.milkbox.net/packages/")))
-(setq package-archive-enable-alist '(("marmalade" gtags)))
+;;(setq package-archives '(("elpa" .      "http://elpa.gnu.org/packages/")
+;;                         ("marmalade" . "http://marmalade-repo.org/packages/")
+;;                         ("melpa" .     "http://melpa.milkbox.net/packages/")))
+;;(setq package-archive-enable-alist '(("marmalade" gtags)))
 
 ;;; Activate all the packages (in particular autoloads).
-(package-initialize)
+;;(package-initialize)
 
 ;;; Fetch the list of packages available.
-(unless (file-exists-p package-user-dir)
-  (package-refresh-contents))
+;;(unless (file-exists-p package-user-dir)
+;;  (package-refresh-contents))
 
 ;;; Install the missing packages.
-(dolist (package package-list)
-  (unless (package-installed-p package)
-    (package-install package)))
+;;(dolist (package package-list)
+;;  (unless (package-installed-p package)
+;;    (package-install package)))
 
-(when (memq window-system '(mac ns))
-  (exec-path-from-shell-initialize))
+(require 'init-utils)
+(require 'init-elpa)
+(when (maybe-require-package 'exec-path-from-shell)
+  (when (memq window-system '(mac ns))
+    (exec-path-from-shell-initialize)))
 
-(add-to-list 'load-path "~/.emacs.d/themes")       ;; "Tomorrow" requires base code.
-(add-to-list 'load-path "~/.emacs.d/project-root") ;; My pkg for finding proj. roots.
+(maybe-require-package 'ag)
+(maybe-require-package 'auto-complete)
+(maybe-require-package 'color-theme-sanityinc-tomorrow)
+(maybe-require-package 'color-theme-approximate)
+(maybe-require-package 'evil)
+(maybe-require-package 'evil-leader)
+(maybe-require-package 'evil-jumper)
+(maybe-require-package 'evil-surround)
+(maybe-require-package 'evil-indent-textobject)
+(maybe-require-package 'exec-path-from-shell)
+(maybe-require-package 'fiplr)
+(maybe-require-package 'flycheck)
+(maybe-require-package 'gtags)
+(maybe-require-package 'guide-key)
+(maybe-require-package 'helm)
+(maybe-require-package 'helm-projectile)
+(maybe-require-package 'highlight-symbol)
+(maybe-require-package 'magit)
+(maybe-require-package 'markdown-mode)
+(maybe-require-package 'powerline)
+(maybe-require-package 'powerline-evil)
+(maybe-require-package 'projectile)
+(maybe-require-package 'php-mode)
+(maybe-require-package 'php-extras)
+(maybe-require-package 'twilight-bright-theme)
+(maybe-require-package 'twilight-anti-bright-theme)
+(maybe-require-package 'twittering-mode)
+(maybe-require-package 'window-numbering)
+(maybe-require-package 'yasnippet)
+(maybe-require-package 'zenburn-theme)
+
+;;(add-to-list 'load-path "~/.emacs.d/themes")       ;; "Tomorrow" requires base code.
+;;(add-to-list 'load-path "~/.emacs.d/project-root") ;; My pkg for finding proj. roots.
 (add-to-list 'load-path "~/.emacs.d/sunshine")     ;; My pkg for displaying weather data.
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 (add-to-list 'exec-path "/usr/local/bin")
@@ -103,10 +139,6 @@
 (setq guide-key/guide-key-sequence t)
 (setq guide-key/idle-delay 0.5)
 
-;;; Seamlessly degrade color themes to terminal colors.
-(autoload 'color-theme-approximate-on "color-theme-approximate")
-(color-theme-approximate-on)
-
 (defvar show-paren-delay 0
   "Delay (in seconds) before matching paren is highlighted.")
 (setq-default left-fringe-width 10)
@@ -116,9 +148,6 @@
 (setq make-backup-files nil)
 
 (setq-default highlight-symbol-idle-delay 1.5)
-(setq-default fci-rule-character 9474)
-(setq-default fci-rule-character-color "color-52")
-
 (powerline-evil-vim-color-theme)
 
 ;;; YAsnippet
@@ -133,10 +162,6 @@
 (setq yas-prompt-functions '(yas-completing-prompt
                              yas-ido-prompt
                              yas-dropdown-prompt))
-
-(add-hook 'after-init-hook #'global-flycheck-mode)
-(setq-default flycheck-disabled-checkers '(php-phpmd))
-(setq-default flycheck-phpcs-standard "CSNStores")
 
 (defvar projectile-enable-caching t
   "Tell Projectile to cache project file lists.")
@@ -514,7 +539,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
  '(org-directory "~/Dropbox/org")
  '(org-mobile-directory "~/Dropbox/org/mobile")
  '(org-mobile-inbox-for-pull "~/Dropbox/org/mobile/capture.org")
- '(safe-local-variable-values (quote ((require-final-newline))))
+ '(safe-local-variable-values (quote ((no-byte-compile t) (require-final-newline))))
  '(sunshine-location "Brookline, MA")
  '(sunshine-show-icons t)
  '(vc-annotate-background "#222222")
