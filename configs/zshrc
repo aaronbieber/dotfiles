@@ -170,6 +170,7 @@ alias tad="tmux attach -d"
 alias tl="tmux ls"
 alias urldecode='python -c "import sys, urllib as ul; print ul.unquote_plus(sys.argv[1])"'
 alias cps='rsync -aP'
+alias ssh='ssh -A'
 
 ## Emacs:
 #alias e="emacsclient -t"          # Preferred
