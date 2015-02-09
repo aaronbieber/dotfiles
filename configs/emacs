@@ -34,6 +34,10 @@
   (when (memq window-system '(mac ns))
     (exec-path-from-shell-initialize)))
 
+(when (eq system-type "gnu/linux")
+      (setq browse-url-browser-function 'browse-url-generic
+            browse-url-generic-program "google-chrome"))
+
 (maybe-require-package 'ag)
 (maybe-require-package 'auto-complete)
 (maybe-require-package 'color-theme-sanityinc-tomorrow)
