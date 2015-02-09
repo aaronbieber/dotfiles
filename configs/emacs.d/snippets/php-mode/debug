@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: debug
+# key: de
+# --
+debug(${1:what}); // @todo @delete

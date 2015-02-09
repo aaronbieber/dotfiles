@@ -1,0 +1,7 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: class
+# key: class
+# --
+class ${1:Class_Name} {
+  $0
+}

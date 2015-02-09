@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: debug_with_description
+# key: dd
+# binding: direct-keybinding
+# --
+debug(${1:what}, '$1'); // @todo @delete

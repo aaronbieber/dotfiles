@@ -1,0 +1,10 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: doc_f
+# key: doc_f
+# binding: direct-keybinding
+# --
+/**
+ * Documentation
+ *
+ * @return ${1:type} ${2:Description}
+ */

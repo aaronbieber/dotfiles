@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: echo-html
+# key: ebr
+# binding: direct-keybinding
+# --
+echo "$0<br/>";

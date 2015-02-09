@@ -1,0 +1,8 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: foreach
+# key: foreach
+# binding: direct-keybinding
+# --
+foreach (${1:things} as $${2:thing}) {
+  $0
+}

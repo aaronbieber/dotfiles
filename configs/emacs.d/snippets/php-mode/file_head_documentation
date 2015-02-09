@@ -1,0 +1,13 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: file_head_documentation
+# key: doc_h
+# --
+/**
+ * ${1:A PHP script file.}
+ *
+ * PHP Version 5
+ *
+ * @author    Aaron Bieber <abieber@wayfair.com>
+ * @copyright 2014 Wayfair, LLC - All rights reserved
+ */
+$0
