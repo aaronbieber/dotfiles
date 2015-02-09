@@ -72,6 +72,7 @@
   (define-key evil-normal-state-map (kbd "C-]") 'gtags-find-tag-from-here)
   (define-key evil-normal-state-map (kbd "g/")  'occur-last-search)
   (define-key evil-normal-state-map (kbd "[i")  'show-first-occurrence)
+  (define-key evil-insert-state-map (kbd "C-e") 'end-of-line)
 
   (defun minibuffer-keyboard-quit ()
     "Abort recursive edit.

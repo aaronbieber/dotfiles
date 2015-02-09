@@ -182,8 +182,6 @@ Repeated invocations toggle between the two most recently open buffers."
          nil
        (- selective-display 1)))))
 
-;;; Override Vim keys when the Emacs ones were actually more useful.
-(define-key evil-insert-state-map (kbd "C-e") 'end-of-line)
 (define-key global-map (kbd "C-c t w") (lambda () (interactive) (find-file "~/Dropbox/org/work.org")))
 (define-key global-map (kbd "C-c t h") (lambda () (interactive) (find-file "~/Dropbox/org/home.org")))
 
