@@ -1,4 +1,4 @@
-(when maybe-require-package 'gtags
+(when (maybe-require-package 'gtags)
       ;; Bind some useful keys in the gtags select buffer that evil overrides.
       (when (boundp 'evil-normal-state-local-map)
         (add-hook 'gtags-select-mode-hook
