@@ -2,6 +2,7 @@
 
 (define-key global-map (kbd "C-c t w") (lambda () (interactive) (find-file "~/Dropbox/org/work.org")))
 (define-key global-map (kbd "C-c t h") (lambda () (interactive) (find-file "~/Dropbox/org/home.org")))
+(define-key global-map (kbd "C-x C-q") 'kill-emacs)
 
 (when (memq window-system '(mac ns))
   (define-key global-map (kbd "<s-return>") 'toggle-frame-fullscreen))
