@@ -6,69 +6,16 @@
 ;;
 ;;; Code:
 
-;;; Avoid compiler warnings about assigning free variables.
-(defvar package-list)
-(defvar package-archives)
-(defvar package-archive-enable-alist)
-
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
-
-;;; List the packages you want.
-;;(setq package-list '(ag
-;;                     auto-complete
-;;                     color-theme-sanityinc-tomorrow
-;;                     color-theme-approximate
-;;                     evil
-;;                     evil-leader
-;;                     evil-jumper
-;;                     evil-surround
-;;                     evil-indent-textobject
-;;                     exec-path-from-shell
-;;                     fiplr
-;;                     flycheck
-;;                     gtags
-;;                     guide-key
-;;                     helm
-;;                     helm-projectile
-;;                     highlight-symbol
-;;                     magit
-;;                     markdown-mode
-;;                     powerline
-;;                     powerline-evil
-;;                     projectile
-;;                     php-mode
-;;                     php-extras
-;;                     twilight-bright-theme
-;;                     twilight-anti-bright-theme
-;;                     twittering-mode
-;;                     window-numbering
-;;                     yasnippet
-;;                     zenburn-theme))
-
-;;; List the repositories containing them.
-;; For the record, I want to allow any package from ELPA or MELPA, but only the
-;; ones from Marmalade that I absolutely need to have and am willing to put up
-;; with potentially old releases. So leave it like this until I find the ones
-;; that can't be found, then slowly add those to package-archive-enable-alist.
-;;(setq package-archives '(("elpa" .      "http://elpa.gnu.org/packages/")
-;;                         ("marmalade" . "http://marmalade-repo.org/packages/")
-;;                         ("melpa" .     "http://melpa.milkbox.net/packages/")))
-;;(setq package-archive-enable-alist '(("marmalade" gtags)))
-
-;;; Activate all the packages (in particular autoloads).
-;;(package-initialize)
-
-;;; Fetch the list of packages available.
-;;(unless (file-exists-p package-user-dir)
-;;  (package-refresh-contents))
-
-;;; Install the missing packages.
-;;(dolist (package package-list)
-;;  (unless (package-installed-p package)
-;;    (package-install package)))
+(add-to-list 'load-path "~/.emacs.d/sunshine")     ;; My pkg for displaying weather data.
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+(add-to-list 'exec-path "/usr/local/bin")
 
 (require 'init-utils)
 (require 'init-elpa)
+(require 'init-fonts)
+(require 'project-root)
+
 (when (maybe-require-package 'exec-path-from-shell)
   (when (memq window-system '(mac ns))
     (exec-path-from-shell-initialize)))
@@ -100,15 +47,10 @@
 (maybe-require-package 'twilight-bright-theme)
 (maybe-require-package 'twilight-anti-bright-theme)
 (maybe-require-package 'twittering-mode)
+(maybe-require-package 'web-mode)
 (maybe-require-package 'window-numbering)
 (maybe-require-package 'yasnippet)
 (maybe-require-package 'zenburn-theme)
-
-;;(add-to-list 'load-path "~/.emacs.d/themes")       ;; "Tomorrow" requires base code.
-;;(add-to-list 'load-path "~/.emacs.d/project-root") ;; My pkg for finding proj. roots.
-(add-to-list 'load-path "~/.emacs.d/sunshine")     ;; My pkg for displaying weather data.
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-(add-to-list 'exec-path "/usr/local/bin")
 
 (require 'sunshine)
 (require 'epa-file)
