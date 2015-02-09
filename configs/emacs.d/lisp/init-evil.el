@@ -43,7 +43,7 @@
 
   (setq evil-want-C-u-scroll t)
   (setq-default evil-want-C-i-jump nil)
-  (setq evil-symbol-word-search t)
+  (setq-default evil-symbol-word-search t)
 
   (evil-set-initial-state 'magit-log-edit-mode 'insert)
   (evil-set-initial-state 'git-commit-mode 'insert)
