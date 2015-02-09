@@ -1,7 +1,11 @@
+# Ignore all of /xmonad/, which is mostly compiled scripts and logs.
 configs/xmonad/*
+# But don't ignore the actual config file.
+!configs/xmonad/xmonad.hs
+
+# Ignore all of emacs.d, which is mostly compiled/downloaded scripts.
 configs/emacs.d/*
 *.elc
-!configs/emacs.d/evil-rebellion
-!configs/emacs.d/project-root
+# But don't ignore these specific locations.
 !configs/emacs.d/lisp
-!configs/xmonad/xmonad.hs
+!configs/emacs.d/snippets
