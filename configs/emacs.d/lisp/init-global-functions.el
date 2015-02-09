@@ -82,4 +82,16 @@ Repeated invocations toggle between the two most recently open buffers."
          (args (concat "http://dox.wayfair.com/source/xref/php/" file-path "#" line-num)))
     (call-process "xdg-open" nil nil nil args)))
 
+;;; From http://beatofthegeek.com/2014/02/my-setup-for-using-emacs-as-web-browser.html
+(defun wikipedia-search (search-term)
+  "Search for SEARCH-TERM on wikipedia"
+  (interactive
+   (let ((term (if mark-active
+                   (buffer-substring (region-beginning) (region-end))
+                 (word-at-point))))
+     (list (read-string (format "Wikipedia (%s): " term) nil nil term))))
+  (browse-url (concat
+               "http://en.m.wikipedia.org/w/index.php?search="
+               search-term)))
+
 (provide 'init-global-functions)
