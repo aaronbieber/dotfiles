@@ -27,14 +27,7 @@ same.  DELTA should be a multiple of 10, to match the units used
 by the :height face attribute."
   (let* ((new-height (+ (face-attribute 'default :height) delta))
          (new-point-height (/ new-height 10)))
-    (dolist (f (frame-list))
-      (with-selected-frame f
-        ;; Latest 'set-frame-font supports a "frames" arg, but
-        ;; we cater to Emacs 23 by looping instead.
-        (set-frame-font (sanityinc/font-name-replace-size
-                         (face-font 'default)
-                         new-point-height)
-                        t)))
+    (set-frame-font (sanityinc/font-name-replace-size (face-font 'default) new-point-height) t t)
     (set-face-attribute 'default nil :height new-height)
     (message "Default font size is now %d" new-point-height)))
 
