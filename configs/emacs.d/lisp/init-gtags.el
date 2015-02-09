@@ -40,4 +40,4 @@
               (if (fboundp 'evil-normal-state)
                   (evil-normal-state)))))))
 
-(provide 'gtags-init)
+(provide 'init-gtags)
