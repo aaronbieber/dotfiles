@@ -8,4 +8,8 @@
 (when (memq window-system '(mac ns))
   (define-key global-map (kbd "<s-return>") 'toggle-frame-fullscreen))
 
+;; C-v is "visual block" in normal mode, but use it for "paste" in insert mode.
+(when (equal system-type 'darwin)
+  (evil-define-key 'insert global-map (kbd "C-v") 'yank))
+
 (provide 'init-maps)
