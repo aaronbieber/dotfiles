@@ -26,8 +26,10 @@
 (require 'init-global-functions)
 (require 'init-elpa)
 (require 'init-fonts)
+(require 'init-gtags)
 (require 'init-evil)
 (require 'init-maps)
+(require 'init-w3m)
 (require 'project-root)
 
 (when (maybe-require-package 'exec-path-from-shell)
