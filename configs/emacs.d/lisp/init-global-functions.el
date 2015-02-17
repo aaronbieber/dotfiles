@@ -1,5 +1,12 @@
 ;;; Global functions mostly used by mappings.
 
+(defun load-only-theme ()
+  "Disable all themes and then load a single theme interactively."
+  (interactive)
+  (while custom-enabled-themes
+    (disable-theme (car custom-enabled-themes)))
+  (call-interactively 'load-theme))
+
 (defun occur-last-search ()
   "Run `occur` with the last evil search term."
   (interactive)
