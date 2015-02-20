@@ -44,6 +44,7 @@
 (maybe-require-package 'auto-complete)
 (maybe-require-package 'color-theme-sanityinc-tomorrow)
 (maybe-require-package 'color-theme-approximate)
+(maybe-require-package 'dictionary)
 (maybe-require-package 'exec-path-from-shell)
 (maybe-require-package 'fiplr)
 (maybe-require-package 'flycheck)
@@ -195,6 +196,7 @@
   (require 'newcomment)
   (setq comment-auto-fill-only-comments 1)
   (setq auto-fill-function 'do-auto-fill)
+  (setq flycheck-disabled-checkers '(php-phpmd))
 
   (c-set-style "wf-php")
   (turn-on-eldoc-mode)
@@ -203,7 +205,8 @@
   (turn-on-auto-fill)
   (set-fill-column 120)
   (add-to-list 'write-file-functions 'delete-trailing-whitespace)
-  (gtags-mode t))
+  (gtags-mode t)
+  (flycheck-mode))
 
 (add-hook 'php-mode-hook 'configure-php-mode)
 
