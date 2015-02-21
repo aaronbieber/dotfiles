@@ -38,16 +38,16 @@
   (evil-mode 1)
 
   ;; My personal evil settings.
-  (add-to-list 'evil-buffer-regexps '("\\*Sunshine\\*"))
-  (add-to-list 'evil-buffer-regexps '("\\*magit:"))
-
   (setq evil-want-C-u-scroll t)
   (setq-default evil-want-C-i-jump nil)
   (setq-default evil-symbol-word-search t)
 
-  (evil-set-initial-state 'magit-log-edit-mode 'insert)
   (evil-set-initial-state 'git-commit-mode 'insert)
+  (evil-set-initial-state 'magit-log-edit-mode 'insert)
+  (evil-set-initial-state 'sunshine-mode 'emacs)
   (evil-set-initial-state 'twittering-edit-mode 'insert)
+
+  (add-to-list 'evil-buffer-regexps '("\\*magit:"))
 
   (evil-add-hjkl-bindings ag-mode-map 'normal
     "n"   'evil-search-next
