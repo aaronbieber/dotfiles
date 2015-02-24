@@ -172,6 +172,8 @@ alias urldecode='python -c "import sys, urllib as ul; print ul.unquote_plus(sys.
 alias ssh='ssh -A'
 alias cpr="rsync -aP"
 
+command -v xdg-open >/dev/null 2>&1 && alias open="xdg-open"
+
 ## Emacs:
 #alias e="emacsclient -t"          # Preferred
 alias ed="`which emacs` --daemon" # Start the daemon
