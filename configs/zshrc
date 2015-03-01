@@ -1,5 +1,17 @@
 #!/bin/sh
 
+# For tramp et al., don't do anything fancy.
+if [[ "$TERM" == "dumb"  ]]
+then
+  unsetopt zle
+  unsetopt prompt_cr
+  unsetopt prompt_subst
+  unfunction precmd
+  unfunction preexec
+  PS1='$ '
+  return
+fi
+
 # Path to your oh-my-zsh configuration.
 ZSH=$HOME/.oh-my-zsh
 
