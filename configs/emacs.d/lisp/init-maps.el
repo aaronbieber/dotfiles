@@ -4,7 +4,8 @@
 (define-key global-map (kbd "C-c t h") (lambda () (interactive) (find-file "~/Dropbox/org/home.org")))
 (define-key global-map (kbd "C-x C-q") 'kill-emacs)
 (define-key global-map (kbd "C-c C-u") 'insert-char) ;; "u" for Unicode, get it?
-(define-key global-map (kbd "C-c d") 'dictionary-lookup-definition)
+(define-key global-map (kbd "C-c l") 'dictionary-lookup-definition)
+(define-key global-map (kbd "C-c d f") 'dired-find-file)
 
 (when (memq window-system '(mac ns))
   (define-key global-map (kbd "<s-return>") 'toggle-frame-fullscreen))
