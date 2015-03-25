@@ -1,44 +1,44 @@
 [user]
-	name = Aaron Bieber
-	email = aaron@aaronbieber.com
+    name = Aaron Bieber
+    email = aaron@aaronbieber.com
 [alias]
-	st = status
-	ci = commit
-	co = checkout
-	br = branch
-	lg1 = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
-	lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
-	lg3 = log --graph --abbrev-commit --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --all
-	lg = !"git lg1"
-	cob = "checkout -b"
-        rb = "!MERGE_BASE=$(git merge-base origin/master HEAD); git diff -M --full-index $MERGE_BASE HEAD"
-	rom = "rebase origin/master"
-	dom = "diff origin/master"
-	ms = "merge --squash"
-	comp = !"git co master && git pull"
-	rmorig = !"git status --porcelain | awk '/^\\?.*orig/{print $2}' | xargs rm -v"
-        rmpound = !"git status --porcelain | awk '/^\\??.*\\/#[^\\/]*#$/{print $2}' | xargs rm -v"
-	rmuntracked = !"git status --porcelain | awk '/^\\?/{print $2}' | xargs rm -v"
-	todo = !"git diff --name-only origin/master | xargs grep -i -C3 '@todo'"
-        rmtrains = !"git branch | grep 'deploy_' | xargs git branch -D"
-	trains = !"echo -n 'Fetching...' && git fetch -q && echo ' DONE' && git for-each-ref --count=5 --sort=-committerdate --format='%(committerdate:relative) %09 %(refname:short)' refs/remotes/origin/deploy_*"
-	train = !"git fetch -q && git for-each-ref --count=1 --sort=-committerdate --format='%(refname:short)' refs/remotes/origin/deploy_*"
-        board = !"git train | xargs git checkout -t"
+    st = status
+    ci = commit
+    co = checkout
+    br = branch
+    lg1 = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+    lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+    lg3 = log --graph --abbrev-commit --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --all
+    lg = !"git lg1"
+    cob = "checkout -b"
+    rb = "!MERGE_BASE=$(git merge-base origin/master HEAD); git diff -M --full-index $MERGE_BASE HEAD"
+    rom = "rebase origin/master"
+    dom = "diff origin/master"
+    ms = "merge --squash"
+    comp = !"git co master && git pull"
+    rmorig = !"git status --porcelain | awk '/^\\?.*orig/{print $2}' | xargs rm -v"
+    rmpound = !"git status --porcelain | awk '/^\\??.*\\/#[^\\/]*#$/{print $2}' | xargs rm -v"
+    rmuntracked = !"git status --porcelain | awk '/^\\?/{print $2}' | xargs rm -v"
+    todo = !"git diff --name-only origin/master | xargs grep -i -C3 '@todo'"
+    rmtrains = !"git branch | grep 'deploy_' | xargs git branch -D"
+    trains = !"echo -n 'Fetching...' && git fetch -q && echo ' DONE' && git for-each-ref --count=5 --sort=-committerdate --format='%(committerdate:relative) %09 %(refname:short)' refs/remotes/origin/deploy_$(date +%Y_%m_%d)_*"
+    train = !"git fetch -q && git for-each-ref --count=1 --sort=-committerdate --format='%(refname:short)' refs/remotes/origin/deploy_*"
+    board = !"git train | xargs git checkout -t"
 [color]
-	branch = auto
-	diff = auto
-	interactive = auto
-	status = auto
+    branch = auto
+    diff = auto
+    interactive = auto
+    status = auto
 [core]
-	editor = vim
-	excludesfile = ~/.gitignore_global
+    editor = vim
+    excludesfile = ~/.gitignore_global
 [merge]
-	tool = vimdiff
+    tool = vimdiff
 [push]
-	default = upstream
+    default = upstream
 [pull]
-	rebase = true
+    rebase = true
 [rerere]
-	enabled = true
+    enabled = true
 [fetch]
-	prune = true
+    prune = true
