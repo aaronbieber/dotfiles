@@ -30,5 +30,5 @@ main = do
         , ("S-M-j", spawn "amixer -q sset Master 5%-")
         , ("S-M-k", spawn "amixer -q sset Master 5%+")
         , ("M-p", spawn "dmenu_run -i -nb '#282b57' -nf '#eeeeff' -sb '#555a9e' -fn 'Inconsolata-10'")
-        , ("S-M-g", spawn "xdg-open `xclip -o`")
+        , ("S-M-g", spawn "x-www-browser `xclip -o`")
         ])
