@@ -5,7 +5,7 @@
 (define-key global-map (kbd "C-x C-q") 'kill-emacs)
 (define-key global-map (kbd "C-c C-u") 'insert-char) ;; "u" for Unicode, get it?
 (define-key global-map (kbd "C-c l") 'dictionary-lookup-definition)
-(define-key global-map (kbd "C-c d f") 'dired-find-file)
+(define-key global-map (kbd "C-c d f") 'find-name-dired)
 
 (when (memq window-system '(mac ns))
   (define-key global-map (kbd "<s-return>") 'toggle-frame-fullscreen))

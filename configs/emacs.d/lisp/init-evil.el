@@ -13,7 +13,7 @@
     "B"  'magit-blame-mode
     "d"  (lambda () (interactive) (evil-ex-call-command nil "bdelete" nil))
     "D"  'open-current-line-in-codebase-search
-    "f"  'helm-semantic-or-imenu
+    "f"  'helm-imenu
     "g"  'magit-status
     "l"  'whitespace-mode
     "nn" 'narrow-and-set-normal ;; "narrow normal"
