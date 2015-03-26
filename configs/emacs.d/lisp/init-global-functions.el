@@ -3,8 +3,7 @@
 (defun load-only-theme ()
   "Disable all themes and then load a single theme interactively."
   (interactive)
-  (while custom-enabled-themes
-    (disable-theme (car custom-enabled-themes)))
+  (mapcar #'disable-theme custom-enabled-themes)
   (call-interactively 'load-theme))
 
 (defun occur-last-search ()
