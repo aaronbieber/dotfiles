@@ -7,7 +7,13 @@
                                    "Version/4.0 Mobile Safari/533."))
 
       (add-hook 'w3m-mode-hook (lambda ()
-                (define-key w3m-mode-map (kbd "d") (lambda () (interactive) (w3m-scroll-up (/ (window-height) 2))))
-                (define-key w3m-mode-map (kbd "u") (lambda () (interactive) (w3m-scroll-down (/ (window-height) 2)))))))
+                                 (define-key w3m-mode-map (kbd "d") (lambda ()
+                                                                      (interactive)
+                                                                      (w3m-scroll-up
+                                                                       (/ (window-height) 2))))
+                                 (define-key w3m-mode-map (kbd "u") (lambda ()
+                                                                      (interactive)
+                                                                      (w3m-scroll-down
+                                                                       (/ (window-height) 2)))))))
 
 (provide 'init-w3m)
