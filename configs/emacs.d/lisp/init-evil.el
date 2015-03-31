@@ -68,12 +68,12 @@
   (defun next-conflict-marker ()
     (interactive)
     (search-forward-regexp "\\(>>>>\\|====\\|<<<<\\)" (point-max) t)
-    (move-beginning-of-line))
+    (move-beginning-of-line nil))
 
   (defun previous-conflict-marker ()
     (interactive)
-    (search-backward-regexp "\\(>>>>\\|====\\|<<<<\\)" (point-max) t)
-    (move-beginning-of-line))
+    (search-backward-regexp "\\(>>>>\\|====\\|<<<<\\)" (point-min) t)
+    (move-beginning-of-line nil))
 
   ;; Global bindings.
   (define-key evil-normal-state-map (kbd "C-S-P") 'helm-projectile-switch-project)
