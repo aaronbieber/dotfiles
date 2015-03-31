@@ -65,6 +65,16 @@
   (evil-add-hjkl-bindings org-agenda-mode-map 'emacs
     "RET" 'org-agenda-switch-to)
 
+  (defun next-conflict-marker ()
+    (interactive)
+    (search-forward-regexp "\\(>>>>\\|====\\|<<<<\\)" (point-max) t)
+    (move-beginning-of-line))
+
+  (defun previous-conflict-marker ()
+    (interactive)
+    (search-backward-regexp "\\(>>>>\\|====\\|<<<<\\)" (point-max) t)
+    (move-beginning-of-line))
+
   ;; Global bindings.
   (define-key evil-normal-state-map (kbd "C-S-P") 'helm-projectile-switch-project)
   (define-key evil-normal-state-map (kbd "C-p") 'helm-projectile)
@@ -72,6 +82,8 @@
   (define-key evil-normal-state-map (kbd "C-]") 'gtags-find-tag-from-here)
   (define-key evil-normal-state-map (kbd "g/")  'occur-last-search)
   (define-key evil-normal-state-map (kbd "[i")  'show-first-occurrence)
+  (define-key evil-normal-state-map (kbd "]n") 'next-conflict-marker)
+  (define-key evil-normal-state-map (kbd "[n") 'previous-conflict-marker)
   (define-key evil-insert-state-map (kbd "C-e") 'end-of-line)
 
   (defun minibuffer-keyboard-quit ()
