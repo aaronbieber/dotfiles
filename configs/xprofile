@@ -4,7 +4,7 @@
 xrandr --output VBOX1 --right-of VBOX0
 
 # Run the X composition manager because it makes Xmonad draw correctly in VirtualBox.
-xcompmgr &
+#xcompmgr &
 
 # Load the keyring daemon's stuff. This might not actually work.
 eval $(gnome-keyring-daemon --start)
