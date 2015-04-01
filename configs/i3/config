@@ -59,6 +59,9 @@ bindsym $mod+Shift+k move up
 bindsym $mod+Shift+l move right
 #bindsym $mod+Shift+semicolon move right
 
+bindsym $mod+Shift+Control+h move workspace to output left
+bindsym $mod+Shift+Control+l move workspace to output right
+
 # split in horizontal orientation
 bindsym $mod+bar split h
 
@@ -150,6 +153,8 @@ mode "player" {
 }
 
 bindsym $mod+Shift+p mode "player"
+
+bindsym $mod+Shift+g exec "x-www-browser `xclip -o`"
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
