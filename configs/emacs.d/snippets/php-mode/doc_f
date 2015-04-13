@@ -1,6 +1,6 @@
 # -*- mode: snippet; require-final-newline: nil -*-
-# name: doc_f
-# key: doc_f
+# name: doc-function-post
+# key: doc_fp
 # binding: direct-keybinding
 # --
 /**
