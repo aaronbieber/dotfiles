@@ -21,7 +21,7 @@
     "o"  'delete-other-windows
     "p"  'put-from-x-clipboard
     "s"  'ag-project            ;; "search"
-    "r"  'font-lock-fontify-buffer
+    "r"  (lambda () (interactive) (font-lock-fontify-buffer) (redraw-display))
     "S"  'delete-trailing-whitespace
     "t"  'gtags-reindex
     "T"  'gtags-find-tag
