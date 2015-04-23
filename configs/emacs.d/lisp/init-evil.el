@@ -15,6 +15,7 @@
     "D"  'open-current-line-in-codebase-search
     "f"  'helm-imenu
     "g"  'magit-status
+    "h"  'fontify-and-browse
     "l"  'whitespace-mode
     "nn" 'narrow-and-set-normal ;; "narrow normal"
     "nw" 'widen                 ;; "narrow widen"

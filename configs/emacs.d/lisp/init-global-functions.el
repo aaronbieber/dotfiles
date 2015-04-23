@@ -1,5 +1,14 @@
 ;;; Global functions mostly used by mappings.
 
+(defun fontify-and-browse ()
+  "Fontify the current buffer into HTML, write it to a temp file, and open it in a browser."
+  (interactive)
+  (let* ((fontified-buffer (hfy-fontify-buffer))
+         (temp-file-name (make-temp-file "ff" nil ".html")))
+    (with-current-buffer fontified-buffer
+      (write-region (point-min) (point-max) temp-file-name))
+    (browse-url (concat "file://" temp-file-name))))
+
 (defun load-only-theme ()
   "Disable all themes and then load a single theme interactively."
   (interactive)
