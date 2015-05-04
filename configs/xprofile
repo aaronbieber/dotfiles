@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configure dual displays.
-xrandr --output VBOX1 --right-of VBOX0
+xrandr --output VGA-0 --left-of VGA-1
 
 # Run the X composition manager because it makes Xmonad draw correctly in VirtualBox.
 #xcompmgr &
