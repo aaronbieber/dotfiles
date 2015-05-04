@@ -282,6 +282,11 @@
                                 (turn-on-auto-fill)
                                 (flyspell-mode)))
 
+;;; HTML mode:
+(add-hook 'html-mode-hook (lambda ()
+                            (setq sgml-basic-offset 2)
+                            (setq indent-tabs-mode nil)))
+
 (defun find-php-functions-in-current-buffer ()
   "Find lines that appear to be PHP functions in the buffer.
 
