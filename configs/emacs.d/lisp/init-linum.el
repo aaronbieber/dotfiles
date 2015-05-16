@@ -1,7 +1,3 @@
-;;; Set up relative line numbering to mimic `:set number relativenumber`.
-(global-linum-mode t)
-(add-hook 'linum-before-numbering-hook 'my-linum-get-format-string)
-
 ;;; Stuff for line numbers.
 (defun my-linum-get-format-string ()
   (let* ((width (max 4 (1+ (length (number-to-string
@@ -25,5 +21,9 @@
   (let ((my-linum-current-line-number (line-number-at-pos)))
     ad-do-it))
 (ad-activate 'linum-update)
+
+;;; Set up relative line numbering to mimic `:set number relativenumber`.
+(global-linum-mode t)
+(add-hook 'linum-before-numbering-hook 'my-linum-get-format-string)
 
 (provide 'init-linum)
