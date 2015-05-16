@@ -23,6 +23,11 @@
 (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
 (global-visual-line-mode nil)
 (setq-default left-fringe-width nil)
+(setq-default indent-tabs-mode nil)
+(eval-after-load "vc" '(setq vc-handled-backends nil))
+(setq vc-follow-symlinks t)
+(setq large-file-warning-threshold nil)
+(setq split-width-threshold nil)
 
 (require 'project-root)
 (require 'init-linum)
@@ -124,17 +129,6 @@
 
 ;;; Use evil surround mode in all buffers.
 (global-evil-surround-mode 1)
-
-;;; Use spaces instead of tabs.
-(setq-default indent-tabs-mode nil)
-;;; Don't actually use VC, because it slows down loading.
-(eval-after-load "vc" '(setq vc-handled-backends nil))
-;;; Follow symlinks to version-controlled files without argument. Just do it.
-(setq vc-follow-symlinks t)
-;;; Don't warn me when files are big. It's fine.
-(setq large-file-warning-threshold nil)
-;;; Never "sensibly" split windows vertically.
-(setq split-width-threshold nil)
 
 ;;; Flycheck mode:
 (add-hook 'flycheck-mode-hook (lambda ()
