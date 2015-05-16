@@ -1,5 +1,6 @@
 ;;; Global functions mostly used by mappings.
 
+(require 'htmlfontify)
 (defun fontify-and-browse ()
   "Fontify the current buffer into HTML, write it to a temp file, and open it in a browser."
   (interactive)
@@ -72,7 +73,6 @@ Repeated invocations toggle between the two most recently open buffers."
          nil
        (- selective-display 1)))))
 
-;;; This is bound to a leader key below.
 (defun my-align-single-equals ()
   "Align on the first single equal sign."
   (interactive)
@@ -105,7 +105,7 @@ Repeated invocations toggle between the two most recently open buffers."
                    (buffer-substring (region-beginning) (region-end))
                  (word-at-point))))
      (list (read-string (format "Wikipedia (%s): " term) nil nil term))))
-  (browse-url (concat
+  (w3m-browse-url (concat
                "http://en.m.wikipedia.org/w/index.php?search="
                search-term)))
 
