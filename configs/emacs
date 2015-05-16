@@ -30,7 +30,6 @@
 (setq split-width-threshold nil)
 
 (require 'project-root)
-(require 'init-linum)
 (require 'init-utils)
 (require 'init-mac)
 (require 'init-global-functions)
@@ -375,6 +374,7 @@ is the buffer location at which the function was found."
 
 (put 'narrow-to-region 'disabled nil)
 (load-theme 'spolsky t)
+(require 'init-linum)
 
 (provide 'emacs)
 ;;; emacs ends here
