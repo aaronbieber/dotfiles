@@ -24,6 +24,7 @@
 (global-visual-line-mode nil)
 (setq-default left-fringe-width nil)
 
+(require 'project-root)
 (require 'init-linum)
 (require 'init-utils)
 (require 'init-mac)
@@ -35,7 +36,6 @@
 (require 'init-maps)
 (require 'init-w3m)
 (require 'init-php)
-(require 'project-root)
 
 (when (maybe-require-package 'exec-path-from-shell)
   (when (memq window-system '(mac ns))
