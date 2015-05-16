@@ -8,7 +8,7 @@
                                          (find-file-other-window "~/Dropbox/org/home.org")))
 (define-key global-map (kbd "C-x C-q") 'kill-emacs)
 (define-key global-map (kbd "C-c C-u") 'insert-char) ;; "u" for Unicode, get it?
-(define-key global-map (kbd "C-c l") 'dictionary-lookup-definition)
+(define-key global-map (kbd "C-c l")   'dictionary-lookup-definition)
 (define-key global-map (kbd "C-c d f") 'find-name-dired)
 
 ;; C-v is "visual block" in normal mode, but use it for "paste" in insert mode.
