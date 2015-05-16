@@ -5,7 +5,9 @@
   (evil-leader/set-leader ",")
   (setq evil-leader/in-all-states 1)
   (evil-leader/set-key
+    ","  'avy-goto-char-2
     "."  'switch-to-previous-buffer
+    ":"  'eval-expression
     "aa" 'align-regexp
     "a=" 'my-align-single-equals
     "b"  'helm-mini             ;; Switch to another buffer
