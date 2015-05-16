@@ -22,7 +22,9 @@
 (visual-line-mode 1)
 (setq-default left-fringe-width 10)
 
+(require 'init-linum)
 (require 'init-utils)
+(require 'init-mac)
 (require 'init-global-functions)
 (require 'init-elpa)
 (require 'init-fonts)
@@ -30,6 +32,7 @@
 (require 'init-evil)
 (require 'init-maps)
 (require 'init-w3m)
+(require 'init-php)
 (require 'project-root)
 
 (when (maybe-require-package 'exec-path-from-shell)
@@ -40,43 +43,37 @@
       (setq browse-url-browser-function 'browse-url-generic
             browse-url-generic-program "google-chrome"))
 
-;;(maybe-require-package 'ag)
-;;(maybe-require-package 'auto-complete)
-;;(maybe-require-package 'color-theme-sanityinc-tomorrow)
-;;(maybe-require-package 'color-theme-approximate)
-;;(maybe-require-package 'dictionary)
-;;(maybe-require-package 'exec-path-from-shell)
-;;(maybe-require-package 'fiplr)
-;;(maybe-require-package 'flycheck)
-;;(maybe-require-package 'guide-key)
-;;(maybe-require-package 'helm)
-;;(maybe-require-package 'helm-projectile)
-;;(maybe-require-package 'highlight-symbol)
-;;(maybe-require-package 'magit)
-;;(maybe-require-package 'markdown-mode)
-;;(maybe-require-package 'powerline)
-;;(maybe-require-package 'powerline-evil)
-;;(maybe-require-package 'projectile)
-;;(maybe-require-package 'php-mode)
-;;(maybe-require-package 'php-extras)
-;;(maybe-require-package 'sublime-themes)
-;;(maybe-require-package 'twilight-bright-theme)
-;;(maybe-require-package 'twilight-anti-bright-theme)
-;;(maybe-require-package 'twittering-mode)
-;;(maybe-require-package 'web-mode)
-;;(maybe-require-package 'window-numbering)
-;;(maybe-require-package 'yasnippet)
-;;(maybe-require-package 'zenburn-theme)
+(maybe-require-package 'ag)
+(maybe-require-package 'auto-complete)
+(maybe-require-package 'dictionary)
+(maybe-require-package 'flycheck)
+(maybe-require-package 'guide-key)
+(maybe-require-package 'helm)
+(maybe-require-package 'helm-projectile)
+(maybe-require-package 'highlight-symbol)
+(maybe-require-package 'magit)
+(maybe-require-package 'markdown-mode)
+(maybe-require-package 'powerline)
+(maybe-require-package 'powerline-evil)
+(maybe-require-package 'projectile)
+(maybe-require-package 'php-extras)
+(maybe-require-package 'sublime-themes)
+(maybe-require-package 'twittering-mode)
+(maybe-require-package 'web-mode)
+(maybe-require-package 'yasnippet)
+(maybe-require-package 'zenburn-theme)
+(maybe-require-package 'sunshine)
 
-(require 'sunshine)
+;;; Helpers for GNUPG, which I use for encrypting/decrypting secrets.
 (require 'epa-file)
 (epa-file-enable)
 (setq-default epa-file-cache-passphrase-for-symmetric-encryption t)
 
-;;; Turn off scroll bar mode if it exists (GUI only)
+;;; Scroll bars are for losers.
 (when (boundp 'scroll-bar-mode)
   (scroll-bar-mode -1))
 
+;;; Always use guide-key mode, it is awesome.
 (guide-key-mode 1)
 (setq-default guide-key/guide-key-sequence t
               guide-key/idle-delay 0.5)
@@ -97,7 +94,8 @@
 (yas-global-mode 1)
 ;;(define-key yas-minor-mode-map (kbd "<tab>") nil)
 ;;(define-key yas-minor-mode-map (kbd "TAB") nil)
-(define-key yas-minor-mode-map (kbd "C-l") 'yas-expand)
+;;(setq tab-always-indent 'yas-expand)
+;;(define-key yas-minor-mode-map (kbd "C-l") 'yas-expand)
 (define-key yas-minor-mode-map (kbd "<escape>") 'yas-exit-snippet)
 
 (setq yas-prompt-functions '(yas-completing-prompt
@@ -136,90 +134,6 @@
 (setq large-file-warning-threshold nil)
 ;;; Never "sensibly" split windows vertically.
 (setq split-width-threshold nil)
-
-;;; Set up relative line numbering to mimic `:set number relativenumber`.
-(global-linum-mode t)
-(add-hook 'linum-before-numbering-hook 'my-linum-get-format-string)
-
-;;; Stuff for line numbers.
-(defun my-linum-get-format-string ()
-  (let* ((width (max 4 (1+ (length (number-to-string
-                             (count-lines (point-min) (point-max)))))))
-         (format (concat "%" (number-to-string width) "d ")))
-    (setq my-linum-format-string format)))
-
-(defvar my-linum-current-line-number 0)
-
-(setq linum-format 'my-linum-relative-line-numbers)
-
-(defun my-linum-relative-line-numbers (line-number)
-  (let* ( (offset (abs (- line-number my-linum-current-line-number)))
-          (linum-display-value (if (= 0 offset)
-				   my-linum-current-line-number
-				   offset))
-        )
-    (propertize (format my-linum-format-string linum-display-value) 'face 'linum)))
-
-(defadvice linum-update (around my-linum-update)
-  (let ((my-linum-current-line-number (line-number-at-pos)))
-    ad-do-it))
-(ad-activate 'linum-update)
-
-(defun my-php-lineup-arglist-intro (langelem)
-  (save-excursion
-    (goto-char (cdr langelem))
-    (vector (+ (current-column) (* 2 c-basic-offset)))))
-
-(defun my-php-lineup-arglist-close (langelem)
-  (save-excursion
-    (goto-char (c-langelem-pos langelem))
-    (vector (current-column))))
-
-(defun my-php-lineup-arglist-cont-nonempty (langelem)
-  "Align continued arglist lines to two times the basic offset from langelem."
-  (save-excursion
-    (goto-char (c-langelem-pos langelem))
-    (vector (+ (current-column) (* 2 c-basic-offset)))))
-
-(defun my-php-lineup-statement-cont (langelem)
-  "Align continued statement lines in PHP."
-  (message (buffer-substring-no-properties (line-beginning-position) (line-end-position)))
-  (save-excursion
-    (back-to-indentation)
-    (if (search-forward "->" (line-end-position) t)
-        (* 2 c-basic-offset)
-      (php-lineup-string-cont langelem))))
-
-;;; Provide a style based on "php" that changes a couple of indent behaviors.
-(c-add-style "wf-php"
-             '("php"
-               (c-basic-offset . 2)
-               (c-offsets-alist . ((arglist-intro . my-php-lineup-arglist-intro)
-                                   (arglist-close . my-php-lineup-arglist-close)
-                                   (arglist-cont-nonempty . my-php-lineup-arglist-cont-nonempty)
-                                   (statement-cont . my-php-lineup-statement-cont)
-                                   (topmost-intro-cont . my-php-lineup-statement-cont)))))
-
-;;; Configure things for PHP usage.
-;;; We can bring back fci-mode if we use @purcell's workaround found here:
-;;; https://github.com/alpaker/Fill-Column-Indicator/issues/21
-(defun configure-php-mode ()
-  (require 'newcomment)
-  (setq comment-auto-fill-only-comments 1)
-  (setq auto-fill-function 'do-auto-fill)
-  (setq flycheck-disabled-checkers '(php-phpmd))
-
-  (c-set-style "wf-php")
-  (turn-on-eldoc-mode)
-  (highlight-symbol-mode)
-
-  (turn-on-auto-fill)
-  (set-fill-column 120)
-  (add-to-list 'write-file-functions 'delete-trailing-whitespace)
-  (gtags-mode t)
-  (flycheck-mode))
-
-(add-hook 'php-mode-hook 'configure-php-mode)
 
 ;;; Flycheck mode:
 (add-hook 'flycheck-mode-hook (lambda ()
