@@ -84,7 +84,6 @@
     :front "^```cl[\n\r]+"
     :back "^```$")))
 
-(setq mmm-global-mode 't)
 (mmm-add-mode-ext-class 'markdown-mode nil 'markdown-cl)
 
 ;;; Don't display this nag about reverting buffers.
@@ -107,8 +106,6 @@
 (setq backup-directory-alist (list (cons "." backup-dir)))
 (setq make-backup-files nil)
 (setq-default highlight-symbol-idle-delay 1.5)
-
-;;(powerline-evil-vim-color-theme)
 
 ;;; YAsnippet
 (setq-default yas-snippet-dirs '("~/.emacs.d/snippets"
@@ -249,7 +246,6 @@ is the buffer location at which the function was found."
  '(diary-entry-marker (quote font-lock-variable-name-face))
  '(gnus-logo-colors (quote ("#0d7b72" "#adadad")))
  '(js-indent-level 2)
- '(linum-format " %7i ")
  '(org-agenda-files
    (quote
     ("~/Dropbox/org/todo.org_archive" "~/Dropbox/org/todo.org")))
@@ -295,7 +291,7 @@ is the buffer location at which the function was found."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- ;;'(default ((t (:background nil))))
+ '(default ((t (:background nil))))
  '(powerline-evil-normal-face
    ((t (:inherit powerline-evil-base-face :background "green" :foreground "black")))))
 
@@ -408,9 +404,6 @@ is the buffer location at which the function was found."
 (when (memq window-system '(mac ns))
   (setq ns-use-srgb-colorspace nil))
 
-;;;(powerline-vim-theme)
-;;;(powerline-custom-vim-theme)
-;;;(powerline-default-theme)
 (my-powerline-default-theme)
 
 (provide 'emacs)
