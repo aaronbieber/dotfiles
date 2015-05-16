@@ -10,23 +10,17 @@
 
 (require 'package)
 
-
 
 ;;; Standard package repositories
-
-;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
-
-;; We include the org repository for completeness, but don't normally
-;; use it.
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
-
-(when (< emacs-major-version 24)
-  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
-
-;;; Also use Melpa for most packages
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
 
+;;; Pin some packages to specific repositories.
+(setq package-pinned-packages '((gtags . "marmalade")
+                                (php-extras . "marmalade")
+                                (magit . "melpa-stable")))
 
 
 ;; If gpg cannot be found, signature checking will fail, so we
@@ -39,10 +33,8 @@
 (after-load 'init-exec-path
   (sanityinc/package-maybe-enable-signatures))
 
-
 
 ;;; On-demand installation of packages
-
 (defun require-package (package &optional min-version no-refresh)
   "Install given PACKAGE, optionally requiring MIN-VERSION.
 If NO-REFRESH is non-nil, the available package lists will not be
@@ -54,7 +46,6 @@ re-downloaded in order to locate PACKAGE."
       (progn
         (package-refresh-contents)
         (require-package package min-version t)))))
-
 
 (defun maybe-require-package (package &optional min-version no-refresh)
   "Try to install PACKAGE, and return non-nil if successful.
@@ -70,10 +61,8 @@ locate PACKAGE."
 
 
 ;;; Fire up package.el
-
 (setq package-enable-at-startup nil)
 (package-initialize)
-
 
 
 (require-package 'fullframe)
@@ -97,6 +86,5 @@ locate PACKAGE."
       (sanityinc/set-tabulated-list-column-width "Archive" longest-archive-name))))
 
 (add-hook 'package-menu-mode-hook 'sanityinc/maybe-widen-package-menu-columns)
-
 
 (provide 'init-elpa)
