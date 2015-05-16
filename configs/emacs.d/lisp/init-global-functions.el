@@ -10,6 +10,11 @@
       (write-region (point-min) (point-max) temp-file-name))
     (browse-url (concat "file://" temp-file-name))))
 
+(defadvice load-theme (after restore-line-numbering)
+  "Re-set linum-format after loading themes, which frequently overwrite it."
+  (setq linum-format 'my-linum-relative-line-numbers))
+(ad-activate 'load-theme)
+
 (defun load-only-theme ()
   "Disable all themes and then load a single theme interactively."
   (interactive)
