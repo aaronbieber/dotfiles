@@ -30,6 +30,9 @@
 (setq split-width-threshold nil)
 (setq visible-bell t)
 
+;;; File type overrides.
+(add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+
 (require 'project-root)
 (require 'init-utils)
 (require 'init-mac)
@@ -57,6 +60,7 @@
 (maybe-require-package 'ag)
 (maybe-require-package 'auto-complete)
 (maybe-require-package 'dictionary)
+(maybe-require-package 'emmet-mode)
 (maybe-require-package 'flycheck)
 (maybe-require-package 'guide-key)
 (maybe-require-package 'helm)
@@ -170,6 +174,24 @@
             (auto-fill-mode)
             (flyspell-mode)))
 
+;;; Magit mode (which does not open in evil-mode):
+(add-hook 'magit-mode
+          (lambda ()
+            (define-key magit-mode-map (kbd ",o") 'delete-other-windows)))
+
+;;; Emmet mode:
+(add-hook 'emmet-mode-hook
+          (lambda ()
+            (evil-define-key 'insert emmet-mode-keymap (kbd "C-S-l") 'emmet-next-edit-point)
+            (evil-define-key 'insert emmet-mode-keymap (kbd "C-S-h") 'emmet-prev-edit-point)))
+
+;;; Web mode:
+(add-hook 'web-mode-hook
+          (lambda ()
+            (emmet-mode)
+            (flycheck-add-mode 'html-tidy 'web-mode)
+            (flycheck-mode)))
+
 ;;; Emacs Lisp mode:
 (add-hook 'emacs-lisp-mode-hook
           (lambda ()
@@ -193,7 +215,6 @@
 
 ;;; Javascript mode:
 (add-hook 'javascript-mode-hook (lambda ()
-                                  (message "IAM RUNNIGN IN UR HOOKS")
                                   (set-fill-column 120)
                                   (turn-on-auto-fill)
                                   (setq js-indent-level 2)))

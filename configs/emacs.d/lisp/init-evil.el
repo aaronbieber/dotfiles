@@ -51,6 +51,8 @@
   (evil-set-initial-state 'twittering-edit-mode 'insert)
 
   (add-to-list 'evil-buffer-regexps '("\\*magit:"))
+  (add-to-list 'evil-buffer-regexps '("\\*Flycheck"))
+  (add-to-list 'evil-emacs-state-modes 'flycheck-error-list-mode)
 
   (evil-add-hjkl-bindings ag-mode-map 'normal
     "n"   'evil-search-next
