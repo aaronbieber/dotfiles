@@ -51,7 +51,8 @@
     (set-fill-column 120)
     (add-to-list 'write-file-functions 'delete-trailing-whitespace)
     (gtags-mode t)
-    (flycheck-mode))
+    (flycheck-mode)
+    (yas-minor-mode-on))
 
   (add-hook 'php-mode-hook 'configure-php-mode))
 

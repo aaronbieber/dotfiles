@@ -112,18 +112,19 @@
 (setq-default highlight-symbol-idle-delay 1.5)
 
 ;;; YAsnippet
-(setq-default yas-snippet-dirs '("~/.emacs.d/snippets"
-                                 "~/.emacs.d/remote-snippets"))
-(yas-global-mode 1)
-;;(define-key yas-minor-mode-map (kbd "<tab>") nil)
-;;(define-key yas-minor-mode-map (kbd "TAB") nil)
-;;(setq tab-always-indent 'yas-expand)
-;;(define-key yas-minor-mode-map (kbd "C-l") 'yas-expand)
-(define-key yas-minor-mode-map (kbd "<escape>") 'yas-exit-snippet)
+(add-hook 'yas-minor-mode-map
+          (lambda ()
+            (setq-default yas-snippet-dirs '("~/.emacs.d/snippets"
+                                             "~/.emacs.d/remote-snippets"))
+            ;;(define-key yas-minor-mode-map (kbd "<tab>") nil)
+            ;;(define-key yas-minor-mode-map (kbd "TAB") nil)
+            ;;(setq tab-always-indent 'yas-expand)
+            ;;(define-key yas-minor-mode-map (kbd "C-l") 'yas-expand)
+            (define-key yas-minor-mode-map (kbd "<escape>") 'yas-exit-snippet)
 
-(setq yas-prompt-functions '(yas-completing-prompt
-                             yas-ido-prompt
-                             yas-dropdown-prompt))
+            (setq yas-prompt-functions '(yas-completing-prompt
+                                         yas-ido-prompt
+                                         yas-dropdown-prompt))))
 
 ;;(global-auto-complete-mode t)
 (require 'auto-complete-config)
@@ -200,6 +201,7 @@
 ;;; Emacs Lisp mode:
 (add-hook 'emacs-lisp-mode-hook
           (lambda ()
+            (yas-minor-mode-on)
             (turn-on-eldoc-mode)
             (highlight-symbol-mode)))
 
@@ -318,8 +320,8 @@ is the buffer location at which the function was found."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:background nil))))
- '(powerline-evil-normal-face
-   ((t (:inherit powerline-evil-base-face :background "green" :foreground "black")))))
+ '(comint-highlight-prompt ((t nil)))
+ '(powerline-evil-normal-face ((t (:inherit powerline-evil-base-face :background "green" :foreground "black")))))
 
 ;; handle tmux's xterm-keys
 ;; put the following line in your ~/.tmux.conf:
