@@ -21,6 +21,22 @@
   (mapcar #'disable-theme custom-enabled-themes)
   (call-interactively 'load-theme))
 
+(defun cycle-powerline-separators ()
+  "Cycle through the available Powerline separators, setting each in turn."
+  (setq separators '("arrow" "arrow-fade" "slant" "chamfer" "wave"
+                     "brace" "roundstub" "zigzag" "butt" "rounded"
+                     "contour" "curve"))
+  (setq first-sep (car separators))
+  (while separators
+    (progn (setq sep (car separators))
+           (setq separators (cdr separators))
+           (when (string= sep powerline-default-separator)
+             (progn (message (number-to-string (length separators)))
+                    (setq powerline-default-separator (if (> (length separators) 0)
+                                                          (car separators)
+                                                        first-sep))
+                    (setq separators '()))))))
+
 (defun occur-last-search ()
   "Run `occur` with the last evil search term."
   (interactive)
