@@ -23,10 +23,7 @@
 
 (defun cycle-powerline-separators (&optional reverse)
   "Set Powerline separators in turn. If REVERSE is not nil, go backwards."
-<<<<<<< HEAD
-=======
   (interactive)
->>>>>>> Better cycle-powerline-separators and a mapping.
   (let* ((fn (if reverse 'reverse 'identity))
          (separators (funcall fn '("arrow" "arrow-fade" "slant"
                                    "chamfer" "wave" "brace" "roundstub" "zigzag"
