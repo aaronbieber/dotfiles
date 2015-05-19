@@ -23,6 +23,7 @@
 
 (defun cycle-powerline-separators ()
   "Cycle through the available Powerline separators, setting each in turn."
+  (interactive)
   (setq separators '("arrow" "arrow-fade" "slant" "chamfer" "wave"
                      "brace" "roundstub" "zigzag" "butt" "rounded"
                      "contour" "curve"))
