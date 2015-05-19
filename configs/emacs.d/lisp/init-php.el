@@ -52,7 +52,7 @@
     (add-to-list 'write-file-functions 'delete-trailing-whitespace)
     (gtags-mode t)
     (flycheck-mode)
-    (yas-minor-mode-on))
+    (yas-minor-mode t))
 
   (add-hook 'php-mode-hook 'configure-php-mode))
 
