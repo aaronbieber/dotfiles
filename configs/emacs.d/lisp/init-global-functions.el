@@ -21,22 +21,18 @@
   (mapcar #'disable-theme custom-enabled-themes)
   (call-interactively 'load-theme))
 
-(defun cycle-powerline-separators ()
-  "Cycle through the available Powerline separators, setting each in turn."
-  (interactive)
-  (setq separators '("arrow" "arrow-fade" "slant" "chamfer" "wave"
-                     "brace" "roundstub" "zigzag" "butt" "rounded"
-                     "contour" "curve"))
-  (setq first-sep (car separators))
-  (while separators
-    (progn (setq sep (car separators))
-           (setq separators (cdr separators))
-           (when (string= sep powerline-default-separator)
-             (progn (message (number-to-string (length separators)))
-                    (setq powerline-default-separator (if (> (length separators) 0)
-                                                          (car separators)
-                                                        first-sep))
-                    (setq separators '()))))))
+(defun cycle-powerline-separators (&optional reverse)
+  "Set Powerline separators in turn. If REVERSE is not nil, go backwards."
+  (let* ((fn (if reverse 'reverse 'identity))
+         (separators (funcall fn '("arrow" "arrow-fade" "slant"
+                                   "chamfer" "wave" "brace" "roundstub" "zigzag"
+                                   "butt" "rounded" "contour" "curve")))
+         (found nil))
+    (while (not found)
+      (progn (setq separators (append (cdr separators) (list (car separators))))
+             (when (string= (car separators) powerline-default-separator)
+               (progn (setq powerline-default-separator (cadr separators))
+                      (setq found t)))))))
 
 (defun occur-last-search ()
   "Run `occur` with the last evil search term."
