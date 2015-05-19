@@ -111,21 +111,6 @@
 (setq make-backup-files nil)
 (setq-default highlight-symbol-idle-delay 1.5)
 
-;;; YAsnippet
-(add-hook 'yas-minor-mode-map
-          (lambda ()
-            (setq-default yas-snippet-dirs '("~/.emacs.d/snippets"
-                                             "~/.emacs.d/remote-snippets"))
-            ;;(define-key yas-minor-mode-map (kbd "<tab>") nil)
-            ;;(define-key yas-minor-mode-map (kbd "TAB") nil)
-            ;;(setq tab-always-indent 'yas-expand)
-            ;;(define-key yas-minor-mode-map (kbd "C-l") 'yas-expand)
-            (define-key yas-minor-mode-map (kbd "<escape>") 'yas-exit-snippet)
-
-            (setq yas-prompt-functions '(yas-completing-prompt
-                                         yas-ido-prompt
-                                         yas-dropdown-prompt))))
-
 ;;(global-auto-complete-mode t)
 (require 'auto-complete-config)
 (ac-config-default)
@@ -149,9 +134,10 @@
 (global-evil-surround-mode 1)
 
 ;;; Flycheck mode:
-(add-hook 'flycheck-mode-hook (lambda ()
-  (evil-define-key 'normal flycheck-mode-map (kbd "]e") 'flycheck-next-error)
-  (evil-define-key 'normal flycheck-mode-map (kbd "[e") 'flycheck-previous-error)))
+(add-hook 'flycheck-mode-hook
+          (lambda ()
+            (evil-define-key 'normal flycheck-mode-map (kbd "]e") 'flycheck-next-error)
+            (evil-define-key 'normal flycheck-mode-map (kbd "[e") 'flycheck-previous-error)))
 
 ;;; Helm mode:
 (define-key helm-find-files-map (kbd "C-k") 'helm-find-files-up-one-level)
@@ -180,8 +166,23 @@
           (lambda ()
             (define-key lisp-interaction-mode-map (kbd "<C-return>") 'eval-last-sexp)))
 
+;;; YAsnippet
+(require 'yasnippet)
+(setq yas-snippet-dirs '("~/.emacs.d/snippets"
+                         "~/.emacs.d/remote-snippets"))
+(yas-reload-all)
+;;(define-key yas-minor-mode-map (kbd "<tab>") nil)
+;;(define-key yas-minor-mode-map (kbd "TAB") nil)
+;;(setq tab-always-indent 'yas-expand)
+;;(define-key yas-minor-mode-map (kbd "C-l") 'yas-expand)
+(define-key yas-minor-mode-map (kbd "<escape>") 'yas-exit-snippet)
+
+(setq yas-prompt-functions '(yas-completing-prompt
+                             yas-ido-prompt
+                             yas-dropdown-prompt))
+
 ;;; Magit mode (which does not open in evil-mode):
-(add-hook 'magit-mode
+(add-hook 'magit-mode-hook
           (lambda ()
             (define-key magit-mode-map (kbd ",o") 'delete-other-windows)))
 
@@ -194,6 +195,7 @@
 ;;; Web mode:
 (add-hook 'web-mode-hook
           (lambda ()
+            (setq web-mode-style-padding 2)
             (emmet-mode)
             (flycheck-add-mode 'html-tidy 'web-mode)
             (flycheck-mode)))
