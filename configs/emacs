@@ -338,7 +338,10 @@ is the buffer location at which the function was found."
  ;; If there is more than one, they won't work right.
  '(default ((t (:background nil))))
  '(comint-highlight-prompt ((t nil)))
- '(powerline-evil-normal-face ((t (:inherit powerline-evil-base-face :background "green" :foreground "black")))))
+ '(powerline-evil-normal-face ((t (:inherit powerline-evil-base-face :background "green" :foreground "black"))))
+ '(term-color-blue ((t (:background "DodgerBlue2" :foreground "DodgerBlue2"))))
+ '(term-color-green ((t (:background "LimeGreen" :foreground "LimeGreen"))))
+ '(term-color-cyan ((t (:background "CadetBlue2" :foreground "CadetBlue2")))))
 
 ;; handle tmux's xterm-keys
 ;; put the following line in your ~/.tmux.conf:
