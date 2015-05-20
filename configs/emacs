@@ -162,7 +162,7 @@
             (flyspell-mode)))
 
 ;;; Lisp interaction mode:
-(add-hook 'lisp-interaction-mode
+(add-hook 'lisp-interaction-mode-hook
           (lambda ()
             (define-key lisp-interaction-mode-map (kbd "<C-return>") 'eval-last-sexp)))
 
