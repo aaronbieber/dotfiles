@@ -10,9 +10,7 @@
     (interactive)
     (let* ((root-path (project-root))
            (gtags-path (concat root-path "GTAGS")))
-      (if (file-exists-p gtags-path)
-          (gtags-reindex-process root-path)
-        (message "I have not found GTAGS."))))
+      (gtags-reindex-process root-path)))
 
   (defun gtags-reindex-process (path)
     "Internal function triggered by gtags-reindex that recursively generates GTAGS."

@@ -196,9 +196,24 @@
 (add-hook 'web-mode-hook
           (lambda ()
             (setq web-mode-style-padding 2)
+            (yas-minor-mode t)
             (emmet-mode)
             (flycheck-add-mode 'html-tidy 'web-mode)
             (flycheck-mode)))
+
+(setq web-mode-ac-sources-alist
+      '(("php" . (ac-source-php-extras ac-source-yasnippet ac-source-gtags ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
+        ("css" . (ac-source-css-property ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))))
+
+(add-hook 'web-mode-before-auto-complete-hooks
+          '(lambda ()
+             (let ((web-mode-cur-language (web-mode-language-at-pos)))
+               (if (string= web-mode-cur-language "php")
+                   (yas-activate-extra-mode 'php-mode)
+                 (yas-deactivate-extra-mode 'php-mode))
+               (if (string= web-mode-cur-language "css")
+                   (setq emmet-use-css-transform t)
+                 (setq emmet-use-css-transform nil)))))
 
 ;;; Emacs Lisp mode:
 (add-hook 'emacs-lisp-mode-hook
