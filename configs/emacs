@@ -161,10 +161,13 @@
             (auto-fill-mode)
             (flyspell-mode)))
 
-;;; Lisp interaction mode:
+;;; Lisp interaction mode & Emacs Lisp mode:
 (add-hook 'lisp-interaction-mode-hook
           (lambda ()
             (define-key lisp-interaction-mode-map (kbd "<C-return>") 'eval-last-sexp)))
+(add-hook 'emacs-lisp-mode-hook
+          (lambda ()
+            (define-key emacs-lisp-mode-map (kbd "<C-return>") 'eval-last-sexp)))
 
 ;;; YAsnippet
 (require 'yasnippet)
@@ -291,9 +294,7 @@ is the buffer location at which the function was found."
  '(diary-entry-marker (quote font-lock-variable-name-face))
  '(gnus-logo-colors (quote ("#0d7b72" "#adadad")))
  '(js-indent-level 2)
- '(org-agenda-files
-   (quote
-    ("~/Dropbox/org/todo.org_archive" "~/Dropbox/org/todo.org")))
+ '(org-agenda-files '("~/Dropbox/org/"))
  '(org-directory "~/Dropbox/org")
  '(org-mobile-directory "~/Dropbox/org/mobile")
  '(org-mobile-inbox-for-pull "~/Dropbox/org/mobile/capture.org")
@@ -340,8 +341,8 @@ is the buffer location at which the function was found."
  '(comint-highlight-prompt ((t nil)))
  '(powerline-evil-normal-face ((t (:inherit powerline-evil-base-face :background "green" :foreground "black"))))
  '(term-color-blue ((t (:background "DodgerBlue2" :foreground "DodgerBlue2"))))
- '(term-color-green ((t (:background "LimeGreen" :foreground "LimeGreen"))))
- '(term-color-cyan ((t (:background "CadetBlue2" :foreground "CadetBlue2")))))
+ '(term-color-cyan ((t (:background "CadetBlue2" :foreground "CadetBlue2"))))
+ '(term-color-green ((t (:background "LimeGreen" :foreground "LimeGreen")))))
 
 ;; handle tmux's xterm-keys
 ;; put the following line in your ~/.tmux.conf:
