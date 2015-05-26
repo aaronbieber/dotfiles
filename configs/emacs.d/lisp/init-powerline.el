@@ -1,7 +1,8 @@
 (when (and (maybe-require-package 'powerline)
            (maybe-require-package 'powerline-evil))
 
-  (setq powerline-default-separator 'arrow-fade)
+  (setq powerline-default-separator (if (display-graphic-p) 'slant
+                                      nil))
 
   (defface my-pl-segment1-active
     '((t (:foreground "black" :background "#E1B61A")))
