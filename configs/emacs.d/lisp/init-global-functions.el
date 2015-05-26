@@ -33,7 +33,8 @@
       (progn (setq separators (append (cdr separators) (list (car separators))))
              (when (string= (car separators) powerline-default-separator)
                (progn (setq powerline-default-separator (cadr separators))
-                      (setq found t)))))))
+                      (setq found t)
+                      (redraw-display)))))))
 
 (defun occur-last-search ()
   "Run `occur` with the last evil search term."
