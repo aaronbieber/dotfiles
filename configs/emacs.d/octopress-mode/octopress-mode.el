@@ -201,6 +201,17 @@
       "Running"
     "Stopped"))
 
+(defun om--generic-process-filter (proc string)
+  (when (buffer-live-p (process-buffer proc))
+    (with-current-buffer (process-buffer proc)
+      (let ((moving (= (point) (process-mark proc))))
+        (save-excursion
+          ;; Insert the text, advancing the process marker.
+          (goto-char (process-mark proc))
+          (insert string)
+          (set-marker (process-mark proc) (point)))
+        (if moving (goto-char (process-mark proc)))))))
+
 (defun om--prepare-buffer-for-type (type &optional mode-function)
   "Prepare an empty buffer for TYPE and optionally run MODE-FUNCTION."
   (let ((buffer-name (om--buffer-name-for-type type)))
@@ -208,7 +219,7 @@
         (get-buffer buffer-name)
       (let ((buf (get-buffer-create buffer-name)))
         (with-current-buffer buf
-          (setq buffer-read-only nil)
+          (setq buffer-read-only t)
           (kill-all-local-variables)
           (if (functionp mode-function)
               (funcall mode-function)))
