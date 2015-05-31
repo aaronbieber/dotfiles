@@ -188,8 +188,10 @@
     (cond ((string-prefix-p "finished" event)
            (progn (message "Octopress server has stopped.")
                   (with-current-buffer (om--prepare-server-buffer)
-                    (insert "\nServer process ended.")
-                    (goto-char (point-max))))))))
+                    (goto-char (process-mark process))
+                    (let ((inhibit-read-only t))
+                      (insert (propertize "\nServer process ended.\n\n" 'face 'font-lock-warning-face))
+                      (goto-char (point-max)))))))))
 
 (defun om--server-status ()
   (let ((server-process (get-buffer-process (om--buffer-name-for-type "server"))))
@@ -344,6 +346,7 @@ Returns the process object."
                     pbuffer
                     (concat "cd " om-root " && " command))))
       (set-process-sentinel process 'om--octopress-sentinel)
+      (set-process-filter process 'om--generic-process-filter)
       process)))
 
 (defun om--octopress-sentinel (process event)
@@ -351,8 +354,9 @@ Returns the process object."
         (event (replace-regexp-in-string "\n$" "" event)))
     (cond ((string-prefix-p "finished" event)
            (progn (with-current-buffer (om--buffer-name-for-type "process")
-                    (insert "--\n")
-                    (goto-char (point-max)))
+                    (let ((inhibit-read-only t))
+                      (insert "--\n")
+                      (goto-char (point-max))))
                   (message "Octopress has completed.")))
           ((string-prefix-p "exited" event)
            (message "Octopress exited abnormally; check the process output for information.")))))
