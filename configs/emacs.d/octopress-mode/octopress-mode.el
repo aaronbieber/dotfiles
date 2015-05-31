@@ -4,6 +4,8 @@
 
 ;;; Code:
 
+(require 'cl-lib)
+
 (defvar om-server-process-buffer nil
   "A buffer that will contain the output of the Jekyll server.")
 
@@ -294,6 +296,13 @@ passed the resulting BUFFER."
                           ".*md$\\|.*markdown$"))))
       (server-status . ,(om--server-status-string)))))
 
+(defun om--next-heading ()
+  (goto-char
+   (or (save-excursion
+         (forward-line)
+         (text-property-any (point) (point-max) 'heading t))
+       (point))))
+
 (defun om--draw-status (buffer)
   "Draw a display of STATUS in BUFFER.
 
@@ -305,10 +314,11 @@ STATUS is an alist of status names and their printable values."
       (insert
        (propertize "Octopress Status\n" 'face 'font-lock-constant-face)
        "\n"
-       "    Blog root: " om-root "\n"
-       "       Server: " (cdr (assoc 'server-status status)) "\n"
-       "       Drafts: " (cdr (assoc 'drafts-count status)) "\n"
-       "        Posts: " (cdr (assoc 'posts-count status)) "\n"
+       (propertize "    Blog root: " 'heading t) om-root "\n"
+       (propertize "       Server: " 'heading t) (cdr (assoc 'server-status status)) "\n"
+       (propertize "       Drafts: " 'heading t) (cdr (assoc 'drafts-count status)) "\n"
+       (propertize "        Posts: " 'heading t) (cdr (assoc 'posts-count status)) "\n"
+       (om--get-posts-display)
        "\n"
        (propertize "Commands:\n" 'face 'font-lock-constant-face)
        " " (om--legend-item "n" "New" 18)
@@ -322,12 +332,27 @@ STATUS is an alist of status names and their printable values."
       (goto-char (point-min))
       (setq buffer-read-only t))))
 
+(defun om--get-posts-display ()
+  (let ((post-list "")
+        (posts (om--get-posts)))
+    (cl-loop for post in posts do
+             (setq post-list
+                   (concat post-list (make-string 10 ? ) (propertize post 'face 'font-lock-variable-name-face) "\n")))
+    post-list))
+
 (defun om--legend-item (key label column-width)
   (let ((pad (- column-width (+ (length key) (length label) 2))))
     (concat
      (propertize key 'face 'font-lock-keyword-face) ": "
      label
      (make-string pad ? ))))
+
+(defun om--get-posts ()
+  (om--setup)
+  (directory-files
+   (expand-file-name octopress-posts-directory om-root)
+   nil
+   "*.md$\\|.*markdown$"))
 
 (defun om--run-octopress-command (command)
   "Run an Octopress command, sending output to the process buffer.
