@@ -19,6 +19,7 @@
     (define-key map "d" 'om-deploy)
     (define-key map "b" 'om-build)
     (define-key map "$" 'om-show-server)
+    (define-key map "!" 'om-show-process)
     map)
   "Get the keymap for the Octopress status buffer.")
 
@@ -27,6 +28,12 @@
     (define-key map "q" 'om-server-quit)
     map)
   "Get the keymap for the Octopress server buffer.")
+
+(defvar octopress-process-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map "q" 'om-process-quit)
+    map)
+  "Get the keymap for the Octopress process buffer.")
 
 ;;; Customization
 (defcustom octopress-posts-directory
@@ -72,7 +79,11 @@
 
 (defun om-show-server ()
   (interactive)
-  (pop-to-buffer (get-buffer (om--buffer-name-for-type "server"))))
+  (pop-to-buffer (om--prepare-server-buffer)))
+
+(defun om-show-process ()
+  (interactive)
+  (pop-to-buffer (om--prepare-process-buffer)))
 
 (defun om-new-thing ()
   (interactive)
@@ -101,6 +112,11 @@
 
 (defun om-server-quit ()
   "Quit the Octopress Server Mode window, preserving its buffer."
+  (interactive)
+  (quit-window))
+
+(defun om-process-quit ()
+  "Quit the Octopress Process Mode window, preserving its buffer."
   (interactive)
   (quit-window))
 
@@ -172,7 +188,8 @@
     (cond ((string-prefix-p "finished" event)
            (progn (message "Octopress server has stopped.")
                   (with-current-buffer (om--prepare-server-buffer)
-                    (insert "\nServer process ended.")))))))
+                    (insert "\nServer process ended.")
+                    (goto-char (point-max))))))))
 
 (defun om--server-status ()
   (let ((server-process (get-buffer-process (om--buffer-name-for-type "server"))))
@@ -198,15 +215,21 @@
         buf))))
 
 (defun om--prepare-status-buffer ()
-  "Create an empty, writable, Octopress Mode buffer and return it."
+  "Return the Octopress Mode (\"status\") buffer.
+
+If the buffer doesn't exist yet, it will be created and prepared."
   (om--prepare-buffer-for-type "status" 'octopress-mode))
 
 (defun om--prepare-server-buffer ()
-  "Create an empty, writable, Octopress Server Mode buffer and return it."
+  "Return the Octopress Server Mode buffer.
+
+If the buffer doesn't exist yet, it will be created and prepared."
   (om--prepare-buffer-for-type "server" 'octopress-server-mode))
 
 (defun om--prepare-process-buffer ()
-  "Create an empty, writable, Octopress Process Mode buffer and return it."
+  "Return the Octopress Process Mode buffer.
+
+If the buffer doesn't exist yet, it will be created and prepared."
   (om--prepare-buffer-for-type "process" 'octopress-process-mode))
 
 (defun om--get-root ()
@@ -275,14 +298,23 @@ STATUS is an alist of status names and their printable values."
        "        Posts: " (cdr (assoc 'posts-count status)) "\n"
        "\n"
        (propertize "Commands:\n" 'face 'font-lock-constant-face)
-       (propertize "n" 'face 'font-lock-keyword-face) ": New"     (make-string 4 ? )
-       (propertize "s" 'face 'font-lock-keyword-face) ": Server"  (make-string 4 ? )
-       (propertize "g" 'face 'font-lock-keyword-face) ": Refresh" (make-string 4 ? )
-       (propertize "d" 'face 'font-lock-keyword-face) ": Deploy"  (make-string 4 ? )
-       (propertize "b" 'face 'font-lock-keyword-face) ": Build"   (make-string 4 ? )
-       (propertize "q" 'face 'font-lock-keyword-face) ": Quit\n")
+       " " (om--legend-item "n" "New" 18)
+       (om--legend-item "s" "Server" 18)
+       (om--legend-item "b" "Build" 18)
+       (om--legend-item "d" "Deploy" 18) "\n"
+       " " (om--legend-item "!" "Show Process" 18)
+       (om--legend-item "$" "Show Server" 18)
+       (om--legend-item "g" "Refresh" 18)
+       (om--legend-item "q" "Quit" 18))
       (goto-char (point-min))
       (setq buffer-read-only t))))
+
+(defun om--legend-item (key label column-width)
+  (let ((pad (- column-width (+ (length key) (length label) 2))))
+    (concat
+     (propertize key 'face 'font-lock-keyword-face) ": "
+     label
+     (make-string pad ? ))))
 
 (defun om--run-octopress-command (command)
   "Run an Octopress command, sending output to the process buffer.
@@ -294,7 +326,8 @@ Returns the process object."
         (command (replace-regexp-in-string "'" "\\\\'" command)))
     (message "Running `%s'..." command)
     (with-current-buffer pbuffer
-      (goto-char (point-max)))
+      (goto-char (point-max))
+      (insert (propertize (format "Running `%s'...\n\n" command) 'face 'font-lock-variable-name-face)))
     (let ((process (start-process-shell-command
                     "octopress"
                     pbuffer
@@ -305,10 +338,10 @@ Returns the process object."
 (defun om--octopress-sentinel (process event)
   (let ((program (process-name process))
         (event (replace-regexp-in-string "\n$" "" event)))
-    (message (concat program " - " event)) ;; @todo @delete
     (cond ((string-prefix-p "finished" event)
            (progn (with-current-buffer (om--buffer-name-for-type "process")
-                    (insert "\n-\n\n"))
+                    (insert "--\n")
+                    (goto-char (point-max)))
                   (message "Octopress has completed.")))
           ((string-prefix-p "exited" event)
            (message "Octopress exited abnormally; check the process output for information.")))))
