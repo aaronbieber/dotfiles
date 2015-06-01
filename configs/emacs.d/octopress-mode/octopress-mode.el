@@ -1,4 +1,4 @@
-;;; octopress-mode.el --- Lightweight wrapper for Jekyll and Octopress.
+;; octopress-mode.el --- Lightweight wrapper for Jekyll and Octopress.
 
 ;;; Commentary:
 
@@ -30,8 +30,8 @@
     (define-key map "b" 'om-build)
     (define-key map "$" 'om-show-server)
     (define-key map "!" 'om-show-process)
-    (define-key map (kbd "C-n") 'om--move-to-next-heading)
-    (define-key map (kbd "C-p") 'om--move-to-previous-heading)
+    (define-key map (kbd "C-n") 'om--move-to-next-thing)
+    (define-key map (kbd "C-p") 'om--move-to-previous-thing)
     (define-key map (kbd "<tab>") 'om--maybe-toggle-visibility)
     map)
   "Get the keymap for the Octopress status buffer.")
@@ -187,9 +187,9 @@
     (if (processp (get-buffer-process om-server-process-buffer))
         (message "Server already running!")
       (with-current-buffer om-server-process-buffer
-        (setq-local inhibit-read-only t)
-        (goto-char (point-max))
-        (insert (propertize (format "Running `%s'...\n\n" command) 'face 'font-lock-variable-name-face)))
+        (let ((inhibit-read-only t))
+          (goto-char (point-max))
+          (insert (propertize (format "Running `%s'...\n\n" command) 'face 'font-lock-variable-name-face))))
       (let ((om-server-process
             (start-process-shell-command
              "octopress-server"
@@ -235,7 +235,8 @@
 (defun om--generic-process-filter (proc string)
   (when (buffer-live-p (process-buffer proc))
     (with-current-buffer (process-buffer proc)
-      (let ((moving (= (point) (process-mark proc))))
+      (let ((moving (= (point) (process-mark proc)))
+            (inhibit-read-only t))
         (save-excursion
           ;; Insert the text, advancing the process marker.
           (goto-char (process-mark proc))
@@ -328,20 +329,26 @@ passed the resulting BUFFER."
                           ".*md$\\|.*markdown$"))))
       (server-status . ,(om--server-status-string)))))
 
-(defun om--move-to-next-heading ()
+(defun om--move-to-next-thing ()
   (interactive)
   (goto-char
    (or (save-excursion
          (goto-char (line-end-position))
-         (next-single-property-change (point) 'heading))
+         (let ((thing (next-single-property-change (point) 'thing)))
+           (if thing
+               (let ((type (get-text-property thing 'invisible)))
+                 (if (or (not type)
+                         (not (memq type buffer-invisibility-spec)))
+                     thing
+                   nil)))))
        (point))))
 
-(defun om--move-to-previous-heading ()
+(defun om--move-to-previous-thing ()
   (interactive)
   (goto-char
    (or (save-excursion
          (goto-char (line-beginning-position))
-         (previous-single-property-change (point) 'heading))
+         (previous-single-property-change (point) 'thing))
        (point)))
   (goto-char (line-beginning-position)))
 
@@ -368,16 +375,16 @@ STATUS is an alist of status names and their printable values."
       (insert
        (propertize "Octopress Status\n" 'face 'font-lock-constant-face)
        "\n"
-       (propertize " " 'heading t)
+       (propertize " " 'thing t)
        "   Blog root: " om-root "\n"
 
-       (propertize " " 'heading t)
+       (propertize " " 'thing t)
        "      Server: " (cdr (assoc 'server-status status)) "\n"
 
-       (propertize " " 'heading t 'hidden 'drafts)
+       (propertize " " 'thing t 'hidden 'drafts)
        "      Drafts: " (cdr (assoc 'drafts-count status)) "\n"
 
-       (propertize " " 'heading t 'hidden 'posts)
+       (propertize " " 'thing t 'hidden 'posts)
        "       Posts: " (cdr (assoc 'posts-count status)) "\n"
 
        (om--get-posts-display)
@@ -399,7 +406,10 @@ STATUS is an alist of status names and their printable values."
         (posts (om--get-posts)))
     (cl-loop for post in posts do
              (setq post-list
-                   (concat post-list (make-string 10 ? ) (propertize post 'face 'font-lock-variable-name-face) "\n")))
+                   (concat post-list
+                           (propertize " " 'thing t)
+                           (make-string 10 ? )
+                           (propertize post 'face 'font-lock-variable-name-face) "\n")))
     (propertize post-list 'invisible 'posts)))
 
 (defun om--legend-item (key label column-width)
