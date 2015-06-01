@@ -22,6 +22,9 @@
     (define-key map "b" 'om-build)
     (define-key map "$" 'om-show-server)
     (define-key map "!" 'om-show-process)
+    (define-key map (kbd "C-n") 'om--move-to-next-heading)
+    (define-key map (kbd "C-p") 'om--move-to-previous-heading)
+    (define-key map (kbd "<tab>") 'om--maybe-toggle-visibility)
     map)
   "Get the keymap for the Octopress status buffer.")
 
@@ -233,7 +236,11 @@
   "Return the Octopress Mode (\"status\") buffer.
 
 If the buffer doesn't exist yet, it will be created and prepared."
-  (om--prepare-buffer-for-type "status" 'octopress-mode))
+  (let ((status-buffer (om--prepare-buffer-for-type "status" 'octopress-mode)))
+    (with-current-buffer status-buffer
+      (add-to-invisibility-spec 'posts)
+      (add-to-invisibility-spec 'drafts))
+    status-buffer))
 
 (defun om--prepare-server-buffer ()
   "Return the Octopress Server Mode buffer.
@@ -263,7 +270,8 @@ user will be prompted to enter the path to an Octopress site."
              (buffer-local-value 'om-root status-buffer))
         (buffer-local-value 'om-root status-buffer)
       (or (and this-dir
-               (expand-file-name (vc-find-root this-dir "_config.yml")))
+               (let ((candidate-dir (vc-find-root this-dir "_config.yml")))
+                 (if candidate-dir (expand-file-name candidate-dir) nil)))
           (let ((candidate-dir (read-directory-name "Octopress site root: ")))
             (if (file-exists-p (expand-file-name "_config.yml" candidate-dir))
                 (expand-file-name candidate-dir)
@@ -296,12 +304,33 @@ passed the resulting BUFFER."
                           ".*md$\\|.*markdown$"))))
       (server-status . ,(om--server-status-string)))))
 
-(defun om--next-heading ()
+(defun om--move-to-next-heading ()
+  (interactive)
   (goto-char
    (or (save-excursion
-         (forward-line)
-         (text-property-any (point) (point-max) 'heading t))
+         (goto-char (line-end-position))
+         (next-single-property-change (point) 'heading))
        (point))))
+
+(defun om--move-to-previous-heading ()
+  (interactive)
+  (goto-char
+   (or (save-excursion
+         (goto-char (line-beginning-position))
+         (previous-single-property-change (point) 'heading))
+       (point)))
+  (goto-char (line-beginning-position)))
+
+(defun om--maybe-toggle-visibility ()
+  (interactive)
+  (save-excursion
+    (goto-char (line-beginning-position))
+    (let ((hidden (get-text-property (point) 'hidden)))
+      (if hidden
+          (if (memq hidden buffer-invisibility-spec)
+              (remove-from-invisibility-spec hidden)
+            (add-to-invisibility-spec hidden)))))
+  (redraw-frame))
 
 (defun om--draw-status (buffer)
   "Draw a display of STATUS in BUFFER.
@@ -314,10 +343,18 @@ STATUS is an alist of status names and their printable values."
       (insert
        (propertize "Octopress Status\n" 'face 'font-lock-constant-face)
        "\n"
-       (propertize "    Blog root: " 'heading t) om-root "\n"
-       (propertize "       Server: " 'heading t) (cdr (assoc 'server-status status)) "\n"
-       (propertize "       Drafts: " 'heading t) (cdr (assoc 'drafts-count status)) "\n"
-       (propertize "        Posts: " 'heading t) (cdr (assoc 'posts-count status)) "\n"
+       (propertize " " 'heading t)
+       "   Blog root: " om-root "\n"
+
+       (propertize " " 'heading t)
+       "      Server: " (cdr (assoc 'server-status status)) "\n"
+
+       (propertize " " 'heading t 'hidden 'drafts)
+       "      Drafts: " (cdr (assoc 'drafts-count status)) "\n"
+
+       (propertize " " 'heading t 'hidden 'posts)
+       "       Posts: " (cdr (assoc 'posts-count status)) "\n"
+
        (om--get-posts-display)
        "\n"
        (propertize "Commands:\n" 'face 'font-lock-constant-face)
@@ -338,7 +375,7 @@ STATUS is an alist of status names and their printable values."
     (cl-loop for post in posts do
              (setq post-list
                    (concat post-list (make-string 10 ? ) (propertize post 'face 'font-lock-variable-name-face) "\n")))
-    post-list))
+    (propertize post-list 'invisible 'posts)))
 
 (defun om--legend-item (key label column-width)
   (let ((pad (- column-width (+ (length key) (length label) 2))))
