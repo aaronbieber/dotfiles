@@ -6,6 +6,14 @@
 
 (require 'cl-lib)
 
+(defface om-option-on-face
+  '((t (:foreground "#418743")))
+  "An Octopress interactive option when on.")
+
+(defface om-option-off-face
+  '((t (:foreground "#944141")))
+  "An Octopress interactive option when off.")
+
 (defvar om-server-process-buffer nil
   "A buffer that will contain the output of the Jekyll server.")
 
@@ -53,31 +61,39 @@
   :type 'string
   :group 'octopress-mode)
 
-;;(defcustom octopress-command-new-post)
-;;(defcustom octopress-command-new-draft)
-;;(defcustom octopress-command-build)
-;;(defcustom octopress-command-deploy)
-
 (defun om-refresh-status ()
   (interactive)
   (om--maybe-redraw-status))
 
-(defun om-start-stop-server (&optional with-drafts)
+(defun om-start-stop-server ()
   (interactive)
-  (let ((choice (read-char-choice
-                 "[s] Start, [d] Start w/drafts, [k] Kill, [q] Abort"
-                 '(?s ?d ?k ?q))))
-    (cond ((eq choice ?s)
-           (progn (message "Starting server normally...")
-                  (om--start-server-process)))
-          ((eq choice ?d)
-           (progn (message "Starting server with drafts...")
-                  (om--start-server-process t)))
-          ((eq choice ?k)
-           (progn (message "Stopping server...")
-                  (om--stop-server-process)))
-          ((eq choice ?q)
-           (message "Aborted.")))))
+  (let (done drafts future unpublished)
+    (while (not done)
+      (let* ((prompt (concat (propertize "(" 'face t)
+                             (propertize "[d]rafts " 'face (if drafts 'om-option-on 'om-option-off))
+                             (propertize "[f]uture " 'face (if future 'om-option-on 'om-option-off))
+                             (propertize "[u]npublished" 'face (if unpublished 'om-option-on 'om-option-off))
+                             ") [s] Serve, [k] Kill, [q] Abort"
+                             ))
+             (choice (read-char-choice prompt '(?d ?f ?u ?s ?k ?q))))
+        (cond ((eq choice ?d)
+               (setq drafts (not drafts)))
+              ((eq choice ?f)
+               (setq future (not future)))
+              ((eq choice ?u)
+               (setq unpublished (not unpublished)))
+              ((eq choice ?s)
+               (progn (message "Starting server normally...")
+                      (om--start-server-process drafts future unpublished)
+                      (setq done t)))
+              ((eq choice ?k)
+               (progn (message "Stopping server...")
+                      (om--stop-server-process)
+                      (setq done t)))
+              ((eq choice ?q)
+               (progn
+                 (message "Aborted.")
+                 (setq done t))))))))
 
 (defun om-restart-server ()
   (interactive))
@@ -161,19 +177,27 @@
          (and (assoc 'om-root vars)
               (string= (cdr (assoc 'major-mode vars)) "octopress-mode")))))
 
-(defun om--start-server-process (&optional with-drafts)
+(defun om--start-server-process (&optional with-drafts with-future with-unpublished)
   (om--setup)
-  (let ((om-server-process-buffer (om--prepare-server-buffer))
-        (drafts-opt (if with-drafts " -D" nil)))
+  (let* ((om-server-process-buffer (om--prepare-server-buffer))
+         (drafts-opt (if with-drafts " --drafts" nil))
+         (future-opt (if with-future " --future" nil))
+         (unpublished-opt (if with-unpublished " --unpublished" nil))
+         (command (concat "jekyll serve" drafts-opt future-opt unpublished-opt)))
     (if (processp (get-buffer-process om-server-process-buffer))
         (message "Server already running!")
-      (setq om-server-process
+      (with-current-buffer om-server-process-buffer
+        (setq-local inhibit-read-only t)
+        (goto-char (point-max))
+        (insert (propertize (format "Running `%s'...\n\n" command) 'face 'font-lock-variable-name-face)))
+      (let ((om-server-process
             (start-process-shell-command
              "octopress-server"
              om-server-process-buffer
-             (concat "cd " (om--get-root) " && jekyll serve" drafts-opt)))
+             (concat "cd " (om--get-root) " && " command))))
       (message "Server started!")
       (set-process-sentinel om-server-process 'om--server-sentinel)
+      (set-process-filter om-server-process 'om--generic-process-filter))
       (om--maybe-redraw-status))))
 
 (defun om--stop-server-process ()
@@ -323,14 +347,15 @@ passed the resulting BUFFER."
 
 (defun om--maybe-toggle-visibility ()
   (interactive)
-  (save-excursion
-    (goto-char (line-beginning-position))
-    (let ((hidden (get-text-property (point) 'hidden)))
-      (if hidden
-          (if (memq hidden buffer-invisibility-spec)
-              (remove-from-invisibility-spec hidden)
-            (add-to-invisibility-spec hidden)))))
-  (redraw-frame))
+  (let ((hidden (save-excursion
+                  (goto-char (line-beginning-position))
+                  (get-text-property (point) 'hidden))))
+    (if hidden
+        (if (memq hidden buffer-invisibility-spec)
+            (remove-from-invisibility-spec hidden)
+          (add-to-invisibility-spec hidden))))
+  (message "redisplay")
+  (force-window-update (current-buffer)))
 
 (defun om--draw-status (buffer)
   "Draw a display of STATUS in BUFFER.
