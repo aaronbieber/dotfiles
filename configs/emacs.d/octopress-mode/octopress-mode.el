@@ -496,10 +496,11 @@ Returns the process object."
   (let ((pbuffer (om--prepare-process-buffer))
         (om-root (om--get-root))
         (command (replace-regexp-in-string "'" "\\\\'" command)))
-    (message "Running `%s'..." command)
+    (message "Running Octopress..." command)
     (with-current-buffer pbuffer
-      (goto-char (point-max))
-      (insert (propertize (format "Running `%s'...\n\n" command) 'face 'font-lock-variable-name-face)))
+      (let ((inhibit-read-only t))
+        (goto-char (point-max))
+        (insert (propertize (format "Running `%s'...\n\n" command) 'face 'font-lock-variable-name-face))))
     (let ((process (start-process-shell-command
                     "octopress"
                     pbuffer
@@ -516,7 +517,8 @@ Returns the process object."
                     (let ((inhibit-read-only t))
                       (insert "--\n")
                       (goto-char (point-max))))
-                  (message "Octopress has completed.")))
+                  (message "Octopress has completed.")
+                  (om--maybe-redraw-status)))
           ((string-prefix-p "exited" event)
            (message "Octopress exited abnormally; check the process output for information.")))))
 
