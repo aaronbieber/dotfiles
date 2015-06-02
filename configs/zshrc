@@ -225,7 +225,7 @@ if [[ `uname` == "Darwin" ]]; then
 			/usr/bin/top "$@"
 		fi
 	}
-  alias l="ls -alhFG"
+  alias l="ls -lhFG"
   alias la="ls -Alh -G"
 else
   # Non-OS X things.
