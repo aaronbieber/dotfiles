@@ -299,7 +299,6 @@ is the buffer location at which the function was found."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(css-indent-offset 2)
  '(circe-notifications-backend "terminal-notifier")
  '(circe-notifications-terminal-notifier-command "/home/abieber/bin/terminal-notifier")
  '(circe-notifications-wait-for 60)
@@ -313,9 +312,7 @@ is the buffer location at which the function was found."
  '(org-directory "~/Dropbox/org")
  '(org-mobile-directory "~/Dropbox/org/mobile")
  '(org-mobile-inbox-for-pull "~/Dropbox/org/mobile/capture.org")
- '(package-selected-packages
-   (quote
-    (yaml-mode hyde diminish zenburn-theme yasnippet web-mode w3m twittering-mode sunshine sublime-themes powerline-evil php-extras mmm-mode markdown-mode magit highlight-symbol helm-projectile guide-key gtags fullframe flycheck exec-path-from-shell evil-surround evil-leader evil-jumper evil-indent-textobject emmet-mode dictionary avy auto-complete ag)))
+ '(python-indent-offset 2)
  '(safe-local-variable-values (quote ((no-byte-compile t) (require-final-newline))))
  '(scss-compile-at-save nil)
  '(sunshine-location "Brookline, MA")
@@ -356,6 +353,7 @@ is the buffer location at which the function was found."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((t (:background nil))))
  '(comint-highlight-prompt ((t nil)))
  '(powerline-evil-normal-face ((t (:inherit powerline-evil-base-face :background "green" :foreground "black"))))
  '(term-color-blue ((t (:background "DodgerBlue2" :foreground "DodgerBlue2"))))
