@@ -9,3 +9,4 @@ configs/emacs.d/*
 # But don't ignore these specific locations.
 !configs/emacs.d/lisp
 !configs/emacs.d/snippets
+!configs/emacs.d/octopress-mode
