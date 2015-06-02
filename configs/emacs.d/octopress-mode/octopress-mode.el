@@ -348,7 +348,13 @@ passed the resulting BUFFER."
   (goto-char
    (or (save-excursion
          (goto-char (line-beginning-position))
-         (previous-single-property-change (point) 'thing))
+         (let ((thing (previous-single-property-change (point) 'thing)))
+           (if thing
+               (let ((type (get-text-property thing 'invisible)))
+                 (if (or (not type)
+                         (not (memq type buffer-invisibility-spec)))
+                     thing
+                   nil)))))
        (point)))
   (goto-char (line-beginning-position)))
 
@@ -361,7 +367,6 @@ passed the resulting BUFFER."
         (if (memq hidden buffer-invisibility-spec)
             (remove-from-invisibility-spec hidden)
           (add-to-invisibility-spec hidden))))
-  (message "redisplay")
   (force-window-update (current-buffer)))
 
 (defun om--draw-status (buffer)
