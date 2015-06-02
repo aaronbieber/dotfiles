@@ -379,10 +379,9 @@ passed the resulting BUFFER."
          (let ((thing (next-single-property-change (point) prop-name)))
            (if thing
                (let ((type (get-text-property thing 'invisible)))
-                 (if (or (not type)
-                         (not (memq type buffer-invisibility-spec)))
-                     thing
-                   nil)))))
+                 (if (and type (memq type buffer-invisibility-spec))
+                     (remove-from-invisibility-spec type))
+                 thing))))
        (point))))
 
 (defun om--move-to-previous-thing ()
