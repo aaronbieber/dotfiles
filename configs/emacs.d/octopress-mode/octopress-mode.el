@@ -33,6 +33,7 @@
     (define-key map (kbd "C-n") 'om--move-to-next-thing)
     (define-key map (kbd "C-p") 'om--move-to-previous-thing)
     (define-key map (kbd "<tab>") 'om--maybe-toggle-visibility)
+    (define-key map (kbd "<return>") 'om--open-at-point)
     map)
   "Get the keymap for the Octopress status buffer.")
 
@@ -156,6 +157,23 @@
                 om-buffer)
           (progn (kill-buffer om-buffer)
                  nil))))))
+
+(defun om--open-at-point ()
+  "Open the file at point, if there is one."
+  (interactive)
+  (save-excursion
+    (beginning-of-line)
+    (let ((thing (get-text-property (point) 'invisible)))
+      (if thing
+          (progn (back-to-indentation)
+                 (let ((file (thing-at-point 'filename)))
+                   (if file
+                       (let ((filename
+                              (expand-file-name
+                               file (expand-file-name
+                                     octopress-posts-directory (om--get-root)))))
+                         (if (file-exists-p filename)
+                             (pop-to-buffer (find-file filename)))))))))))
 
 (defun om--new-post ()
   (let ((name (read-string "Post name: ")))
