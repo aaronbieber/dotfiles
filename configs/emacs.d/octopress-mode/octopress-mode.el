@@ -25,7 +25,7 @@
     (define-key map "q" 'om-status-quit)
     (define-key map "s" 'om-start-stop-server)
     (define-key map "g" 'om-refresh-status)
-    (define-key map "n" 'om-new-thing)
+    (define-key map "c" 'om-create-thing)
     (define-key map "d" 'om-deploy)
     (define-key map "b" 'om-build)
     (define-key map "$" 'om-show-server)
@@ -107,7 +107,8 @@
   (interactive)
   (pop-to-buffer (om--prepare-process-buffer)))
 
-(defun om-new-thing ()
+(defun om-create-thing ()
+  "Present a menu through which the user may create a new thing."
   (interactive)
   (let ((choice (read-char-choice
                  "[p] Post, [d] Draft, [g] Page, [q] Abort"
@@ -185,7 +186,7 @@
          (full-filename (om--expand-path-for-type filename type)))
     (if (file-exists-p full-filename)
         (pop-to-buffer (find-file full-filename)))))
-             
+
 (defun om--new-post ()
   (let ((name (read-string "Post name: ")))
     (om--run-octopress-command (concat "octopress new post \"" name "\""))))
