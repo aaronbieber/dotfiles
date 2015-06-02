@@ -414,47 +414,49 @@ passed the resulting BUFFER."
 STATUS is an alist of status names and their printable values."
   (let ((status (om--get-status-data buffer)))
     (with-current-buffer buffer
-      (setq buffer-read-only nil)
-      (erase-buffer)
-      (insert
-       (propertize "Octopress Status\n" 'face '(:inherit font-lock-constant-face :height 160))
-       "\n"
-       (propertize " " 'thing t 'heading t)
-       (propertize "   Blog root: " 'face 'font-lock-function-name-face)
-       om-root "\n"
+      (let ((inhibit-read-only t)
+            (pos (point)))
+        (erase-buffer)
+        (insert
+         (propertize "Octopress Status\n" 'face '(:inherit font-lock-constant-face :height 160))
+         "\n"
+         (propertize " " 'thing t 'heading t)
+         (propertize "   Blog root: " 'face 'font-lock-function-name-face)
+         om-root "\n"
 
-       (propertize " " 'thing t 'heading t)
-       (propertize "      Server: " 'face 'font-lock-function-name-face)
-       (cdr (assoc 'server-status status)) "\n"
+         (propertize " " 'thing t 'heading t)
+         (propertize "      Server: " 'face 'font-lock-function-name-face)
+         (cdr (assoc 'server-status status)) "\n"
 
-       (propertize " " 'thing t 'hidden 'drafts 'heading t)
-       (propertize "      Drafts: " 'face 'font-lock-function-name-face)
-       (cdr (assoc 'drafts-count status)) "\n"
-       (om--get-display-list (om--get-drafts) 'drafts)
+         (propertize " " 'thing t 'hidden 'drafts 'heading t)
+         (propertize "      Drafts: " 'face 'font-lock-function-name-face)
+         (cdr (assoc 'drafts-count status)) "\n"
+         (om--get-display-list (om--get-drafts) 'drafts)
 
-       (propertize " " 'thing t 'hidden 'posts 'heading t)
-       (propertize "       Posts: " 'face 'font-lock-function-name-face)
-       (cdr (assoc 'posts-count status)) "\n"
-       (om--get-display-list (om--get-posts) 'posts)
+         (propertize " " 'thing t 'hidden 'posts 'heading t)
+         (propertize "       Posts: " 'face 'font-lock-function-name-face)
+         (cdr (assoc 'posts-count status)) "\n"
+         (om--get-display-list (om--get-posts) 'posts)
 
-       "\n"
-       (propertize "Commands:\n" 'face 'font-lock-constant-face)
-       " " (om--legend-item "C-n" "Next heading" 18)
-       (om--legend-item "C-p" "Prev heading" 18)
-       (om--legend-item "n" "Next thing" 18)
-       (om--legend-item "p" "Prev thing" 18) "\n"
-       " " (om--legend-item "TAB" "Toggle thing" 18)
-       (om--legend-item "RET" "Open thing" 18) "\n\n"
-       " " (om--legend-item "c" "Create" 18)
-       (om--legend-item "s" "Server" 18)
-       (om--legend-item "b" "Build" 18)
-       (om--legend-item "d" "Deploy" 18) "\n"
-       " " (om--legend-item "!" "Show Process" 18)
-       (om--legend-item "$" "Show Server" 18)
-       (om--legend-item "g" "Refresh" 18)
-       (om--legend-item "q" "Quit" 18))
-      (goto-char (point-min))
-      (setq buffer-read-only t))))
+         "\n"
+         (propertize "Commands:\n" 'face 'font-lock-constant-face)
+         " " (om--legend-item "C-n" "Next heading" 18)
+         (om--legend-item "C-p" "Prev heading" 18)
+         (om--legend-item "n" "Next thing" 18)
+         (om--legend-item "p" "Prev thing" 18) "\n"
+         " " (om--legend-item "TAB" "Toggle thing" 18)
+         (om--legend-item "RET" "Open thing" 18) "\n\n"
+         " " (om--legend-item "c" "Create" 18)
+         (om--legend-item "s" "Server" 18)
+         (om--legend-item "b" "Build" 18)
+         (om--legend-item "d" "Deploy" 18) "\n"
+         " " (om--legend-item "!" "Show Process" 18)
+         (om--legend-item "$" "Show Server" 18)
+         (om--legend-item "g" "Refresh" 18)
+         (om--legend-item "q" "Quit" 18))
+        (goto-char (if (< pos (point-max))
+                       pos
+                     (point-min)))))))
 
 (defun om--get-display-list (things visibility-name)
   (let ((thing-list ""))
