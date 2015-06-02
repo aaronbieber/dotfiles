@@ -320,6 +320,7 @@ is the buffer location at which the function was found."
  '(scss-compile-at-save nil)
  '(sunshine-location "Brookline, MA")
  '(sunshine-show-icons t)
+ '(twittering-use-native-retweet t)
  '(vc-annotate-background "#222222")
  '(vc-annotate-color-map
    (quote
