@@ -30,6 +30,8 @@
     (define-key map "b" 'om-build)
     (define-key map "$" 'om-show-server)
     (define-key map "!" 'om-show-process)
+    (define-key map "n" 'om--move-to-next-thing)
+    (define-key map "p" 'om--move-to-previous-thing)
     (define-key map (kbd "C-n") 'om--move-to-next-heading)
     (define-key map (kbd "C-p") 'om--move-to-previous-heading)
     (define-key map (kbd "<tab>") 'om--maybe-toggle-visibility)
@@ -359,15 +361,22 @@ passed the resulting BUFFER."
                           ".*md$\\|.*markdown$"))))
       (server-status . ,(om--server-status-string)))))
 
-(defun om--move-to-next-heading ()
+(defun om--move-to-next-thing ()
+  "Move to the next item with property 'thing."
   (interactive)
-  (om--move-to-next-thing 'heading))
+  (om--move-to-next-prop 'thing))
 
-(defun om--move-to-next-thing (thing-name)
+(defun om--move-to-next-heading ()
+  "Move to the next item with property 'heading."
+  (interactive)
+  (om--move-to-next-prop 'heading))
+
+(defun om--move-to-next-prop (prop-name)
+  "Move to the next item with property PROP-NAME."
   (goto-char
    (or (save-excursion
          (goto-char (line-end-position))
-         (let ((thing (next-single-property-change (point) thing-name)))
+         (let ((thing (next-single-property-change (point) prop-name)))
            (if thing
                (let ((type (get-text-property thing 'invisible)))
                  (if (or (not type)
@@ -376,15 +385,22 @@ passed the resulting BUFFER."
                    nil)))))
        (point))))
 
-(defun om--move-to-previous-heading ()
+(defun om--move-to-previous-thing ()
+  "Move to the previous item with property 'thing."
   (interactive)
-  (om--move-to-previous-thing 'heading))
+  (om--move-to-previous-prop 'thing))
 
-(defun om--move-to-previous-thing (thing-name)
+(defun om--move-to-previous-heading ()
+  "Move to the previous item with property 'heading."
+  (interactive)
+  (om--move-to-previous-prop 'heading))
+
+(defun om--move-to-previous-prop (prop-name)
+  "Move to the previous item with property PROP-NAME."
   (goto-char
    (or (save-excursion
          (goto-char (line-beginning-position))
-         (let ((thing (previous-single-property-change (point) thing-name)))
+         (let ((thing (previous-single-property-change (point) prop-name)))
            (if thing
                (let ((type (get-text-property thing 'invisible)))
                  (if (or (not type)
