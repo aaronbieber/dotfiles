@@ -30,8 +30,8 @@
     (define-key map "b" 'om-build)
     (define-key map "$" 'om-show-server)
     (define-key map "!" 'om-show-process)
-    (define-key map (kbd "C-n") 'om--move-to-next-thing)
-    (define-key map (kbd "C-p") 'om--move-to-previous-thing)
+    (define-key map (kbd "C-n") 'om--move-to-next-heading)
+    (define-key map (kbd "C-p") 'om--move-to-previous-heading)
     (define-key map (kbd "<tab>") 'om--maybe-toggle-visibility)
     (define-key map (kbd "<return>") 'om--open-at-point)
     map)
@@ -158,23 +158,34 @@
           (progn (kill-buffer om-buffer)
                  nil))))))
 
+(defun om--get-line-type ()
+  (save-excursion
+    (beginning-of-line)
+    (get-text-property (point) 'invisible)))
+
+(defun om--get-line-filename ()
+  (save-excursion
+    (back-to-indentation)
+    (thing-at-point 'filename)))
+
+(defun om--expand-path-for-type (filename type)
+  (let ((type-dir (cdr (assoc type `((posts . ,octopress-posts-directory)
+                                     (drafts . ,octopress-drafts-directory))))))
+    (and filename
+         type-dir
+         (expand-file-name
+          filename (expand-file-name
+                    type-dir (om--get-root))))))
+
 (defun om--open-at-point ()
   "Open the file at point, if there is one."
   (interactive)
-  (save-excursion
-    (beginning-of-line)
-    (let ((thing (get-text-property (point) 'invisible)))
-      (if thing
-          (progn (back-to-indentation)
-                 (let ((file (thing-at-point 'filename)))
-                   (if file
-                       (let ((filename
-                              (expand-file-name
-                               file (expand-file-name
-                                     octopress-posts-directory (om--get-root)))))
-                         (if (file-exists-p filename)
-                             (pop-to-buffer (find-file filename)))))))))))
-
+  (let* ((type (om--get-line-type))
+         (filename (om--get-line-filename))
+         (full-filename (om--expand-path-for-type filename type)))
+    (if (file-exists-p full-filename)
+        (pop-to-buffer (find-file full-filename)))))
+             
 (defun om--new-post ()
   (let ((name (read-string "Post name: ")))
     (om--run-octopress-command (concat "octopress new post \"" name "\""))))
@@ -347,12 +358,15 @@ passed the resulting BUFFER."
                           ".*md$\\|.*markdown$"))))
       (server-status . ,(om--server-status-string)))))
 
-(defun om--move-to-next-thing ()
+(defun om--move-to-next-heading ()
   (interactive)
+  (om--move-to-next-thing 'heading))
+
+(defun om--move-to-next-thing (thing-name)
   (goto-char
    (or (save-excursion
          (goto-char (line-end-position))
-         (let ((thing (next-single-property-change (point) 'thing)))
+         (let ((thing (next-single-property-change (point) thing-name)))
            (if thing
                (let ((type (get-text-property thing 'invisible)))
                  (if (or (not type)
@@ -361,12 +375,15 @@ passed the resulting BUFFER."
                    nil)))))
        (point))))
 
-(defun om--move-to-previous-thing ()
+(defun om--move-to-previous-heading ()
   (interactive)
+  (om--move-to-previous-thing 'heading))
+
+(defun om--move-to-previous-thing (thing-name)
   (goto-char
    (or (save-excursion
          (goto-char (line-beginning-position))
-         (let ((thing (previous-single-property-change (point) 'thing)))
+         (let ((thing (previous-single-property-change (point) thing-name)))
            (if thing
                (let ((type (get-text-property thing 'invisible)))
                  (if (or (not type)
@@ -396,20 +413,24 @@ STATUS is an alist of status names and their printable values."
       (setq buffer-read-only nil)
       (erase-buffer)
       (insert
-       (propertize "Octopress Status\n" 'face 'font-lock-constant-face)
+       (propertize "Octopress Status\n" 'face '(:inherit 'font-lock-constant-face :height 160))
        "\n"
-       (propertize " " 'thing t)
-       "   Blog root: " om-root "\n"
+       (propertize " " 'thing t 'heading t)
+       (propertize "   Blog root: " 'face 'font-lock-function-name-face)
+       om-root "\n"
 
-       (propertize " " 'thing t)
-       "      Server: " (cdr (assoc 'server-status status)) "\n"
+       (propertize " " 'thing t 'heading t)
+       (propertize "      Server: " 'face 'font-lock-function-name-face)
+       (cdr (assoc 'server-status status)) "\n"
 
-       (propertize " " 'thing t 'hidden 'drafts)
-       "      Drafts: " (cdr (assoc 'drafts-count status)) "\n"
+       (propertize " " 'thing t 'hidden 'drafts 'heading t)
+       (propertize "      Drafts: " 'face 'font-lock-function-name-face)
+       (cdr (assoc 'drafts-count status)) "\n"
        (om--get-display-list (om--get-drafts) 'drafts)
 
-       (propertize " " 'thing t 'hidden 'posts)
-       "       Posts: " (cdr (assoc 'posts-count status)) "\n"
+       (propertize " " 'thing t 'hidden 'posts 'heading t)
+       (propertize "       Posts: " 'face 'font-lock-function-name-face)
+       (cdr (assoc 'posts-count status)) "\n"
        (om--get-display-list (om--get-posts) 'posts)
 
        "\n"
@@ -429,9 +450,9 @@ STATUS is an alist of status names and their printable values."
   (let ((thing-list ""))
     (cl-loop for thing in things do
              (setq thing-list
-                   (concat thing-list " "
-                           (make-string 10 ? )
-                           (propertize thing 'face 'font-lock-variable-name-face) "\n")))
+                   (concat thing-list
+                           (propertize " " 'thing t)
+                           (make-string 10 ? ) thing "\n")))
     (propertize thing-list 'invisible visibility-name)))
 
 (defun om--legend-item (key label column-width)
