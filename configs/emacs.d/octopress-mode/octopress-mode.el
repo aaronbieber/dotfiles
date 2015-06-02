@@ -451,7 +451,13 @@ STATUS is an alist of status names and their printable values."
 
        "\n"
        (propertize "Commands:\n" 'face 'font-lock-constant-face)
-       " " (om--legend-item "n" "New" 18)
+       " " (om--legend-item "C-n" "Next heading" 18)
+       (om--legend-item "C-p" "Prev heading" 18)
+       (om--legend-item "n" "Next thing" 18)
+       (om--legend-item "p" "Prev thing" 18) "\n"
+       " " (om--legend-item "TAB" "Toggle thing" 18)
+       (om--legend-item "RET" "Open thing" 18) "\n\n"
+       " " (om--legend-item "c" "Create" 18)
        (om--legend-item "s" "Server" 18)
        (om--legend-item "b" "Build" 18)
        (om--legend-item "d" "Deploy" 18) "\n"
