@@ -78,10 +78,10 @@ fi
 # Initialize rbenv if it exists on this system and isn't yet in our path.
 # This prevents path duplication in tmux when a sub-shell runs this script
 # again.
-if [ -d $HOME/.rbenv/bin ] && [[ ! "$PATH" =~ "rbenv" ]]; then
-  export PATH="$HOME/.rbenv/bin:$PATH"
+if [ -d $HOME/.rbenv/shims ] && [[ ! "$PATH" =~ "rbenv" ]]; then
+  export PATH="$HOME/.rbenv/shims:$PATH"
   type rbenv >/dev/null 2>&1
-  [ "$?" = 0 ] && eval "$(rbenv init -)"
+  [[ "$?" == 0 ]] && eval "$(rbenv init -)"
 fi
 
 function nicediff {
