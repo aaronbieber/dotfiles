@@ -7,11 +7,11 @@
 (require 'cl-lib)
 
 (defface om-option-on-face
-  '((t (:foreground "#418743")))
+  '((t (:foreground "#50A652")))
   "An Octopress interactive option when on.")
 
 (defface om-option-off-face
-  '((t (:foreground "#944141")))
+  '((t (:foreground "#CF4C4C")))
   "An Octopress interactive option when off.")
 
 (defvar om-server-process-buffer nil
@@ -70,9 +70,9 @@
   (let (done drafts future unpublished)
     (while (not done)
       (let* ((prompt (concat (propertize "(" 'face t)
-                             (propertize "[d]rafts " 'face (if drafts 'om-option-on 'om-option-off))
-                             (propertize "[f]uture " 'face (if future 'om-option-on 'om-option-off))
-                             (propertize "[u]npublished" 'face (if unpublished 'om-option-on 'om-option-off))
+                             (propertize "[d]rafts " 'face (if drafts 'om-option-on-face 'om-option-off-face))
+                             (propertize "[f]uture " 'face (if future 'om-option-on-face 'om-option-off-face))
+                             (propertize "[u]npublished" 'face (if unpublished 'om-option-on-face 'om-option-off-face))
                              ") [s] Serve, [k] Kill, [q] Abort"
                              ))
              (choice (read-char-choice prompt '(?d ?f ?u ?s ?k ?q))))
