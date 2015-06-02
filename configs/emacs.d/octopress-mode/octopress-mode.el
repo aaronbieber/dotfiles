@@ -264,18 +264,6 @@
       "Running"
     "Stopped"))
 
-(defun om--generic-process-filter (proc string)
-  (when (buffer-live-p (process-buffer proc))
-    (with-current-buffer (process-buffer proc)
-      (let ((moving (= (point) (process-mark proc)))
-            (inhibit-read-only t))
-        (save-excursion
-          ;; Insert the text, advancing the process marker.
-          (goto-char (process-mark proc))
-          (insert string)
-          (set-marker (process-mark proc) (point)))
-        (if moving (goto-char (process-mark proc)))))))
-
 (defun om--prepare-buffer-for-type (type &optional mode-function)
   "Prepare an empty buffer for TYPE and optionally run MODE-FUNCTION."
   (let ((buffer-name (om--buffer-name-for-type type)))
@@ -529,6 +517,18 @@ Returns the process object."
                   (message "Octopress has completed.")))
           ((string-prefix-p "exited" event)
            (message "Octopress exited abnormally; check the process output for information.")))))
+
+(defun om--generic-process-filter (proc string)
+  (when (buffer-live-p (process-buffer proc))
+    (with-current-buffer (process-buffer proc)
+      (let ((moving (= (point) (process-mark proc)))
+            (inhibit-read-only t))
+        (save-excursion
+          ;; Insert the text, advancing the process marker.
+          (goto-char (process-mark proc))
+          (insert string)
+          (set-marker (process-mark proc) (point)))
+        (if moving (goto-char (process-mark proc)))))))
 
 (defun om--prop-command (key label)
   "Propertize a command legend item with pretty colors.
