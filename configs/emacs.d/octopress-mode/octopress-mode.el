@@ -406,11 +406,12 @@ STATUS is an alist of status names and their printable values."
 
        (propertize " " 'thing t 'hidden 'drafts)
        "      Drafts: " (cdr (assoc 'drafts-count status)) "\n"
+       (om--get-display-list (om--get-drafts) 'drafts)
 
        (propertize " " 'thing t 'hidden 'posts)
        "       Posts: " (cdr (assoc 'posts-count status)) "\n"
+       (om--get-display-list (om--get-posts) 'posts)
 
-       (om--get-posts-display)
        "\n"
        (propertize "Commands:\n" 'face 'font-lock-constant-face)
        " " (om--legend-item "n" "New" 18)
@@ -424,16 +425,14 @@ STATUS is an alist of status names and their printable values."
       (goto-char (point-min))
       (setq buffer-read-only t))))
 
-(defun om--get-posts-display ()
-  (let ((post-list "")
-        (posts (om--get-posts)))
-    (cl-loop for post in posts do
-             (setq post-list
-                   (concat post-list
-                           (propertize " " 'thing t)
+(defun om--get-display-list (things visibility-name)
+  (let ((thing-list ""))
+    (cl-loop for thing in things do
+             (setq thing-list
+                   (concat thing-list " "
                            (make-string 10 ? )
-                           (propertize post 'face 'font-lock-variable-name-face) "\n")))
-    (propertize post-list 'invisible 'posts)))
+                           (propertize thing 'face 'font-lock-variable-name-face) "\n")))
+    (propertize thing-list 'invisible visibility-name)))
 
 (defun om--legend-item (key label column-width)
   (let ((pad (- column-width (+ (length key) (length label) 2))))
@@ -446,6 +445,13 @@ STATUS is an alist of status names and their printable values."
   (om--setup)
   (directory-files
    (expand-file-name octopress-posts-directory om-root)
+   nil
+   "*.md$\\|.*markdown$"))
+
+(defun om--get-drafts ()
+  (om--setup)
+  (directory-files
+   (expand-file-name octopress-drafts-directory om-root)
    nil
    "*.md$\\|.*markdown$"))
 
