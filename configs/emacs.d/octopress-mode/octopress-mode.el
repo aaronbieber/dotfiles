@@ -430,7 +430,7 @@ STATUS is an alist of status names and their printable values."
       (setq buffer-read-only nil)
       (erase-buffer)
       (insert
-       (propertize "Octopress Status\n" 'face '(:inherit 'font-lock-constant-face :height 160))
+       (propertize "Octopress Status\n" 'face '(:inherit font-lock-constant-face :height 160))
        "\n"
        (propertize " " 'thing t 'heading t)
        (propertize "   Blog root: " 'face 'font-lock-function-name-face)
