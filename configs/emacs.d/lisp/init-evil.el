@@ -49,6 +49,8 @@
   (evil-set-initial-state 'magit-log-edit-mode 'insert)
   (evil-set-initial-state 'sunshine-mode 'emacs)
   (evil-set-initial-state 'octopress-mode 'emacs)
+  (evil-set-initial-state 'octopress-server-mode 'emacs)
+  (evil-set-initial-state 'octopress-process-mode 'emacs)
   (evil-set-initial-state 'twittering-edit-mode 'insert)
 
   (add-to-list 'evil-buffer-regexps '("\\*magit:"))
