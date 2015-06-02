@@ -1,0 +1,10 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: doc-variable-post
+# key: doc_vp
+# binding: direct-keybinding
+# --
+/**
+ * ${1:description}
+ *
+ * @var ${2:type}
+ */
