@@ -7,9 +7,12 @@
 ;;; Code:
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+(add-to-list 'load-path (expand-file-name "octopress-mode" user-emacs-directory))
 (add-to-list 'load-path "~/.emacs.d/sunshine")
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 (add-to-list 'exec-path "/usr/local/bin")
+
+(require 'octopress-mode)
 
 ;; Essential settings.
 (setq inhibit-splash-screen t
