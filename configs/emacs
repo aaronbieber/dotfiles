@@ -47,6 +47,11 @@
 (require 'init-php)
 (require 'init-powerline)
 
+(maybe-require-package 'wgrep)
+(maybe-require-package 'wgrep-ag)
+(autoload 'wgrep-ag-setup "wgrep-ag")
+(add-hook 'ag-mode-hook 'wgrep-ag-setup)
+
 (when (maybe-require-package 'exec-path-from-shell)
   (when (memq window-system '(mac ns))
     (exec-path-from-shell-initialize)))
