@@ -564,13 +564,18 @@ Returns the process object."
   (when (buffer-live-p (process-buffer proc))
     (with-current-buffer (process-buffer proc)
       (let ((moving (= (point) (process-mark proc)))
+            (window (get-buffer-window))
             (inhibit-read-only t))
         (save-excursion
           ;; Insert the text, advancing the process marker.
           (goto-char (process-mark proc))
           (insert string)
           (set-marker (process-mark proc) (point)))
-        (if moving (goto-char (process-mark proc)))))))
+        (when moving
+          (goto-char (process-mark proc))
+          (if window
+              (with-selected-window window
+                (goto-char (process-mark proc)))))))))
 
 (defun om--prop-command (key label)
   "Propertize a command legend item with pretty colors.
