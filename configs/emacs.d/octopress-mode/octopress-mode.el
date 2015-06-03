@@ -109,7 +109,9 @@
            (message "Aborted.")))))
 
 (defun om-deploy ()
-  (interactive))
+  (interactive)
+  (when (yes-or-no-p "Really deploy your site? ")
+    (om--start-deploy-process)))
 
 (defun om-build ()
   (interactive)
@@ -229,6 +231,12 @@ This function returns the char value from CHOICES selected by the user."
                     (get-buffer buffer))))
          (and (assoc 'om-root vars)
               (string= (cdr (assoc 'major-mode vars)) "octopress-mode")))))
+
+(defun om--start-deploy-process ()
+  (om--setup)
+  (let* ((root (om--get-root))
+         (command "octopress deploy"))
+    (om--run-octopress-command (concat "cd " root " && " command))))
 
 (defun om--start-build-process (&optional with-drafts with-future with-unpublished)
   (om--setup)
