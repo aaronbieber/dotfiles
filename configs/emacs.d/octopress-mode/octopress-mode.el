@@ -48,13 +48,13 @@
 ;;; Customization
 (defcustom octopress-posts-directory
   "_posts"
-  "Directory containing posts, assumed to begin with /path/to/jekyll-site/"
+  "Directory containing posts, relative to /path/to/jekyll-site/"
   :type 'string
   :group 'octopress-mode)
 
 (defcustom octopress-drafts-directory
   "_drafts"
-  "Directory containing drafts, assumed to begin with /path/to/jekyll-site/"
+  "Directory containing drafts, relative to /path/to/jekyll-site/"
   :type 'string
   :group 'octopress-mode)
 
@@ -159,7 +159,7 @@ enabled by default in the interactive prompt to start the server."
   (interactive)
   (quit-window))
 
-;;; "Private" -- not meant to be used by users.
+;;; "Private" functions
 (defun om--setup ()
   "Stuff that has to happen before anything else can happen."
   ;; Only set up if we have to...
