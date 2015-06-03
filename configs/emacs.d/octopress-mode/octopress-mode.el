@@ -247,7 +247,7 @@ This function returns the char value from CHOICES selected by the user."
          (future-opt (if with-future " --future" nil))
          (unpublished-opt (if with-unpublished " --unpublished" nil))
          (command (concat "jekyll serve" drafts-opt future-opt unpublished-opt)))
-    (if (processp (get-buffer-process om-server-process-buffer))
+    (if (processp (get-buffer-process (om--buffer-name-for-type "server")))
         (message "Server already running!")
       (with-current-buffer om-server-process-buffer
         (let ((inhibit-read-only t))
@@ -287,7 +287,7 @@ This function returns the char value from CHOICES selected by the user."
 (defun om--server-status ()
   (let ((server-process (get-buffer-process (om--buffer-name-for-type "server"))))
     (and (processp server-process)
-         (string= (process-status om-server-process) "run"))))
+         (string= (process-status server-process) "run"))))
 
 (defun om--server-status-string ()
   (if (om--server-status)
@@ -524,7 +524,7 @@ STATUS is an alist of status names and their printable values."
 Returns the process object."
   (om--setup)
   (let ((pbuffer (om--prepare-process-buffer))
-        (om-root (om--get-root))
+        (root (om--get-root))
         (command (replace-regexp-in-string "'" "\\\\'" command)))
     (message "Running Octopress..." command)
     (with-current-buffer pbuffer
@@ -534,7 +534,7 @@ Returns the process object."
     (let ((process (start-process-shell-command
                     "octopress"
                     pbuffer
-                    (concat "cd " om-root " && " command))))
+                    (concat "cd " root " && " command))))
       (set-process-sentinel process 'om--octopress-sentinel)
       (set-process-filter process 'om--generic-process-filter)
       process)))
@@ -545,8 +545,8 @@ Returns the process object."
     (cond ((string-prefix-p "finished" event)
            (progn (with-current-buffer (om--buffer-name-for-type "process")
                     (let ((inhibit-read-only t))
-                      (insert (propertize (make-string 80 "-") 'face 'font-lock-comment-face))
-                      (goto-char (point-max))))
+                      (insert (concat (propertize (make-string 80 ?-) 'face 'font-lock-comment-face) "\n\n"))
+                      (set-marker (process-mark process) (point))))
                   (message "Octopress has completed.")
                   (om--maybe-redraw-status)))
           ((string-prefix-p "exited" event)
