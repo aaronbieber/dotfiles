@@ -111,8 +111,15 @@
 (defun om-deploy ()
   (interactive))
 
-(defun om-build (&optional with-drafts)
-  (interactive))
+(defun om-build ()
+  (interactive)
+  (let* ((config (om--read-char-with-toggles "[b] Build, [q] Abort" '(?b ?q)))
+         (choice (cdr (assoc 'choice config)))
+         (drafts (cdr (assoc 'drafts config)))
+         (future (cdr (assoc 'future config)))
+         (unpublished (cdr (assoc 'unpublished config))))
+    (when (eq choice ?b)
+      (om--start-build-process drafts future unpublished))))
 
 (defun om-status-quit ()
   "Quit the Octopress Mode window, preserving its buffer."
@@ -222,6 +229,16 @@ This function returns the char value from CHOICES selected by the user."
                     (get-buffer buffer))))
          (and (assoc 'om-root vars)
               (string= (cdr (assoc 'major-mode vars)) "octopress-mode")))))
+
+(defun om--start-build-process (&optional with-drafts with-future with-unpublished)
+  (om--setup)
+  (let* ((process-buffer (om--prepare-process-buffer))
+         (drafts-opt (if with-drafts " --drafts" nil))
+         (future-opt (if with-future " --future" nil))
+         (unpublished-opt (if with-unpublished " --unpublished" nil))
+         (root (om--get-root))
+         (command (concat "jekyll build" drafts-opt future-opt unpublished-opt)))
+    (om--run-octopress-command (concat "cd " root " && " command))))
 
 (defun om--start-server-process (&optional with-drafts with-future with-unpublished)
   (om--setup)
