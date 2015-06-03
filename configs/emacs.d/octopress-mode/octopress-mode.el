@@ -367,7 +367,8 @@ user will be prompted to enter the path to an Octopress site."
     (if (bufferp status-buffer)
         (om--draw-status status-buffer))))
 
-(defun om--get-status-data (buffer)
+(defun om--get-status-data ()
+  (om--setup)
   "Return the status of the Octopress site linked to BUFFER.
 
 This function can only be called after `om-status' has been run and must be
@@ -376,13 +377,13 @@ passed the resulting BUFFER."
     `((posts-count . ,(number-to-string
                        (length
                         (directory-files
-                         (expand-file-name octopress-posts-directory om-root)
+                         (expand-file-name octopress-posts-directory (om--get-root))
                          nil
                          "*.md$\\|.*markdown$"))))
       (drafts-count . ,(number-to-string
                         (length
                          (directory-files
-                          (expand-file-name octopress-drafts-directory om-root)
+                          (expand-file-name octopress-drafts-directory (om--get-root))
                           nil
                           ".*md$\\|.*markdown$"))))
       (server-status . ,(om--server-status-string)))))
@@ -450,7 +451,7 @@ passed the resulting BUFFER."
   "Draw a display of STATUS in BUFFER.
 
 STATUS is an alist of status names and their printable values."
-  (let ((status (om--get-status-data buffer)))
+  (let ((status (om--get-status-data)))
     (with-current-buffer buffer
       (let ((inhibit-read-only t)
             (pos (point)))
