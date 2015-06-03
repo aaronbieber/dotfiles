@@ -14,12 +14,6 @@
   '((t (:foreground "#CF4C4C")))
   "An Octopress interactive option when off.")
 
-(defvar om-server-process-buffer nil
-  "A buffer that will contain the output of the Jekyll server.")
-
-(defvar om-server-process nil
-  "A process object that may point to a Jekyll server.")
-
 (defvar octopress-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map "q" 'om-status-quit)
@@ -250,25 +244,25 @@ This function returns the char value from CHOICES selected by the user."
 
 (defun om--start-server-process (&optional with-drafts with-future with-unpublished)
   (om--setup)
-  (let* ((om-server-process-buffer (om--prepare-server-buffer))
+  (let* ((buffer (om--prepare-server-buffer))
          (drafts-opt (if with-drafts " --drafts" nil))
          (future-opt (if with-future " --future" nil))
          (unpublished-opt (if with-unpublished " --unpublished" nil))
          (command (concat "jekyll serve" drafts-opt future-opt unpublished-opt)))
     (if (processp (get-buffer-process (om--buffer-name-for-type "server")))
         (message "Server already running!")
-      (with-current-buffer om-server-process-buffer
+      (with-current-buffer buffer
         (let ((inhibit-read-only t))
           (goto-char (point-max))
           (insert (propertize (format "Running `%s'...\n\n" command) 'face 'font-lock-variable-name-face))))
-      (let ((om-server-process
+      (let ((process
             (start-process-shell-command
              "octopress-server"
-             om-server-process-buffer
+             buffer
              (concat "cd " (om--get-root) " && " command))))
       (message "Server started!")
-      (set-process-sentinel om-server-process 'om--server-sentinel)
-      (set-process-filter om-server-process 'om--generic-process-filter))
+      (set-process-sentinel process 'om--server-sentinel)
+      (set-process-filter process 'om--generic-process-filter))
       (om--maybe-redraw-status))))
 
 (defun om--stop-server-process ()
