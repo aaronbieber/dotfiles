@@ -457,6 +457,7 @@ STATUS is an alist of status names and their printable values."
   (let ((status (om--get-status-data)))
     (with-current-buffer buffer
       (let ((inhibit-read-only t)
+            (window (get-buffer-window))
             (pos (point)))
         (erase-buffer)
         (insert
@@ -498,7 +499,9 @@ STATUS is an alist of status names and their printable values."
          (om--legend-item "q" "Quit" 18))
         (goto-char (if (< pos (point-max))
                        pos
-                     (point-min)))))))
+                     (point-min)))
+        (if window
+            (force-window-update window))))))
 
 (defun om--get-display-list (things visibility-name)
   (let ((thing-list ""))
