@@ -58,13 +58,37 @@
   :type 'string
   :group 'octopress-mode)
 
+(defcustom octopress-default-build-flags
+  '()
+  "The default flags to pass to `jekyll build'. Each option is a type of post
+that is normally excluded from a Jekyll build. The checked options will be
+enabled by default in the interactive prompt."
+  :type    '(set (const :tag "Drafts" drafts)
+                 (const :tag "Posts with future dates" future)
+                 (const :tag "Unpublished posts" unpublished))
+  :group   'octopress-mode)
+
+(defcustom octopress-default-server-flags
+  '(drafts unpublished)
+  "The default flags to pass to `jekyll serve'. Each option is a type of post
+that is normally ignored by the Jekyll server. The checked options will be
+enabled by default in the interactive prompt to start the server."
+  :type    '(set (const :tag "Drafts" drafts)
+                 (const :tag "Posts with future dates" future)
+                 (const :tag "Unpublished posts" unpublished))
+  :group   'octopress-mode)
+
+;;; "Public" functions
 (defun om-refresh-status ()
   (interactive)
   (om--maybe-redraw-status))
 
 (defun om-start-stop-server ()
   (interactive)
-  (let* ((config (om--read-char-with-toggles "[s] Server, [k] Kill, [q] Abort" '(?s ?k ?q)))
+  (let* ((config (om--read-char-with-toggles
+                  "[s] Server, [k] Kill, [q] Abort"
+                  '(?s ?k ?q)
+                  octopress-default-server-flags))
          (choice (cdr (assoc 'choice config)))
          (drafts (cdr (assoc 'drafts config)))
          (future (cdr (assoc 'future config)))
@@ -109,7 +133,10 @@
 
 (defun om-build ()
   (interactive)
-  (let* ((config (om--read-char-with-toggles "[b] Build, [q] Abort" '(?b ?q)))
+  (let* ((config (om--read-char-with-toggles
+                  "[b] Build, [q] Abort"
+                  '(?b ?q)
+                  octopress-default-build-flags))
          (choice (cdr (assoc 'choice config)))
          (drafts (cdr (assoc 'drafts config)))
          (future (cdr (assoc 'future config)))
@@ -148,13 +175,22 @@
           (progn (kill-buffer om-buffer)
                  nil))))))
 
-(defun om--read-char-with-toggles (prompt-suffix choices)
+(defun om--read-char-with-toggles (prompt-suffix choices &optional default-to-on)
   "Read a selection from a menu with toggles.
 
-Display a fixed menu of toggles followed by PROMPT-SUFFIX.
+Display a fixed menu of toggles followed by PROMPT-SUFFIX. Accept any of
+the default choices (d, f, u, q) as well as the supplied CHOICES, which
+should be provided as a list of characters (not strings).
+
+If any of the symbols `drafts', `future', or `unpublished' are present in
+the DEFAULT-TO-ON list, those toggles will be turned on initially.
+
 This function returns the char value from CHOICES selected by the user."
   (let ((choices (append choices '(?d ?f ?u ?q)))
-        return done drafts future unpublished)
+        (drafts (memq 'drafts default-to-on))
+        (future (memq 'future default-to-on))
+        (unpublished (memq 'unpublished default-to-on))
+        return done)
     (while (not done)
       (let* ((prompt (concat (propertize "(" 'face 'default)
                              (propertize "[d]rafts " 'face (if drafts 'om-option-on-face 'om-option-off-face))
