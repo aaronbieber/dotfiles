@@ -319,11 +319,14 @@ This function returns the char value from CHOICES selected by the user."
   "Return the Octopress Mode (\"status\") buffer.
 
 If the buffer doesn't exist yet, it will be created and prepared."
-  (let ((status-buffer (om--prepare-buffer-for-type "status" 'octopress-mode)))
-    (with-current-buffer status-buffer
-      (add-to-invisibility-spec 'posts)
-      (add-to-invisibility-spec 'drafts))
-    status-buffer))
+  (let ((buffer-name (om--buffer-name-for-type "status")))
+    (if (get-buffer buffer-name)
+        (get-buffer buffer-name)
+      (let ((status-buffer (om--prepare-buffer-for-type "status" 'octopress-mode)))
+        (with-current-buffer status-buffer
+          (add-to-invisibility-spec 'posts)
+          (add-to-invisibility-spec 'drafts))
+        status-buffer))))
 
 (defun om--prepare-server-buffer ()
   "Return the Octopress Server Mode buffer.
