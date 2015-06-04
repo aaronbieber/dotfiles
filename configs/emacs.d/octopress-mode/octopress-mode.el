@@ -26,6 +26,7 @@
     (define-key map "!" 'om-show-process)
     (define-key map "n" 'om--move-to-next-thing)
     (define-key map "p" 'om--move-to-previous-thing)
+    (define-key map "P" 'om-publish-unpublish)
     (define-key map (kbd "C-n") 'om--move-to-next-heading)
     (define-key map (kbd "C-p") 'om--move-to-previous-heading)
     (define-key map (kbd "<tab>") 'om--maybe-toggle-visibility)
@@ -159,35 +160,39 @@ enabled by default in the interactive prompt to start the server."
   (interactive)
   (quit-window))
 
+(defun om-publish-unpublish ()
+  (interactive)
+  (let ((thing (om--thing-near-point)))
+    (cond ((eq thing 'posts)
+           (om-unpublish))
+          ((eq thing 'drafts)
+           (om-publish))
+          (t
+           (message "There is no post nor draft on this line.")))))
+
 (defun om-unpublish ()
   (interactive)
-  (if (not (eq (om--thing-near-point) 'posts))
-      (message "You can only unpublish a post.")
-    (save-excursion
-      (let* ((drafts-path (expand-file-name octopress-drafts-directory (om--get-root)))
-             (posts-path (expand-file-name octopress-posts-directory (om--get-root)))
-             (line (buffer-substring (line-beginning-position) (line-end-position)))
-             (found (string-match "^\s*\\([^ ]*\\)" line))
-             (filename (match-string 1 line)))
-        (message "line: %s" line)
-        (message "filename: %s" filename)
-        (if (file-exists-p (expand-file-name filename posts-path))
-            (om--run-octopress-command (concat "octopress unpublish " filename)))))))
+  (let* ((posts-path (expand-file-name octopress-posts-directory (om--get-root)))
+         (thing (om--get-filename-near-point))
+         (filename (car thing))
+         (thing-type (cdr thing)))
+    (if (not (eq thing-type 'posts))
+        (message "You can only unpublish a post.")
+      (if (file-exists-p (expand-file-name filename posts-path))
+          (om--run-octopress-command (concat "octopress unpublish " filename))
+        (message "The file `%s' doesn't exist in `%s'. Try refreshing?" filename posts-path)))))
 
 (defun om-publish ()
   (interactive)
-  (if (not (eq (om--thing-near-point) 'drafts))
-      (message "You can only publish a draft.")
-    (save-excursion
-      (let* ((drafts-path (expand-file-name octopress-drafts-directory (om--get-root)))
-             (posts-path (expand-file-name octopress-posts-directory (om--get-root)))
-             (line (buffer-substring (line-beginning-position) (line-end-position)))
-             (found (string-match "^\s*\\([^ ]*\\)" line))
-             (filename (match-string 1 line)))
-        (message "line: %s" line)
-        (message "filename: %s" filename)
-        (if (file-exists-p (expand-file-name filename drafts-path))
-            (om--run-octopress-command (concat "octopress publish " filename)))))))
+  (let* ((drafts-path (expand-file-name octopress-drafts-directory (om--get-root)))
+         (thing (om--get-filename-near-point))
+         (filename (car thing))
+         (thing-type (cdr thing)))
+    (if (not (eq thing-type 'drafts))
+        (message "You can only publish a draft.")
+      (if (file-exists-p (expand-file-name filename drafts-path))
+          (om--run-octopress-command (concat "octopress publish " filename))
+        (message "The file `%s' doesn't exist in `%s'. Try refreshing?" filename drafts-path)))))
 
 ;;; "Private" functions
 (defun om--setup ()
@@ -204,6 +209,22 @@ enabled by default in the interactive prompt to start the server."
                 om-buffer)
           (progn (kill-buffer om-buffer)
                  nil))))))
+
+(defun om--get-filename-near-point ()
+  "Return the filename on the current line (of *om-status*).
+
+Return a single cons cell where the car of the cons is the filename and the cdr
+of the cons is the `thing type', e.g. 'drafts or 'posts.
+
+If the current line of the current buffer does not have a valid thing type, this
+function returns nil."
+    (let* ((thing-type (get-text-property (line-beginning-position) 'invisible))
+           (line (buffer-substring (line-beginning-position) (line-end-position)))
+           (found (string-match "^\s*\\([^ ]*\\)" line))
+           (filename (match-string 1 line)))
+      (if (and thing-type found filename)
+          (cons filename thing-type)
+        nil)))
 
 (defun om--read-char-with-toggles (prompt-suffix choices &optional default-to-on)
   "Read a selection from a menu with toggles.
@@ -597,8 +618,8 @@ STATUS is an alist of status names and their printable values."
    "*.md$\\|.*markdown$"))
 
 (defun om--thing-near-point ()
-  (save-excursion
-    (get-text-property (line-beginning-position) 'invisible)))
+  "Return the thing-name for the thing on this line."
+  (get-text-property (line-beginning-position) 'invisible))
 
 (defun om--run-octopress-command (command)
   "Run an Octopress command, sending output to the process buffer.
