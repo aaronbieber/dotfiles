@@ -589,16 +589,19 @@ Returns the process object."
 
 (defun om--octopress-sentinel (process event)
   (let ((program (process-name process))
-        (event (replace-regexp-in-string "\n$" "" event)))
+        (event (replace-regexp-in-string "\n$" "" event))
+        (buffer (get-buffer (om--buffer-name-for-type "process"))))
     (cond ((string-prefix-p "finished" event)
-           (progn (with-current-buffer (om--buffer-name-for-type "process")
+           (progn (om--handle-octopress-output buffer)
+                  (with-current-buffer buffer
                     (let ((inhibit-read-only t))
                       (insert (concat (propertize (make-string 80 ?-) 'face 'font-lock-comment-face) "\n\n"))
                       (set-marker (process-mark process) (point))))
                   (message "Octopress has completed.")
                   (om--maybe-redraw-status)))
           ((string-prefix-p "exited" event)
-           (message "Octopress exited abnormally; check the process output for information.")))))
+           (message "Octopress exited abnormally; check the process output for information.")
+           (om--handle-octopress-output buffer)))))
 
 (defun om--generic-process-filter (proc string)
   (when (buffer-live-p (process-buffer proc))
@@ -616,6 +619,26 @@ Returns the process object."
           (if window
               (with-selected-window window
                 (goto-char (process-mark proc)))))))))
+
+(defun om--handle-octopress-output (buffer)
+  "Attempt to do something reasonable based on what Octopress said."
+  (with-current-buffer buffer
+    (save-excursion
+      (goto-char (point-max))
+      (re-search-backward "^[A-Z]" (point-min) t)
+      (let ((output (buffer-substring (line-beginning-position) (line-end-position))))
+        (cond (or ((string-prefix-p "New post:" output)
+                   (string-prefix-p "New draft:" output)
+                   (string-prefix-p "New page:" output))
+                  (let* ((found (string-match " \\([^ ]*\\)$" output))
+                         (filename (and found
+                                        (expand-file-name (match-string 1 output) (om--get-root)))))
+                    (if (file-exists-p filename)
+                        (find-file filename))))
+              ((string-prefix-p "Published:" output)
+               ())
+              ((string-prefix-p "Unpublished:" output)
+               ()))))))
 
 (defun om--prop-command (key label)
   "Propertize a command legend item with pretty colors.
