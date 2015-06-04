@@ -159,6 +159,36 @@ enabled by default in the interactive prompt to start the server."
   (interactive)
   (quit-window))
 
+(defun om-unpublish ()
+  (interactive)
+  (if (not (eq (om--thing-near-point) 'posts))
+      (message "You can only unpublish a post.")
+    (save-excursion
+      (let* ((drafts-path (expand-file-name octopress-drafts-directory (om--get-root)))
+             (posts-path (expand-file-name octopress-posts-directory (om--get-root)))
+             (line (buffer-substring (line-beginning-position) (line-end-position)))
+             (found (string-match "^\s*\\([^ ]*\\)" line))
+             (filename (match-string 1 line)))
+        (message "line: %s" line)
+        (message "filename: %s" filename)
+        (if (file-exists-p (expand-file-name filename posts-path))
+            (om--run-octopress-command (concat "octopress unpublish " filename)))))))
+
+(defun om-publish ()
+  (interactive)
+  (if (not (eq (om--thing-near-point) 'drafts))
+      (message "You can only publish a draft.")
+    (save-excursion
+      (let* ((drafts-path (expand-file-name octopress-drafts-directory (om--get-root)))
+             (posts-path (expand-file-name octopress-posts-directory (om--get-root)))
+             (line (buffer-substring (line-beginning-position) (line-end-position)))
+             (found (string-match "^\s*\\([^ ]*\\)" line))
+             (filename (match-string 1 line)))
+        (message "line: %s" line)
+        (message "filename: %s" filename)
+        (if (file-exists-p (expand-file-name filename drafts-path))
+            (om--run-octopress-command (concat "octopress publish " filename)))))))
+
 ;;; "Private" functions
 (defun om--setup ()
   "Stuff that has to happen before anything else can happen."
@@ -566,6 +596,10 @@ STATUS is an alist of status names and their printable values."
    nil
    "*.md$\\|.*markdown$"))
 
+(defun om--thing-near-point ()
+  (save-excursion
+    (get-text-property (line-beginning-position) 'invisible)))
+
 (defun om--run-octopress-command (command)
   "Run an Octopress command, sending output to the process buffer.
 
@@ -627,18 +661,20 @@ Returns the process object."
       (goto-char (point-max))
       (re-search-backward "^[A-Z]" (point-min) t)
       (let ((output (buffer-substring (line-beginning-position) (line-end-position))))
-        (cond (or ((string-prefix-p "New post:" output)
+        (cond ((or (string-prefix-p "New post:" output)
                    (string-prefix-p "New draft:" output)
                    (string-prefix-p "New page:" output))
-                  (let* ((found (string-match " \\([^ ]*\\)$" output))
-                         (filename (and found
-                                        (expand-file-name (match-string 1 output) (om--get-root)))))
-                    (if (file-exists-p filename)
-                        (find-file filename))))
-              ((string-prefix-p "Published:" output)
-               ())
-              ((string-prefix-p "Unpublished:" output)
-               ()))))))
+               (progn (message "Saw '%s'" output)
+                      (let* ((found (string-match ": \\(.*\\)$" output))
+                             (filename (and found
+                                            (expand-file-name (match-string 1 output) (om--get-root)))))
+                        (message "Filename: %s" filename)
+                        (if (file-exists-p filename)
+                            (find-file filename)))))
+               ((string-prefix-p "Published:" output)
+                ())
+               ((string-prefix-p "Unpublished:" output)
+                ()))))))
 
 (defun om--prop-command (key label)
   "Propertize a command legend item with pretty colors.
