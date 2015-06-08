@@ -4,14 +4,18 @@ because most of them begin with a period (a "dot"). These configurations are
 also used in OS X, so not all of them are even applicable to Linux (such as 
 `.slate`), but linking them shouldn't hurt.
 
-Wait, linking? What?
+*Important note:* These are my personal configuration files, which are in a
+constant state of change as I develop my environment across several systems. I
+can't guarantee that these configurations will work for you, at all, so if you
+encounter problems with them, you're pretty much on your own.
 
-Yes, that's right, I have also provided a handy bash script called `linkall` 
-that will handle the oh so arduous process of symlinking each of these 
-configurations into your home directory. Why would I do this? So that these 
-files can live in their own directory as an isolated git repository and also 
-function as configuration files in your home directory at the same time. Simply 
-run `linkall` and you're done.
+## Linking
+
+I have also provided a handy bash script called `linkall` that will handle the
+arduous process of symlinking each of these configurations into your home
+directory. Why would I do this? So that these files can live in their own
+directory as an isolated git repository and also function as configuration files
+in your home directory at the same time. Simply run `linkall` and you're done.
 
 ## Usage
 Usage is straightforward.
