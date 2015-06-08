@@ -162,37 +162,25 @@ enabled by default in the interactive prompt to start the server."
 
 (defun om-publish-unpublish ()
   (interactive)
-  (let ((thing (om--thing-near-point)))
-    (cond ((eq thing 'posts)
-           (om-unpublish))
-          ((eq thing 'drafts)
-           (om-publish))
-          (t
-           (message "There is no post nor draft on this line.")))))
+  (let* ((thing (om--thing-near-point))
+         (thing-type (car thing))
+         (filename (cdr thing)))
+    (if (memq thing-type '(drafts posts))
+        (om--publish-unpublish thing-type filename)
+      (message "There is no post nor draft on this line."))))
 
-(defun om-unpublish ()
-  (interactive)
-  (let* ((posts-path (expand-file-name octopress-posts-directory (om--get-root)))
-         (thing (om--get-filename-near-point))
-         (filename (car thing))
-         (thing-type (cdr thing)))
-    (if (not (eq thing-type 'posts))
-        (message "You can only unpublish a post.")
-      (if (file-exists-p (expand-file-name filename posts-path))
-          (om--run-octopress-command (concat "octopress unpublish " filename))
-        (message "The file `%s' doesn't exist in `%s'. Try refreshing?" filename posts-path)))))
-
-(defun om-publish ()
-  (interactive)
-  (let* ((drafts-path (expand-file-name octopress-drafts-directory (om--get-root)))
-         (thing (om--get-filename-near-point))
-         (filename (car thing))
-         (thing-type (cdr thing)))
-    (if (not (eq thing-type 'drafts))
-        (message "You can only publish a draft.")
-      (if (file-exists-p (expand-file-name filename drafts-path))
-          (om--run-octopress-command (concat "octopress publish " filename))
-        (message "The file `%s' doesn't exist in `%s'. Try refreshing?" filename drafts-path)))))
+(defun om--publish-unpublish (type filename)
+  (let ((source-path (cond ((eq type 'posts)
+                            (expand-file-name octopress-posts-directory (om--get-root)))
+                           ((eq type 'drafts)
+                            (expand-file-name octopress-drafts-directory (om--get-root)))))
+        (subcommand (cond ((eq type 'posts)
+                           "unpublish")
+                          ((eq type 'drafts)
+                           "publish"))))
+      (if (file-exists-p (expand-file-name filename source-path))
+          (om--run-octopress-command (concat "octopress " subcommand " " filename))
+        (message "The file `%s' doesn't exist in `%s'. Try refreshing?" filename posts-path))))
 
 ;;; "Private" functions
 (defun om--setup ()
@@ -210,11 +198,11 @@ enabled by default in the interactive prompt to start the server."
           (progn (kill-buffer om-buffer)
                  nil))))))
 
-(defun om--get-filename-near-point ()
+(defun om--thing-near-point ()
   "Return the filename on the current line (of *om-status*).
 
-Return a single cons cell where the car of the cons is the filename and the cdr
-of the cons is the `thing type', e.g. 'drafts or 'posts.
+Return a single cons cell where the car of the cons is the `thing
+type', e.g. 'drafts or 'posts, and the cdr of the cons is the filename.
 
 If the current line of the current buffer does not have a valid thing type, this
 function returns nil."
@@ -223,7 +211,7 @@ function returns nil."
            (found (string-match "^\s*\\([^ ]*\\)" line))
            (filename (match-string 1 line)))
       (if (and thing-type found filename)
-          (cons filename thing-type)
+          (cons thing-type (om--strip-text-properties filename))
         nil)))
 
 (defun om--read-char-with-toggles (prompt-suffix choices &optional default-to-on)
@@ -576,11 +564,12 @@ STATUS is an alist of status names and their printable values."
          " " (om--legend-item "c" "Create" 18)
          (om--legend-item "s" "Server" 18)
          (om--legend-item "b" "Build" 18)
-         (om--legend-item "d" "Deploy" 18) "\n"
-         " " (om--legend-item "!" "Show Process" 18)
-         (om--legend-item "$" "Show Server" 18)
+         (om--legend-item "P" "[Un]publish" 18) "\n"
+         " " (om--legend-item "d" "Deploy" 18)
          (om--legend-item "g" "Refresh" 18)
-         (om--legend-item "q" "Quit" 18))
+         (om--legend-item "!" "Show Process" 18)
+         (om--legend-item "$" "Show Server" 18) "\n"
+         " " (om--legend-item "q" "Quit" 18))
         (goto-char (if (< pos (point-max))
                        pos
                      (point-min)))
@@ -617,10 +606,6 @@ STATUS is an alist of status names and their printable values."
    nil
    "*.md$\\|.*markdown$"))
 
-(defun om--thing-near-point ()
-  "Return the thing-name for the thing on this line."
-  (get-text-property (line-beginning-position) 'invisible))
-
 (defun om--run-octopress-command (command)
   "Run an Octopress command, sending output to the process buffer.
 
@@ -629,11 +614,11 @@ Returns the process object."
   (let ((pbuffer (om--prepare-process-buffer))
         (root (om--get-root))
         (command (replace-regexp-in-string "'" "\\\\'" command)))
-    (message "Running Octopress..." command)
     (with-current-buffer pbuffer
       (let ((inhibit-read-only t))
         (goto-char (point-max))
-        (insert (propertize (format "Running `%s'...\n\n" command) 'face 'font-lock-variable-name-face))))
+        (message (concat "Running Octopress..."))
+        (insert (propertize (concat "Running `" command "'...\n\n") 'face 'font-lock-variable-name-face))))
     (let ((process (start-process-shell-command
                     "octopress"
                     pbuffer
@@ -702,6 +687,11 @@ Returns the process object."
 
 Return a propertized string like KEY: LABEL."
   (concat (propertize key 'face 'font-lock-keyword-face) ": " label))
+
+(defun om--strip-text-properties(text)
+  "Remove all properties from TEXT and return it."
+  (set-text-properties 0 (length text) nil text)
+      text)
 
 ;;;###autoload
 (defun om-status ()
