@@ -6,7 +6,7 @@
 (define-key global-map (kbd "C-c t h") (lambda ()
                                          (interactive)
                                          (find-file-other-window "~/Dropbox/org/home.org")))
-(define-key global-map (kbd "C-c t a") 'org-agenda)
+(define-key global-map (kbd "C-c t a") 'org-agenda-list)
 (define-key global-map (kbd "C-x C-q") 'kill-emacs)
 (define-key global-map (kbd "C-c C-u") 'insert-char) ;; "u" for Unicode, get it?
 (define-key global-map (kbd "C-c l")   'dictionary-lookup-definition)
