@@ -92,6 +92,8 @@
   (define-key evil-normal-state-map (kbd "[i")    'show-first-occurrence)
   (define-key evil-normal-state-map (kbd "]n")    'next-conflict-marker)
   (define-key evil-normal-state-map (kbd "[n")    'previous-conflict-marker)
+  (define-key evil-visual-state-map (kbd "]n")    'next-conflict-marker)
+  (define-key evil-visual-state-map (kbd "[n")    'previous-conflict-marker)
   (define-key evil-insert-state-map (kbd "C-e")   'end-of-line)
 
   (defun minibuffer-keyboard-quit ()
