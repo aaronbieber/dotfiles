@@ -1,20 +1,15 @@
 #!/bin/bash
 
 # Configure dual displays.
-xrandr --output VGA-0 --left-of VGA-1
+# xrandr --output VGA-0 --left-of VGA-1
+xsetroot -mod 4 4 -fg "#103142" -bg "#000000"
 
 # Run the X composition manager because it makes Xmonad draw correctly in VirtualBox.
 #xcompmgr &
-
-# Load the keyring daemon's stuff. This might not actually work.
-eval $(gnome-keyring-daemon --start)
-export GNOME_KEYRING_SOCKET
-export GNOME_KEYRING_PID
 
 dropbox start
 lsyncd ~/lsyncd/php_lsyncd.conf
 lsyncd ~/lsyncd/resources_lsyncd.conf
 lsyncd ~/lsyncd/templates_lsyncd.conf
 
-eval `ssh-agent`
-xfce4-terminal -e ssh-add
+eval `keychain -q --eval id_rsa`
