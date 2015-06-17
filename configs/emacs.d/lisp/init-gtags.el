@@ -14,25 +14,21 @@
 
   (defun gtags-reindex-process (path)
     "Internal function triggered by gtags-reindex that recursively generates GTAGS."
-    (let ((gtags-buffer (get-buffer-create "*Gtags*")))
+    (let ((gtags-buffer (get-buffer-create "*gtags: reindex*")))
       (with-current-buffer gtags-buffer
-        (display-buffer gtags-buffer)
-        (setq gtags-window (get-buffer-window gtags-buffer))
-        (with-selected-window gtags-window
-          (if (> (window-size) 10)
-              (shrink-window (- (window-size) 10))
-            (enlarge-window (- 10 (window-size)))))
-        (widen)
         (kill-all-local-variables)
+        (setq buffer-read-only t)
         (let ((inhibit-read-only t) (erase-buffer)))
+        (display-buffer (current-buffer))
+        ;; @TODO make this not PHP specific.
         (let ((cmd (concat "cd " (shell-quote-argument path) " && "
                            "find . -type f -iname '*php' | "
                            "gtags -v -f - &"))
               (map (make-sparse-keymap)))
-          (shell-command cmd (current-buffer))
-          (set-keymap-parent map (current-local-map))
+          ;;(set-keymap-parent map (current-local-map))
           (define-key map "q" #'(lambda () (interactive) (kill-buffer (current-buffer))))
           (use-local-map map)
+          (shell-command cmd (current-buffer))
           (if (fboundp 'evil-normal-state)
               (evil-normal-state)))))))
 
