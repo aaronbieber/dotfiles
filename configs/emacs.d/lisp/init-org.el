@@ -1,6 +1,8 @@
 (when (and (maybe-require-package 'org)
            (maybe-require-package 'evil-leader))
 
+  (setq org-agenda-text-search-extra-files '(agenda-archives))
+
   (evil-leader/set-key-for-mode 'org-mode
     "t"  'org-set-tags
     "p"  '(lambda ()
