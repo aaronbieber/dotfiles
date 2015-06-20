@@ -21,3 +21,5 @@
               (evil-define-key 'insert org-mode-map (kbd "C-\\") 'org-insert-heading)
               (auto-fill-mode)
               (flyspell-mode))))
+
+(provide 'init-org)

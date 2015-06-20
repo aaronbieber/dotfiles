@@ -49,6 +49,7 @@
 (require 'init-mac)
 (require 'init-global-functions)
 (require 'init-elpa)
+(require 'init-org)
 (require 'init-fonts)
 (require 'init-gtags)
 (require 'init-evil)
