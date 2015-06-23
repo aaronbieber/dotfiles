@@ -2,6 +2,7 @@
            (maybe-require-package 'evil-leader))
 
   (setq org-agenda-text-search-extra-files '(agenda-archives))
+  (setq org-agenda-files '("~/Dropbox/org/"))
 
   (evil-leader/set-key-for-mode 'org-mode
     "t"  'org-set-tags
