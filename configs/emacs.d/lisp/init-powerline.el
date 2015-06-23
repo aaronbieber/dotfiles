@@ -47,12 +47,12 @@
                                               ))
                                        (if evil-mode
                                            (funcall separator-left (powerline-evil-face) seg1))
-                                       ;;(powerline-raw "%*" nil 'l)
                                        ;;(when powerline-display-buffer-size
                                        ;;  (powerline-buffer-size nil 'l))
                                        ;;(when powerline-display-mule-info
                                        ;;  (powerline-raw mode-line-mule-info nil 'l))
                                        (powerline-buffer-id seg1 'l)
+                                       (powerline-raw "[%*]" seg1 'l)
                                        (when (and (boundp 'which-func-mode) which-func-mode)
                                          (powerline-raw which-func-format seg1 'l))
                                        (powerline-raw " " seg1)
