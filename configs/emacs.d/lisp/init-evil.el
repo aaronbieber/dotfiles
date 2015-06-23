@@ -90,11 +90,16 @@
   (define-key evil-normal-state-map (kbd "C-]")   'gtags-find-tag-from-here)
   (define-key evil-normal-state-map (kbd "g/")    'occur-last-search)
   (define-key evil-normal-state-map (kbd "[i")    'show-first-occurrence)
-  (define-key evil-normal-state-map (kbd "]n")    'next-conflict-marker)
-  (define-key evil-normal-state-map (kbd "[n")    'previous-conflict-marker)
-  (define-key evil-visual-state-map (kbd "]n")    'next-conflict-marker)
-  (define-key evil-visual-state-map (kbd "[n")    'previous-conflict-marker)
-  (define-key evil-insert-state-map (kbd "C-e")   'end-of-line)
+  (define-key evil-insert-state-map (kbd "C-e")   'end-of-line) ;; I know...
+
+  (evil-define-key 'normal php-mode-map (kbd "]n") 'next-conflict-marker)
+  (evil-define-key 'normal php-mode-map (kbd "[n") 'previous-conflict-marker)
+  (evil-define-key 'visual php-mode-map (kbd "]n") 'next-conflict-marker)
+  (evil-define-key 'visual php-mode-map (kbd "[n") 'previous-conflict-marker)
+
+  (evil-define-key 'normal org-mode-map (kbd "]n") 'org-forward-heading-same-level)
+  (evil-define-key 'normal org-mode-map (kbd "[n") 'org-backward-heading-same-level)
+
 
   (defun minibuffer-keyboard-quit ()
     "Abort recursive edit.
