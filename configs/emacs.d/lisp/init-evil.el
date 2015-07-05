@@ -21,7 +21,6 @@
     "nn" 'narrow-and-set-normal ;; Narrow to region and enter normal mode
     "nw" 'widen
     "o"  'delete-other-windows  ;; C-w o
-    "pl" 'cycle-powerline-separators
     "s"  'ag-project            ;; Ag search from project's root
     "r"  (lambda () (interactive) (font-lock-fontify-buffer) (redraw-display))
     "S"  'delete-trailing-whitespace
