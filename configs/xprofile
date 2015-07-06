@@ -11,5 +11,3 @@ dropbox start
 lsyncd ~/lsyncd/php_lsyncd.conf
 lsyncd ~/lsyncd/resources_lsyncd.conf
 lsyncd ~/lsyncd/templates_lsyncd.conf
-
-eval `keychain -q --eval id_rsa`
