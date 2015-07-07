@@ -99,7 +99,10 @@
 
   (evil-define-key 'normal org-mode-map (kbd "]n") 'org-forward-heading-same-level)
   (evil-define-key 'normal org-mode-map (kbd "[n") 'org-backward-heading-same-level)
-
+  (evil-define-key 'normal org-mode-map (kbd "C-S-l") 'org-shiftright)
+  (evil-define-key 'normal org-mode-map (kbd "C-S-h") 'org-shiftleft)
+  (evil-define-key 'insert org-mode-map (kbd "C-S-l") 'org-shiftright)
+  (evil-define-key 'insert org-mode-map (kbd "C-S-h") 'org-shiftleft)
 
   (defun minibuffer-keyboard-quit ()
     "Abort recursive edit.
