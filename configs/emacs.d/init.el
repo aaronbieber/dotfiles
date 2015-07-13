@@ -189,6 +189,9 @@
           (lambda ()
             (define-key magit-mode-map (kbd ",o") 'delete-other-windows)))
 
+;;; Git Commit Mode (a Magit minor mode):
+(add-hook 'git-commit-mode-hook 'evil-insert-state)
+
 ;;; Emmet mode:
 (add-hook 'emmet-mode-hook
           (lambda ()
