@@ -236,6 +236,7 @@
 ;;; Twittering mode:
 (setq twittering-use-master-password t)
 (add-hook 'twittering-mode-hook (lambda ()
+                                  (define-key twittering-mode-map (kbd "C-c C-a") 'twittering-favorite)
                                   (define-key twittering-mode-map (kbd ",b") 'helm-mini)))
 
 ;;; Let me move the selection like a normal human in the Grizzl results buffer.
