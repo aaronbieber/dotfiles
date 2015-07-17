@@ -73,7 +73,9 @@
 
   (defun next-conflict-marker ()
     (interactive)
-    (search-forward-regexp "\\(>>>>\\|====\\|<<<<\\)" (point-max) t)
+    (forward-line 1)
+    (if (not (search-forward-regexp "\\(>>>>\\|====\\|<<<<\\)" (point-max) t))
+        (forward-line -1))
     (move-beginning-of-line nil))
 
   (defun previous-conflict-marker ()
