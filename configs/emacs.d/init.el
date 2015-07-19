@@ -46,11 +46,11 @@
 ;;; My own configurations, which are bundled in my dotfiles.
 (require 'project-root)
 (require 'init-utils)
-(require 'init-fonts)
 (require 'init-mac)
 (require 'init-global-functions)
 (require 'init-elpa)
 (require 'init-org)
+(require 'init-fonts)
 (require 'init-gtags)
 (require 'init-evil)
 (require 'init-maps)
@@ -105,9 +105,15 @@
     :submode emacs-lisp-mode
     :face mmm-declaration-submode-face
     :front "^```cl[\n\r]+"
+    :back "^```$")
+   (markdown-php
+    :submode php-mode
+    :face mmm-declaration-submode-face
+    :front "^```php[\n\r]+"
     :back "^```$")))
 
 (mmm-add-mode-ext-class 'markdown-mode nil 'markdown-cl)
+(mmm-add-mode-ext-class 'markdown-mode nil 'markdown-php)
 
 ;;; Don't display this nag about reverting buffers.
 (setq magit-last-seen-setup-instructions "1.4.0")
