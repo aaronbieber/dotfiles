@@ -155,6 +155,9 @@
 (setq helm-buffers-fuzzy-matching t)
 (helm-mode 1)
 
+(require 'helm)
+(define-key helm-buffer-map (kbd "S-SPC") 'helm-toggle-visible-mark)
+
 ;;; Use evil surround mode in all buffers.
 (global-evil-surround-mode 1)
 
