@@ -3,21 +3,21 @@
 (defun air--pop-to-file (path)
   (find-file-other-window path))
 
-(defun air--pop-to-org-work ()
+(defun air-pop-to-org-work ()
   (interactive)
   (air--pop-to-file "~/Dropbox/org/work.org"))
 
-(defun air--pop-to-org-home ()
+(defun air-pop-to-org-home ()
   (interactive)
   (air--pop-to-file "~/Dropbox/org/home.org"))
 
-(defun air--pop-to-org-vault ()
+(defun air-pop-to-org-vault ()
   (interactive)
   (air--pop-to-file "~/Dropbox/org/vault.gpg"))
 
-(define-key global-map (kbd "C-c t w") 'air--pop-to-org-work)
-(define-key global-map (kbd "C-c t h") 'air--pop-to-org-home)
-(define-key global-map (kbd "C-c t v") 'air--pop-to-org-vault)
+(define-key global-map (kbd "C-c t w") 'air-pop-to-org-work)
+(define-key global-map (kbd "C-c t h") 'air-pop-to-org-home)
+(define-key global-map (kbd "C-c t v") 'air-pop-to-org-vault)
 (define-key global-map (kbd "C-c t a") 'org-agenda-list)
 (define-key global-map (kbd "C-x C-q") 'kill-emacs)
 (define-key global-map (kbd "C-c C-u") 'insert-char) ;; "u" for Unicode, get it?
