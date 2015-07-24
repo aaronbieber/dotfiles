@@ -301,6 +301,9 @@ is the buffer location at which the function was found."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ag-highlight-search t)
+ '(ag-reuse-buffers t)
+ '(ag-reuse-window t)
  '(circe-notifications-backend "terminal-notifier")
  '(circe-notifications-terminal-notifier-command "/home/abieber/bin/terminal-notifier")
  '(circe-notifications-wait-for 60)
@@ -310,7 +313,7 @@ is the buffer location at which the function was found."
  '(diary-entry-marker (quote font-lock-variable-name-face))
  '(gnus-logo-colors (quote ("#0d7b72" "#adadad")))
  '(js-indent-level 2)
- '(org-agenda-files (quote ("~/Dropbox/org/")))
+ '(org-agenda-files (quote ("~/Dropbox/org/")) t)
  '(org-blank-before-new-entry (quote ((heading) (plain-list-item))))
  '(org-directory "~/Dropbox/org")
  '(org-mobile-directory "~/Dropbox/org/mobile")
