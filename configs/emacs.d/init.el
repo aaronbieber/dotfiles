@@ -161,12 +161,6 @@
 ;;; Use evil surround mode in all buffers.
 (global-evil-surround-mode 1)
 
-;;; Flycheck mode:
-(add-hook 'flycheck-mode-hook
-          (lambda ()
-            (evil-define-key 'normal flycheck-mode-map (kbd "]e") 'flycheck-next-error)
-            (evil-define-key 'normal flycheck-mode-map (kbd "[e") 'flycheck-previous-error)))
-
 ;;; Helm mode:
 (define-key helm-find-files-map (kbd "C-k") 'helm-find-files-up-one-level)
 
