@@ -18,8 +18,8 @@
 (add-to-list 'exec-path "/usr/local/bin")
 
 ;; Just while I'm working on it.
-(add-to-list 'load-path (expand-file-name "octopress-mode" user-emacs-directory))
-(require 'octopress-mode)
+(add-to-list 'load-path (expand-file-name "octopress" user-emacs-directory))
+(require 'octopress)
 
 ;; Essential settings.
 (setq inhibit-splash-screen t
