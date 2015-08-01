@@ -79,7 +79,7 @@
 (maybe-require-package 'dictionary)
 (maybe-require-package 'emmet-mode)
 (maybe-require-package 'flycheck)
-(maybe-require-package 'guide-key)
+(maybe-require-package 'which-key)
 (maybe-require-package 'helm)
 (maybe-require-package 'helm-projectile)
 (maybe-require-package 'highlight-symbol)
@@ -124,9 +124,7 @@
 (setq-default epa-file-cache-passphrase-for-symmetric-encryption t)
 
 ;;; Always use guide-key mode, it is awesome.
-(guide-key-mode 1)
-(setq-default guide-key/guide-key-sequence t
-              guide-key/idle-delay 0.5)
+(which-key-mode 1)
 
 (defvar show-paren-delay 0
   "Delay (in seconds) before matching paren is highlighted.")
@@ -466,7 +464,7 @@ is the buffer location at which the function was found."
   (eval-after-load "highlight-symbol"
     '(diminish 'highlight-symbol-mode))
   (diminish 'helm-mode)
-  (diminish 'guide-key-mode)
+  (diminish 'which-key-mode)
   (diminish 'mmm-mode)
   (diminish 'undo-tree-mode))
 
