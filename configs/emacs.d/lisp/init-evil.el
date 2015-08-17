@@ -73,9 +73,9 @@
 
   (defun next-conflict-marker ()
     (interactive)
-    (forward-line 1)
+    (evil-next-visual-line)
     (if (not (search-forward-regexp "\\(>>>>\\|====\\|<<<<\\)" (point-max) t))
-        (forward-line -1))
+        (evil-previous-visual-line))
     (move-beginning-of-line nil))
 
   (defun previous-conflict-marker ()
