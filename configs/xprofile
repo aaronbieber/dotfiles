@@ -8,6 +8,4 @@ xsetroot -mod 4 4 -fg "#103142" -bg "#000000"
 #xcompmgr &
 
 dropbox start
-lsyncd ~/lsyncd/php_lsyncd.conf
-lsyncd ~/lsyncd/resources_lsyncd.conf
-lsyncd ~/lsyncd/templates_lsyncd.conf
+~/realsync/sync
