@@ -306,6 +306,7 @@ is the buffer location at which the function was found."
  '(gnus-logo-colors (quote ("#0d7b72" "#adadad")))
  '(js-indent-level 2)
  '(linum-format " %7i ")
+ '(lpr-page-header-switches (quote ("-h" "%s" "-F" "-l 65")))
  '(magit-branch-arguments nil)
  '(org-agenda-files (quote ("~/Dropbox/org/")))
  '(org-blank-before-new-entry (quote ((heading) (plain-list-item))))
