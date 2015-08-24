@@ -11,7 +11,7 @@
     "aa" 'align-regexp
     "a=" 'my-align-single-equals
     "b"  'helm-mini             ;; Switch to another buffer
-    "B"  'magit-blame-mode
+    "B"  'magit-blame-toggle
     "d"  (lambda () (interactive) (evil-ex-call-command nil "bdelete" nil))
     "D"  'open-current-line-in-codebase-search
     "f"  'helm-imenu            ;; Jump to function in buffer
@@ -28,7 +28,14 @@
     "T"  'gtags-find-tag
     "w"  'save-buffer
     "x"  'helm-M-x
-    "y"  'yank-to-x-clipboard))
+    "y"  'yank-to-x-clipboard)
+
+  (defun magit-blame-toggle ()
+    "Toggle magit-blame-mode on and off interactively."
+    (interactive)
+    (if (and (boundp 'magit-blame-mode) magit-blame-mode)
+        (magit-blame-quit)
+      (call-interactively 'magit-blame))))
 
 (when (maybe-require-package 'evil-jumper)
   (global-evil-jumper-mode))
