@@ -1,17 +1,53 @@
 #!/usr/bin/env python
 
-import sys
-import json
-import subprocess
-import re
-import os
-import time
 import calendar
+import json
+import os
+import re
+import subprocess
+import sys
+import time
 
-def get_governor():
-    """ Get the current governor for cpu0, assuming all CPUs use the same. """
-    with open('/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor') as fp:
-        return fp.readlines()[0].strip()
+def tail(fname, lines = 1):
+    bufsize = 8192
+    fsize = os.stat(fname).st_size
+
+    iter = 0
+    with open(fname) as f:
+        if bufsize > fsize:
+            bufsize = fsize-1
+        data = []
+        while True:
+            iter +=1
+            f.seek(fsize-bufsize*iter)
+            data.extend(f.readlines())
+            if len(data) >= lines or f.tell() == 0:
+                return ''.join(data[-lines:])
+
+def is_syncd(repo):
+    if repo == 'php':
+        line = tail('/home/abieber/realsync/logs/php.log')
+    elif repo == 'resources':
+        line = tail('/home/abieber/realsync/logs/resources.log')
+    elif repo == 'templates':
+        line = tail('/home/abieber/realsync/logs/templates.log')
+
+    return 'done' in line \
+        or 'ready' in line \
+        or 'speedup' in line
+
+def get_sync_status():
+    """Get the status of realsync for my three repos."""
+    php = resources = templates = 'working'
+
+    if is_syncd('php'):
+        php = 'done'
+    if is_syncd('resources'):
+        resources = 'done'
+    if is_syncd('templates'):
+        templates = 'done'
+
+    return 'PHP: %s, Resources: %s, Templates: %s' % (php, resources, templates)
 
 def get_music():
     return subprocess.check_output(["/home/abieber/bin/show_track"])
@@ -76,7 +112,8 @@ if __name__ == '__main__':
         j = json.loads(line)
         # insert information into the start of the json, but could be anywhere
         # CHANGE THIS LINE TO INSERT SOMETHING ELSE
-        j.insert(0, {'full_text' : '%s' % get_weather(), 'name' : 'weather'})
-        j.insert(0, {'full_text' : '%s' % get_music(), 'name' : 'music'})
+        j.insert(0, {'full_text': '%s' % get_weather(), 'name': 'weather'})
+        j.insert(0, {'full_text': '%s' % get_sync_status(), 'name': 'syncd'})
+        # j.insert(0, {'full_text' : '%s' % get_music(), 'name' : 'music'})
         # and echo back new encoded json
         print_line(prefix+json.dumps(j))
