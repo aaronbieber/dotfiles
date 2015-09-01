@@ -8,8 +8,8 @@
   (define-key global-map (kbd "<s-return>") 'toggle-frame-fullscreen))
 
 (when (memq window-system '(x))
-  (add-to-list 'default-frame-alist '(font . "Fixedsys Excelsior 3.01"))
-  (set-face-attribute 'default t :font "Fixedsys Excelsior 3.01")
-  (sanityinc/set-frame-font-size 12))
+  (add-to-list 'default-frame-alist '(font . "Hack"))
+  (set-face-attribute 'default t :font "Hack")
+  (sanityinc/set-frame-font-size 10))
 
 (provide 'init-platform)
