@@ -46,7 +46,7 @@
 ;;; My own configurations, which are bundled in my dotfiles.
 (require 'project-root)
 (require 'init-utils)
-(require 'init-mac)
+(require 'init-platform)
 (require 'init-global-functions)
 (require 'init-elpa)
 (require 'init-org)
