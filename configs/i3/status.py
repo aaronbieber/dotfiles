@@ -34,7 +34,8 @@ def is_syncd(repo):
 
     return 'done' in line \
         or 'ready' in line \
-        or 'speedup' in line
+        or 'speedup' in line \
+        or 'Watching' in line
 
 def get_sync_status():
     """Get the status of realsync for my three repos."""
