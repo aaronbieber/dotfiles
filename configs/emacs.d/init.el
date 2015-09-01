@@ -309,6 +309,7 @@ is the buffer location at which the function was found."
  '(lpr-page-header-switches (quote ("-h" "%s" "-F" "-l 65")))
  '(magit-branch-arguments nil)
  '(org-agenda-files (quote ("~/Dropbox/org/")))
+ '(magit-push-always-verify nil)
  '(org-blank-before-new-entry (quote ((heading) (plain-list-item))))
  '(org-directory "~/Dropbox/org")
  '(org-mobile-directory "~/Dropbox/org/mobile")
