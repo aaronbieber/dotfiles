@@ -8,7 +8,7 @@
   (defun gtags-reindex ()
     "Kick off gtags reindexing."
     (interactive)
-    (let* ((root-path (project-root))
+    (let* ((root-path (vc-find-root (buffer-file-name) ".git"))
            (gtags-path (concat root-path "GTAGS")))
       (gtags-reindex-process root-path)))
 
