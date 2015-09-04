@@ -26,24 +26,35 @@
       (air--rbt-run-command command)))
 
   (defun my-php-lineup-arglist-intro (langelem)
+    "Align the first argument of a multi-line argument list.
+
+Each argument is indented to two times the basic offset."
     (save-excursion
       (goto-char (cdr langelem))
       (vector (+ (current-column) (* 2 c-basic-offset)))))
 
   (defun my-php-lineup-arglist-close (langelem)
+    "Align the close paren of a multi-line argument.
+
+The close paren aligns with the level of the surrounding code (the
+same as the line where the arglist is opened)."
     (save-excursion
       (goto-char (c-langelem-pos langelem))
       (vector (current-column))))
 
   (defun my-php-lineup-arglist-cont-nonempty (langelem)
-    "Align continued arglist lines to two times the basic offset from langelem."
+    "Align the remaining arguments in a multi-line list.
+
+Each argument aligns to to two times the basic offset from langelem."
     (save-excursion
       (goto-char (c-langelem-pos langelem))
       (vector (+ (current-column) (* 2 c-basic-offset)))))
 
   (defun my-php-lineup-statement-cont (langelem)
-    "Align continued statement lines in PHP."
-    (message (buffer-substring-no-properties (line-beginning-position) (line-end-position)))
+    "Align continued statement lines in PHP.
+
+When continuing method calls on an object on separate lines, indent to
+two times the basic offset."
     (save-excursion
       (back-to-indentation)
       (if (search-forward "->" (line-end-position) t)
