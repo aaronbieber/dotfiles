@@ -131,6 +131,6 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
   (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
   ;; My own Ex commands.
-  (evil-ex-define-cmd "om" 'om-status))
+  (evil-ex-define-cmd "om" 'octopress-status))
 
 (provide 'init-evil)
