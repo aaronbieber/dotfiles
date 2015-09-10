@@ -1,5 +1,6 @@
 (when (and (maybe-require-package 'org)
-           (maybe-require-package 'evil-leader))
+           (maybe-require-package 'evil-leader)
+           (maybe-require-package 'evil))
 
   (setq org-agenda-text-search-extra-files '(agenda-archives))
   (setq org-agenda-files '("~/Dropbox/org/"))
@@ -14,6 +15,11 @@
     "a"  'org-agenda
     "ns" 'org-narrow-to-subtree
     "$"  'org-archive-subtree)
+
+  (evil-define-key 'normal org-mode-map (kbd "C-<") 'org-metaleft)
+  (evil-define-key 'normal org-mode-map (kbd "C->") 'org-metaright)
+  (evil-define-key 'insert org-mode-map (kbd "C-<") 'org-metaleft)
+  (evil-define-key 'insert org-mode-map (kbd "C->") 'org-metaright)
 
   (add-hook 'org-mode-hook
             (lambda ()
