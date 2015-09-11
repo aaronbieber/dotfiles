@@ -308,6 +308,7 @@ is the buffer location at which the function was found."
  '(org-agenda-files (quote ("~/Dropbox/org/")))
  '(org-blank-before-new-entry (quote ((heading) (plain-list-item))))
  '(org-directory "~/Dropbox/org")
+ '(org-enforce-todo-dependencies t)
  '(org-mobile-directory "~/Dropbox/org/mobile")
  '(org-mobile-inbox-for-pull "~/Dropbox/org/mobile/capture.org")
  '(package-selected-packages
