@@ -53,6 +53,7 @@
 (require 'init-w3m)
 (require 'init-php)
 (require 'init-powerline)
+(require 'init-flycheck)
 
 (maybe-require-package 'wgrep)
 (maybe-require-package 'wgrep-ag)
@@ -74,7 +75,6 @@
 (maybe-require-package 'auto-complete)
 (maybe-require-package 'dictionary)
 (maybe-require-package 'emmet-mode)
-(maybe-require-package 'flycheck)
 (maybe-require-package 'which-key)
 (maybe-require-package 'helm)
 (maybe-require-package 'helm-projectile)

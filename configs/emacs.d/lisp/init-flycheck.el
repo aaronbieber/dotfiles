@@ -4,9 +4,11 @@
   ;; Flycheck mode:
   (add-hook 'flycheck-mode-hook
             (lambda ()
-              (evil-define-key 'normal flycheck-mode-map (kbd "]e") 'flycheck-next-error)
-              (evil-define-key 'normal flycheck-mode-map (kbd "[e") 'flycheck-previous-error)
-              (evil-leader/set-key-for-mode 'flycheck-mode (kbd "e") 'flycheck-list-errors))
+              (when (maybe-require-package 'evil)
+                (evil-define-key 'normal flycheck-mode-map (kbd "]e") 'flycheck-next-error)
+                (evil-define-key 'normal flycheck-mode-map (kbd "[e") 'flycheck-previous-error))
+              (when (maybe-require-package 'evil-leader)
+                (evil-leader/set-key-for-mode 'flycheck-mode (kbd "e") 'flycheck-list-errors)))
 
   ;; Override default flycheck triggers
   (setq flycheck-check-syntax-automatically '(save idle-change mode-enabled)
@@ -14,6 +16,6 @@
         flycheck-disabled-checkers '(php-phpmd)
         flycheck-phpcs-standard "CSNStores")
 
-  (setq flycheck-display-errors-function #'flycheck-display-error-messages-unless-error-list))
+  (setq flycheck-display-errors-function #'flycheck-display-error-messages-unless-error-list)))
 
 (provide 'init-flycheck)
