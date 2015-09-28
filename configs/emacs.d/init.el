@@ -234,6 +234,9 @@
                                   (define-key twittering-mode-map (kbd "C-c C-a") 'twittering-favorite)
                                   (define-key twittering-mode-map (kbd ",b") 'helm-mini)))
 
+(add-hook 'twittering-edit-mode-hook (lambda ()
+                                       (flyspell-mode)))
+
 ;;; Let me move the selection like a normal human in the Grizzl results buffer.
 (add-hook 'grizzl-mode-hook (lambda ()
                               (define-key *grizzl-keymap* (kbd "C-j") 'grizzl-set-selection-1)
