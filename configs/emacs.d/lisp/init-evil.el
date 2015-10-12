@@ -12,6 +12,7 @@
     "a=" 'my-align-single-equals
     "b"  'helm-mini             ;; Switch to another buffer
     "B"  'magit-blame-toggle
+    "c"  'comment-dwim
     "d"  (lambda () (interactive) (evil-ex-call-command nil "bdelete" nil))
     "D"  'open-current-line-in-codebase-search
     "f"  'helm-imenu            ;; Jump to function in buffer
