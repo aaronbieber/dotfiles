@@ -65,11 +65,13 @@ two times the basic offset."
   (c-add-style "wf-php"
                '("php"
                  (c-basic-offset . 2)
-                 (c-offsets-alist . ((arglist-intro . my-php-lineup-arglist-intro)
-                                     (arglist-close . my-php-lineup-arglist-close)
-                                     (arglist-cont-nonempty . my-php-lineup-arglist-cont-nonempty)
+                 (c-echo-syntactic-information-p . t)
+                 (c-comment-only-line-offset . (0 . 0))
+                 (c-offsets-alist . ((arglist-intro . ++)
+                                     (arglist-cont . 0)
+                                     (arglist-cont-nonempty . ++)
                                      (statement-cont . my-php-lineup-statement-cont)
-                                     (topmost-intro-cont . my-php-lineup-statement-cont)))))
+                                     (topmost-intro-cont . ++)))))
 
   ;; Configure things for PHP usage.
   ;; We can bring back fci-mode if we use @purcell's workaround found here:
