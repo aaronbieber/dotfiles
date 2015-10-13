@@ -6,7 +6,7 @@
   (setq org-agenda-files '("~/Dropbox/org/"))
 
   (evil-leader/set-key-for-mode 'org-mode
-    "t"  'org-set-tags
+    "t"  'org-time-stamp-inactive
     "p"  '(lambda ()
             (interactive)
             (org-insert-property-drawer))
