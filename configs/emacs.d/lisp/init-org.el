@@ -1,3 +1,9 @@
+;;; init-org.el --- Set up Org Mode
+;;; Commentary:
+
+;; Basic Org Mode configuration, assuming presence of Evil & Evil Leader.
+
+;;; Code:
 (when (and (maybe-require-package 'org)
            (maybe-require-package 'evil-leader)
            (maybe-require-package 'evil))
@@ -30,3 +36,4 @@
               (flyspell-mode))))
 
 (provide 'init-org)
+;;; init-org.el ends here
