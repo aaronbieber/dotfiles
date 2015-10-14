@@ -73,9 +73,16 @@ def get_weather():
         weather = "\n".join(fp.readlines())
 
     m = re.search('Temperature: (.*)', weather)
-    temp = m.group(1)
+    if m == None:
+        temp = ""
+    else:
+        temp = m.group(1)
+
     m = re.search('Sky conditions: (.*)', weather)
-    cond = m.group(1)
+    if m == None:
+        cond = ""
+    else:
+        cond = m.group(1)
 
     return "%s - %s" % (temp, cond)
 
