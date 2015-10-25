@@ -36,7 +36,8 @@
 (setq visible-bell t)
 
 ;;; File type overrides.
-(add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.html$" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.twig$" . web-mode))
 
 ;;; My own configurations, which are bundled in my dotfiles.
 (require 'project-root)
