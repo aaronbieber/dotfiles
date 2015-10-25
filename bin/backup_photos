@@ -1,0 +1,63 @@
+#!/usr/bin/env python
+
+# Back up all of my photos.
+
+import sys
+import os
+import subprocess
+import tempfile
+import time
+import io
+
+try:
+    from ansicolor import red, green, blue
+except ImportError:
+    print("Could not load `ansicolor'; ensure that the module is installed.")
+
+all_jobs = [("/Volumes/Arcturus/Pictures/Lightroom/",
+             "/Volumes/Ares/Pictures/Lightroom/"),
+            ("/Volumes/Arcturus/Pictures/Photography/",
+             "/Volumes/Ares/Pictures/Photography/"),
+            ("/Volumes/Arcturus/Pictures/Lightroom/",
+             "/Volumes/Pictures/Lightroom/"),
+            ("/Volumes/Arcturus/Pictures/Photography/",
+             "/Volumes/Pictures/Photography/")]
+
+#all_locations = [path for job in jobs for path in job]
+jobs = []
+
+print("Checking for sync locations...")
+
+for job in all_jobs:
+    if not os.path.exists(job[0]) \
+       or not os.path.exists(job[1]):
+        print(red("Excluding %s -> %s." % (job[0], job[1])))
+        continue
+    else:
+        jobs.append(job)
+        print(green("Including %s -> %s." % (job[0], job[1])))
+
+for job in jobs:
+    print("Syncing %s to %s..." % (job[0], job[1]))
+
+    process = subprocess.Popen(["rsync",
+                                "-Waiv",
+                                "--no-p",
+                                "--delete",
+                                job[0],
+                                job[1]],
+                               stdout=subprocess.PIPE,
+                               bufsize=1)
+    while process.poll() is None:
+        sys.stdout.write("> %s" % process.stdout.readline())
+
+    tail = process.communicate()[0]
+    if len(tail):
+        print("> %s" % process.communicate()[0])
+
+    if process.returncode == 0:
+        print(green("Sync completed successfully."))
+    else:
+        print(red("Sync exited with non-zero status."))
+
+    process = None
