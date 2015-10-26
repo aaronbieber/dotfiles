@@ -26,10 +26,10 @@
   (evil-define-key 'normal org-mode-map (kbd "C->") 'org-metaright)
   (evil-define-key 'insert org-mode-map (kbd "C-<") 'org-metaleft)
   (evil-define-key 'insert org-mode-map (kbd "C->") 'org-metaright)
-  (define-key org-mode-map (kbd "C-c ,") 'org-time-stamp-inactive)
 
   (add-hook 'org-mode-hook
             (lambda ()
+              (define-key org-mode-map (kbd "C-c ,") 'org-time-stamp-inactive)
               (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle)
               (evil-define-key 'normal org-mode-map (kbd "C-\\") 'org-insert-heading)
               (evil-define-key 'insert org-mode-map (kbd "C-\\") 'org-insert-heading)
