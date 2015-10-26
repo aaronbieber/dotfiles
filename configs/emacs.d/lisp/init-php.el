@@ -57,7 +57,10 @@ When continuing method calls on an object on separate lines, indent to
 two times the basic offset."
     (save-excursion
       (back-to-indentation)
-      (if (search-forward "->" (line-end-position) t)
+      ;; Method calls and Booleans are indented to 2x basic offset.
+      (if (or (search-forward "->" (line-end-position) t)
+              (search-forward "&&" (line-end-position) t)
+              (search-forward "||" (line-end-position) t))
           (* 2 c-basic-offset)
         (php-lineup-string-cont langelem))))
 
