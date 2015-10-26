@@ -310,7 +310,7 @@ is the buffer location at which the function was found."
  '(magit-branch-arguments nil)
  '(magit-push-always-verify nil)
  '(octopress-blog-root "/Users/airborne/Blog")
- '(org-agenda-files (quote ("~/Dropbox/org/")))
+ '(org-agenda-files (quote ("~/Dropbox/org/")) t)
  '(org-blank-before-new-entry (quote ((heading) (plain-list-item))))
  '(org-directory "~/Dropbox/org")
  '(org-enforce-todo-dependencies t)
