@@ -165,6 +165,11 @@
           (lambda ()
             (define-key emacs-lisp-mode-map (kbd "<C-return>") 'eval-last-sexp)))
 
+;;; Python mode:
+(add-hook 'python-mode-hook
+          (lambda ()
+            (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
+
 ;;; YAsnippet
 (require 'yasnippet)
 (setq yas-snippet-dirs '("~/.emacs.d/snippets"
