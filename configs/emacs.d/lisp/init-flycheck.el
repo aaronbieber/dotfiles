@@ -1,3 +1,6 @@
+;;; init-flycheck.el --- Initialize Flycheck
+;;; Commentary:
+;;; Code:
 (when (maybe-require-package 'flycheck)
   (add-hook 'after-init-hook 'global-flycheck-mode)
 
@@ -8,7 +11,7 @@
                 (evil-define-key 'normal flycheck-mode-map (kbd "]e") 'flycheck-next-error)
                 (evil-define-key 'normal flycheck-mode-map (kbd "[e") 'flycheck-previous-error))
               (when (maybe-require-package 'evil-leader)
-                (evil-leader/set-key-for-mode 'flycheck-mode (kbd "e") 'flycheck-list-errors)))
+                (evil-leader/set-key (kbd "e") 'flycheck-list-errors)))
 
   ;; Override default flycheck triggers
   (setq flycheck-check-syntax-automatically '(save idle-change mode-enabled)
@@ -19,3 +22,4 @@
   (setq flycheck-display-errors-function #'flycheck-display-error-messages-unless-error-list)))
 
 (provide 'init-flycheck)
+;;; init-flycheck.el ends here
