@@ -53,6 +53,7 @@
   (setq-default evil-symbol-word-search t)
 
   (evil-set-initial-state 'magit-log-edit-mode 'insert)
+  (evil-set-initial-state 'git-rebase-mode 'emacs)
   (evil-set-initial-state 'sunshine-mode 'emacs)
   (evil-set-initial-state 'octopress-mode 'emacs)
   (evil-set-initial-state 'octopress-server-mode 'emacs)
