@@ -319,6 +319,7 @@ is the buffer location at which the function was found."
  '(org-blank-before-new-entry (quote ((heading) (plain-list-item))))
  '(org-directory "~/Dropbox/org")
  '(org-enforce-todo-dependencies t)
+ '(org-log-redeadline (quote time))
  '(org-log-reschedule (quote time))
  '(org-mobile-directory "~/Dropbox/org/mobile")
  '(org-mobile-inbox-for-pull "~/Dropbox/org/mobile/capture.org")
