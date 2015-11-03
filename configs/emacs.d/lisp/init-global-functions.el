@@ -1,4 +1,6 @@
-;;; Global functions mostly used by mappings.
+;;; init-global-functions.el --- Global functions mostly used by mappings.
+;;; Commentary:
+;;; Code:
 
 (require 'htmlfontify)
 (defun fontify-and-browse ()
@@ -22,7 +24,7 @@
   (call-interactively 'load-theme))
 
 (defun cycle-powerline-separators (&optional reverse)
-  "Set Powerline separators in turn. If REVERSE is not nil, go backwards."
+  "Set Powerline separators in turn.  If REVERSE is not nil, go backwards."
   (interactive)
   (let* ((fn (if reverse 'reverse 'identity))
          (separators (funcall fn '("arrow" "arrow-fade" "slant"
@@ -68,17 +70,6 @@
 Repeated invocations toggle between the two most recently open buffers."
   (interactive)
   (switch-to-buffer (other-buffer (current-buffer) 1)))
-
-;;; Functions for working with the X clipboard, which is very handy.
-(defun yank-to-x-clipboard (&optional start end)
-  (interactive "r")
-  ;; Force the command to output everything to the default output buffer and don't show it.
-  (shell-command-on-region start end "/usr/bin/xsel --clipboard -i > /dev/null" nil nil nil nil)
-  (deactivate-mark))
-
-(defun put-from-x-clipboard ()
-  (interactive)
-  (insert (shell-command-to-string "xsel --clipboard")))
 
 (defun selective-display-increase ()
   (interactive)
@@ -130,3 +121,4 @@ Repeated invocations toggle between the two most recently open buffers."
                search-term)))
 
 (provide 'init-global-functions)
+;;; init-global-functions.el ends here
