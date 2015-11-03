@@ -1,4 +1,6 @@
-;;; Stuff for line numbers.
+;;; init-linum.el --- Stuff for line numbers.
+;;; Commentary:
+;;; Code:
 (defface linum-current
   '((t (:inherit linum :weight bold :underline "#555")))
   "The current line number.")
@@ -34,3 +36,4 @@
 (add-hook 'linum-before-numbering-hook 'my-linum-get-format-string)
 
 (provide 'init-linum)
+;;; init-linum.el ends here
