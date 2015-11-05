@@ -106,7 +106,7 @@ Repeated invocations toggle between the two most recently open buffers."
   (let* ((line-num (number-to-string (line-number-at-pos)))
          (file-path (replace-regexp-in-string (project-root) "" (buffer-file-name)))
          (args (concat "http://dox.wayfair.com/source/xref/php/" file-path "#" line-num)))
-    (call-process "xdg-open" nil nil nil args)))
+    (call-process "open" nil nil nil args)))
 
 ;;; From http://beatofthegeek.com/2014/02/my-setup-for-using-emacs-as-web-browser.html
 (defun wikipedia-search (search-term)
