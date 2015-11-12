@@ -52,13 +52,17 @@
   (setq-default evil-want-C-i-jump nil)
   (setq-default evil-symbol-word-search t)
 
-  (evil-set-initial-state 'magit-log-edit-mode 'insert)
+  ;; Use Emacs mode
   (evil-set-initial-state 'git-rebase-mode 'emacs)
   (evil-set-initial-state 'sunshine-mode 'emacs)
   (evil-set-initial-state 'octopress-mode 'emacs)
   (evil-set-initial-state 'octopress-server-mode 'emacs)
   (evil-set-initial-state 'octopress-process-mode 'emacs)
+  (evil-set-initial-state 'ag-mode 'emacs)
+
+  ;; Use insert mode
   (evil-set-initial-state 'twittering-edit-mode 'insert)
+  (evil-set-initial-state 'magit-log-edit-mode 'insert)
 
   (add-to-list 'evil-buffer-regexps '("\\*magit:"))
   (add-to-list 'evil-buffer-regexps '("\\*Flycheck"))
