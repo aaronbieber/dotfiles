@@ -314,7 +314,11 @@ is the buffer location at which the function was found."
  '(org-log-redeadline (quote time))
  '(org-log-reschedule (quote time))
  '(package-selected-packages
-   (quote (zenburn-theme yasnippet web-mode sunshine sublime-themes markdown-mode magit highlight-symbol helm-projectile helm which-key emmet-mode ag avy exec-path-from-shell flycheck w3m evil-jumper yaml-mode wgrep-ag twittering-mode powerline-evil php-extras mmm-mode gtags fullframe evil-surround evil-leader evil-indent-textobject diminish dictionary auto-complete)))
+   (quote
+    (color-theme-modern bpr octopress which-key flycheck-package jinja2-mode zenburn-theme yasnippet yaml-mode wgrep-ag web-mode w3m twittering-mode sunshine sublime-themes powerline-evil php-extras mmm-mode markdown-mode magit hyde highlight-symbol helm-projectile gtags fullframe flycheck exec-path-from-shell evil-surround evil-leader evil-jumper evil-indent-textobject emmet-mode diminish dictionary circe avy auto-complete ag)))
+ '(python-indent-offset 4)
+ '(safe-local-variable-values (quote ((no-byte-compile t) (require-final-newline))))
+ '(scss-compile-at-save nil)
  '(sunshine-location "Brookline, MA")
  '(sunshine-show-icons t)
  '(twittering-use-native-retweet t)
