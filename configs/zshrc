@@ -89,48 +89,14 @@ function nicediff {
   diff -W `tput cols` -y "$@" | colordiff | less
 }
 
-# Perform a visual diff of conflicted source files in vim.
-function vdiff () {
-	if [ $# -eq 0 ]; then
-		echo "Usage: vdiff FILENAME"
-		return 1
-	else
-		BASE_FILE="$1"
-		MINE_FILE="$1.working"
+function serve {
+  if [ $# -gt 0 ]; then
+    port="$1"
+  else
+    port=8000
+  fi
 
-		if [ ! -f "$MINE_FILE" ]; then
-			echo "The base file given does not have a .mine variation."
-			return 1
-		fi
-
-		# Get all of the file variations and find the numbered ones.
-    FILES=$(ls $1.merge-*.r*)
-    files=("${(f)FILES}")
-		#read V1_FILE V2_FILE <<< $(ls -1 $1.merge-*.r*)
-
-    if [[ $#files -lt 2 ]]; then
-			echo "I couldn't find revision variations ($1.merge-*.r*)."
-			return 1
-    fi
-
-		#if [ ! -f "$V1_FILE" ] || [ ! -f "$V2_FILE" ]; then
-		#	echo "I can't find revision variations ($1.r*)."
-		#	return 1
-		#fi
-
-		# Re-shuffle them if they're not in numerical order.
-		if [[ "${files[1]##*.r}" -gt "${files[2]##*.r}" ]]; then
-			LEFT_FILE=$files[2]
-			RIGHT_FILE=$files[1]
-		else
-			LEFT_FILE=$files[1]
-			RIGHT_FILE=$files[2]
-		fi
-
-		#echo "Starting vimdiff with $LEFT_FILE -> $MINE_FILE -> $RIGHT_FILE"
-		#vim -d "$LEFT_FILE" "$MINE_FILE" "$RIGHT_FILE"
-		vim "$1" -c "split $RIGHT_FILE | diffthis | vert split $MINE_FILE | diffthis | vert split $LEFT_FILE | diffthis"
-	fi
+  which python > /dev/null && python -m SimpleHTTPServer $port
 }
 
 # In case you want to see a new MOTD, you can just call this function.
