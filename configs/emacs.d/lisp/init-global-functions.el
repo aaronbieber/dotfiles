@@ -23,6 +23,22 @@
   (mapcar #'disable-theme custom-enabled-themes)
   (call-interactively 'load-theme))
 
+(defun func-region (func start end)
+  "Run FUNC over the region between START and END in current buffer."
+  (save-excursion
+    (let ((text (delete-and-extract-region start end)))
+      (insert (funcall func text)))))
+
+(defun hex-region (start end)
+  "Hexify (URL encod) the region between START and END in current buffer."
+  (interactive "r")
+  (func-region #'url-hexify-string start end))
+
+(defun unhex-region (start end)
+  "Unhex (URL decode) the region between START and END in current buffer."
+  (interactive "r")
+  (func-region #'url-unhex-string start end))
+
 (defun cycle-powerline-separators (&optional reverse)
   "Set Powerline separators in turn.  If REVERSE is not nil, go backwards."
   (interactive)
