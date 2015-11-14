@@ -18,5 +18,9 @@
               (set-face-attribute 'default nil :font "Hack")
               (sanityinc/set-frame-font-size 16))))
 
+;; Display emoji on Macs where the font is already there.
+(when (memq window-system '(mac))
+  (set-fontset-font t 'unicode "Apple Color Emoji" nil 'prepend))
+
 (provide 'init-platform)
 ;;; init-platform.el ends here
