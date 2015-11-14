@@ -72,8 +72,13 @@
 (when (maybe-require-package 'avy)
   (setq avy-background t))
 
+(when (maybe-require-package 'company)
+  (add-hook 'company-mode-hook (lambda ()
+                                 (define-key company-active-map (kbd "tab") 'company-select-next)
+                                 (define-key company-active-map (kbd "<backtab>") 'company-select-previous)))
+  (global-company-mode))
+
 (maybe-require-package 'ag)
-(maybe-require-package 'auto-complete)
 (maybe-require-package 'dictionary)
 (maybe-require-package 'emmet-mode)
 (maybe-require-package 'which-key)
@@ -128,15 +133,6 @@
 (setq backup-directory-alist (list (cons "." backup-dir)))
 (setq make-backup-files nil)
 (setq-default highlight-symbol-idle-delay 1.5)
-
-;;(global-auto-complete-mode t)
-(require 'auto-complete-config)
-(ac-config-default)
-(ac-set-trigger-key "TAB")
-(ac-set-trigger-key "<tab>")
-(setq-default ac-dwim nil)
-(setq-default ac-use-menu-map t)
-(define-key ac-menu-map (kbd "<backtab>") 'ac-previous)
 
 (defvar projectile-enable-caching t
   "Tell Projectile to cache project file lists.")
@@ -299,7 +295,10 @@ is the buffer location at which the function was found."
  '(ag-highlight-search t)
  '(ag-reuse-buffers t)
  '(ag-reuse-window t)
+ '(company-idle-delay 0.5)
+ '(company-selection-wrap-around t)
  '(custom-safe-themes t)
+ '(global-company-mode t)
  '(helm-autoresize-mode t)
  '(helm-buffer-max-length 40)
  '(js-indent-level 2)
