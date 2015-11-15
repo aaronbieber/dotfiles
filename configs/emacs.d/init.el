@@ -73,9 +73,8 @@
   (setq avy-background t))
 
 (when (maybe-require-package 'company)
-  (add-hook 'company-mode-hook (lambda ()
-                                 (define-key company-active-map (kbd "tab") 'company-select-next)
-                                 (define-key company-active-map (kbd "<backtab>") 'company-select-previous)))
+  (eval-after-load 'company '(progn
+                               (define-key company-active-map [tab] 'company-complete-common-or-cycle)))
   (global-company-mode))
 
 (maybe-require-package 'ag)
