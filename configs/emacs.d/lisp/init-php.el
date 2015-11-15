@@ -86,7 +86,7 @@ two times the basic offset."
     (setq flycheck-disabled-checkers '(php-phpmd))
 
     (c-set-style "wf-php")
-    (turn-on-eldoc-mode)
+    (eldoc-mode t)
     (highlight-symbol-mode)
 
     (turn-on-auto-fill)
