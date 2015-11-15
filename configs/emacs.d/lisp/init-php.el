@@ -89,6 +89,10 @@ two times the basic offset."
     (eldoc-mode t)
     (highlight-symbol-mode)
 
+    (when (fboundp 'php-extras-eldoc-documentation-function)
+      (add-function :before-until (local 'eldoc-documentation-function)
+                    #'php-extras-eldoc-documentation-function))
+
     (turn-on-auto-fill)
     (set-fill-column 120)
     (add-to-list 'write-file-functions 'delete-trailing-whitespace)
