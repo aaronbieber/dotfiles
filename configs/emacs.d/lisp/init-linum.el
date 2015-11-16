@@ -15,8 +15,6 @@
 
 (defvar my-linum-current-line-number 0)
 
-(setq linum-format 'my-linum-relative-line-numbers)
-
 (defun my-linum-relative-line-numbers (line-number)
   (let* ((offset (abs (- line-number my-linum-current-line-number)))
          (linum-display-value (if (= 0 offset)
@@ -30,6 +28,9 @@
   (let ((my-linum-current-line-number (line-number-at-pos)))
     ad-do-it))
 (ad-activate 'linum-update)
+
+;;; This is the actual line number format definition.
+(setq linum-format 'my-linum-relative-line-numbers)
 
 ;;; Set up relative line numbering to mimic `:set number relativenumber`.
 (global-linum-mode t)
