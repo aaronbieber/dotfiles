@@ -17,11 +17,15 @@
   (setq linum-format 'my-linum-relative-line-numbers))
 (ad-activate 'load-theme)
 
-(defun load-only-theme ()
-  "Disable all themes and then load a single theme interactively."
-  (interactive)
+(defun load-only-theme (theme)
+  "Disable all themes and then load THEME interactively."
+  (interactive
+   (list
+    (completing-read "Load custom theme: "
+                             (mapcar 'symbol-name
+                                     (custom-available-themes)))))
   (mapcar #'disable-theme custom-enabled-themes)
-  (call-interactively 'load-theme))
+  (load-theme (intern theme) nil nil))
 
 (defun func-region (func start end)
   "Run FUNC over the region between START and END in current buffer."
