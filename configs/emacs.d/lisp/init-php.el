@@ -89,6 +89,10 @@ two times the basic offset."
     (eldoc-mode t)
     (highlight-symbol-mode)
 
+    (when (boundp 'company-backends)
+      (setq-local company-backends
+                  '((company-dabbrev-code php-extras-company))))
+
     (when (fboundp 'php-extras-eldoc-documentation-function)
       (add-function :before-until (local 'eldoc-documentation-function)
                     #'php-extras-eldoc-documentation-function))
