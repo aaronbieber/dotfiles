@@ -334,6 +334,8 @@ is the buffer location at which the function was found."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :background "yellow2" :foreground "#c82829"))))
+ '(company-tooltip-selection ((t (:background "yellow2"))))
  '(term-color-blue ((t (:background "DodgerBlue2" :foreground "DodgerBlue2"))))
  '(term-color-cyan ((t (:background "CadetBlue2" :foreground "CadetBlue2"))))
  '(term-color-green ((t (:background "LimeGreen" :foreground "LimeGreen")))))
