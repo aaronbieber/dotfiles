@@ -439,7 +439,6 @@ is the buffer location at which the function was found."
 (put 'narrow-to-region 'disabled nil)
 (load-theme 'sanityinc-tomorrow-day t)
 (require 'init-linum)
-(require 'linum-off)
 
 (when (maybe-require-package 'diminish)
   (require 'diminish)
