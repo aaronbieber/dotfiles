@@ -20,7 +20,8 @@
 ;;; Pin some packages to specific repositories.
 (setq package-pinned-packages '((gtags . "marmalade")
                                 (php-extras . "marmalade")
-                                (magit . "melpa-stable")))
+                                (magit . "melpa-stable")
+                                (magit-popup . "melpa-stable")))
 
 
 ;; If gpg cannot be found, signature checking will fail, so we
