@@ -301,6 +301,10 @@ is the buffer location at which the function was found."
  '(helm-autoresize-mode t)
  '(helm-buffer-max-length 40)
  '(js-indent-level 2)
+ '(linum-delay t)
+ '(linum-disabled-modes-list
+   (quote
+    (eshell-mode wl-summary-mode compilation-mode org-agenda-mode org-mode text-mode dired-mode doc-view-mode image-mode)))
  '(linum-format " %7i ")
  '(lpr-page-header-switches (quote ("-h" "%s" "-F" "-l 65")))
  '(magit-branch-arguments nil)
@@ -435,6 +439,7 @@ is the buffer location at which the function was found."
 (put 'narrow-to-region 'disabled nil)
 (load-theme 'sanityinc-tomorrow-day t)
 (require 'init-linum)
+(require 'linum-off)
 
 (when (maybe-require-package 'diminish)
   (require 'diminish)

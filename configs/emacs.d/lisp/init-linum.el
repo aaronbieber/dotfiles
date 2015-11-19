@@ -33,7 +33,6 @@
 (setq linum-format 'my-linum-relative-line-numbers)
 
 ;;; Set up relative line numbering to mimic `:set number relativenumber`.
-(global-linum-mode t)
 (add-hook 'linum-before-numbering-hook 'my-linum-get-format-string)
 
 (provide 'init-linum)
