@@ -13,15 +13,20 @@
     "Kick off gtags reindexing."
     (interactive)
     (let* ((root-path (expand-file-name (vc-git-root (buffer-file-name))))
-           (gtags-path (concat root-path "GTAGS")))
-      (gtags-reindex-process root-path)))
+           (gtags-filename (expand-file-name "GTAGS" root-path)))
+      (if (file-exists-p gtags-filename)
+          (gtags-index-update root-path)
+        (gtags-index-initial root-path))))
 
-  (defun gtags-reindex-process (path)
-    "Internal function triggered by gtags-reindex that recursively generates GTAGS."
-    (let ((cmd (concat "cd " (shell-quote-argument path) " && "
-                       "find . -type f -iname '*php' | "
-                       "gtags -v -f -")))
-    (bpr-spawn cmd))))
+  (defun gtags-index-initial (path)
+    "Generate initial GTAGS files for PATH."
+    (let ((bpr-process-directory path))
+      (bpr-spawn "gtags")))
+
+  (defun gtags-index-update (path)
+    "Update GTAGS in PATH."
+    (let ((bpr-process-directory path))
+      (bpr-spawn "global -uv")))
 
 (provide 'init-gtags)
 ;;; init-gtags.el ends here
