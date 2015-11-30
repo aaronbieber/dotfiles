@@ -25,7 +25,9 @@
                              (mapcar 'symbol-name
                                      (custom-available-themes)))))
   (mapcar #'disable-theme custom-enabled-themes)
-  (load-theme (intern theme) nil nil))
+  (load-theme (intern theme) nil nil)
+  (when (fboundp 'powerline-reset)
+    (powerline-reset)))
 
 (defun func-region (func start end)
   "Run FUNC over the region between START and END in current buffer."
