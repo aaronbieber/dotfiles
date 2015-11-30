@@ -26,7 +26,7 @@
   (defun gtags-index-update (path)
     "Update GTAGS in PATH."
     (let ((bpr-process-directory path))
-      (bpr-spawn "global -uv")))
+      (bpr-spawn "global -uv"))))
 
 (provide 'init-gtags)
 ;;; init-gtags.el ends here
