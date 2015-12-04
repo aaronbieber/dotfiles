@@ -19,6 +19,7 @@
 
 (defun chrome-reload ()
   "Use osascript to tell Google Chrome to reload."
+  (interactive)
   (let ((cmd (concat "osascript -e 'tell application \"Google Chrome\" "
                      "to reload (active tab of (window 1))'")))
     (shell-command cmd "*Reload Chrome")))

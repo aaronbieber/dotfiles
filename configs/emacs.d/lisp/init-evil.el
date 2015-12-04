@@ -23,7 +23,8 @@
     "nw" 'widen
     "o"  'delete-other-windows  ;; C-w o
     "s"  'ag-project            ;; Ag search from project's root
-    "r"  (lambda () (interactive) (font-lock-fontify-buffer) (redraw-display))
+    "r"  'chrome-reload
+    "R"  (lambda () (interactive) (font-lock-fontify-buffer) (redraw-display))
     "S"  'delete-trailing-whitespace
     "t"  'gtags-reindex
     "T"  'gtags-find-tag
