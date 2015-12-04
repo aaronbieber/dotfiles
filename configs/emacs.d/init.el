@@ -95,6 +95,7 @@
 (maybe-require-package 'zenburn-theme)
 (maybe-require-package 'mmm-mode)
 (maybe-require-package 'yaml-mode)
+(maybe-require-package 'pandoc-mode)
 
 (require 'mmm-mode)
 (setq mmm-global-mode 'maybe)
