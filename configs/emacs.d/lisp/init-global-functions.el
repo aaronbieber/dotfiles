@@ -17,6 +17,12 @@
   (setq linum-format 'my-linum-relative-line-numbers))
 (ad-activate 'load-theme)
 
+(defun chrome-reload ()
+  "Use osascript to tell Google Chrome to reload."
+  (let ((cmd (concat "osascript -e 'tell application \"Google Chrome\" "
+                     "to reload (active tab of (window 1))'")))
+    (shell-command cmd "*Reload Chrome")))
+
 (defun load-only-theme (theme)
   "Disable all themes and then load THEME interactively."
   (interactive
