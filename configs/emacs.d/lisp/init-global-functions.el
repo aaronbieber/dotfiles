@@ -17,11 +17,15 @@
   (setq linum-format 'my-linum-relative-line-numbers))
 (ad-activate 'load-theme)
 
-(defun chrome-reload ()
-  "Use osascript to tell Google Chrome to reload."
-  (interactive)
+(defun chrome-reload (&optional focus)
+  "Use osascript to tell Google Chrome to reload.
+
+If optional argument FOCUS is non-nil, give Chrome the focus as well."
+  (interactive "P")
   (let ((cmd (concat "osascript -e 'tell application \"Google Chrome\" "
-                     "to reload (active tab of (window 1))'")))
+                     "to (reload (active tab of (window 1)))"
+                     (if focus " & activate" "")
+                     "'")))
     (shell-command cmd "*Reload Chrome")))
 
 (defun load-only-theme (theme)
