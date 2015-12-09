@@ -287,6 +287,8 @@ is the buffer location at which the function was found."
   (interactive)
   (helm-other-buffer '(helm-c-source-projectile-files-list) "*Project Files*"))
 
+(setq octopress-blog-root (expand-file-name "~/Blog"))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -310,7 +312,6 @@ is the buffer location at which the function was found."
  '(lpr-page-header-switches (quote ("-h" "%s" "-F" "-l 65")))
  '(magit-branch-arguments nil)
  '(magit-push-always-verify nil)
- '(octopress-blog-root "/Users/airborne/Blog")
  '(org-agenda-files (quote ("~/Dropbox/org/")))
  '(org-blank-before-new-entry (quote ((heading) (plain-list-item))))
  '(org-default-notes-file "~/Dropbox/org/notes.org")
