@@ -88,6 +88,7 @@ two times the basic offset."
     (c-set-style "wf-php")
     (eldoc-mode t)
     (highlight-symbol-mode)
+    (electric-pair-local-mode)
 
     (when (boundp 'company-backends)
       (setq-local company-backends
