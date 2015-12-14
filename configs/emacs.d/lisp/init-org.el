@@ -4,13 +4,12 @@
 ;; Basic Org Mode configuration, assuming presence of Evil & Evil Leader.
 
 ;;; Code:
-(when (and (maybe-require-package 'org)
-           (maybe-require-package 'evil-leader)
-           (maybe-require-package 'evil))
-
+(use-package org
+  :ensure t
+  :defer t
+  :config
   (setq org-agenda-text-search-extra-files '(agenda-archives))
   (setq org-agenda-files '("~/Dropbox/org/"))
-
   (evil-leader/set-key-for-mode 'org-mode
     "t"  'org-time-stamp-inactive
     "p"  '(lambda ()

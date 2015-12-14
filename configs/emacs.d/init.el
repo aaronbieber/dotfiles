@@ -1,3 +1,4 @@
+;;; init.el -- My Emacs configuration
 ;-*-Emacs-Lisp-*-
 
 ;;; Commentary:
@@ -6,7 +7,7 @@
 ;;
 ;;; Code:
 
-;(package-initialize)
+(package-initialize)
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
@@ -35,6 +36,12 @@
 (setq split-width-threshold nil)
 (setq visible-bell t)
 
+(put 'narrow-to-region 'disabled nil)
+
+(defvar backup-dir "~/.emacs.d/backups/")
+(setq backup-directory-alist (list (cons "." backup-dir)))
+(setq make-backup-files nil)
+
 ;;; File type overrides.
 (add-to-list 'auto-mode-alist '("\\.html$" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.twig$" . web-mode))
@@ -45,6 +52,13 @@
 (require 'init-platform)
 (require 'init-global-functions)
 (require 'init-elpa)
+
+(maybe-require-package 'use-package)
+(eval-when-compile
+  (require 'use-package))
+
+(require 'diminish)
+(require 'bind-key)
 (require 'init-org)
 (require 'init-fonts)
 (require 'init-gtags)
@@ -56,102 +70,140 @@
 (require 'init-powerline)
 (require 'init-flycheck)
 
-(maybe-require-package 'wgrep)
-(maybe-require-package 'wgrep-ag)
-(autoload 'wgrep-ag-setup "wgrep-ag")
-(add-hook 'ag-mode-hook 'wgrep-ag-setup)
+(use-package color-theme-sanityinc-tomorrow
+  :ensure t
+  :init
+  (load-theme 'sanityinc-tomorrow-day t))
 
-(when (maybe-require-package 'exec-path-from-shell)
+(use-package wgrep :ensure t)
+(use-package wgrep-ag
+  :ensure t
+  :commands (wgrep-ag-setup))
+(autoload 'wgrep-ag-setup "wgrep-ag")
+
+(use-package ag
+  :ensure t
+  :defer t
+  :config
+  (add-hook 'ag-mode-hook 'wgrep-ag-setup))
+
+(use-package exec-path-from-shell
+  :ensure t
+  :defer t
+  :config
   (when (memq window-system '(mac ns))
     (exec-path-from-shell-initialize)))
 
-(when (string= system-type "gnu/linux")
-      (setq browse-url-browser-function 'browse-url-generic
-            browse-url-generic-program "google-chrome"))
+(use-package helm
+  :ensure t
+  :diminish helm-mode
+  :init
+  (setq helm-buffers-fuzzy-matching t)
+  :config
+  (helm-mode 1)
+  (bind-key "S-SPC" 'helm-toggle-visible-mark helm-map)
+  (bind-key "C-k" 'helm-find-files-up-one-level helm-find-files-map))
 
-(when (maybe-require-package 'avy)
-  (setq avy-background t))
+(use-package company
+  :ensure t
+  :defer t
+  :init
+  (global-company-mode)
+  :config
+  (define-key company-active-map [tab] 'company-complete)
+  (define-key company-active-map (kbd "C-n") 'company-select-next)
+  (define-key company-active-map (kbd "C-p") 'company-select-previous))
 
-(when (maybe-require-package 'company)
-  (eval-after-load 'company '(progn
-                               (define-key company-active-map [tab] 'company-complete-common-or-cycle)))
-  (global-company-mode))
+(use-package dictionary :ensure t)
+(use-package emmet-mode :ensure t)
+(use-package flycheck :ensure t)
+(use-package helm-projectile :ensure t :defer t)
+(use-package markdown-mode :ensure t)
+(use-package php-extras :ensure t :defer t)
+(use-package sublime-themes :ensure t)
+(use-package sunshine
+  :ensure t
+  :commands sunshine-forecast)
+(use-package twittering-mode
+  :ensure t
+  :commands twit)
+(use-package web-mode :ensure t :defer t)
+(use-package zenburn-theme :ensure t :defer t)
+(use-package mmm-mode :ensure t :defer t)
+(use-package yaml-mode :ensure t :defer t)
 
-(maybe-require-package 'ag)
-(maybe-require-package 'dictionary)
-(maybe-require-package 'emmet-mode)
-(maybe-require-package 'which-key)
-(maybe-require-package 'helm)
-(maybe-require-package 'helm-projectile)
-(maybe-require-package 'highlight-symbol)
-(maybe-require-package 'magit)
-(maybe-require-package 'markdown-mode)
-(maybe-require-package 'php-extras)
-(maybe-require-package 'projectile)
-(maybe-require-package 'sublime-themes)
-(maybe-require-package 'sunshine)
-(maybe-require-package 'web-mode)
-(maybe-require-package 'yasnippet)
-(maybe-require-package 'zenburn-theme)
-(maybe-require-package 'mmm-mode)
-(maybe-require-package 'yaml-mode)
-(maybe-require-package 'pandoc-mode)
+(use-package yasnippet
+  :ensure t
+  :defer t
+  :config
+  (yas-reload-all)
+  (setq yas-snippet-dirs '("~/.emacs.d/snippets"
+                           "~/.emacs.d/remote-snippets"))
+  (setq tab-always-indent 'complete)
+  (setq yas-prompt-functions '(yas-completing-prompt
+                               yas-ido-prompt
+                               yas-dropdown-prompt))
+  (define-key yas-minor-mode-map (kbd "<escape>") 'yas-exit-snippet))
 
-(require 'mmm-mode)
-(setq mmm-global-mode 'maybe)
+(use-package which-key
+  :ensure t
+  :diminish ""
+  :config
+  (which-key-mode t))
 
-(mmm-add-classes
- '((markdown-cl
-    :submode emacs-lisp-mode
-    :face mmm-declaration-submode-face
-    :front "^```cl[\n\r]+"
-    :back "^```$")
-   (markdown-php
-    :submode php-mode
-    :face mmm-declaration-submode-face
-    :front "^```php[\n\r]+"
-    :back "^```$")))
+(use-package projectile
+  :ensure t
+  :defer t
+  :config
+  (projectile-global-mode)
+  (setq projectile-enable-caching t))
 
-(mmm-add-mode-ext-class 'markdown-mode nil 'markdown-cl)
-(mmm-add-mode-ext-class 'markdown-mode nil 'markdown-php)
+(use-package highlight-symbol
+  :ensure t
+  :defer t
+  :diminish ""
+  :config
+  (setq-default highlight-symbol-idle-delay 1.5))
 
-;;; Don't display this nag about reverting buffers.
-(setq magit-last-seen-setup-instructions "1.4.0")
+(use-package magit
+  :ensure t
+  :defer t
+  :init
+  ;; Don't display this nag about reverting buffers.
+  (setq magit-last-seen-setup-instructions "1.4.0"))
+
+(use-package mmm-mode
+  :ensure t
+  :defer t
+  :config
+  (setq mmm-global-mode 'maybe)
+  (mmm-add-classes
+   '((markdown-cl
+      :submode emacs-lisp-mode
+      :face mmm-declaration-submode-face
+      :front "^```cl[\n\r]+"
+      :back "^```$")
+     (markdown-php
+      :submode php-mode
+      :face mmm-declaration-submode-face
+      :front "^```php[\n\r]+"
+      :back "^```$")))
+  (mmm-add-mode-ext-class 'markdown-mode nil 'markdown-cl)
+  (mmm-add-mode-ext-class 'markdown-mode nil 'markdown-php))
 
 ;;; Helpers for GNUPG, which I use for encrypting/decrypting secrets.
 (require 'epa-file)
 (epa-file-enable)
 (setq-default epa-file-cache-passphrase-for-symmetric-encryption t)
 
-;;; Always use guide-key mode, it is awesome.
-(which-key-mode 1)
-
 (defvar show-paren-delay 0
   "Delay (in seconds) before matching paren is highlighted.")
 
-(defvar backup-dir "~/.emacs.d/backups/")
-(setq backup-directory-alist (list (cons "." backup-dir)))
-(setq make-backup-files nil)
-(setq-default highlight-symbol-idle-delay 1.5)
-
-(defvar projectile-enable-caching t
-  "Tell Projectile to cache project file lists.")
-(projectile-global-mode)
-;; This appears to be necessary only in Linux?
-(require 'helm-projectile)
-
-;;; Use Helm all the time.
-(setq helm-buffers-fuzzy-matching t)
-(helm-mode 1)
-
-(require 'helm)
-(define-key helm-buffer-map (kbd "S-SPC") 'helm-toggle-visible-mark)
-
-;;; Use evil surround mode in all buffers.
-(global-evil-surround-mode 1)
-
-;;; Helm mode:
-(define-key helm-find-files-map (kbd "C-k") 'helm-find-files-up-one-level)
+;;; Flycheck mode:
+(add-hook 'flycheck-mode-hook
+          (lambda ()
+            (evil-define-key 'normal flycheck-mode-map (kbd "]e") 'flycheck-next-error)
+            (evil-define-key 'normal flycheck-mode-map (kbd "[e") 'flycheck-previous-error)))
 
 ;;; Lisp interaction mode & Emacs Lisp mode:
 (add-hook 'lisp-interaction-mode-hook
@@ -165,21 +217,6 @@
 (add-hook 'python-mode-hook
           (lambda ()
             (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
-
-;;; YAsnippet
-(require 'yasnippet)
-(setq yas-snippet-dirs '("~/.emacs.d/snippets"
-                         "~/.emacs.d/remote-snippets"))
-(yas-reload-all)
-;;(define-key yas-minor-mode-map (kbd "<tab>") nil)
-;;(define-key yas-minor-mode-map (kbd "TAB") nil)
-;;(setq tab-always-indent 'yas-expand)
-;;(define-key yas-minor-mode-map (kbd "C-l") 'yas-expand)
-(define-key yas-minor-mode-map (kbd "<escape>") 'yas-exit-snippet)
-
-(setq yas-prompt-functions '(yas-completing-prompt
-                             yas-ido-prompt
-                             yas-dropdown-prompt))
 
 ;;; Magit mode (which does not open in evil-mode):
 (add-hook 'magit-mode-hook
@@ -221,7 +258,7 @@
 ;;; Emacs Lisp mode:
 (add-hook 'emacs-lisp-mode-hook
           (lambda ()
-            (yas-minor-mode-on)
+            ;(yas-minor-mode-on)
             (turn-on-eldoc-mode)
             (highlight-symbol-mode)))
 
@@ -297,13 +334,17 @@ is the buffer location at which the function was found."
  '(ag-highlight-search t)
  '(ag-reuse-buffers t)
  '(ag-reuse-window t)
+ '(ansi-color-faces-vector
+   [default bold shadow italic underline bold bold-italic bold])
+ '(ansi-color-names-vector
+   (vector "#4d4d4c" "#c82829" "#718c00" "#eab700" "#4271ae" "#8959a8" "#3e999f" "#ffffff"))
  '(company-idle-delay 0.5)
  '(company-selection-wrap-around t)
  '(custom-safe-themes t)
- '(global-company-mode t)
+ '(diary-entry-marker (quote font-lock-variable-name-face))
+ '(fci-rule-color "#d6d6d6")
  '(helm-autoresize-mode t)
  '(helm-buffer-max-length 40)
- '(js-indent-level 2)
  '(linum-delay t)
  '(linum-disabled-modes-list
    (quote
@@ -312,6 +353,7 @@ is the buffer location at which the function was found."
  '(lpr-page-header-switches (quote ("-h" "%s" "-F" "-l 65")))
  '(magit-branch-arguments nil)
  '(magit-push-always-verify nil)
+ '(octopress-blog-root "/Users/airborne/Blog")
  '(org-agenda-files (quote ("~/Dropbox/org/")))
  '(org-blank-before-new-entry (quote ((heading) (plain-list-item))))
  '(org-default-notes-file "~/Dropbox/org/notes.org")
@@ -321,20 +363,39 @@ is the buffer location at which the function was found."
  '(org-log-reschedule (quote time))
  '(package-selected-packages
    (quote
-    (magit-popup color-theme-sanityinc-tomorrow color-theme-modern bpr octopress which-key flycheck-package jinja2-mode zenburn-theme yasnippet yaml-mode wgrep-ag web-mode w3m twittering-mode sunshine sublime-themes powerline-evil php-extras mmm-mode markdown-mode magit hyde highlight-symbol helm-projectile gtags fullframe flycheck exec-path-from-shell evil-surround evil-leader evil-jumper evil-indent-textobject emmet-mode diminish dictionary circe avy auto-complete ag)))
- '(python-indent-offset 4)
- '(safe-local-variable-values (quote ((no-byte-compile t) (require-final-newline))))
- '(scss-compile-at-save nil)
+    (bpr zenburn-theme yasnippet yaml-mode which-key wgrep-ag web-mode w3m use-package twittering-mode sunshine sublime-themes powerline-evil php-extras mmm-mode markdown-mode magit highlight-symbol helm-projectile gtags fullframe flycheck-package exec-path-from-shell evil-surround evil-leader evil-jumper evil-indent-textobject emmet-mode dictionary company auto-complete ag)))
+ '(safe-local-variable-values (quote ((no-byte-compile t))))
  '(sunshine-location "Brookline, MA")
  '(sunshine-show-icons t)
  '(twittering-use-native-retweet t)
+ '(vc-annotate-background nil)
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#c82829")
+     (40 . "#f5871f")
+     (60 . "#eab700")
+     (80 . "#718c00")
+     (100 . "#3e999f")
+     (120 . "#4271ae")
+     (140 . "#8959a8")
+     (160 . "#c82829")
+     (180 . "#f5871f")
+     (200 . "#eab700")
+     (220 . "#718c00")
+     (240 . "#3e999f")
+     (260 . "#4271ae")
+     (280 . "#8959a8")
+     (300 . "#c82829")
+     (320 . "#f5871f")
+     (340 . "#eab700")
+     (360 . "#718c00"))))
+ '(vc-annotate-very-old-color nil)
  '(web-mode-attr-indent-offset 2)
  '(web-mode-code-indent-offset 2)
  '(web-mode-css-indent-offset 2)
  '(web-mode-indent-style 2)
  '(web-mode-markup-indent-offset 2)
- '(web-mode-sql-indent-offset 2)
- '(web-mode-style-padding 0))
+ '(web-mode-sql-indent-offset 2))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -440,24 +501,17 @@ is the buffer location at which the function was found."
   )
 
 (put 'narrow-to-region 'disabled nil)
-(load-theme 'sanityinc-tomorrow-day t)
+(diminish 'undo-tree-mode)
 (require 'init-linum)
-
-(when (maybe-require-package 'diminish)
-  (require 'diminish)
-  (eval-after-load "highlight-symbol"
-    '(diminish 'highlight-symbol-mode))
-  (diminish 'helm-mode)
-  (diminish 'which-key-mode)
-  (diminish 'mmm-mode)
-  (diminish 'undo-tree-mode))
 
 ;;; sRGB doesn't blend with Powerline's pixmap colors, but is only
 ;;; used in OS X. Disable sRGB before setting up Powerline.
 (when (memq window-system '(mac ns))
   (setq ns-use-srgb-colorspace nil))
 
-(my-powerline-default-theme)
+(when (string= system-type "gnu/linux")
+      (setq browse-url-browser-function 'browse-url-generic
+            browse-url-generic-program "google-chrome"))
 
 (provide 'emacs)
 ;;; emacs ends here

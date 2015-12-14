@@ -1,5 +1,4 @@
-(when (maybe-require-package 'evil-leader)
-  ;; Evil leader must be loaded before evil (as documented).
+(defun air--config-evil-leader ()
   (global-evil-leader-mode)
 
   (evil-leader/set-leader ",")
@@ -39,21 +38,9 @@
         (magit-blame-quit)
       (call-interactively 'magit-blame))))
 
-(when (maybe-require-package 'evil-jumper)
-  (global-evil-jumper-mode))
-(maybe-require-package 'evil-surround)
-(maybe-require-package 'evil-indent-textobject)
-
-(when (maybe-require-package 'evil)
-  ;; Always use evil mode.
-  (evil-mode 1)
-
-  ;; My personal evil settings.
-  (setq evil-want-C-u-scroll t)
-  (setq-default evil-want-C-i-jump nil)
-  (setq-default evil-symbol-word-search t)
-
+(defun air--config-evil ()
   ;; Use Emacs mode
+  (evil-set-initial-state 'magit-log-edit-mode 'insert)
   (evil-set-initial-state 'git-rebase-mode 'emacs)
   (evil-set-initial-state 'sunshine-mode 'emacs)
   (evil-set-initial-state 'octopress-mode 'emacs)
@@ -139,5 +126,33 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 
   ;; My own Ex commands.
   (evil-ex-define-cmd "om" 'octopress-status))
+
+(use-package evil-leader
+  :ensure t
+  :config
+  (air--config-evil-leader))
+
+(use-package evil-jumper
+  :ensure t
+  :config
+  (global-evil-jumper-mode))
+
+(use-package evil-surround
+  :ensure t
+  :config
+  (global-evil-surround-mode 1))
+
+(use-package evil-indent-textobject
+  :ensure t)
+
+(use-package evil
+  :ensure t
+  :config
+  ;; Always use evil mode.
+  (setq evil-want-C-u-scroll t)
+  (setq-default evil-want-C-i-jump nil)
+  (setq-default evil-symbol-word-search t)
+  (evil-mode 1)
+  (air--config-evil))
 
 (provide 'init-evil)
