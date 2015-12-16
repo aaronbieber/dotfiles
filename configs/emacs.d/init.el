@@ -368,7 +368,7 @@ is the buffer location at which the function was found."
  '(org-log-reschedule (quote time))
  '(package-selected-packages
    (quote
-    (bpr zenburn-theme yasnippet yaml-mode which-key wgrep-ag web-mode w3m use-package twittering-mode sunshine sublime-themes powerline-evil php-extras mmm-mode markdown-mode magit highlight-symbol helm-projectile gtags fullframe flycheck-package exec-path-from-shell evil-surround evil-leader evil-jumper evil-indent-textobject emmet-mode dictionary company auto-complete ag)))
+    (bpr zenburn-theme yasnippet yaml-mode which-key wgrep-ag web-mode w3m use-package twittering-mode sunshine sublime-themes powerline-evil php-extras mmm-mode markdown-mode magit highlight-symbol helm-projectile gtags fullframe flycheck-package exec-path-from-shell evil-surround evil-leader evil-jumper evil-indent-textobject emmet-mode dictionary company ag)))
  '(safe-local-variable-values (quote ((no-byte-compile t))))
  '(sunshine-location "Brookline, MA")
  '(sunshine-show-icons t)
