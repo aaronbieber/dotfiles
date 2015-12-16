@@ -21,18 +21,21 @@
     "ns" 'org-narrow-to-subtree
     "$"  'org-archive-subtree)
 
-  (define-key org-agenda-mode-map (kbd "n") 'org-agenda-capture)
-  (evil-define-key 'normal org-mode-map (kbd "C-<") 'org-metaleft)
-  (evil-define-key 'normal org-mode-map (kbd "C->") 'org-metaright)
-  (evil-define-key 'insert org-mode-map (kbd "C-<") 'org-metaleft)
-  (evil-define-key 'insert org-mode-map (kbd "C->") 'org-metaright)
+  (defun air-org-insert-scheduled-heading ()
+    "Insert a new org heading scheduled for today."
+    (interactive)
+    (call-interactively 'org-insert-todo-heading)
+    (org-schedule nil (format-time-string "%Y-%m-%d")))
 
   (add-hook 'org-mode-hook
             (lambda ()
+              (define-key org-agenda-mode-map (kbd "n") 'org-agenda-capture)
               (define-key org-mode-map (kbd "C-c ,") 'org-time-stamp-inactive)
+              (define-key org-mode-map (kbd "C-|") 'air-org-insert-scheduled-heading)
+              (define-key org-mode-map (kbd "C-<") 'org-metaleft)
+              (define-key org-mode-map (kbd "C->") 'org-metaright)
+              (define-key org-mode-map (kbd "C-\\") 'org-insert-heading)
               (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle)
-              (evil-define-key 'normal org-mode-map (kbd "C-\\") 'org-insert-heading)
-              (evil-define-key 'insert org-mode-map (kbd "C-\\") 'org-insert-heading)
               (auto-fill-mode)
               (flyspell-mode))))
 
