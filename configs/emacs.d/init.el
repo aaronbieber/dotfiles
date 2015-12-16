@@ -356,6 +356,11 @@ is the buffer location at which the function was found."
  '(octopress-blog-root "/Users/airborne/Blog")
  '(org-agenda-files (quote ("~/Dropbox/org/")))
  '(org-blank-before-new-entry (quote ((heading) (plain-list-item))))
+ '(org-capture-templates
+   (quote
+    (("q" "My TODO task format." entry
+      (file "~/Dropbox/org/notes.org")
+      "* TODO %?\n  SCHEDULED: %t"))))
  '(org-default-notes-file "~/Dropbox/org/notes.org")
  '(org-directory "~/Dropbox/org")
  '(org-enforce-todo-dependencies t)

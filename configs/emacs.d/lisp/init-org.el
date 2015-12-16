@@ -21,6 +21,7 @@
     "ns" 'org-narrow-to-subtree
     "$"  'org-archive-subtree)
 
+  (define-key org-agenda-mode-map (kbd "n") 'org-agenda-capture)
   (evil-define-key 'normal org-mode-map (kbd "C-<") 'org-metaleft)
   (evil-define-key 'normal org-mode-map (kbd "C->") 'org-metaright)
   (evil-define-key 'insert org-mode-map (kbd "C-<") 'org-metaleft)
