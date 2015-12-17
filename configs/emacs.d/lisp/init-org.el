@@ -7,6 +7,7 @@
 (use-package org
   :ensure t
   :defer t
+  :commands (org-capture)
   :config
   (setq org-agenda-text-search-extra-files '(agenda-archives))
   (setq org-agenda-files '("~/Dropbox/org/"))
@@ -27,9 +28,19 @@
     (call-interactively 'org-insert-todo-heading)
     (org-schedule nil (format-time-string "%Y-%m-%d")))
 
+  (defun air-org-agenda-capture ()
+    (interactive)
+    (if (not (eq major-mode 'org-agenda-mode))
+        (user-error "You cannot do this outside of agenda buffers")
+      (let ((org-overriding-default-time (org-get-cursor-date)))
+        (org-capture nil "a"))))
+
+  (add-hook 'org-agenda-mode-hook
+            (lambda ()
+              (define-key org-agenda-mode-map "n" 'air-org-agenda-capture)))
+
   (add-hook 'org-mode-hook
             (lambda ()
-              (define-key org-agenda-mode-map (kbd "n") 'org-agenda-capture)
               (define-key org-mode-map (kbd "C-c ,") 'org-time-stamp-inactive)
               (define-key org-mode-map (kbd "C-|") 'air-org-insert-scheduled-heading)
               (define-key org-mode-map (kbd "C-<") 'org-metaleft)
