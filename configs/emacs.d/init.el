@@ -367,6 +367,7 @@ is the buffer location at which the function was found."
  '(org-default-notes-file "~/Dropbox/org/notes.org")
  '(org-directory "~/Dropbox/org")
  '(org-enforce-todo-dependencies t)
+ '(org-log-done (quote time))
  '(org-log-redeadline (quote time))
  '(org-log-reschedule (quote time))
  '(package-selected-packages
