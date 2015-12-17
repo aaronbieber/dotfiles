@@ -39,6 +39,10 @@
             (lambda ()
               (define-key org-agenda-mode-map "n" 'air-org-agenda-capture)))
 
+  (add-hook 'org-capture-mode-hook
+            (lambda ()
+              (evil-insert-state)))
+
   (add-hook 'org-mode-hook
             (lambda ()
               (define-key org-mode-map (kbd "C-c ,") 'org-time-stamp-inactive)
