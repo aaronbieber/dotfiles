@@ -117,7 +117,9 @@
 (use-package dictionary :ensure t)
 (use-package emmet-mode :ensure t)
 (use-package flycheck :ensure t)
-(use-package helm-projectile :ensure t :defer t)
+(use-package helm-projectile
+  :commands (helm-projectile helm-projectile-switch-project)
+  :ensure t)
 (use-package markdown-mode :ensure t)
 (use-package php-extras :ensure t :defer t)
 (use-package sublime-themes :ensure t)
