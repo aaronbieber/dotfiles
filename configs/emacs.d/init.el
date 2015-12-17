@@ -360,9 +360,10 @@ is the buffer location at which the function was found."
  '(org-blank-before-new-entry (quote ((heading) (plain-list-item))))
  '(org-capture-templates
    (quote
-    (("q" "My TODO task format." entry
+    (("a" "My TODO task format." entry
       (file "~/Dropbox/org/notes.org")
-      "* TODO %?\n  SCHEDULED: %t"))))
+      "* TODO %?
+  SCHEDULED: %t"))))
  '(org-default-notes-file "~/Dropbox/org/notes.org")
  '(org-directory "~/Dropbox/org")
  '(org-enforce-todo-dependencies t)
