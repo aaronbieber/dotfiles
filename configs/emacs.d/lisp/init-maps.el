@@ -19,12 +19,18 @@
   (interactive)
   (air--pop-to-file "~/Dropbox/org/vault.gpg"))
 
-(define-key global-map (kbd "C-c c") 'org-capture)
+(defun air-pop-to-org-agenda (split)
+  (interactive "P")
+  (org-agenda-list)
+  (when (not split)
+    (delete-other-windows)))
+
+(define-key global-map (kbd "C-c c") (lambda () (interactive) (org-capture nil "a")))
 (define-key global-map (kbd "C-c t n") 'air-pop-to-org-notes)
 (define-key global-map (kbd "C-c t h") 'air-pop-to-org-home)
 (define-key global-map (kbd "C-c t v") 'air-pop-to-org-vault)
 (define-key global-map (kbd "C-c t w") 'air-pop-to-org-work)
-(define-key global-map (kbd "C-c t a") 'org-agenda-list)
+(define-key global-map (kbd "C-c t a") 'air-pop-to-org-agenda)
 (define-key global-map (kbd "C-x C-q") 'kill-emacs)
 (define-key global-map (kbd "C-c C-u") 'insert-char) ;; "u" for Unicode, get it?
 (define-key global-map (kbd "C-c l")   'dictionary-lookup-definition)
