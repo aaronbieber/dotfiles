@@ -1,4 +1,8 @@
+;;; init-evil.el -- My evil mode configuration.
+;;; Commentary:
+;;; Code:
 (defun air--config-evil-leader ()
+  "Configure evil leader mode."
   (global-evil-leader-mode)
 
   (evil-leader/set-leader ",")
@@ -39,6 +43,7 @@
       (call-interactively 'magit-blame))))
 
 (defun air--config-evil ()
+  "Configure evil mode."
   ;; Use Emacs mode
   (evil-set-initial-state 'magit-log-edit-mode 'insert)
   (evil-set-initial-state 'git-rebase-mode 'emacs)
@@ -156,3 +161,4 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
   (air--config-evil))
 
 (provide 'init-evil)
+;;; init-evil.el ends here
