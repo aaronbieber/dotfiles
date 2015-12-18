@@ -3,8 +3,6 @@
 ;;; Code:
 (defun air--config-evil-leader ()
   "Configure evil leader mode."
-  (global-evil-leader-mode)
-
   (evil-leader/set-leader ",")
   (setq evil-leader/in-all-states 1)
   (evil-leader/set-key
@@ -134,10 +132,17 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
   ;; My own Ex commands.
   (evil-ex-define-cmd "om" 'octopress-status))
 
-(use-package evil-leader
+(use-package evil
   :ensure t
   :config
-  (air--config-evil-leader))
+  (add-hook 'evil-mode-hook 'air--config-evil)
+  (evil-mode 1)
+  
+  (use-package evil-leader
+    :ensure t
+    :config
+    (global-evil-leader-mode)
+    (air--config-evil-leader)))
 
 (use-package evil-jumper
   :ensure t
@@ -151,16 +156,6 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 
 (use-package evil-indent-textobject
   :ensure t)
-
-(use-package evil
-  :ensure t
-  :config
-  ;; Always use evil mode.
-  (setq evil-want-C-u-scroll t)
-  (setq-default evil-want-C-i-jump nil)
-  (setq-default evil-symbol-word-search t)
-  (evil-mode 1)
-  (air--config-evil))
 
 (provide 'init-evil)
 ;;; init-evil.el ends here
