@@ -45,6 +45,13 @@
 
   (add-hook 'org-mode-hook
             (lambda ()
+              (setq-local my-timer
+                          (run-with-idle-timer 1 t
+                                               (lambda ()
+                                                 (when (and (string= major-mode "org-mode")
+                                                            (buffer-file-name)
+                                                            (buffer-modified-p))
+                                                   (save-buffer)))))
               (define-key org-mode-map (kbd "C-c ,") 'org-time-stamp-inactive)
               (define-key org-mode-map (kbd "C-|") 'air-org-insert-scheduled-heading)
               (define-key org-mode-map (kbd "C-<") 'org-metaleft)
