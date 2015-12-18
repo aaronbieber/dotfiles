@@ -96,6 +96,7 @@
 
 (use-package helm
   :ensure t
+  :defer t
   :diminish helm-mode
   :init
   (setq helm-buffers-fuzzy-matching t)
