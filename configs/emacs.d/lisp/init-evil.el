@@ -72,11 +72,6 @@
     (kbd "C-u")     'evil-scroll-up
     (kbd "C-w C-w") 'other-window)
 
-  (evil-add-hjkl-bindings org-agenda-mode-map 'emacs
-    "j"   'org-agenda-next-line
-    "k"   'org-agenda-previous-line
-    "RET" 'org-agenda-switch-to)
-
   (defun next-conflict-marker ()
     (interactive)
     (evil-next-visual-line)

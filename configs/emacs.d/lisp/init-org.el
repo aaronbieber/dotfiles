@@ -29,15 +29,21 @@
     (org-schedule nil (format-time-string "%Y-%m-%d")))
 
   (defun air-org-agenda-capture ()
+    "Capture a task in agenda mode, using the date at point."
     (interactive)
-    (if (not (eq major-mode 'org-agenda-mode))
-        (user-error "You cannot do this outside of agenda buffers")
-      (let ((org-overriding-default-time (org-get-cursor-date)))
-        (org-capture nil "a"))))
+    (let ((org-overriding-default-time (org-get-cursor-date)))
+      (org-capture nil "a")))
 
   (add-hook 'org-agenda-mode-hook
             (lambda ()
-              (define-key org-agenda-mode-map "n" 'air-org-agenda-capture)))
+              (define-key org-agenda-mode-map "j"         'org-agenda-next-line)
+              (define-key org-agenda-mode-map "k"         'org-agenda-previous-line)
+              (define-key org-agenda-mode-map "n"         'org-agenda-next-date-line)
+              (define-key org-agenda-mode-map "p"         'org-agenda-previous-date-line)
+              (define-key org-agenda-mode-map "c"         'air-org-agenda-capture)
+              (define-key org-agenda-mode-map (kbd "RET") 'org-agenda-switch-to)
+
+              ))
 
   (add-hook 'org-capture-mode-hook
             (lambda ()
