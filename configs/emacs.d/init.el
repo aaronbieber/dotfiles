@@ -362,10 +362,9 @@ is the buffer location at which the function was found."
  '(org-capture-templates
    (quote
     (("a" "My TODO task format." entry
-      (file "~/Dropbox/org/notes.org")
-      "* TODO %?
-  SCHEDULED: %t"))))
- '(org-default-notes-file "~/Dropbox/org/notes.org")
+      (file "~/Dropbox/org/todo.org")
+      "* TODO %?\n  SCHEDULED: %t"))))
+ '(org-default-notes-file "~/Dropbox/org/todo.org")
  '(org-directory "~/Dropbox/org")
  '(org-enforce-todo-dependencies t)
  '(org-log-done (quote time))
