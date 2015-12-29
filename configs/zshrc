@@ -196,7 +196,7 @@ if [[ `uname` == "Darwin" ]]; then
   alias la="ls -Alh -G"
 else
   # Non-OS X things.
-  alias l="ls -alhF --group-directories-first --color=always"
+  alias l="ls -lhF --group-directories-first --color=always"
 fi
 
 # Finally, remove duplicate PATH entries.
