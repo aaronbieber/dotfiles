@@ -364,7 +364,8 @@ is the buffer location at which the function was found."
    (quote
     (("a" "My TODO task format." entry
       (file "~/Dropbox/org/todo.org")
-      "* TODO %?\n  SCHEDULED: %t"))))
+      "* TODO %?
+  SCHEDULED: %t"))))
  '(org-default-notes-file "~/Dropbox/org/todo.org")
  '(org-directory "~/Dropbox/org")
  '(org-enforce-todo-dependencies t)
