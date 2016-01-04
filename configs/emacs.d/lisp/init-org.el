@@ -57,6 +57,8 @@
               (define-key org-mode-map (kbd "C-<") 'org-metaleft)
               (define-key org-mode-map (kbd "C->") 'org-metaright)
               (define-key org-mode-map (kbd "C-\\") 'org-insert-heading)
+              (define-key org-mode-map (kbd "C-S-j") 'org-priority-down)
+              (define-key org-mode-map (kbd "C-S-k") 'org-priority-up)
               (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle)
               (auto-fill-mode)
               (flyspell-mode))))
