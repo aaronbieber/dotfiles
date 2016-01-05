@@ -49,6 +49,8 @@
                           (run-with-idle-timer 1 t
                                                (lambda ()
                                                  (when (and (string= major-mode "org-mode")
+                                                            (and evil-state
+                                                                 (not (eq evil-state 'insert)))
                                                             (buffer-file-name)
                                                             (buffer-modified-p))
                                                    (save-buffer)))))
