@@ -48,7 +48,7 @@
               (setq-local my-timer
                           (run-with-idle-timer 1 t
                                                (lambda ()
-                                                 (when (and (string= major-mode "org-mode")
+                                                 (when (and (eq major-mode 'org-mode)
                                                             (and evil-state
                                                                  (not (eq evil-state 'insert)))
                                                             (buffer-file-name)
