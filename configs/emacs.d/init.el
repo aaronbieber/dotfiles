@@ -70,6 +70,9 @@
 (require 'init-powerline)
 (require 'init-flycheck)
 
+(use-package elpy
+  :ensure t)
+
 (use-package color-theme-sanityinc-tomorrow
   :ensure t
   :init
@@ -129,7 +132,9 @@
   :commands sunshine-forecast)
 (use-package twittering-mode
   :ensure t
-  :commands twit)
+  :commands twit
+  :config
+  (setq twittering-icon-mode t))
 (use-package web-mode :ensure t :defer t)
 (use-package zenburn-theme :ensure t :defer t)
 (use-package mmm-mode :ensure t :defer t)
