@@ -379,11 +379,13 @@ is the buffer location at which the function was found."
  '(org-log-reschedule (quote time))
  '(package-selected-packages
    (quote
-    (bpr zenburn-theme yasnippet yaml-mode which-key wgrep-ag web-mode w3m use-package twittering-mode sunshine sublime-themes powerline-evil php-extras mmm-mode markdown-mode magit highlight-symbol helm-projectile gtags fullframe flycheck-package exec-path-from-shell evil-surround evil-leader evil-jumper evil-indent-textobject emmet-mode dictionary company ag)))
+    (elpy zenburn-theme yasnippet yaml-mode which-key wgrep-ag web-mode w3m use-package twittering-mode sunshine sublime-themes pyvenv powerline-evil php-extras mmm-mode markdown-mode magit highlight-symbol highlight-indentation helm-projectile gtags fullframe flycheck-package exec-path-from-shell evil-surround evil-leader evil-jumper evil-indent-textobject emmet-mode dictionary company color-theme-sanityinc-tomorrow bpr avy auto-complete ag)))
  '(safe-local-variable-values (quote ((no-byte-compile t))))
  '(sunshine-location "Brookline, MA")
  '(sunshine-show-icons t)
  '(twittering-use-native-retweet t)
+ '(twittering-default-show-replied-tweets 3)
+ '(twittering-use-icon-storage t)
  '(vc-annotate-background nil)
  '(vc-annotate-color-map
    (quote
