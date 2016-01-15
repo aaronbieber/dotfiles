@@ -140,7 +140,10 @@
 (use-package sublime-themes :ensure t)
 (use-package sunshine
   :ensure t
-  :commands sunshine-forecast)
+  :commands sunshine-forecast
+  :config
+  (setq sunshine-location "Brookline, MA")
+  (setq sunshine-show-icons t))
 
 (use-package twittering-mode
   :ensure t
