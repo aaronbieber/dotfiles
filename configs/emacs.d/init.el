@@ -134,17 +134,23 @@
 (use-package helm-projectile
   :commands (helm-projectile helm-projectile-switch-project)
   :ensure t)
+
 (use-package markdown-mode :ensure t)
 (use-package php-extras :ensure t :defer t)
 (use-package sublime-themes :ensure t)
 (use-package sunshine
   :ensure t
   :commands sunshine-forecast)
+
 (use-package twittering-mode
   :ensure t
   :commands twit
   :config
+  (setq twittering-use-native-retweet t)
+  (setq twittering-default-show-replied-tweets 3)
+  (setq twittering-use-icon-storage t)
   (setq twittering-icon-mode t))
+
 (use-package web-mode :ensure t :defer t)
 (use-package zenburn-theme :ensure t :defer t)
 (use-package mmm-mode :ensure t :defer t)
