@@ -13,6 +13,22 @@
   (setq org-agenda-files '("~/Dropbox/org/"))
   (setq org-todo-keywords
         '((sequence "☛ TODO" "○ IN-PROGRESS" "⚑ WAITING" "|" "✓ DONE" "✗ CANCELED")))
+
+  (setq org-agenda-files (quote ("~/Dropbox/org/")))
+  (setq org-blank-before-new-entry (quote ((heading) (plain-list-item))))
+  (setq org-capture-templates
+         (quote
+          (("a" "My TODO task format." entry
+            (file "~/Dropbox/org/todo.org")
+            "* TODO %?
+  SCHEDULED: %t"))))
+  (setq org-default-notes-file "~/Dropbox/org/todo.org")
+  (setq org-directory "~/Dropbox/org")
+  (setq org-enforce-todo-dependencies t)
+  (setq org-log-done (quote time))
+  (setq org-log-redeadline (quote time))
+  (setq org-log-reschedule (quote time))
+
   (evil-leader/set-key-for-mode 'org-mode
     "t"  'org-time-stamp-inactive
     "p"  '(lambda ()
