@@ -32,10 +32,16 @@
 ;;; This is the actual line number format definition.
 (setq linum-format 'my-linum-relative-line-numbers)
 
+;;; Basic settings.
+(setq linum-delay t)
+
 ;;; Set up relative line numbering to mimic `:set number relativenumber`.
 (add-hook 'linum-before-numbering-hook 'my-linum-get-format-string)
 
 (when (require 'linum-off)
+  (setq linum-disabled-modes-list
+        (quote
+         (eshell-mode wl-summary-mode compilation-mode org-agenda-mode org-mode text-mode dired-mode doc-view-mode image-mode)))
   (add-hook 'after-change-major-mode-hook 'linum-on))
 
 (provide 'init-linum)
