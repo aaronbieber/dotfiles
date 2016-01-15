@@ -192,8 +192,9 @@
 (use-package magit
   :ensure t
   :defer t
-  :init
-  ;; Don't display this nag about reverting buffers.
+  :config
+  (setq magit-branch-arguments nil)
+  (setq magit-push-always-verify nil)
   (setq magit-last-seen-setup-instructions "1.4.0"))
 
 (use-package mmm-mode
