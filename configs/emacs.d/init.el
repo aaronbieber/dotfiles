@@ -122,6 +122,8 @@
   :init
   (global-company-mode)
   :config
+  ;(setq company-tooltip-common-selection ((t (:inherit company-tooltip-selection :background "yellow2" :foreground "#c82829"))))
+  ;(setq company-tooltip-selection ((t (:background "yellow2"))))
   (setq company-idle-delay 0.5)
   (setq company-selection-wrap-around t)
   (define-key company-active-map [tab] 'company-complete)
@@ -154,7 +156,17 @@
   (setq twittering-use-icon-storage t)
   (setq twittering-icon-mode t))
 
-(use-package web-mode :ensure t :defer t)
+(use-package web-mode
+  :ensure t
+  :defer t
+  :config
+  (setq web-mode-attr-indent-offset 2)
+  (setq web-mode-code-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-indent-style 2)
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-sql-indent-offset 2))
+
 (use-package zenburn-theme :ensure t :defer t)
 (use-package mmm-mode :ensure t :defer t)
 (use-package yaml-mode :ensure t :defer t)
