@@ -371,92 +371,24 @@ is the buffer location at which the function was found."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ag-executable "/usr/local/bin/ag")
- '(ag-highlight-search t)
- '(ag-reuse-buffers t)
- '(ag-reuse-window t)
  '(ansi-color-faces-vector
    [default bold shadow italic underline bold bold-italic bold])
  '(ansi-color-names-vector
    (vector "#4d4d4c" "#c82829" "#718c00" "#eab700" "#4271ae" "#8959a8" "#3e999f" "#ffffff"))
- '(company-idle-delay 0.5)
- '(company-selection-wrap-around t)
  '(custom-safe-themes t)
- '(diary-entry-marker (quote font-lock-variable-name-face))
- '(fci-rule-color "#d6d6d6")
- '(helm-autoresize-mode t)
- '(helm-buffer-max-length 40)
- '(linum-delay t)
- '(linum-disabled-modes-list
-   (quote
-    (eshell-mode wl-summary-mode compilation-mode org-agenda-mode org-mode text-mode dired-mode doc-view-mode image-mode)))
- '(linum-format " %7i ")
  '(lpr-page-header-switches (quote ("-h" "%s" "-F" "-l 65")))
- '(magit-branch-arguments nil)
- '(magit-push-always-verify nil)
- '(octopress-blog-root "/Users/airborne/Blog")
- '(org-agenda-files (quote ("~/Dropbox/org/")))
- '(org-blank-before-new-entry (quote ((heading) (plain-list-item))))
- '(org-capture-templates
-   (quote
-    (("a" "My TODO task format." entry
-      (file "~/Dropbox/org/todo.org")
-      "* TODO %?
-  SCHEDULED: %t"))))
- '(org-default-notes-file "~/Dropbox/org/todo.org")
- '(org-directory "~/Dropbox/org")
- '(org-enforce-todo-dependencies t)
- '(org-log-done (quote time))
- '(org-log-redeadline (quote time))
- '(org-log-reschedule (quote time))
  '(package-selected-packages
    (quote
-    (elpy zenburn-theme yasnippet yaml-mode which-key wgrep-ag web-mode w3m use-package twittering-mode sunshine sublime-themes pyvenv powerline-evil php-extras mmm-mode markdown-mode magit highlight-symbol highlight-indentation helm-projectile gtags fullframe flycheck-package exec-path-from-shell evil-surround evil-leader evil-jumper evil-indent-textobject emmet-mode dictionary company color-theme-sanityinc-tomorrow bpr avy auto-complete ag)))
  '(safe-local-variable-values (quote ((no-byte-compile t))))
- '(sunshine-location "Brookline, MA")
- '(sunshine-show-icons t)
- '(twittering-use-native-retweet t)
- '(twittering-default-show-replied-tweets 3)
- '(twittering-use-icon-storage t)
- '(vc-annotate-background nil)
- '(vc-annotate-color-map
-   (quote
-    ((20 . "#c82829")
-     (40 . "#f5871f")
-     (60 . "#eab700")
-     (80 . "#718c00")
-     (100 . "#3e999f")
-     (120 . "#4271ae")
-     (140 . "#8959a8")
-     (160 . "#c82829")
-     (180 . "#f5871f")
-     (200 . "#eab700")
-     (220 . "#718c00")
-     (240 . "#3e999f")
-     (260 . "#4271ae")
-     (280 . "#8959a8")
-     (300 . "#c82829")
-     (320 . "#f5871f")
-     (340 . "#eab700")
-     (360 . "#718c00"))))
- '(vc-annotate-very-old-color nil)
- '(web-mode-attr-indent-offset 2)
- '(web-mode-code-indent-offset 2)
- '(web-mode-css-indent-offset 2)
- '(web-mode-indent-style 2)
- '(web-mode-markup-indent-offset 2)
- '(web-mode-sql-indent-offset 2))
+    (org-bullets zenburn-theme yaml-mode which-key wgrep-ag web-mode w3m use-package twittering-mode sunshine sublime-themes powerline-evil php-extras mmm-mode markdown-mode magit highlight-symbol helm-projectile gtags fullframe flycheck-package exec-path-from-shell evil-surround evil-leader evil-jumper evil-indent-textobject emmet-mode elpy dictionary color-theme-sanityinc-tomorrow bpr avy auto-complete ag)))
+ '(safe-local-variable-values (quote ((no-byte-compile t)))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :background "yellow2" :foreground "#c82829"))))
- '(company-tooltip-selection ((t (:background "yellow2"))))
- '(term-color-blue ((t (:background "DodgerBlue2" :foreground "DodgerBlue2"))))
- '(term-color-cyan ((t (:background "CadetBlue2" :foreground "CadetBlue2"))))
- '(term-color-green ((t (:background "LimeGreen" :foreground "LimeGreen")))))
+ )
 
 ;; handle tmux's xterm-keys
 ;; put the following line in your ~/.tmux.conf:
