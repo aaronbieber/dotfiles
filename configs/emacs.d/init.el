@@ -13,10 +13,6 @@
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
 (add-to-list 'exec-path "/usr/local/bin")
 
-;; Just while I'm working on it.
-(add-to-list 'load-path (expand-file-name "octopress" user-emacs-directory))
-(require 'octopress)
-
 ;; Essential settings.
 (setq inhibit-splash-screen t
       inhibit-startup-message t
@@ -69,6 +65,12 @@
 (require 'init-php)
 (require 'init-powerline)
 (require 'init-flycheck)
+
+;; Just while I'm working on it.
+(add-to-list 'load-path (expand-file-name "octopress" user-emacs-directory))
+(use-package octopress
+  :config
+  (setq octopress-blog-root "/Users/airborne/Blog"))
 
 (use-package elpy
   :ensure t)
