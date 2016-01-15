@@ -88,7 +88,11 @@
   :ensure t
   :defer t
   :config
-  (add-hook 'ag-mode-hook 'wgrep-ag-setup))
+  (add-hook 'ag-mode-hook 'wgrep-ag-setup)
+  (setq ag-executable "/usr/local/bin/ag")
+  (setq ag-highlight-search t)
+  (setq ag-reuse-buffers t)
+  (setq ag-reuse-window t))
 
 (use-package exec-path-from-shell
   :ensure t
