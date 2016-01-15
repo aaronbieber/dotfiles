@@ -11,6 +11,8 @@
   :config
   (setq org-agenda-text-search-extra-files '(agenda-archives))
   (setq org-agenda-files '("~/Dropbox/org/"))
+  (setq org-todo-keywords
+        '((sequence "☛ TODO" "○ IN-PROGRESS" "⚑ WAITING" "|" "✓ DONE" "✗ CANCELED")))
   (evil-leader/set-key-for-mode 'org-mode
     "t"  'org-time-stamp-inactive
     "p"  '(lambda ()
@@ -70,6 +72,11 @@
               (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle)
               (auto-fill-mode)
               (flyspell-mode))))
+
+(use-package org-bullets
+  :ensure t
+  :config
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
 (provide 'init-org)
 ;;; init-org.el ends here
