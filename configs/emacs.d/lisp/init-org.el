@@ -20,7 +20,7 @@
          (quote
           (("a" "My TODO task format." entry
             (file "~/Dropbox/org/todo.org")
-            "* TODO %?
+            "* ☛ TODO %?
   SCHEDULED: %t"))))
   (setq org-default-notes-file "~/Dropbox/org/todo.org")
   (setq org-directory "~/Dropbox/org")
