@@ -30,6 +30,34 @@
         (* 2 c-basic-offset)
       (php-lineup-string-cont langelem))))
 
+(defun air--rbt-run-command (command)
+  "Run an rbt COMMAND and send its output to a buffer."
+  (let ((rbt-buffer (get-buffer-create "*rbt: command*"))
+        (cmd (concat "rbt " command))
+        (map (make-sparse-keymap)))
+    (with-current-buffer rbt-buffer
+      (local-set-key (kbd "q") #'(lambda () (interactive) (kill-buffer (current-buffer))))
+      (shell-command cmd rbt-buffer)
+      (goto-char (point-min))
+      (if (search-forward "http" (point-max) t)
+          (let ((url (thing-at-point 'url)))
+            (if (yes-or-no-p (format "Browse to `%s'? " url))
+                (browse-url url)))))))
+
+(defun air-rbt-post (summary)
+  "Post a new review with SUMMARY to Review Board."
+  (interactive "MSummary: ")
+  (let ((command (concat "post --summary " (shell-quote-argument summary))))
+    (message "Running `%s'..." command)
+    (air--rbt-run-command command)))
+
+(defun air-rbt-update (id)
+  "Update the review with ID on Review Board."
+  (interactive "nRequest ID to update: ")
+  (let ((command (concat "post -r " (shell-quote-argument (number-to-string id)))))
+    (message "Running `%s'..." command)
+    (air--rbt-run-command command)))
+
 (defun configure-php-mode ()
   "Set up all of my PHP mode preferences."
   (require 'newcomment)
