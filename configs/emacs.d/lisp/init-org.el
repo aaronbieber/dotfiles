@@ -87,7 +87,8 @@
               (define-key org-mode-map (kbd "C-S-k") 'org-priority-up)
               (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle)
               (auto-fill-mode)
-              (flyspell-mode))))
+              (flyspell-mode)
+              (org-indent-mode))))
 
 (use-package org-bullets
   :ensure t
