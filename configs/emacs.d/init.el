@@ -43,7 +43,6 @@
 (add-to-list 'auto-mode-alist '("\\.twig$" . web-mode))
 
 ;;; My own configurations, which are bundled in my dotfiles.
-(require 'project-root)
 (require 'init-utils)
 (require 'init-platform)
 (require 'init-global-functions)
@@ -154,6 +153,13 @@
   :ensure t
   :commands sunshine-forecast
   :config
+  (defun get-string-from-file (file-path)
+    "Return FILE-PATH's contents."
+    (with-temp-buffer
+      (insert-file-contents file-path)
+      (buffer-string)))
+  (setq sunshine-appid (get-string-from-file
+                        (expand-file-name "sunshine-appid" user-emacs-directory)))
   (setq sunshine-location "Brookline, MA")
   (setq sunshine-show-icons t))
 
@@ -352,7 +358,7 @@
   "Find lines that appear to be PHP functions in the buffer.
 
 This function performs a regexp forward search from the top
-(point-min) of the buffer to the end, looking for lines that
+\(point-min) of the buffer to the end, looking for lines that
 appear to be PHP function declarations.
 
 The return value of this function is a list of cons in which
@@ -369,12 +375,6 @@ is the buffer location at which the function was found."
                   (append res
                           (list `(,fn-name . ,fn-location)))))))
       res)))
-
-(defun helm-project-files ()
-  (interactive)
-  (helm-other-buffer '(helm-c-source-projectile-files-list) "*Project Files*"))
-
-(setq octopress-blog-root (expand-file-name "~/Blog"))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -500,9 +500,5 @@ is the buffer location at which the function was found."
 (when (memq window-system '(mac ns))
   (setq ns-use-srgb-colorspace nil))
 
-(when (string= system-type "gnu/linux")
-      (setq browse-url-browser-function 'browse-url-generic
-            browse-url-generic-program "google-chrome"))
-
-(provide 'emacs)
-;;; emacs ends here
+(provide 'init)
+;;; init.el ends here
