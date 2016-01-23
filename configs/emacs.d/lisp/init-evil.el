@@ -42,22 +42,23 @@
 
 (defun air--config-evil ()
   "Configure evil mode."
-  ;; Use Emacs mode
-  (evil-set-initial-state 'magit-log-edit-mode 'insert)
-  (evil-set-initial-state 'git-rebase-mode 'emacs)
-  (evil-set-initial-state 'sunshine-mode 'emacs)
-  (evil-set-initial-state 'octopress-mode 'emacs)
-  (evil-set-initial-state 'octopress-server-mode 'emacs)
-  (evil-set-initial-state 'octopress-process-mode 'emacs)
-  (evil-set-initial-state 'ag-mode 'emacs)
 
-  ;; Use insert mode
-  (evil-set-initial-state 'twittering-edit-mode 'insert)
-  (evil-set-initial-state 'magit-log-edit-mode 'insert)
+  ;; Use Emacs state in these additional modes.
+  (dolist (mode '(ag-mode
+                  flycheck-error-list-mode
+                  git-rebase-mode
+                  octopress-mode
+                  octopress-server-mode
+                  octopress-process-mode
+                  sunshine-mode))
+    (add-to-list 'evil-emacs-state-modes mode))
 
-  (add-to-list 'evil-buffer-regexps '("\\*magit:"))
+  ;; Use insert state in these additional modes.
+  (dolist (mode '(twittering-edit-mode
+                  magit-log-edit-mode))
+    (add-to-list 'evil-insert-state-modes mode))
+
   (add-to-list 'evil-buffer-regexps '("\\*Flycheck"))
-  (add-to-list 'evil-emacs-state-modes 'flycheck-error-list-mode)
 
   (evil-add-hjkl-bindings ag-mode-map 'normal
     "n"   'evil-search-next
