@@ -137,20 +137,20 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
     :ensure t
     :config
     (global-evil-leader-mode)
-    (air--config-evil-leader)))
+    (air--config-evil-leader))
 
-(use-package evil-jumper
-  :ensure t
-  :config
-  (global-evil-jumper-mode))
+  (use-package evil-jumper
+    :ensure t
+    :config
+    (global-evil-jumper-mode))
 
-(use-package evil-surround
-  :ensure t
-  :config
-  (global-evil-surround-mode 1))
+  (use-package evil-surround
+    :ensure t
+    :config
+    (global-evil-surround-mode 1))
 
-(use-package evil-indent-textobject
-  :ensure t)
+  (use-package evil-indent-textobject
+    :ensure t))
 
 (provide 'init-evil)
 ;;; init-evil.el ends here
