@@ -19,7 +19,6 @@
   (setq org-todo-keywords
         '((sequence "☛ TODO" "○ IN-PROGRESS" "⚑ WAITING" "|" "✓ DONE" "✗ CANCELED")))
 
-  (setq org-agenda-files (quote ("~/Dropbox/org/")))
   (setq org-blank-before-new-entry (quote ((heading) (plain-list-item))))
   (setq org-capture-templates
          (quote
