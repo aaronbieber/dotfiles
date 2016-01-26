@@ -8,6 +8,11 @@
   :ensure t
   :defer t
   :commands (org-capture)
+  :bind (("C-c c" . air-org-task-capture)
+         ("C-c t n" . air-pop-to-org-notes)
+         ("C-c t t" . air-pop-to-org-todo)
+         ("C-c t v" . air-pop-to-org-vault)
+         ("C-c t a" . air-pop-to-org-agenda))
   :config
   (setq org-agenda-text-search-extra-files '(agenda-archives))
   (setq org-agenda-files '("~/Dropbox/org/"))
@@ -46,11 +51,38 @@
     (call-interactively 'org-insert-todo-heading)
     (org-schedule nil (format-time-string "%Y-%m-%d")))
 
+  (defun air-org-task-capture ()
+    "Capture a task with my default template."
+    (interactive)
+    (org-capture nil "a"))
+
   (defun air-org-agenda-capture ()
     "Capture a task in agenda mode, using the date at point."
     (interactive)
     (let ((org-overriding-default-time (org-get-cursor-date)))
       (org-capture nil "a")))
+
+  (defun air-pop-to-org-todo (split)
+    "Visit my main TODO list, in the current window or a SPLIT."
+    (interactive "P")
+    (air--pop-to-file "~/Dropbox/org/todo.org" split))
+
+  (defun air-pop-to-org-notes (split)
+    "Visit my main notes file, in the current window or a SPLIT."
+    (interactive "P")
+    (air--pop-to-file "~/Dropbox/org/notes.org" split))
+
+  (defun air-pop-to-org-vault (split)
+    "Visit my encrypted vault file, in the current window or a SPLIT."
+    (interactive "P")
+    (air--pop-to-file "~/Dropbox/org/vault.gpg" split))
+
+  (defun air-pop-to-org-agenda (split)
+    "Visit the org agenda, in the current window or a SPLIT."
+    (interactive "P")
+    (org-agenda-list)
+    (when (not split)
+      (delete-other-windows)))
 
   (add-hook 'org-agenda-mode-hook
             (lambda ()

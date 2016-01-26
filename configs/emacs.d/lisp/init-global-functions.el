@@ -1,6 +1,11 @@
 ;;; init-global-functions.el --- Global functions mostly used by mappings.
 ;;; Commentary:
 ;;; Code:
+(defun air--pop-to-file (file &optional split)
+  "Visit a FILE, either in the current window or a SPLIT."
+  (if split
+      (find-file-other-window file)
+    (find-file file)))
 
 (require 'htmlfontify)
 (defun fontify-and-browse ()
