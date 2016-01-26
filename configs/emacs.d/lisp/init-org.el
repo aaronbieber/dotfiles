@@ -19,7 +19,7 @@
   (setq org-capture-templates
          (quote
           (("a" "My TODO task format." entry
-            (file "~/Dropbox/org/todo.org")
+            (file "todo.org")
             "* ☛ TODO %?
   SCHEDULED: %t"))))
   (setq org-default-notes-file "~/Dropbox/org/todo.org")
