@@ -30,7 +30,7 @@
 (ad-activate 'linum-update)
 
 ;;; This is the actual line number format definition.
-(setq linum-format 'my-linum-relative-line-numbers)
+(defvar linum-format 'my-linum-relative-line-numbers)
 
 ;;; Basic settings.
 (setq linum-delay t)
