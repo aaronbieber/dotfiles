@@ -155,7 +155,11 @@
   :commands (helm-projectile helm-projectile-switch-project)
   :ensure t)
 
-(use-package markdown-mode :ensure t)
+(use-package markdown-mode
+  :ensure t
+  :config
+  (define-key markdown-mode-map (kbd "C-\\") 'markdown-insert-list-item))
+
 (use-package php-extras :ensure t :defer t)
 (use-package sublime-themes :ensure t)
 (use-package sunshine
