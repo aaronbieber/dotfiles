@@ -1,6 +1,9 @@
 ;;; init-flycheck.el --- Initialize Flycheck
 ;;; Commentary:
 ;;; Code:
+(use-package let-alist
+  :ensure t)
+
 (when (maybe-require-package 'flycheck)
   (add-hook 'after-init-hook 'global-flycheck-mode)
 
