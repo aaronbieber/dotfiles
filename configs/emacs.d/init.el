@@ -97,13 +97,16 @@
 (use-package wgrep-ag
   :ensure t
   :commands (wgrep-ag-setup))
-(autoload 'wgrep-ag-setup "wgrep-ag")
 
 (use-package ag
   :ensure t
   :defer t
   :config
-  (add-hook 'ag-mode-hook 'wgrep-ag-setup)
+  (add-hook 'ag-mode-hook
+            (lambda ()
+              (wgrep-ag-setup)
+              (define-key 'ag-mode-map (kbd "n") 'evil-search-next)
+              (define-key 'ag-mode-map (kbd "N") 'evil-search-previous)))
   (setq ag-executable "/usr/local/bin/ag")
   (setq ag-highlight-search t)
   (setq ag-reuse-buffers t)
