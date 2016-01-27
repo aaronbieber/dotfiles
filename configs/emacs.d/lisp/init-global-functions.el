@@ -1,39 +1,6 @@
 ;;; init-global-functions.el --- Global functions mostly used by mappings.
 ;;; Commentary:
 ;;; Code:
-(defun air-find-code-block-at-point ()
-  "Find the extents and type of the code block at point.
-
-Returns a list containing the specified language name, start position,
-and end position of the code block, e.g. (\"cl\" 100 150), where the
-language is \"cl\" and the block begins at buffer position 100 and
-ends at buffer position 150.
-
-Returns nil if a block cannot be matched."
-  (save-excursion
-    (let* ((start (re-search-backward "^~~~\\(.+\\)$" (buffer-end -1) t 1))
-           (lang (when start (match-string 1)))
-           (start (and start (forward-line) (point)))
-           (end (re-search-forward "^~~~$" (buffer-end 1) t 1))
-           (end (and end (line-beginning-position))))
-      (when (and start end)
-        (set-text-properties 0 (length lang) nil lang)
-        `(,lang ,(1+ start) ,(1- end))))))
-
-(defun air-edit-code-block-at-point ()
-  "Narrow to a code block surround point if one can be found."
-  (interactive)
-  (deactivate-mark)
-  (let ((block (air-find-code-block-at-point)))
-    (if (length block)
-        (let* ((buffer-name (generate-new-buffer-name "*indirect*"))
-               (buf (make-indirect-buffer (current-buffer) buffer-name)))
-          (pop-to-buffer buf)
-          (narrow-to-region (cadr block) (caddr block))
-          (markdown-mode)
-          (goto-char (point-min))
-          (shrink-window-if-larger-than-buffer)))))
-
 (defun air--pop-to-file (file &optional split)
   "Visit a FILE, either in the current window or a SPLIT."
   (if split
@@ -52,6 +19,7 @@ Returns nil if a block cannot be matched."
 
 (defadvice load-theme (after restore-line-numbering)
   "Re-set linum-format after loading themes, which frequently overwrite it."
+  (defvar linum-format)
   (setq linum-format 'my-linum-relative-line-numbers))
 (ad-activate 'load-theme)
 
