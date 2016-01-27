@@ -60,11 +60,6 @@
 
   (add-to-list 'evil-buffer-regexps '("\\*Flycheck"))
 
-  (evil-add-hjkl-bindings ag-mode-map 'normal
-    "n"   'evil-search-next
-    "N"   'evil-search-previous
-    "RET" 'compile-goto-error)
-
   (evil-add-hjkl-bindings occur-mode-map 'emacs
     (kbd "/")       'evil-search-forward
     (kbd "n")       'evil-search-next
@@ -148,7 +143,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
   (use-package evil-surround
     :ensure t
     :config
-    (global-evil-surround-mode 1))
+    (global-evil-surround-mode))
 
   (use-package evil-indent-textobject
     :ensure t))
