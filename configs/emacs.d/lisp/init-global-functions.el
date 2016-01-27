@@ -34,10 +34,6 @@ Returns nil if a block cannot be matched."
           (goto-char (point-min))
           (shrink-window-if-larger-than-buffer)))))
 
-(defun air-edit-code-block-in-split ()
-    (with-current-buffer buf
-      (air-narrow-to-code-block-at-point))))
-
 (defun air--pop-to-file (file &optional split)
   "Visit a FILE, either in the current window or a SPLIT."
   (if split
