@@ -402,7 +402,7 @@ is the buffer location at which the function was found."
  '(lpr-page-header-switches (quote ("-h" "%s" "-F" "-l 65")))
  '(package-selected-packages
    (quote
-    (elpy zenburn-theme yasnippet yaml-mode which-key wgrep-ag web-mode w3m use-package twittering-mode sunshine sublime-themes sr-speedbar soft-stone-theme powerline-evil php-extras pandoc-mode org-bullets org mmm-mode markdown-mode magit ht highlight-symbol helm-projectile gtags fullframe flycheck exec-path-from-shell evil-surround evil-leader evil-jumper evil-indent-textobject emmet-mode dictionary cyberpunk-theme company color-theme-sanityinc-tomorrow color-theme-modern bpr auto-complete ag ace-link)))
+    (rainbow-mode elpy zenburn-theme yasnippet yaml-mode which-key wgrep-ag web-mode w3m use-package twittering-mode sunshine sublime-themes sr-speedbar soft-stone-theme powerline-evil php-extras pandoc-mode org-bullets org mmm-mode markdown-mode magit ht highlight-symbol helm-projectile gtags fullframe flycheck exec-path-from-shell evil-surround evil-leader evil-jumper evil-indent-textobject emmet-mode dictionary cyberpunk-theme company color-theme-sanityinc-tomorrow color-theme-modern bpr auto-complete ag ace-link)))
  '(safe-local-variable-values (quote ((no-byte-compile t)))))
 
 (custom-set-faces
