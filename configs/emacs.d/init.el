@@ -69,7 +69,7 @@
 (add-to-list 'load-path (expand-file-name "octopress" user-emacs-directory))
 (use-package octopress
   :config
-  (setq octopress-blog-root "/Users/airborne/Blog"))
+  (setq octopress-blog-root (expand-file-name "~/Blog")))
 
 (use-package exec-path-from-shell
   :ensure t
