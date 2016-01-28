@@ -2,9 +2,10 @@
 ;;; Commentary:
 ;;; Code:
 
-(defcustom narrow-to-code-mode-mapping
+(defcustom ntm-markdown-symbol-mapping
   '(("markdown" . "markdown-mode")
-    ("cl" . "lisp-interaction-mode"))
+    ("cl" . "lisp-interaction-mode")
+    ("php" . "php-mode"))
   "A mapping from markdown language symbols to the modes they should be edited in.")
 
 (defcustom narrow-to-code-recenter-on-widen t
@@ -53,7 +54,7 @@ original mode is reset."
          (start (cadr block))
          (end (caddr block))
          (lang (car block))
-         (mode (cdr (assoc lang narrow-to-code-mode-mapping))))
+         (mode (cdr (assoc lang ntm-markdown-symbol-mapping))))
     (if (and block
              mode)
         (ntm-narrow-to-new-mode start end mode)
