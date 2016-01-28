@@ -14,7 +14,7 @@
 (defvar-local ntm-previous-mode nil
   "Mode set before narrowing, restored upon widening.")
 
-(defun ntm-find-code-block-at-point ()
+(defun ntm-find-markdown-code-block ()
   "Find the extents and type of the code block at point.
 
 Returns a list containing the specified language name, start position,
@@ -50,7 +50,7 @@ original mode is reset."
   "Narrow to a code block surrounding point, if one can be found."
   (interactive)
   (deactivate-mark)
-  (let* ((block (ntm-find-code-block-at-point))
+  (let* ((block (ntm-find-markdown-code-block))
          (start (cadr block))
          (end (caddr block))
          (lang (car block))
