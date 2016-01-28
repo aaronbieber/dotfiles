@@ -49,28 +49,34 @@ original mode is reset."
     (funcall (intern mode))
     (setq ntm-previous-mode previous-mode)))
 
-(defun ntm-narrow-to-code-block-at-point ()
-  "Narrow to a code block surrounding point, if one can be found."
+(defun ntm-narrow-dwim ()
+  "Narrow to a code block, or widen, depending on the situation."
   (interactive)
+  (if (and (boundp 'ntm-previous-mode)
+           (> (length ntm-previous-mode) 0))
+      (ntm--widen)
+    (ntm--narrow)))
+
+(defun ntm--narrow ()
+  "Look for a code block and, if found, narrow to it and set the mode."
   (deactivate-mark)
   (let* ((block (ntm-find-markdown-code-block))
          (start (cadr block))
          (end (caddr block))
          (lang (car block))
-         (mode (cdr (assoc lang ntm-markdown-symbol-mapping))))
+         (mode (or (cdr (assoc lang ntm-markdown-symbol-mapping))
+                   ntm-default-mode)))
     (if (and block
              mode)
         (ntm-narrow-to-new-mode start end mode)
       (message "No code block found to narrow to."))))
 
-(defun ntm-widen (recenter)
-  (interactive "P")
-  (when (and (boundp 'ntm-previous-mode)
-             (length ntm-previous-mode))
+(defun ntm--widen ()
+  "Widen the buffer and restore the previous mode."
     (widen)
     (funcall (intern ntm-previous-mode))
-    (when (or recenter narrow-to-code-recenter-on-widen)
-      (recenter-top-bottom))))
+    (when ntm-recenter-on-widen
+      (recenter-top-bottom)))
 
 (provide 'narrow-to-mode)
 ;;; narrow-to-mode.el ends here
