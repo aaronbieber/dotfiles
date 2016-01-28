@@ -22,7 +22,7 @@ and end position of the code block, e.g. (\"cl\" 100 150), where the
 language is \"cl\" and the block begins at buffer position 100 and
 ends at buffer position 150.
 
-Returns nil if a block cannot be matched."
+Returns nil if a block cannot be found."
   (save-excursion
     (let* ((start (re-search-backward "^~~~\\(.+\\)$" (buffer-end -1) t 1))
            (lang (when start (match-string 1)))
