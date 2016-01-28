@@ -24,10 +24,10 @@ ends at buffer position 150.
 
 Returns nil if a block cannot be found."
   (save-excursion
-    (let* ((start (re-search-backward "^~~~\\(.+\\)$" (buffer-end -1) t 1))
+    (let* ((start (re-search-backward "^\\(?:~\\{3,\\}\\|`\\{3,\\}\\)\\(.+\\)$" (buffer-end -1) t 1))
            (lang (when start (match-string 1)))
            (start (and start (line-end-position)))
-           (end (re-search-forward "^~~~$" (buffer-end 1) t 1))
+           (end (re-search-forward "^\\(?:~\\{3,\\}\\|`\\{3,\\}\\)$" (buffer-end 1) t 1))
            (end (and end (line-beginning-position))))
       (when (and start end)
         (set-text-properties 0 (length lang) nil lang)
