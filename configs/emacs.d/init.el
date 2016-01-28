@@ -65,6 +65,8 @@
 (require 'init-powerline)
 (require 'init-flycheck)
 
+(require 'narrow-to-mode)
+
 ;; Just while I'm working on it.
 (add-to-list 'load-path (expand-file-name "octopress" user-emacs-directory))
 (use-package octopress
@@ -161,7 +163,8 @@
 (use-package markdown-mode
   :ensure t
   :config
-  (define-key markdown-mode-map (kbd "C-\\") 'markdown-insert-list-item))
+  (define-key markdown-mode-map (kbd "C-\\") 'markdown-insert-list-item)
+  (define-key markdown-mode-map (kbd "C-c '") 'ntm-narrow-dwim))
 
 (use-package php-extras :ensure t :defer t)
 (use-package sublime-themes :ensure t)
