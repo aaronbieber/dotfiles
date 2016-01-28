@@ -8,7 +8,11 @@
     ("php" . "php-mode"))
   "A mapping from markdown language symbols to the modes they should be edited in.")
 
-(defcustom narrow-to-code-recenter-on-widen t
+(defcustom ntm-default-mode
+  "text-mode"
+  "The default mode to use if a match is not found in the mapping list.")
+
+(defcustom ntm-recenter-on-widen t
   "Upon widening, recenter top to bottom automatically?")
 
 (defvar-local ntm-previous-mode nil
