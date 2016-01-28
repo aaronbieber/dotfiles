@@ -84,9 +84,9 @@
 
 (use-package css-mode
   :ensure t
-  :configure
-  (add-hook css-mode-hook (lambda ()
-                            (rainbow-mode))))
+  :config
+  (add-hook 'css-mode-hook (lambda ()
+                             (rainbow-mode))))
 
 (use-package color-theme-sanityinc-tomorrow
   :ensure t
