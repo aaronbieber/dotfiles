@@ -40,7 +40,6 @@ This function will narrow the current buffer to the range defined by
 START and END and then set MODE.  The current mode will be saved in a
 buffer local variable so that when the widening function is called the
 original mode is reset."
-  (interactive)
   (let ((previous-mode (symbol-name major-mode)))
     (narrow-to-region start end)
     (funcall (intern mode))
