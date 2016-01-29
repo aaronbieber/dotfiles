@@ -6,19 +6,22 @@
   '(("markdown" . "markdown-mode")
     ("cl" . "lisp-interaction-mode")
     ("php" . "php-mode"))
-  "A mapping from markdown language symbols to the modes they should be edited in.")
+  "A mapping from markdown language symbols to the modes they should be edited in."
+  :group 'narrow-to-mode)
 
 (defcustom ntm-default-mode
   "text-mode"
-  "The default mode to use if a match is not found in the mapping list.")
+  "The default mode to use if a match is not found in the mapping list."
+  :group 'narrow-to-mode)
 
 (defcustom ntm-recenter-on-widen t
-  "Upon widening, recenter top to bottom automatically?")
+  "Upon widening, recenter top to bottom automatically?"
+  :group 'narrow-to-mode)
 
 (defcustom ntm-blocks
   '(
-    ("^[ \t]*\\(?:~\\{3,\\}\\|`\\{3,\\}\\)\\(.+\\)$"
-     "^[ \t]*\\(?:~\\{3,\\}\\|`\\{3,\\}\\)$"
+    ("^[ \t]*\\(?:~\\{3,\\}\\|`\\{3,\\}\\)\\(.+\\)\n"
+     "^[ \t]*\\(?:~\\{3,\\}\\|`\\{3,\\}\\)\n"
      (lambda ()
        (let* ((lang (match-string 1))
               (lang (cdr (assoc lang ntm-markdown-symbol-mapping))))
@@ -36,7 +39,8 @@ integer indicating the capture group to pass to `match-string' to get
 the language, or a function to call to get the language.
 
 The function will only be called if the regexp matches, so you can
-rely on the presence of match data.")
+rely on the presence of match data."
+  :group 'narrow-to-mode)
 
 (defvar-local ntm-previous-mode nil
   "Mode set before narrowing, restored upon widening.")
@@ -84,8 +88,8 @@ original mode is reset."
   "Look for a code block and, if found, narrow to it and set the mode."
   (deactivate-mark)
   (let* ((block (ntm-find-markdown-code-block))
-         (start (cadr block))
-         (end (caddr block))
+         (start (nth 1 block))
+         (end (nth 2 block))
          (lang (car block))
          (mode (or (cdr (assoc lang ntm-markdown-symbol-mapping))
                    ntm-default-mode)))
@@ -105,11 +109,36 @@ original mode is reset."
 ;;; New buffer code starts here
 ;;; ================================================================================
 
+(defun ntm--get-block-around-point ()
+  "Return metadata about block surrounding point.
+
+Return nil if no block is found."
+  (save-excursion
+    (beginning-of-line)
+    (let ((pos (point))
+          (blocks ntm-blocks)
+          block re-start re-end lang-id start end lang)
+      (catch 'exit
+        (while (setq block (pop blocks))
+          (setq re-start (car block)
+                re-end (nth 1 block)
+                lang-id (nth 2 block))
+          (if (or (looking-at re-start)
+                  (re-search-backward re-start nil t))
+              (progn
+                (setq start (1+ (match-end 0))
+                      lang (cond ((integerp lang-id)
+                                  (match-string lang-id))
+                                 ((functionp lang-id)
+                                  (funcall lang-id))))
+                (if (and (and (goto-char (match-end 0))
+                              (re-search-forward re-end nil t))
+                         (>= (match-beginning 0) pos))
+                    (throw 'exit `(,start ,(match-beginning 0) ,lang))))))))))
+
 (defun ntm-edit-code-at-point ()
   "Look for a code block at point and, if found, edit it."
-  (interactive)
-
-  )
+  (interactive))
 
 (provide 'narrow-to-mode)
 ;;; narrow-to-mode.el ends here
