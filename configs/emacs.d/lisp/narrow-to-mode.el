@@ -22,10 +22,7 @@
   '(
     ("^[ \t]*\\(?:~\\{3,\\}\\|`\\{3,\\}\\)\\(.+\\)\n"
      "^[ \t]*\\(?:~\\{3,\\}\\|`\\{3,\\}\\)\n"
-     (lambda ()
-       (let* ((lang (match-string 1))
-              (lang (cdr (assoc lang ntm-markdown-symbol-mapping))))
-         lang)))
+     1)
     )
   "Alist of regexps matching editable blocks.
 
@@ -130,7 +127,7 @@ Return nil if no block is found."
           (if (or (looking-at re-start)
                   (re-search-backward re-start nil t))
               (progn
-                (setq start (1+ (match-end 0))
+                (setq start (match-end 0)
                       lang (cond ((integerp lang-id)
                                   (match-string lang-id))
                                  ((functionp lang-id)
@@ -140,22 +137,41 @@ Return nil if no block is found."
                          (>= (match-beginning 0) pos))
                     (throw 'exit `(,start ,(match-beginning 0) ,lang))))))))))
 
+(defun ntm--get-mode-for-lang (lang)
+  "Try to get a mode name from language name LANG.
+
+The assumption is that language `LANG' has a mode `LANG-mode'."
+  (let ((mode-name (intern (concat lang "-mode"))))
+    (if (fboundp mode-name)
+        mode-name
+      "text-mode")))
+
 (defun ntm-edit-code-at-point ()
   "Look for a code block at point and, if found, edit it."
   (interactive)
   (let ((block (ntm--get-block-around-point))
-        beg end lang ovl edit-buffer vars)
+        beg end lang code mode ovl edit-buffer vars)
     (if block
         (progn
           (setq beg (car block)
                 end (nth 1 block)
                 lang (nth 2 block)
+                code (buffer-substring-no-properties beg end)
+                mode (ntm--get-mode-for-lang lang)
                 ovl (make-overlay beg end)
                 edit-buffer (generate-new-buffer
                              (ntm--make-edit-buffer-name (buffer-name) lang)))
 
+          ;; Overlay
           (overlay-put ovl 'edit-buffer edit-buffer)
           (overlay-put ovl 'face 'secondary-selection)
+          (overlay-put ovl :read-only "Please don't.")
+
+          ;; Buffer setup
+          (pop-to-buffer edit-buffer)
+          (setq header-line-format "Press C-c C-c to save.")
+          (insert code)
+          (funcall mode)
           ))))
 
 (provide 'narrow-to-mode)
