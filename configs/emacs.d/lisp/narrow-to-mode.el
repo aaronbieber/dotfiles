@@ -109,6 +109,10 @@ original mode is reset."
 ;;; New buffer code starts here
 ;;; ================================================================================
 
+(defun ntm--make-edit-buffer-name (base-buffer-name lang)
+  "Construct the buffer name for a source editing buffer."
+  (concat "*Narrowed Edit " base-buffer-name "[" lang "]*"))
+
 (defun ntm--get-block-around-point ()
   "Return metadata about block surrounding point.
 
@@ -138,7 +142,21 @@ Return nil if no block is found."
 
 (defun ntm-edit-code-at-point ()
   "Look for a code block at point and, if found, edit it."
-  (interactive))
+  (interactive)
+  (let ((block (ntm--get-block-around-point))
+        beg end lang ovl edit-buffer vars)
+    (if block
+        (progn
+          (setq beg (car block)
+                end (nth 1 block)
+                lang (nth 2 block)
+                ovl (make-overlay beg end)
+                edit-buffer (generate-new-buffer
+                             (ntm--make-edit-buffer-name (buffer-name) lang)))
+
+          (overlay-put ovl 'edit-buffer edit-buffer)
+          (overlay-put ovl 'face 'secondary-selection)
+          ))))
 
 (provide 'narrow-to-mode)
 ;;; narrow-to-mode.el ends here
