@@ -76,7 +76,7 @@
   (c-set-style "wf-php")
   (eldoc-mode t)
   (highlight-symbol-mode)
-  (electric-pair-local-mode)
+  (electric-pair-mode)
   (turn-on-auto-fill)
   (set-fill-column 120)
   (add-to-list 'write-file-functions 'delete-trailing-whitespace)
