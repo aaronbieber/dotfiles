@@ -15,6 +15,29 @@
 (defcustom ntm-recenter-on-widen t
   "Upon widening, recenter top to bottom automatically?")
 
+(defcustom ntm-blocks
+  '(
+    ("^[ \t]*\\(?:~\\{3,\\}\\|`\\{3,\\}\\)\\(.+\\)$"
+     "^[ \t]*\\(?:~\\{3,\\}\\|`\\{3,\\}\\)$"
+     (lambda ()
+       (let* ((lang (match-string 1))
+              (lang (cdr (assoc lang ntm-markdown-symbol-mapping))))
+         lang)))
+    )
+  "Alist of regexps matching editable blocks.
+
+Each element takes the form
+\(START-REGEXP END-REGEXP LANG-OR-CAPTURE-OR-FUNC)
+
+Where START- and END-REGEXP are patterns matching the start and end of
+the block, respectively, and LANG-OR-CAPTURE-OR-FUNC is either a
+symbol representing the language the block should be edited in, an
+integer indicating the capture group to pass to `match-string' to get
+the language, or a function to call to get the language.
+
+The function will only be called if the regexp matches, so you can
+rely on the presence of match data.")
+
 (defvar-local ntm-previous-mode nil
   "Mode set before narrowing, restored upon widening.")
 
@@ -77,6 +100,16 @@ original mode is reset."
     (funcall (intern ntm-previous-mode))
     (when ntm-recenter-on-widen
       (recenter-top-bottom)))
+
+;;; ================================================================================
+;;; New buffer code starts here
+;;; ================================================================================
+
+(defun ntm-edit-code-at-point ()
+  "Look for a code block at point and, if found, edit it."
+  (interactive)
+
+  )
 
 (provide 'narrow-to-mode)
 ;;; narrow-to-mode.el ends here
