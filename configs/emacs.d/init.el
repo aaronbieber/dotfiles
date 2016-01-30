@@ -256,8 +256,8 @@
    '((markdown-cl
       :submode emacs-lisp-mode
       :face mmm-declaration-submode-face
-      :front "^```cl[\n\r]+"
-      :back "^```$")
+      :front "^~~~cl[\n\r]+"
+      :back "^~~~$")
      (markdown-php
       :submode php-mode
       :face mmm-declaration-submode-face
@@ -284,8 +284,10 @@
 (add-hook 'lisp-interaction-mode-hook
           (lambda ()
             (define-key lisp-interaction-mode-map (kbd "<C-return>") 'eval-last-sexp)))
+
 (add-hook 'emacs-lisp-mode-hook
           (lambda ()
+            (yas-minor-mode)
             (define-key emacs-lisp-mode-map (kbd "<C-return>") 'eval-last-sexp)))
 
 ;;; Python mode:
