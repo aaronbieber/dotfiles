@@ -42,20 +42,32 @@ rely on the presence of match data."
 (defvar-local ntm-previous-mode nil
   "Mode set before narrowing, restored upon widening.")
 
+(define-minor-mode ntm-edit-mode
+  "A minor mode used when editing a narrow-to-mode block.")
+
 (defvar ntm-edit-mode-hook nil
   "Hook run when narrow-to-mode has set the block's language mode.
 
 You may want to use this to disable language mode configurations that
 don't work well in the snippet view.")
 
-(define-minor-mode ntm-edit-mode
-  "A minor mode used when editing a narrow-to-mode block.")
+(defvar ntm-edit-mode-map (make-sparse-keymap))
+(define-key ntm-edit-mode-map (kbd "C-c C-c") 'ntm-edit-exit)
+(define-key ntm-edit-mode-map (kbd "C-c C-k") 'ntm-edit-abort)
 
 (defun ntm-edit-mode-configure-buffer ()
   "Configure the narrow-to-mode edit buffer."
   (add-hook 'kill-buffer-hook
             #'(lambda () (delete-overlay ntm-overlay)) nil 'local))
 (add-hook 'ntm-edit-mode-hook 'ntm-edit-mode-configure-buffer)
+
+(defsubst ntm-set-local (var value)
+  "Make VAR local in current buffer and set it to VALUE."
+  (set (make-local-variable var) value))
+
+;;; ================================================================================
+;;; Old stuff starts here
+;;; ================================================================================
 
 (defun ntm-find-markdown-code-block ()
   "Find the extents and type of the code block at point.
@@ -179,6 +191,9 @@ The assumption is that language `LANG' has a mode `LANG-mode'."
                 edit-buffer (generate-new-buffer
                              (ntm--make-edit-buffer-name (buffer-name) lang)))
 
+          (if (string-match-p (rx "\n" string-end) code)
+              (setq code (replace-regexp-in-string (rx "\n" string-end) "" code)))
+
           ;; Overlay
           (overlay-put ovl 'edit-buffer edit-buffer)
           (overlay-put ovl 'face 'secondary-selection)
@@ -196,10 +211,55 @@ The assumption is that language `LANG' has a mode `LANG-mode'."
              (message "Language mode `%s' fails with: %S" lang-f (nth 1 e))))
           (ntm-edit-mode)
 
-          (set (make-local-variable 'ntm-overlay) ovl)
-          (set (make-local-variable 'header-line-format) "Press C-c C-c to save.")
+          (ntm-set-local 'ntm-editor t)
+          (ntm-set-local 'ntm-mark-beg beg)
+          (ntm-set-local 'ntm-mark-end end)
+          (ntm-set-local 'ntm-overlay ovl)
+          (ntm-set-local 'header-line-format "Press C-c C-c to save.")
           
           ))))
+
+(defun ntm--guard-edit-buffer ()
+  "Throw an error if current buffer doesn't look like an edit buffer."
+  (unless (bound-and-true-p ntm-editor)
+    (error "This is not a narrow-to-mode editor; something is wrong")))
+
+(defun ntm--abandon-edit-buffer (dest-buffer)
+  "Trash the edit buffer and switch to DEST-BUFFER.
+
+The edit buffer is expected to be the current buffer."
+  (interactive "P")
+  (ntm--guard-edit-buffer)
+  (let ((buffer (current-buffer)))
+    (switch-to-buffer-other-window dest-buffer)
+    (delete-other-windows)
+    (with-current-buffer buffer
+      (set-buffer-modified-p nil))
+    (kill-buffer buffer)))
+
+(defun ntm-edit-exit ()
+  "Conclude editing, replacing the original text."
+  (interactive)
+  (ntm--guard-edit-buffer)
+  (let ((buffer (current-buffer))
+        (code (buffer-string))
+        (beg ntm-mark-beg)
+        (end ntm-mark-end)
+        (ovl ntm-overlay))
+    (if (not (string-match-p "\\n$" code))
+        (setq code (concat code "\n")))
+    (ntm--abandon-edit-buffer (marker-buffer beg))
+    (goto-char beg)
+    (undo-boundary)
+    (delete-region beg end)
+    (insert code)))
+
+(defun ntm-edit-abort ()
+  "Conclude editing, discarding the edited text."
+  (interactive)
+  (ntm--guard-edit-buffer)
+  (let ((dest-buffer (marker-buffer ntm-mark-beg)))
+    (ntm--abandon-edit-buffer dest-buffer)))
 
 (provide 'narrow-to-mode)
 ;;; narrow-to-mode.el ends here
