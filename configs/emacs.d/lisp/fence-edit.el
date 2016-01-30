@@ -1,30 +1,43 @@
-;;; narrow-to-mode.el -- Edit a narrowed region with a different major mode.
-;;; Commentary:
-;;; Code:
+;;; fence-edit.el -- Edit code in fenced code blocks in a specific mode.
 
-(defcustom narrow-to-mode-lang-modes
-  '(("markdown" . markdown-mode)
-    ("cl" . lisp-interaction-mode)
-    ("php" . php-mode))
+;; Author: Aaron Bieber <aaron@aaronbieber.com>
+;; Package-Requires: ((emacs "24.4"))
+;; Keywords: tools mode
+;; Homepage: https://github.com/aaronbieber/fence-edit.el
+
+;; Fence Edit requires at least GNU Emacs 24.4.
+
+;;; Commentary:
+
+;; Fence Edit provides a convenient way to edit the contents of
+;; "fenced code blocks" used by markup formats like Markdown in a
+;; dedicated window set to the major mode appropriate for its
+;; language.
+;;
+;; Simply bind a key to `fence-edit-code-at-point' and call it from
+;; within any code block matching one of the patterns described in
+;; `fence-edit-blocks'.
+
+;;; Code:
+(defcustom fence-edit-lang-modes
+  '(("cl" . lisp-interaction-mode))
   "A mapping from markdown language symbols to the modes they should be edited in."
-  :group 'narrow-to-mode
+  :group 'fence-edit
   :type '(repeat
           (cons
            (string "Language name")
            (symbol "Major mode"))))
 
-(defcustom narrow-to-mode-default-mode
+(defcustom fence-edit-default-mode
   'text-mode
   "The default mode to use if a language-appropriate mode cannot be determined."
-  :group 'narrow-to-mode
+  :group 'fence-edit
   :type '(symbol))
 
-(defcustom narrow-to-mode-blocks
-  '(
-    ("^[ \t]*\\(?:~\\{3,\\}\\|`\\{3,\\}\\)\\(.+\\)\n"
+(defcustom fence-edit-blocks
+  '(("^[ \t]*\\(?:~\\{3,\\}\\|`\\{3,\\}\\)\\(.*\\)\n"
      "^[ \t]*\\(?:~\\{3,\\}\\|`\\{3,\\}\\)"
-     1)
-    )
+     1))
   "Alist of regexps matching editable blocks.
 
 Each element takes the form
@@ -42,9 +55,9 @@ group within the START-REGEXP).
 
 If the language value with `-mode' appended to it does not resolve to
 a bound function, it will be used to look up a mode in
-`narrow-to-mode-lang-modes'.  If the symbol doesn't match a key in
-that list, the `narrow-to-mode-default-mode' will be used."
-  :group 'narrow-to-mode
+`fence-edit-lang-modes'.  If the symbol doesn't match a key in
+that list, the `fence-edit-default-mode' will be used."
+  :group 'fence-edit
   :type '(repeat
           (list
            (regexp "Start regexp")
@@ -52,44 +65,50 @@ that list, the `narrow-to-mode-default-mode' will be used."
            (choice (integer "Capture group number")
                    (symbol "Language name")))))
 
-(defvar-local ntm-previous-mode nil
+(defvar-local fence-edit-previous-mode nil
   "Mode set before narrowing, restored upon widening.")
 
-(define-minor-mode ntm-edit-mode
-  "A minor mode used when editing a narrow-to-mode block."
-  nil "NTM-Edit"
-  '(((kbd "C-c '") . 'ntm-edit-exit)
-    ((kbd "C-c C-k") . 'ntm-edit-abort)))
+(defvar fence-edit-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-c '") 'fence-edit-exit)
+    (define-key map (kbd "C-c C-k") 'fence-edit-abort)
+    map)
+  "The keymap used in fence-edit-mode.")
 
-(defvar ntm-edit-mode-hook nil
-  "Hook run when narrow-to-mode has set the block's language mode.
+(define-minor-mode fence-edit-mode
+  "A minor mode used when editing a fence-edit block."
+  nil "Fence-Edit"
+  fence-edit-mode-map)
+
+(defvar fence-edit-mode-hook nil
+  "Hook run when fence-edit has set the block's language mode.
 
 You may want to use this to disable language mode configurations that
 don't work well in the snippet view.")
 
-(defun ntm-edit-mode-configure ()
-  "Configure the narrow-to-mode edit buffer."
+(defun fence-edit-mode-configure ()
+  "Configure the fence-edit edit buffer."
   (add-hook 'kill-buffer-hook
-            #'(lambda () (delete-overlay ntm-overlay)) nil 'local))
+            #'(lambda () (delete-overlay fence-edit-overlay)) nil 'local))
 
-(add-hook 'ntm-edit-mode-hook 'ntm-edit-mode-configure)
+(add-hook 'fence-edit-mode-hook 'fence-edit-mode-configure)
 
-(defsubst ntm-set-local (var value)
+(defsubst fence-edit-set-local (var value)
   "Make VAR local in current buffer and set it to VALUE."
   (set (make-local-variable var) value))
 
-(defun ntm--make-edit-buffer-name (base-buffer-name lang)
+(defun fence-edit--make-edit-buffer-name (base-buffer-name lang)
   "Make an edit buffer name from BASE-BUFFER-NAME and LANG."
   (concat "*Narrowed Edit " base-buffer-name "[" lang "]*"))
 
-(defun ntm--get-block-around-point ()
+(defun fence-edit--get-block-around-point ()
   "Return metadata about block surrounding point.
 
 Return nil if no block is found."
   (save-excursion
     (beginning-of-line)
     (let ((pos (point))
-          (blocks narrow-to-mode-blocks)
+          (blocks fence-edit-blocks)
           block re-start re-end lang-id start end lang)
       (catch 'exit
         (while (setq block (pop blocks))
@@ -109,21 +128,21 @@ Return nil if no block is found."
                          (>= (match-beginning 0) pos))
                     (throw 'exit `(,start ,(match-beginning 0) ,lang))))))))))
 
-(defun ntm--get-mode-for-lang (lang)
+(defun fence-edit--get-mode-for-lang (lang)
   "Try to get a mode name from language name LANG.
 
 The assumption is that language `LANG' has a mode `LANG-mode'."
   (let ((mode-name (intern (concat lang "-mode"))))
     (if (fboundp mode-name)
         mode-name
-      (if (assoc lang narrow-to-mode-lang-modes)
-          (cdr (assoc lang narrow-to-mode-lang-modes))
-        narrow-to-mode-default-mode))))
+      (if (assoc lang fence-edit-lang-modes)
+          (cdr (assoc lang fence-edit-lang-modes))
+        fence-edit-default-mode))))
 
-(defun ntm-edit-code-at-point ()
+(defun fence-edit-code-at-point ()
   "Look for a code block at point and, if found, edit it."
   (interactive)
-  (let* ((block (ntm--get-block-around-point))
+  (let* ((block (fence-edit--get-block-around-point))
          (pos (point))
          (beg (make-marker))
          (end (copy-marker (make-marker) t))
@@ -135,10 +154,10 @@ The assumption is that language `LANG' has a mode `LANG-mode'."
                 edit-point (1+ (- pos beg))
                 lang (nth 2 block)
                 code (buffer-substring-no-properties beg end)
-                mode (ntm--get-mode-for-lang lang)
+                mode (fence-edit--get-mode-for-lang lang)
                 ovl (make-overlay beg end)
                 edit-buffer (generate-new-buffer
-                             (ntm--make-edit-buffer-name (buffer-name) lang)))
+                             (fence-edit--make-edit-buffer-name (buffer-name) lang)))
           (if (string-match-p (rx "\n" string-end) code)
               (setq code (replace-regexp-in-string (rx "\n" string-end) "" code)))
           (overlay-put ovl 'edit-buffer edit-buffer)
@@ -152,25 +171,25 @@ The assumption is that language `LANG' has a mode `LANG-mode'."
               (funcall mode)
             (error
              (message "Language mode `%s' fails with: %S" lang-f (nth 1 e))))
-          (ntm-edit-mode)
-          (ntm-set-local 'ntm-editor t)
-          (ntm-set-local 'ntm-mark-beg beg)
-          (ntm-set-local 'ntm-mark-end end)
-          (ntm-set-local 'ntm-overlay ovl)
-          (ntm-set-local 'header-line-format "Press C-c ' (C-c apostrophe) to save, C-c C-k to abort.")
+          (fence-edit-mode)
+          (fence-edit-set-local 'fence-edit-editor t)
+          (fence-edit-set-local 'fence-edit-mark-beg beg)
+          (fence-edit-set-local 'fence-edit-mark-end end)
+          (fence-edit-set-local 'fence-edit-overlay ovl)
+          (fence-edit-set-local 'header-line-format "Press C-c ' (C-c apostrophe) to save, C-c C-k to abort.")
           (goto-char edit-point)))))
 
-(defun ntm--guard-edit-buffer ()
+(defun fence-edit--guard-edit-buffer ()
   "Throw an error if current buffer doesn't look like an edit buffer."
-  (unless (bound-and-true-p ntm-editor)
-    (error "This is not a narrow-to-mode editor; something is wrong")))
+  (unless (bound-and-true-p fence-edit-editor)
+    (error "This is not a fence-edit editor; something is wrong")))
 
-(defun ntm--abandon-edit-buffer (dest-buffer)
+(defun fence-edit--abandon-edit-buffer (dest-buffer)
   "Trash the edit buffer and switch to DEST-BUFFER.
 
 The edit buffer is expected to be the current buffer."
   (interactive "P")
-  (ntm--guard-edit-buffer)
+  (fence-edit--guard-edit-buffer)
   (let ((buffer (current-buffer)))
     (switch-to-buffer-other-window dest-buffer)
     (delete-other-windows)
@@ -178,19 +197,19 @@ The edit buffer is expected to be the current buffer."
       (set-buffer-modified-p nil))
     (kill-buffer buffer)))
 
-(defun ntm-edit-exit ()
+(defun fence-edit-exit ()
   "Conclude editing, replacing the original text."
   (interactive)
-  (ntm--guard-edit-buffer)
+  (fence-edit--guard-edit-buffer)
   (let ((buffer (current-buffer))
         (code (buffer-string))
-        (beg ntm-mark-beg)
-        (end ntm-mark-end)
+        (beg fence-edit-mark-beg)
+        (end fence-edit-mark-end)
         (edit-point (point))
-        (ovl ntm-overlay))
+        (ovl fence-edit-overlay))
     (if (not (string-match-p "\\n$" code))
         (setq code (concat code "\n")))
-    (ntm--abandon-edit-buffer (marker-buffer beg))
+    (fence-edit--abandon-edit-buffer (marker-buffer beg))
     (goto-char beg)
     (undo-boundary)
     (delete-region beg end)
@@ -199,12 +218,12 @@ The edit buffer is expected to be the current buffer."
     (set-marker beg nil)
     (set-marker end nil)))
 
-(defun ntm-edit-abort ()
+(defun fence-edit-abort ()
   "Conclude editing, discarding the edited text."
   (interactive)
-  (ntm--guard-edit-buffer)
-  (let ((dest-buffer (marker-buffer ntm-mark-beg)))
-    (ntm--abandon-edit-buffer dest-buffer)))
+  (fence-edit--guard-edit-buffer)
+  (let ((dest-buffer (marker-buffer fence-edit-mark-beg)))
+    (fence-edit--abandon-edit-buffer dest-buffer)))
 
-(provide 'narrow-to-mode)
-;;; narrow-to-mode.el ends here
+(provide 'fence-edit)
+;;; fence-edit.el ends here
