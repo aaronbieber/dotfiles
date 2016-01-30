@@ -107,8 +107,8 @@
   (add-hook 'ag-mode-hook
             (lambda ()
               (wgrep-ag-setup)
-              (define-key 'ag-mode-map (kbd "n") 'evil-search-next)
-              (define-key 'ag-mode-map (kbd "N") 'evil-search-previous)))
+              (define-key ag-mode-map (kbd "n") 'evil-search-next)
+              (define-key ag-mode-map (kbd "N") 'evil-search-previous)))
   (setq ag-executable "/usr/local/bin/ag")
   (setq ag-highlight-search t)
   (setq ag-reuse-buffers t)
