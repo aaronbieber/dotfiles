@@ -2,23 +2,24 @@
 ;;; Commentary:
 ;;; Code:
 
-(defcustom ntm-markdown-symbol-mapping
-  '(("markdown" . "markdown-mode")
-    ("cl" . "lisp-interaction-mode")
-    ("php" . "php-mode"))
+(defcustom narrow-to-mode-lang-modes
+  '(("markdown" . markdown-mode)
+    ("cl" . lisp-interaction-mode)
+    ("php" . php-mode))
   "A mapping from markdown language symbols to the modes they should be edited in."
-  :group 'narrow-to-mode)
+  :group 'narrow-to-mode
+  :type '(repeat
+          (cons
+           (string "Language name")
+           (symbol "Major mode"))))
 
-(defcustom ntm-default-mode
-  "text-mode"
-  "The default mode to use if a match is not found in the mapping list."
-  :group 'narrow-to-mode)
+(defcustom narrow-to-mode-default-mode
+  'text-mode
+  "The default mode to use if a language-appropriate mode cannot be determined."
+  :group 'narrow-to-mode
+  :type '(symbol))
 
-(defcustom ntm-recenter-on-widen t
-  "Upon widening, recenter top to bottom automatically?"
-  :group 'narrow-to-mode)
-
-(defcustom ntm-blocks
+(defcustom narrow-to-mode-blocks
   '(
     ("^[ \t]*\\(?:~\\{3,\\}\\|`\\{3,\\}\\)\\(.+\\)\n"
      "^[ \t]*\\(?:~\\{3,\\}\\|`\\{3,\\}\\)"
@@ -27,23 +28,38 @@
   "Alist of regexps matching editable blocks.
 
 Each element takes the form
-\(START-REGEXP END-REGEXP LANG-OR-CAPTURE-OR-FUNC)
+\(START-REGEXP END-REGEXP LANG-RULE)
 
 Where START- and END-REGEXP are patterns matching the start and end of
-the block, respectively, and LANG-OR-CAPTURE-OR-FUNC is either a
-symbol representing the language the block should be edited in, an
-integer indicating the capture group to pass to `match-string' to get
-the language, or a function to call to get the language.
+the block, respectively.
 
-The function will only be called if the regexp matches, so you can
-rely on the presence of match data."
-  :group 'narrow-to-mode)
+If LANG-RULE is a symbol, that symbol is assumed to be a language
+name.
+
+If LANG-RULE is an integer, it is assumed to be the number of a
+capture group to pass to `match-string' to get the language (a capture
+group within the START-REGEXP).
+
+If the language value with `-mode' appended to it does not resolve to
+a bound function, it will be used to look up a mode in
+`narrow-to-mode-lang-modes'.  If the symbol doesn't match a key in
+that list, the `narrow-to-mode-default-mode' will be used."
+  :group 'narrow-to-mode
+  :type '(repeat
+          (list
+           (regexp "Start regexp")
+           (regexp "End regexp")
+           (choice (integer "Capture group number")
+                   (symbol "Language name")))))
 
 (defvar-local ntm-previous-mode nil
   "Mode set before narrowing, restored upon widening.")
 
 (define-minor-mode ntm-edit-mode
-  "A minor mode used when editing a narrow-to-mode block.")
+  "A minor mode used when editing a narrow-to-mode block."
+  nil "NTM-Edit"
+  '(((kbd "C-c '") . 'ntm-edit-exit)
+    ((kbd "C-c C-k") . 'ntm-edit-abort)))
 
 (defvar ntm-edit-mode-hook nil
   "Hook run when narrow-to-mode has set the block's language mode.
@@ -51,90 +67,19 @@ rely on the presence of match data."
 You may want to use this to disable language mode configurations that
 don't work well in the snippet view.")
 
-(defvar ntm-edit-mode-map (make-sparse-keymap))
-(define-key ntm-edit-mode-map (kbd "C-c C-c") 'ntm-edit-exit)
-(define-key ntm-edit-mode-map (kbd "C-c C-k") 'ntm-edit-abort)
-
-(defun ntm-edit-mode-configure-buffer ()
+(defun ntm-edit-mode-configure ()
   "Configure the narrow-to-mode edit buffer."
   (add-hook 'kill-buffer-hook
             #'(lambda () (delete-overlay ntm-overlay)) nil 'local))
-(add-hook 'ntm-edit-mode-hook 'ntm-edit-mode-configure-buffer)
+
+(add-hook 'ntm-edit-mode-hook 'ntm-edit-mode-configure)
 
 (defsubst ntm-set-local (var value)
   "Make VAR local in current buffer and set it to VALUE."
   (set (make-local-variable var) value))
 
-;;; ================================================================================
-;;; Old stuff starts here
-;;; ================================================================================
-
-(defun ntm-find-markdown-code-block ()
-  "Find the extents and type of the code block at point.
-
-Returns a list containing the specified language name, start position,
-and end position of the code block, e.g. (\"cl\" 100 150), where the
-language is \"cl\" and the block begins at buffer position 100 and
-ends at buffer position 150.
-
-Returns nil if a block cannot be found."
-  (save-excursion
-    (let* ((start (re-search-backward "^\\(?:~\\{3,\\}\\|`\\{3,\\}\\)\\(.+\\)$" (buffer-end -1) t 1))
-           (lang (when start (match-string 1)))
-           (start (and start (line-end-position)))
-           (end (re-search-forward "^\\(?:~\\{3,\\}\\|`\\{3,\\}\\)$" (buffer-end 1) t 1))
-           (end (and end (line-beginning-position))))
-      (when (and start end)
-        (set-text-properties 0 (length lang) nil lang)
-        `(,lang ,(1+ start) ,(1- end))))))
-
-(defun ntm-narrow-to-new-mode (start end mode)
-  "Narrow to the range defined by START and END and set MODE.
-
-This function will narrow the current buffer to the range defined by
-START and END and then set MODE.  The current mode will be saved in a
-buffer local variable so that when the widening function is called the
-original mode is reset."
-  (let ((previous-mode (symbol-name major-mode)))
-    (narrow-to-region start end)
-    (funcall (intern mode))
-    (setq ntm-previous-mode previous-mode)))
-
-(defun ntm-narrow-dwim ()
-  "Narrow to a code block, or widen, depending on the situation."
-  (interactive)
-  (if (and (boundp 'ntm-previous-mode)
-           (> (length ntm-previous-mode) 0))
-      (ntm--widen)
-    (ntm--narrow)))
-
-(defun ntm--narrow ()
-  "Look for a code block and, if found, narrow to it and set the mode."
-  (deactivate-mark)
-  (let* ((block (ntm-find-markdown-code-block))
-         (start (nth 1 block))
-         (end (nth 2 block))
-         (lang (car block))
-         (mode (or (cdr (assoc lang ntm-markdown-symbol-mapping))
-                   ntm-default-mode)))
-    (if (and block
-             mode)
-        (ntm-narrow-to-new-mode start end mode)
-      (message "No code block found to narrow to."))))
-
-(defun ntm--widen ()
-  "Widen the buffer and restore the previous mode."
-    (widen)
-    (funcall (intern ntm-previous-mode))
-    (when ntm-recenter-on-widen
-      (recenter-top-bottom)))
-
-;;; ================================================================================
-;;; New buffer code starts here
-;;; ================================================================================
-
 (defun ntm--make-edit-buffer-name (base-buffer-name lang)
-  "Construct the buffer name for a source editing buffer."
+  "Make an edit buffer name from BASE-BUFFER-NAME and LANG."
   (concat "*Narrowed Edit " base-buffer-name "[" lang "]*"))
 
 (defun ntm--get-block-around-point ()
@@ -144,7 +89,7 @@ Return nil if no block is found."
   (save-excursion
     (beginning-of-line)
     (let ((pos (point))
-          (blocks ntm-blocks)
+          (blocks narrow-to-mode-blocks)
           block re-start re-end lang-id start end lang)
       (catch 'exit
         (while (setq block (pop blocks))
@@ -171,53 +116,49 @@ The assumption is that language `LANG' has a mode `LANG-mode'."
   (let ((mode-name (intern (concat lang "-mode"))))
     (if (fboundp mode-name)
         mode-name
-      "text-mode")))
+      (if (assoc lang narrow-to-mode-lang-modes)
+          (cdr (assoc lang narrow-to-mode-lang-modes))
+        narrow-to-mode-default-mode))))
 
 (defun ntm-edit-code-at-point ()
   "Look for a code block at point and, if found, edit it."
   (interactive)
   (let* ((block (ntm--get-block-around-point))
+         (pos (point))
          (beg (make-marker))
          (end (copy-marker (make-marker) t))
-         lang code mode ovl edit-buffer vars)
+         edit-point lang code mode ovl edit-buffer vars)
     (if block
         (progn
           (setq beg (move-marker beg (car block))
                 end (move-marker end (nth 1 block))
+                edit-point (1+ (- pos beg))
                 lang (nth 2 block)
                 code (buffer-substring-no-properties beg end)
                 mode (ntm--get-mode-for-lang lang)
                 ovl (make-overlay beg end)
                 edit-buffer (generate-new-buffer
                              (ntm--make-edit-buffer-name (buffer-name) lang)))
-
           (if (string-match-p (rx "\n" string-end) code)
               (setq code (replace-regexp-in-string (rx "\n" string-end) "" code)))
-
-          ;; Overlay
           (overlay-put ovl 'edit-buffer edit-buffer)
           (overlay-put ovl 'face 'secondary-selection)
           (overlay-put ovl :read-only "Please don't.")
-
-          ;; Buffer setup
           (switch-to-buffer-other-window edit-buffer t)
           (insert code)
           (remove-text-properties (point-min) (point-max)
                                   '(display nil invisible nil intangible nil))
-          
           (condition-case e
               (funcall mode)
             (error
              (message "Language mode `%s' fails with: %S" lang-f (nth 1 e))))
           (ntm-edit-mode)
-
           (ntm-set-local 'ntm-editor t)
           (ntm-set-local 'ntm-mark-beg beg)
           (ntm-set-local 'ntm-mark-end end)
           (ntm-set-local 'ntm-overlay ovl)
-          (ntm-set-local 'header-line-format "Press C-c C-c to save.")
-          
-          ))))
+          (ntm-set-local 'header-line-format "Press C-c ' (C-c apostrophe) to save, C-c C-k to abort.")
+          (goto-char edit-point)))))
 
 (defun ntm--guard-edit-buffer ()
   "Throw an error if current buffer doesn't look like an edit buffer."
@@ -245,6 +186,7 @@ The edit buffer is expected to be the current buffer."
         (code (buffer-string))
         (beg ntm-mark-beg)
         (end ntm-mark-end)
+        (edit-point (point))
         (ovl ntm-overlay))
     (if (not (string-match-p "\\n$" code))
         (setq code (concat code "\n")))
@@ -252,7 +194,10 @@ The edit buffer is expected to be the current buffer."
     (goto-char beg)
     (undo-boundary)
     (delete-region beg end)
-    (insert code)))
+    (insert code)
+    (goto-char (1- (+ beg edit-point)))
+    (set-marker beg nil)
+    (set-marker end nil)))
 
 (defun ntm-edit-abort ()
   "Conclude editing, discarding the edited text."
