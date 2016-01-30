@@ -65,11 +65,12 @@
 (require 'init-powerline)
 (require 'init-flycheck)
 
-(require 'narrow-to-mode)
+(require 'fence-edit)
 
 ;; Just while I'm working on it.
-(add-to-list 'load-path (expand-file-name "octopress" user-emacs-directory))
+;;(add-to-list 'load-path (expand-file-name "octopress" user-emacs-directory))
 (use-package octopress
+  :ensure t
   :config
   (setq octopress-blog-root (expand-file-name "~/Blog")))
 
@@ -164,7 +165,7 @@
   :ensure t
   :config
   (define-key markdown-mode-map (kbd "C-\\") 'markdown-insert-list-item)
-  (define-key markdown-mode-map (kbd "C-c '") 'ntm-edit-code-at-point))
+  (define-key markdown-mode-map (kbd "C-c '") 'fence-edit-code-at-point))
 
 (use-package php-extras :ensure t :defer t)
 (use-package sublime-themes :ensure t)
@@ -402,15 +403,9 @@ is the buffer location at which the function was found."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default bold shadow italic underline bold bold-italic bold])
- '(ansi-color-names-vector
-   (vector "#4d4d4c" "#c82829" "#718c00" "#eab700" "#4271ae" "#8959a8" "#3e999f" "#ffffff"))
- '(custom-safe-themes t)
- '(lpr-page-header-switches (quote ("-h" "%s" "-F" "-l 65")))
  '(package-selected-packages
    (quote
-    (rainbow-mode elpy zenburn-theme yasnippet yaml-mode which-key wgrep-ag web-mode w3m use-package twittering-mode sunshine sublime-themes sr-speedbar soft-stone-theme powerline-evil php-extras pandoc-mode org-bullets org mmm-mode markdown-mode magit ht highlight-symbol helm-projectile gtags fullframe flycheck exec-path-from-shell evil-surround evil-leader evil-jumper evil-indent-textobject emmet-mode dictionary cyberpunk-theme company color-theme-sanityinc-tomorrow color-theme-modern bpr auto-complete ag ace-link)))
+    (octopress zenburn-theme yaml-mode which-key wgrep-ag web-mode w3m use-package twittering-mode sunshine sublime-themes rainbow-mode powerline-evil php-extras org-bullets mmm-mode markdown-mode magit highlight-symbol helm-projectile gtags fullframe flycheck-package exec-path-from-shell evil-surround evil-leader evil-jumper evil-indent-textobject emmet-mode elpy dictionary color-theme-sanityinc-tomorrow bpr avy auto-complete ag)))
  '(safe-local-variable-values (quote ((no-byte-compile t)))))
 
 (custom-set-faces
