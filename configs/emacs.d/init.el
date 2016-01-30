@@ -164,7 +164,7 @@
   :ensure t
   :config
   (define-key markdown-mode-map (kbd "C-\\") 'markdown-insert-list-item)
-  (define-key markdown-mode-map (kbd "C-c '") 'ntm-narrow-dwim))
+  (define-key markdown-mode-map (kbd "C-c '") 'ntm-edit-code-at-point))
 
 (use-package php-extras :ensure t :defer t)
 (use-package sublime-themes :ensure t)
