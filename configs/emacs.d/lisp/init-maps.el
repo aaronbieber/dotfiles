@@ -9,6 +9,7 @@
 (define-key global-map (kbd "C-c l")   'dictionary-lookup-definition)
 (define-key global-map (kbd "C-c d f") 'find-name-dired)
 (define-key global-map (kbd "s-e") 'eval-buffer)
+(define-key global-map (kbd "s-d") 'eval-defun)
 
 ;; C-v is "visual block" in normal mode, but use it for "paste" in insert mode.
 (when (equal system-type 'darwin)
