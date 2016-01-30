@@ -21,7 +21,7 @@
 (defcustom ntm-blocks
   '(
     ("^[ \t]*\\(?:~\\{3,\\}\\|`\\{3,\\}\\)\\(.+\\)\n"
-     "^[ \t]*\\(?:~\\{3,\\}\\|`\\{3,\\}\\)\n"
+     "^[ \t]*\\(?:~\\{3,\\}\\|`\\{3,\\}\\)"
      1)
     )
   "Alist of regexps matching editable blocks.
@@ -41,6 +41,21 @@ rely on the presence of match data."
 
 (defvar-local ntm-previous-mode nil
   "Mode set before narrowing, restored upon widening.")
+
+(defvar ntm-edit-mode-hook nil
+  "Hook run when narrow-to-mode has set the block's language mode.
+
+You may want to use this to disable language mode configurations that
+don't work well in the snippet view.")
+
+(define-minor-mode ntm-edit-mode
+  "A minor mode used when editing a narrow-to-mode block.")
+
+(defun ntm-edit-mode-configure-buffer ()
+  "Configure the narrow-to-mode edit buffer."
+  (add-hook 'kill-buffer-hook
+            #'(lambda () (delete-overlay ntm-overlay)) nil 'local))
+(add-hook 'ntm-edit-mode-hook 'ntm-edit-mode-configure-buffer)
 
 (defun ntm-find-markdown-code-block ()
   "Find the extents and type of the code block at point.
@@ -149,12 +164,14 @@ The assumption is that language `LANG' has a mode `LANG-mode'."
 (defun ntm-edit-code-at-point ()
   "Look for a code block at point and, if found, edit it."
   (interactive)
-  (let ((block (ntm--get-block-around-point))
-        beg end lang code mode ovl edit-buffer vars)
+  (let* ((block (ntm--get-block-around-point))
+         (beg (make-marker))
+         (end (copy-marker (make-marker) t))
+         lang code mode ovl edit-buffer vars)
     (if block
         (progn
-          (setq beg (car block)
-                end (nth 1 block)
+          (setq beg (move-marker beg (car block))
+                end (move-marker end (nth 1 block))
                 lang (nth 2 block)
                 code (buffer-substring-no-properties beg end)
                 mode (ntm--get-mode-for-lang lang)
@@ -168,10 +185,20 @@ The assumption is that language `LANG' has a mode `LANG-mode'."
           (overlay-put ovl :read-only "Please don't.")
 
           ;; Buffer setup
-          (pop-to-buffer edit-buffer)
-          (setq header-line-format "Press C-c C-c to save.")
+          (switch-to-buffer-other-window edit-buffer t)
           (insert code)
-          (funcall mode)
+          (remove-text-properties (point-min) (point-max)
+                                  '(display nil invisible nil intangible nil))
+          
+          (condition-case e
+              (funcall mode)
+            (error
+             (message "Language mode `%s' fails with: %S" lang-f (nth 1 e))))
+          (ntm-edit-mode)
+
+          (set (make-local-variable 'ntm-overlay) ovl)
+          (set (make-local-variable 'header-line-format) "Press C-c C-c to save.")
+          
           ))))
 
 (provide 'narrow-to-mode)
