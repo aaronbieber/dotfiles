@@ -46,6 +46,31 @@ If optional argument FOCUS is non-nil, give Chrome the focus as well."
   (when (fboundp 'powerline-reset)
     (powerline-reset)))
 
+(defun air-cycle-theme (&optional reverse)
+  "Load the next (or previous if REVERSE is true) available theme."
+  (interactive)
+  (if (> (length custom-enabled-themes) 1)
+      (message "You cannot cycle themes with more than one theme enabled")
+    (let* ((current-theme (car custom-enabled-themes))
+           (all-themes (if reverse
+                           (reverse (custom-available-themes))
+                         (custom-available-themes)))
+           (first-theme (car all-themes))
+           (go (lambda (theme)
+                 (message "Loading %s." (symbol-name theme))
+                 (disable-theme current-theme)
+                 (load-theme theme)))
+           theme)
+      (if (catch 'done
+            (while (setq theme (pop all-themes))
+              (if (and (eq theme current-theme)
+                       (setq theme (pop all-themes)))
+                  (progn
+                    (funcall go theme)
+                    (throw 'done nil))))
+            t)
+          (funcall go first-theme)))))
+
 (defun func-region (func start end)
   "Run FUNC over the region between START and END in current buffer."
   (save-excursion
