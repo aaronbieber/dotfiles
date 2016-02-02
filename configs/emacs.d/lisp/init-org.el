@@ -20,7 +20,8 @@
   (setq org-todo-keywords
         '((sequence "☛ TODO" "○ IN-PROGRESS" "⚑ WAITING" "|" "✓ DONE" "✗ CANCELED")))
 
-  (setq org-blank-before-new-entry (quote ((heading) (plain-list-item))))
+  (setq org-blank-before-new-entry '((heading . t)
+                                     (plain-list-item . t)))
   (setq org-capture-templates
         '(("a" "My TODO task format." entry
            (file "todo.org")
