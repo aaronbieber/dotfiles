@@ -24,7 +24,7 @@ fi
 # The system name is used to link platform-specific files.
 platform=`uname`
 
-# This appears to be the "best" way to get the canonicalized path to where this 
+# This appears to be the "best" way to get the canonicalized path to where this
 # script is located, which is, presumably, where all of my dotfiles are.
 # Lifted from http://stackoverflow.com/a/4774063
 pushd `dirname $0` > /dev/null
@@ -42,7 +42,7 @@ for dotfile in `find $SCRIPTPATH -mindepth 1 -maxdepth 1`; do
   if [[ "${dotfile##*/}" == "bashrc" ]]; then
     linkfile=".bash_profile"
   else
-    # If the dotfile starts with an underscore-braced string, only link it if 
+    # If the dotfile starts with an underscore-braced string, only link it if
     # that string matches our platform.
     if [[ "${dotfile##*/}" =~ "_.*_" ]]; then
       if [[ "${dotfile##*/}" =~ "_${platform}_" ]]; then
@@ -56,13 +56,16 @@ for dotfile in `find $SCRIPTPATH -mindepth 1 -maxdepth 1`; do
     fi
   fi
 
+  if [ -d "./$linkfile" ]
+
   echo -n "Linking $dotfile -> $linkfile... "
-  ln -s $LNOPTS "$dotfile" "$linkfile" > /dev/null 2>&1
-  if [ $? -eq 0 ]; then
-    echo "OK"
+  if [ -e "$linkfile" ]; then
+    echo "Exists"
   else
-    if [ -f "$linkfile" ]; then
-      echo "Exists"
+    ln -s $LNOPTS "$dotfile" "./$linkfile" > /dev/null 2>&1
+
+    if [ $? -eq 0 ]; then
+      echo "OK"
     else
       echo "Failed"
     fi
