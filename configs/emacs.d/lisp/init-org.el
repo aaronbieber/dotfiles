@@ -35,7 +35,7 @@
   (setq org-log-reschedule (quote time))
 
   (evil-leader/set-key-for-mode 'org-mode
-    "t"  'org-time-stamp-inactive
+    "t"  'org-set-tags-command
     "p"  '(lambda ()
             (interactive)
             (org-insert-property-drawer))
