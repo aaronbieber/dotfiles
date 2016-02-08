@@ -97,7 +97,11 @@
   :init
   (load-theme 'sanityinc-tomorrow-day t))
 
-(use-package wgrep :ensure t)
+(use-package wgrep
+  :ensure t
+  :config
+  (setq wgrep-auto-save-buffer t))
+
 (use-package wgrep-ag
   :ensure t
   :commands (wgrep-ag-setup))
