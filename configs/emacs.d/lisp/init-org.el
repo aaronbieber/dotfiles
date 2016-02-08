@@ -13,7 +13,8 @@
          ("C-c t t" . air-pop-to-org-todo)
          ("C-c t v" . air-pop-to-org-vault)
          ("C-c t a" . air-pop-to-org-agenda)
-         ("C-c t s" . org-search-view))
+         ("C-c f k" . org-search-view)
+         ("C-c f t" . org-tags-view))
   :config
   (setq org-agenda-text-search-extra-files '(agenda-archives))
   (setq org-agenda-files '("~/Dropbox/org/"))
