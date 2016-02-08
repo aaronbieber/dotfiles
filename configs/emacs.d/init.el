@@ -92,11 +92,6 @@
   (add-hook 'css-mode-hook (lambda ()
                              (rainbow-mode))))
 
-(use-package color-theme-sanityinc-tomorrow
-  :ensure t
-  :init
-  (load-theme 'sanityinc-tomorrow-day t))
-
 (use-package wgrep
   :ensure t
   :config
@@ -271,6 +266,13 @@
       :back "^```$")))
   (mmm-add-mode-ext-class 'markdown-mode nil 'markdown-cl)
   (mmm-add-mode-ext-class 'markdown-mode nil 'markdown-php))
+
+(use-package sublime-themes :ensure t)
+(use-package gruvbox-theme :ensure t)
+(use-package color-theme-sanityinc-tomorrow
+  :ensure t
+  :init
+  (load-theme 'sanityinc-tomorrow-day t))
 
 ;;; Helpers for GNUPG, which I use for encrypting/decrypting secrets.
 (require 'epa-file)
