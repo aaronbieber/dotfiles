@@ -143,7 +143,10 @@ Repeated invocations toggle between the two most recently open buffers."
   "Go to the current file's current line on the codebase site."
   (interactive)
   (let* ((line-num (number-to-string (line-number-at-pos)))
-         (file-path (replace-regexp-in-string (project-root) "" (buffer-file-name)))
+         (file-path (replace-regexp-in-string
+                     (expand-file-name (vc-find-root (buffer-file-name) ".git"))
+                     ""
+                     (buffer-file-name)))
          (args (concat "http://dox.wayfair.com/source/xref/php/" file-path "#" line-num)))
     (call-process "open" nil nil nil args)))
 
