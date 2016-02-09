@@ -65,6 +65,7 @@
 (require 'init-powerline)
 (require 'init-flycheck)
 
+(add-to-list 'load-path (expand-file-name "fence-edit" user-emacs-directory))
 (require 'fence-edit)
 
 ;; Just while I'm working on it.
