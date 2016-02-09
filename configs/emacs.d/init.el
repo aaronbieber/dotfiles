@@ -30,7 +30,8 @@
 (setq vc-follow-symlinks t)
 (setq large-file-warning-threshold nil)
 (setq split-width-threshold nil)
-(setq visible-bell t)
+(setq visible-bell nil)
+(setq custom-safe-themes t)
 
 (put 'narrow-to-region 'disabled nil)
 
