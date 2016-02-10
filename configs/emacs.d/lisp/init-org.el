@@ -85,6 +85,11 @@
     (when (not split)
       (delete-other-windows)))
 
+  (defun air-org-insert-list-leader-or-self (char)
+    (if (= (current-column) 0)
+        (insert (concat " " char " "))
+      (insert char)))
+
   (add-hook 'org-agenda-mode-hook
             (lambda ()
               (define-key org-agenda-mode-map "j"         'org-agenda-next-line)
@@ -111,6 +116,13 @@
                                                             (buffer-file-name)
                                                             (buffer-modified-p))
                                                    (save-buffer)))))
+              ;; Special plain list leader inserts
+              (dolist (char '("+" "-"))
+                (define-key org-mode-map (kbd char)
+                  (lambda ()
+                    (interactive)
+                    (air-org-insert-list-leader-or-self char))))
+              ;; Normal maps
               (define-key org-mode-map (kbd "C-c ,") 'org-time-stamp-inactive)
               (define-key org-mode-map (kbd "C-|") 'air-org-insert-scheduled-heading)
               (define-key org-mode-map (kbd "C-<") 'org-metaleft)
