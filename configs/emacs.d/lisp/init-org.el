@@ -81,7 +81,7 @@
   (defun air-pop-to-org-agenda (split)
     "Visit the org agenda, in the current window or a SPLIT."
     (interactive "P")
-    (org-agenda-list)
+    (org-agenda-list nil "today" 'day)
     (when (not split)
       (delete-other-windows)))
 
