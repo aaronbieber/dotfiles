@@ -119,9 +119,9 @@
               ;; Special plain list leader inserts
               (dolist (char '("+" "-"))
                 (define-key org-mode-map (kbd char)
-                  (lambda ()
+                  `(lambda ()
                     (interactive)
-                    (air-org-insert-list-leader-or-self char))))
+                    (air-org-insert-list-leader-or-self ,char))))
               ;; Normal maps
               (define-key org-mode-map (kbd "C-c ,") 'org-time-stamp-inactive)
               (define-key org-mode-map (kbd "C-|") 'air-org-insert-scheduled-heading)
