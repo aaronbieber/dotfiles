@@ -63,8 +63,8 @@ S.bind(
     S.op(
         'move',
         {
-            'x': 0,
-            'y': 0,
+            'x': 'screenOriginX',
+            'y': 'screenOriginY',
             'width': 'screenSizeX',
             'height': 'screenSizeY'
         }
