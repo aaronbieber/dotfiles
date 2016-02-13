@@ -45,13 +45,13 @@ function getCycleStates(states) {
             windowStates[win.pid] = states[0];
         }
 
-        eval(windowStates[win.pid] + '.run()');
+        win.doOperation(windowStates[win.pid]);
     };
 }
 
 // Window cycling functions.
-var leftCycleOp = getCycleStates(['leftBarHalf', 'leftBarThird', 'leftBarTwoThirds']);
-var rightCycleOp = getCycleStates(['rightBarHalf', 'rightBarThird', 'rightBarTwoThirds']);
+var leftCycleOp = getCycleStates([leftBarHalf, leftBarThird, leftBarTwoThirds]);
+var rightCycleOp = getCycleStates([rightBarHalf, rightBarThird, rightBarTwoThirds]);
 
 // Bind the window cycling functions.
 S.bind('h:cmd,shift', leftCycleOp);
