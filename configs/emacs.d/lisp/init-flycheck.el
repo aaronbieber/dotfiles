@@ -4,7 +4,9 @@
 (use-package let-alist
   :ensure t)
 
-(when (maybe-require-package 'flycheck)
+(use-package flycheck
+  :ensure t
+  :config
   (add-hook 'after-init-hook 'global-flycheck-mode)
 
   ;; Flycheck mode:
@@ -14,15 +16,16 @@
                 (evil-define-key 'normal flycheck-mode-map (kbd "]e") 'flycheck-next-error)
                 (evil-define-key 'normal flycheck-mode-map (kbd "[e") 'flycheck-previous-error))
               (when (maybe-require-package 'evil-leader)
-                (evil-leader/set-key (kbd "e") 'flycheck-list-errors)))
+                (evil-leader/set-key (kbd "e") 'flycheck-list-errors))))
 
   ;; Override default flycheck triggers
-  (setq flycheck-check-syntax-automatically '(save idle-change mode-enabled)
+  (setq flycheck-emacs-lisp-load-path 'inherit
+        flycheck-check-syntax-automatically '(save idle-change mode-enabled)
         flycheck-idle-change-delay 0.8
         flycheck-disabled-checkers '(php-phpmd)
         flycheck-phpcs-standard "CSNStores")
 
-  (setq flycheck-display-errors-function #'flycheck-display-error-messages-unless-error-list)))
+  (setq flycheck-display-errors-function #'flycheck-display-error-messages-unless-error-list))
 
 (provide 'init-flycheck)
 ;;; init-flycheck.el ends here
