@@ -280,10 +280,7 @@
 
 (use-package sublime-themes :ensure t)
 (use-package gruvbox-theme :ensure t)
-(use-package color-theme-sanityinc-tomorrow
-  :ensure t
-  :init
-  (load-theme 'sanityinc-tomorrow-day t))
+(use-package color-theme-sanityinc-tomorrow :ensure t)
 
 ;;; Helpers for GNUPG, which I use for encrypting/decrypting secrets.
 (require 'epa-file)
@@ -529,6 +526,8 @@ is the buffer location at which the function was found."
 ;;; used in OS X. Disable sRGB before setting up Powerline.
 (when (memq window-system '(mac ns))
   (setq ns-use-srgb-colorspace nil))
+
+(load-theme 'gruvbox)
 
 (provide 'init)
 ;;; init.el ends here
