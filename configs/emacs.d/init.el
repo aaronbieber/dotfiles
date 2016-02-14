@@ -137,14 +137,13 @@
   :ensure t
   :defer t
   :diminish helm-mode
-  :init
-  (setq helm-buffers-fuzzy-matching t)
   :config
   (helm-mode 1)
+  (setq helm-buffers-fuzzy-matching t)
   (setq helm-autoresize-mode t)
   (setq helm-buffer-max-length 40)
-  (bind-key "S-SPC" 'helm-toggle-visible-mark helm-map)
-  (bind-key "C-k" 'helm-find-files-up-one-level helm-find-files-map))
+  (define-key helm-map (kbd "S-SPC") 'helm-toggle-visible-mark)
+  (define-key helm-find-files-map (kbd "C-k") 'helm-find-files-up-one-level))
 
 (use-package company
   :ensure t
