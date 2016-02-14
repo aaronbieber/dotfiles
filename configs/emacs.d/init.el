@@ -35,9 +35,11 @@
 (put 'narrow-to-region 'disabled nil)
 
 (defun my-minibuffer-setup-hook ()
+  "Increase GC cons threshold."
   (setq gc-cons-threshold most-positive-fixnum))
 
 (defun my-minibuffer-exit-hook ()
+  "Set GC cons threshold to its default value."
   (setq gc-cons-threshold 800000))
 
 (add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
