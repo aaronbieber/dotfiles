@@ -304,11 +304,6 @@
           (lambda ()
             (define-key lisp-interaction-mode-map (kbd "<C-return>") 'eval-last-sexp)))
 
-(add-hook 'emacs-lisp-mode-hook
-          (lambda ()
-            (yas-minor-mode)
-            (define-key emacs-lisp-mode-map (kbd "<C-return>") 'eval-last-sexp)))
-
 ;;; Python mode:
 (add-hook 'python-mode-hook
           (lambda ()
@@ -354,9 +349,10 @@
 ;;; Emacs Lisp mode:
 (add-hook 'emacs-lisp-mode-hook
           (lambda ()
-            ;(yas-minor-mode-on)
-            (turn-on-eldoc-mode)
-            (highlight-symbol-mode)))
+            (yas-minor-mode t)
+            (eldoc-mode)
+            (highlight-symbol-mode)
+            (define-key emacs-lisp-mode-map (kbd "<C-return>") 'eval-last-sexp)))
 
 ;;; SH mode:
 (add-hook 'sh-mode-hook (lambda ()
