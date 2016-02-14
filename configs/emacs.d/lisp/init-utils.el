@@ -1,3 +1,6 @@
+;;; init-utils.el --- Utilities borrowed from Steve Purcell
+;;; Commentary:
+;;; Code:
 (if (fboundp 'with-eval-after-load)
     (defalias 'after-load 'with-eval-after-load)
   (defmacro after-load (feature &rest body)
