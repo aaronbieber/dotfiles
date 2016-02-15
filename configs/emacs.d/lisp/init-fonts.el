@@ -46,7 +46,7 @@ by the :height face attribute."
   (if (fboundp 'powerline-reset)
       (powerline-reset)))
 
-(global-set-key (kbd "C-M-=") 'sanityinc/increase-default-font-height)
-(global-set-key (kbd "C-M--") 'sanityinc/decrease-default-font-height)
+(bind-key (kbd "s-=") 'sanityinc/increase-default-font-height)
+(bind-key (kbd "s--") 'sanityinc/decrease-default-font-height)
 
 (provide 'init-fonts)
