@@ -27,7 +27,7 @@
         '(("a" "My TODO task format." entry
            (file "todo.org")
            "* ☛ TODO %?
-  SCHEDULED: %t")))
+SCHEDULED: %t")))
   (setq org-default-notes-file "~/Dropbox/org/todo.org")
   (setq org-directory "~/Dropbox/org")
   (setq org-enforce-todo-dependencies t)
