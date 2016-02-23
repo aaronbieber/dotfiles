@@ -40,7 +40,7 @@
 
 (defun my-minibuffer-exit-hook ()
   "Set GC cons threshold to its default value."
-  (setq gc-cons-threshold 800000))
+  (setq gc-cons-threshold 1000000))
 
 (add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
 (add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
