@@ -37,9 +37,7 @@ SCHEDULED: %t")))
 
   (evil-leader/set-key-for-mode 'org-mode
     "t"  'org-set-tags-command
-    "p"  '(lambda ()
-            (interactive)
-            (org-insert-property-drawer))
+    "p"  'org-set-property
     "d"  'org-deadline
     "s"  'org-schedule
     "a"  'org-agenda
