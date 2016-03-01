@@ -131,17 +131,12 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
   :config
   (add-hook 'evil-mode-hook 'air--config-evil)
   (evil-mode 1)
-  
+
   (use-package evil-leader
     :ensure t
     :config
     (global-evil-leader-mode)
     (air--config-evil-leader))
-
-  (use-package evil-jumper
-    :ensure t
-    :config
-    (global-evil-jumper-mode))
 
   (use-package evil-surround
     :ensure t
