@@ -81,6 +81,9 @@
     (move-beginning-of-line nil))
 
   ;; Global bindings.
+  (define-key evil-normal-state-map (kbd "<down>") 'evil-next-visual-line)
+  (define-key evil-normal-state-map (kbd "<up>")   'evil-previous-visual-line)
+
   (define-key evil-normal-state-map (kbd "C-S-P") 'helm-projectile-switch-project)
   (define-key evil-normal-state-map (kbd "C-p")   'helm-projectile)
   (define-key evil-normal-state-map (kbd "-")     'helm-find-files)
