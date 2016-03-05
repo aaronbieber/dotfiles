@@ -37,7 +37,7 @@ SCHEDULED: %t")))
   (setq org-log-reschedule (quote time))
 
   (evil-leader/set-key-for-mode 'org-mode
-    "t"  'org-set-tags-command
+    "t"  'air-org-set-tags
     "p"  'org-set-property
     "d"  'org-deadline
     "s"  'org-schedule
