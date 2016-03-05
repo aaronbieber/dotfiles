@@ -89,6 +89,48 @@ SCHEDULED: %t")))
         (insert (concat " " char " "))
       (insert char)))
 
+  (defun air--org-swap-tags (old-tags new-tags)
+    "Swap OLD-TAGS for NEW-TAGS and re-indent."
+    (interactive)
+    (let ((old-tags (if old-tags old-tags (org-get-tags-string)))
+          (new-tags (concat " " new-tags)))
+      (save-excursion
+        (beginning-of-line)
+        (re-search-forward
+         (concat "[ \t]*" (regexp-quote old-tags) "[ \t]*$")
+         (line-end-position) t)
+        (replace-match new-tags)
+        (org-set-tags t))))
+
+  (defun air-org-set-tag (tag)
+    "Add TAG, chosen interactively, to the current headline."
+    (interactive
+     (list (let ((org-last-tags-completion-table
+                  (if (derived-mode-p 'org-mode)
+                      (org-uniquify
+                       (delq nil (append (org-get-buffer-tags)
+                                         (org-global-tags-completion-table))))
+                    (org-global-tags-completion-table))))
+             (org-icompleting-read
+              "Tag: " 'org-tags-completion-function nil nil nil
+              'org-tags-history))))
+    (let* ((cur-string (org-get-tags-string))
+           (cur-list (org-get-tags))
+           (new (concat " :" (mapconcat 'identity (append cur-list (list tag)) ":") ":")))
+      (air--org-swap-tags cur-string new)))
+
+  (defun air-org-remove-tag (tag)
+    "Remove TAG, chosen interactively, from the current headline."
+    (interactive
+     (list (org-icompleting-read
+            "Tag: " (org-get-tags))))
+
+    (if tag
+        (let* ((new (concat ":" (mapconcat
+                                 'identity (delete tag (org-get-tags)) ":") ":")))
+          (air--org-swap-tags nil new))))
+
+
   (add-hook 'org-agenda-mode-hook
             (lambda ()
               (define-key org-agenda-mode-map "j"         'org-agenda-next-line)
