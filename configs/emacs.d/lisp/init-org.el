@@ -137,9 +137,7 @@ TAG is chosen interactively from the global tags completion table."
               (define-key org-agenda-mode-map "n"         'org-agenda-next-date-line)
               (define-key org-agenda-mode-map "p"         'org-agenda-previous-date-line)
               (define-key org-agenda-mode-map "c"         'air-org-agenda-capture)
-              (define-key org-agenda-mode-map (kbd "RET") 'org-agenda-switch-to)
-
-              ))
+              (define-key org-agenda-mode-map (kbd "RET") 'org-agenda-switch-to)))
 
   (add-hook 'org-capture-mode-hook
             (lambda ()
