@@ -135,7 +135,6 @@
 
 (use-package helm
   :ensure t
-  :defer t
   :diminish helm-mode
   :config
   (helm-mode 1)
