@@ -94,7 +94,6 @@ SCHEDULED: %t")))
 
 The assumption is that TAGS will be a string conforming to Org Mode's
 tag format specifications, or nil to remove all tags."
-    (interactive)
     (let ((old-tags (org-get-tags-string))
           (tags (if tags
                     (concat " " tags)
