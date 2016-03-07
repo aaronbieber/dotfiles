@@ -65,7 +65,6 @@
 
 (require 'diminish)
 (require 'bind-key)
-(require 'init-org)
 (require 'init-fonts)
 (require 'init-gtags)
 (require 'init-evil)
@@ -78,6 +77,12 @@
 
 (add-to-list 'load-path (expand-file-name "fence-edit" user-emacs-directory))
 (require 'fence-edit)
+
+;; Org prerequisites
+(use-package visual-fill-column
+  :ensure t)
+
+(require 'init-org)
 
 ;; Just while I'm working on it.
 ;;(add-to-list 'load-path (expand-file-name "octopress" user-emacs-directory))

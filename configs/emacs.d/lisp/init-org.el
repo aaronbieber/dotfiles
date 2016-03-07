@@ -37,13 +37,14 @@ SCHEDULED: %t")))
   (setq org-log-reschedule (quote time))
 
   (evil-leader/set-key-for-mode 'org-mode
-    "t"  'air-org-set-tags
-    "p"  'org-set-property
-    "d"  'org-deadline
-    "s"  'org-schedule
+    "$"  'org-archive-subtree
     "a"  'org-agenda
+    "d"  'org-deadline
     "ns" 'org-narrow-to-subtree
-    "$"  'org-archive-subtree)
+    "p"  'org-set-property
+    "s"  'org-schedule
+    "u"  'org-up-element
+    "t"  'air-org-set-tags)
 
   (defun air-org-insert-scheduled-heading ()
     "Insert a new org heading scheduled for today."
@@ -169,7 +170,12 @@ TAG is chosen interactively from the global tags completion table."
               (define-key org-mode-map (kbd "C-S-j") 'org-priority-down)
               (define-key org-mode-map (kbd "C-S-k") 'org-priority-up)
               (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle)
-              (auto-fill-mode)
+              ;; Use fill column, but not in agenda
+              (setq fill-column 100)
+              (when (not (eq major-mode 'org-agenda-mode))
+                (auto-fill-mode)
+                (visual-line-mode)
+                (visual-fill-column-mode))
               (flyspell-mode)
               (org-indent-mode))))
 
