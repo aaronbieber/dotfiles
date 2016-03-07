@@ -173,7 +173,6 @@ TAG is chosen interactively from the global tags completion table."
               ;; Use fill column, but not in agenda
               (setq fill-column 100)
               (when (not (eq major-mode 'org-agenda-mode))
-                (auto-fill-mode)
                 (visual-line-mode)
                 (visual-fill-column-mode))
               (flyspell-mode)
