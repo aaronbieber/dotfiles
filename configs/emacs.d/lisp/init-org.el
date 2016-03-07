@@ -133,6 +133,7 @@ TAG is chosen interactively from the global tags completion table."
 
   (add-hook 'org-agenda-mode-hook
             (lambda ()
+              (setq org-habit-graph-column 50)
               (define-key org-agenda-mode-map "j"         'org-agenda-next-line)
               (define-key org-agenda-mode-map "k"         'org-agenda-previous-line)
               (define-key org-agenda-mode-map "n"         'org-agenda-next-date-line)
