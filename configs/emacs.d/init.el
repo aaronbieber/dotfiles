@@ -435,7 +435,7 @@ is the buffer location at which the function was found."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:background "#282828" :foreground "#fdf4c1")))))
 
 ;; handle tmux's xterm-keys
 ;; put the following line in your ~/.tmux.conf:
