@@ -23,7 +23,6 @@
   (scroll-bar-mode -1))
 (show-paren-mode 1)
 (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
-(global-visual-line-mode nil)
 (setq-default left-fringe-width nil)
 (setq-default indent-tabs-mode nil)
 (eval-after-load "vc" '(setq vc-handled-backends nil))
