@@ -28,7 +28,7 @@
         '(("a" "My TODO task format." entry
            (file "todo.org")
            "* ☛ TODO %?
-SCHEDULED: %t")))
+DEADLINE: %t")))
   (setq org-default-notes-file "~/Dropbox/org/todo.org")
   (setq org-directory "~/Dropbox/org")
   (setq org-enforce-todo-dependencies t)
@@ -62,6 +62,16 @@ SCHEDULED: %t")))
     (interactive)
     (let ((org-overriding-default-time (org-get-cursor-date)))
       (org-capture nil "a")))
+
+  (defun air-org-agenda-toggle-date ()
+    "Toggle `SCHEDULED' and `DEADLINE' tag in the capture buffer."
+    (interactive)
+    (save-excursion
+      (goto-char 0)
+      (if (search-forward "DEADLINE:" (point-max) t)
+          (replace-match "SCHEDULED:")
+        (and (search-forward "SCHEDULED:")
+             (replace-match "DEADLINE:")))))
 
   (defun air-pop-to-org-todo (split)
     "Visit my main TODO list, in the current window or a SPLIT."
@@ -143,6 +153,8 @@ TAG is chosen interactively from the global tags completion table."
 
   (add-hook 'org-capture-mode-hook
             (lambda ()
+              (evil-define-key 'insert org-capture-mode-map (kbd "C-d") 'air-org-agenda-toggle-date)
+              (evil-define-key 'normal org-capture-mode-map (kbd "C-d") 'air-org-agenda-toggle-date)
               (evil-insert-state)))
 
   (add-hook 'org-mode-hook
