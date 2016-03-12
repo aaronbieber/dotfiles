@@ -429,13 +429,6 @@ is the buffer location at which the function was found."
     (octopress zenburn-theme yaml-mode which-key wgrep-ag web-mode w3m use-package twittering-mode sunshine sublime-themes rainbow-mode powerline-evil php-extras org-bullets mmm-mode markdown-mode magit highlight-symbol helm-projectile gtags fullframe flycheck-package exec-path-from-shell evil-surround evil-leader evil-jumper evil-indent-textobject emmet-mode elpy dictionary color-theme-sanityinc-tomorrow bpr avy auto-complete ag)))
  '(safe-local-variable-values (quote ((no-byte-compile t)))))
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:background "#282828" :foreground "#fdf4c1")))))
-
 ;; handle tmux's xterm-keys
 ;; put the following line in your ~/.tmux.conf:
 ;;   setw -g xterm-keys on
