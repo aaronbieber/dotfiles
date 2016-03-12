@@ -8,7 +8,8 @@
   :ensure t
   :defer t
   :commands (org-capture)
-  :bind (("C-c c" . air-org-task-capture)
+  :bind (("C-c c" .   air-org-task-capture)
+         ("C-c l" .   org-store-link)
          ("C-c t n" . air-pop-to-org-notes)
          ("C-c t t" . air-pop-to-org-todo)
          ("C-c t v" . air-pop-to-org-vault)
