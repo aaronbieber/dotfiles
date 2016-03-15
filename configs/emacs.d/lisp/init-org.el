@@ -22,7 +22,6 @@
   (setq org-agenda-files '("~/Dropbox/org/"))
   (setq org-todo-keywords
         '((sequence "☛ TODO" "○ IN-PROGRESS" "⚑ WAITING" "|" "✓ DONE" "✗ CANCELED")))
-
   (setq org-blank-before-new-entry '((heading . t)
                                      (plain-list-item . t)))
   (setq org-capture-templates
@@ -36,6 +35,7 @@ DEADLINE: %t")))
   (setq org-log-done (quote time))
   (setq org-log-redeadline (quote time))
   (setq org-log-reschedule (quote time))
+  (set-face-attribute 'org-upcoming-deadline nil :foreground "gold1")
 
   (evil-leader/set-key-for-mode 'org-mode
     "$"  'org-archive-subtree
