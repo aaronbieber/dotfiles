@@ -150,7 +150,7 @@ TAG is chosen interactively from the global tags completion table."
                        (delq nil (append (org-get-buffer-tags)
                                          (org-global-tags-completion-table))))
                     (org-global-tags-completion-table))))
-             (org-icompleting-read
+             (completing-read
               "Tag: " 'org-tags-completion-function nil nil nil
               'org-tags-history))))
     (let* ((cur-list (org-get-tags))
