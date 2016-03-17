@@ -206,6 +206,7 @@
   :ensure t
   :commands twit
   :config
+  (define-key twittering-mode-map (kbd "C-c r") 'twittering-retweet)
   (setq twittering-use-native-retweet t)
   (setq twittering-default-show-replied-tweets 3)
   (setq twittering-use-icon-storage t)
