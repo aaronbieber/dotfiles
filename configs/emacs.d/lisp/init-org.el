@@ -47,6 +47,22 @@ DEADLINE: %t")))
     "u"  'org-up-element
     "t"  'air-org-set-tags)
 
+  (defun air-org-revert-all (&optional force)
+    "Revert all Org buffers. If FORCE is non-nil, don't even ask."
+    (interactive)
+    (if (or force
+            (yes-or-no-p "Really revert all Org buffers? "))
+        (let ((buffers-touched 0))
+          (dolist (buffer (buffer-list))
+            (with-current-buffer buffer
+              (if (derived-mode-p 'org-mode)
+                  (progn (revert-buffer t t)
+                         (setq buffers-touched (1+ buffers-touched))))))
+          (message "Reverted %s buffer%s."
+                   buffers-touched
+                   (if (not (= buffers-touched 1)) "s" "")))
+      (message "Nevermind, then.")))
+
   (defun air-org-insert-scheduled-heading ()
     "Insert a new org heading scheduled for today."
     (interactive)
