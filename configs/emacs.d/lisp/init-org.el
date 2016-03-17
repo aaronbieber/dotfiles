@@ -80,15 +80,20 @@ DEADLINE: %t")))
     (let ((org-overriding-default-time (org-get-cursor-date)))
       (org-capture nil "a")))
 
-  (defun air-org-agenda-toggle-date ()
+  (defun air-org-agenda-toggle-date (current-line)
     "Toggle `SCHEDULED' and `DEADLINE' tag in the capture buffer."
-    (interactive)
+    (interactive "P")
     (save-excursion
-      (goto-char 0)
-      (if (search-forward "DEADLINE:" (point-max) t)
-          (replace-match "SCHEDULED:")
-        (and (search-forward "SCHEDULED:")
-             (replace-match "DEADLINE:")))))
+      (let ((search-limit (if current-line
+                              (line-end-position)
+                            (point-max))))
+
+        (if current-line (beginning-of-line)
+          (beginning-of-buffer))
+        (if (search-forward "DEADLINE:" search-limit t)
+            (replace-match "SCHEDULED:")
+          (and (search-forward "SCHEDULED:" search-limit t)
+               (replace-match "DEADLINE:"))))))
 
   (defun air-pop-to-org-todo (split)
     "Visit my main TODO list, in the current window or a SPLIT."
@@ -192,6 +197,8 @@ TAG is chosen interactively from the global tags completion table."
                     (interactive)
                     (air-org-insert-list-leader-or-self ,char))))
               ;; Normal maps
+              (define-key org-mode-map (kbd "C-c d") (lambda ()
+                                                         (interactive) (air-org-agenda-toggle-date t)))
               (define-key org-mode-map (kbd "C-c ,") 'org-time-stamp-inactive)
               (define-key org-mode-map (kbd "C-|") 'air-org-insert-scheduled-heading)
               (define-key org-mode-map (kbd "C-<") 'org-metaleft)
