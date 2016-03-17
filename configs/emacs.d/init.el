@@ -175,15 +175,16 @@
   :ensure t)
 
 (use-package markdown-mode
-  :bind (("C-\\" . markdown-insert-list-item)
-         ("C-c '" . fence-edit-code-at-point)
-         ("C-c 1" . markdown-insert-header-atx-1)
-         ("C-c 2" . markdown-insert-header-atx-2)
-         ("C-c 3" . markdown-insert-header-atx-3)
-         ("C-c 4" . markdown-insert-header-atx-4)
-         ("C-c 5" . markdown-insert-header-atx-5)
-         ("C-c 6" . markdown-insert-header-atx-6))
-  :ensure t)
+  :ensure t
+  :config
+  (define-key markdown-mode-map (kbd "C-\\")  'markdown-insert-list-item)
+  (define-key markdown-mode-map (kbd "C-c '") 'fence-edit-code-at-point)
+  (define-key markdown-mode-map (kbd "C-c 1") 'markdown-insert-header-atx-1)
+  (define-key markdown-mode-map (kbd "C-c 2") 'markdown-insert-header-atx-2)
+  (define-key markdown-mode-map (kbd "C-c 3") 'markdown-insert-header-atx-3)
+  (define-key markdown-mode-map (kbd "C-c 4") 'markdown-insert-header-atx-4)
+  (define-key markdown-mode-map (kbd "C-c 5") 'markdown-insert-header-atx-5)
+  (define-key markdown-mode-map (kbd "C-c 6") 'markdown-insert-header-atx-6))
 
 (use-package php-extras :ensure t :defer t)
 (use-package sublime-themes :ensure t)
