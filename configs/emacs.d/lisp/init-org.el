@@ -41,12 +41,17 @@ DEADLINE: %t")))
   (evil-leader/set-key-for-mode 'org-mode
     "$"  'org-archive-subtree
     "a"  'org-agenda
+    "c"  'air-org-set-category-property
     "d"  'org-deadline
     "ns" 'org-narrow-to-subtree
     "p"  'org-set-property
     "s"  'org-schedule
     "u"  'org-up-element
     "t"  'air-org-set-tags)
+
+  (defun air-org-set-category-property (value)
+    (interactive (list (org-read-property-value "CATEGORY")))
+    (org-set-property "CATEGORY" value))
 
   (defun air-org-revert-all (&optional force)
     "Revert all Org buffers. If FORCE is non-nil, don't even ask."
