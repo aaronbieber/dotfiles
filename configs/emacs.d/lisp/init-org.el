@@ -3,6 +3,137 @@
 
 ;; Basic Org Mode configuration, assuming presence of Evil & Evil Leader.
 
+;; Helper functions
+(defun air-org-set-category-property (value)
+  "Set the category property of the current item to VALUE."
+  (interactive (list (org-read-property-value "CATEGORY")))
+  (org-set-property "CATEGORY" value))
+
+(defun air-org-revert-all (&optional force)
+  "Revert all Org buffers.  If FORCE is non-nil, don't even ask."
+  (interactive)
+  (if (or force
+          (yes-or-no-p "Really revert all Org buffers? "))
+      (let ((buffers-touched 0))
+        (dolist (buffer (buffer-list))
+          (with-current-buffer buffer
+            (if (derived-mode-p 'org-mode)
+                (progn (revert-buffer t t)
+                       (setq buffers-touched (1+ buffers-touched))))))
+        (message "Reverted %s buffer%s."
+                 buffers-touched
+                 (if (not (= buffers-touched 1)) "s" "")))
+    (message "Nevermind, then.")))
+
+(defun air-org-insert-scheduled-heading (&optional force-heading)
+  "Insert a new org heading scheduled for today.
+
+Insert the new heading at the end of the current subtree if
+FORCE-HEADING is non-nil."
+  (interactive "P")
+  (org-insert-todo-heading t force-heading)
+  (org-schedule nil (format-time-string "%Y-%m-%d")))
+
+(defun air-org-task-capture ()
+  "Capture a task with my default template."
+  (interactive)
+  (org-capture nil "a"))
+
+(defun air-org-agenda-capture ()
+  "Capture a task in agenda mode, using the date at point."
+  (interactive)
+  (let ((org-overriding-default-time (org-get-cursor-date)))
+    (org-capture nil "a")))
+
+(defun air-org-agenda-toggle-date (current-line)
+  "Toggle `SCHEDULED' and `DEADLINE' tag in the capture buffer."
+  (interactive "P")
+  (save-excursion
+    (let ((search-limit (if current-line
+                            (line-end-position)
+                          (point-max))))
+
+      (if current-line (beginning-of-line)
+        (beginning-of-buffer))
+      (if (search-forward "DEADLINE:" search-limit t)
+          (replace-match "SCHEDULED:")
+        (and (search-forward "SCHEDULED:" search-limit t)
+             (replace-match "DEADLINE:"))))))
+
+(defun air-pop-to-org-todo (split)
+  "Visit my main TODO list, in the current window or a SPLIT."
+  (interactive "P")
+  (air--pop-to-file "~/Dropbox/org/todo.org" split))
+
+(defun air-pop-to-org-notes (split)
+  "Visit my main notes file, in the current window or a SPLIT."
+  (interactive "P")
+  (air--pop-to-file "~/Dropbox/org/notes.org" split))
+
+(defun air-pop-to-org-vault (split)
+  "Visit my encrypted vault file, in the current window or a SPLIT."
+  (interactive "P")
+  (air--pop-to-file "~/Dropbox/org/vault.gpg" split))
+
+(defun air-pop-to-org-agenda (split)
+  "Visit the org agenda, in the current window or a SPLIT."
+  (interactive "P")
+  (org-agenda-list nil "today" 'day)
+  (when (not split)
+    (delete-other-windows)))
+
+(defun air--org-insert-list-leader-or-self (char)
+  "If on column 0, insert space-padded CHAR; otherwise insert CHAR.
+
+This has the effect of automatically creating a properly indented list
+leader; like hyphen, asterisk, or plus sign; without having to use
+list-specific key maps."
+  (if (= (current-column) 0)
+      (insert (concat " " char " "))
+    (insert char)))
+
+(defun air--org-swap-tags (tags)
+  "Replace any tags on the current headline with TAGS.
+
+The assumption is that TAGS will be a string conforming to Org Mode's
+tag format specifications, or nil to remove all tags."
+  (let ((old-tags (org-get-tags-string))
+        (tags (if tags
+                  (concat " " tags)
+                "")))
+    (save-excursion
+      (beginning-of-line)
+      (re-search-forward
+       (concat "[ \t]*" (regexp-quote old-tags) "[ \t]*$")
+       (line-end-position) t)
+      (replace-match tags)
+      (org-set-tags t))))
+
+(defun air-org-set-tags (tag)
+  "Add TAG if it is not in the list of tags, remove it otherwise.
+
+TAG is chosen interactively from the global tags completion table."
+  (interactive
+   (list (let ((org-last-tags-completion-table
+                (if (derived-mode-p 'org-mode)
+                    (org-uniquify
+                     (delq nil (append (org-get-buffer-tags)
+                                       (org-global-tags-completion-table))))
+                  (org-global-tags-completion-table))))
+           (completing-read
+            "Tag: " 'org-tags-completion-function nil nil nil
+            'org-tags-history))))
+  (let* ((cur-list (org-get-tags))
+         (new-tags (mapconcat 'identity
+                              (if (member tag cur-list)
+                                  (delete tag cur-list)
+                                (append cur-list (list tag)))
+                              ":"))
+         (new (if (> (length new-tags) 1) (concat " :" new-tags ":")
+                nil)))
+    (air--org-swap-tags new)))
+
+
 ;;; Code:
 (use-package org
   :ensure t
@@ -49,126 +180,6 @@ DEADLINE: %t")))
     "u"  'org-up-element
     "t"  'air-org-set-tags)
 
-  (defun air-org-set-category-property (value)
-    (interactive (list (org-read-property-value "CATEGORY")))
-    (org-set-property "CATEGORY" value))
-
-  (defun air-org-revert-all (&optional force)
-    "Revert all Org buffers. If FORCE is non-nil, don't even ask."
-    (interactive)
-    (if (or force
-            (yes-or-no-p "Really revert all Org buffers? "))
-        (let ((buffers-touched 0))
-          (dolist (buffer (buffer-list))
-            (with-current-buffer buffer
-              (if (derived-mode-p 'org-mode)
-                  (progn (revert-buffer t t)
-                         (setq buffers-touched (1+ buffers-touched))))))
-          (message "Reverted %s buffer%s."
-                   buffers-touched
-                   (if (not (= buffers-touched 1)) "s" "")))
-      (message "Nevermind, then.")))
-
-  (defun air-org-insert-scheduled-heading ()
-    "Insert a new org heading scheduled for today."
-    (interactive)
-    (call-interactively 'org-insert-todo-heading)
-    (org-schedule nil (format-time-string "%Y-%m-%d")))
-
-  (defun air-org-task-capture ()
-    "Capture a task with my default template."
-    (interactive)
-    (org-capture nil "a"))
-
-  (defun air-org-agenda-capture ()
-    "Capture a task in agenda mode, using the date at point."
-    (interactive)
-    (let ((org-overriding-default-time (org-get-cursor-date)))
-      (org-capture nil "a")))
-
-  (defun air-org-agenda-toggle-date (current-line)
-    "Toggle `SCHEDULED' and `DEADLINE' tag in the capture buffer."
-    (interactive "P")
-    (save-excursion
-      (let ((search-limit (if current-line
-                              (line-end-position)
-                            (point-max))))
-
-        (if current-line (beginning-of-line)
-          (beginning-of-buffer))
-        (if (search-forward "DEADLINE:" search-limit t)
-            (replace-match "SCHEDULED:")
-          (and (search-forward "SCHEDULED:" search-limit t)
-               (replace-match "DEADLINE:"))))))
-
-  (defun air-pop-to-org-todo (split)
-    "Visit my main TODO list, in the current window or a SPLIT."
-    (interactive "P")
-    (air--pop-to-file "~/Dropbox/org/todo.org" split))
-
-  (defun air-pop-to-org-notes (split)
-    "Visit my main notes file, in the current window or a SPLIT."
-    (interactive "P")
-    (air--pop-to-file "~/Dropbox/org/notes.org" split))
-
-  (defun air-pop-to-org-vault (split)
-    "Visit my encrypted vault file, in the current window or a SPLIT."
-    (interactive "P")
-    (air--pop-to-file "~/Dropbox/org/vault.gpg" split))
-
-  (defun air-pop-to-org-agenda (split)
-    "Visit the org agenda, in the current window or a SPLIT."
-    (interactive "P")
-    (org-agenda-list nil "today" 'day)
-    (when (not split)
-      (delete-other-windows)))
-
-  (defun air-org-insert-list-leader-or-self (char)
-    (if (= (current-column) 0)
-        (insert (concat " " char " "))
-      (insert char)))
-
-  (defun air--org-swap-tags (tags)
-    "Replace any tags on the current headline with TAGS.
-
-The assumption is that TAGS will be a string conforming to Org Mode's
-tag format specifications, or nil to remove all tags."
-    (let ((old-tags (org-get-tags-string))
-          (tags (if tags
-                    (concat " " tags)
-                  "")))
-      (save-excursion
-        (beginning-of-line)
-        (re-search-forward
-         (concat "[ \t]*" (regexp-quote old-tags) "[ \t]*$")
-         (line-end-position) t)
-        (replace-match tags)
-        (org-set-tags t))))
-
-  (defun air-org-set-tags (tag)
-    "Add TAG if it is not in the list of tags, remove it otherwise.
-
-TAG is chosen interactively from the global tags completion table."
-    (interactive
-     (list (let ((org-last-tags-completion-table
-                  (if (derived-mode-p 'org-mode)
-                      (org-uniquify
-                       (delq nil (append (org-get-buffer-tags)
-                                         (org-global-tags-completion-table))))
-                    (org-global-tags-completion-table))))
-             (completing-read
-              "Tag: " 'org-tags-completion-function nil nil nil
-              'org-tags-history))))
-    (let* ((cur-list (org-get-tags))
-           (new-tags (mapconcat 'identity
-                                (if (member tag cur-list)
-                                    (delete tag cur-list)
-                                  (append cur-list (list tag)))
-                                ":"))
-           (new (if (> (length new-tags) 1) (concat " :" new-tags ":")
-                  nil)))
-      (air--org-swap-tags new)))
-
   (add-hook 'org-agenda-mode-hook
             (lambda ()
               (setq org-habit-graph-column 50)
@@ -201,7 +212,7 @@ TAG is chosen interactively from the global tags completion table."
                 (define-key org-mode-map (kbd char)
                   `(lambda ()
                     (interactive)
-                    (air-org-insert-list-leader-or-self ,char))))
+                    (air--org-insert-list-leader-or-self ,char))))
               ;; Normal maps
               (define-key org-mode-map (kbd "C-c d") (lambda ()
                                                          (interactive) (air-org-agenda-toggle-date t)))
