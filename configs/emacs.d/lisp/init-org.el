@@ -4,6 +4,42 @@
 ;; Basic Org Mode configuration, assuming presence of Evil & Evil Leader.
 
 ;; Helper functions
+(defun air--org-global-custom-ids ()
+  "Find custom ID fields in all org agenda files."
+  (let ((files (org-agenda-files))
+        file
+        air-all-org-custom-ids)
+    (while (setq file (pop files))
+      (with-current-buffer (org-get-agenda-file-buffer file)
+        (save-excursion
+          (save-restriction
+            (widen)
+            (goto-char (point-min))
+            (while (re-search-forward "^[ \t]*:CUSTOM_ID:[ \t]+\\(\\S-+\\)[ \t]*$"
+                                      nil t)
+              (add-to-list 'air-all-org-custom-ids
+                           `(,(match-string-no-properties 1)
+                             ,(concat file ":" (number-to-string (line-number-at-pos))))))))))
+    air-all-org-custom-ids))
+
+(defun air-org-goto-custom-id ()
+  "Go to the location of CUSTOM-ID, or prompt interactively."
+  (interactive)
+  (let* ((all-custom-ids (air--org-global-custom-ids))
+         (custom-id (completing-read
+                     "Custom ID: "
+                     all-custom-ids)))
+    (when custom-id
+      (let* ((val (cadr (assoc custom-id all-custom-ids)))
+             (id-parts (split-string val ":"))
+             (file (car id-parts))
+             (line (string-to-int (cadr id-parts))))
+        (pop-to-buffer (org-get-agenda-file-buffer file))
+        (goto-char (point-min))
+        (forward-line line)
+        (org-reveal)
+        (org-up-element)))))
+
 (defun air-org-set-category-property (value)
   "Set the category property of the current item to VALUE."
   (interactive (list (org-read-property-value "CATEGORY")))
@@ -147,7 +183,8 @@ TAG is chosen interactively from the global tags completion table."
          ("C-c t a" . air-pop-to-org-agenda)
          ("C-c t A" . org-agenda)
          ("C-c f k" . org-search-view)
-         ("C-c f t" . org-tags-view))
+         ("C-c f t" . org-tags-view)
+         ("C-c f i" . air-org-goto-custom-id))
   :config
   (setq org-agenda-text-search-extra-files '(agenda-archives))
   (setq org-agenda-files '("~/Dropbox/org/"))
