@@ -262,6 +262,9 @@ DEADLINE: %t")))
               (define-key org-mode-map (kbd "C-S-k") 'org-priority-up)
 
               (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle)
+              (evil-define-key 'normal org-mode-map ">>"        'org-metaright)
+              (evil-define-key 'normal org-mode-map "<<"        'org-metaleft)
+
               ;; Use fill column, but not in agenda
               (setq fill-column 100)
               (when (not (eq major-mode 'org-agenda-mode))
