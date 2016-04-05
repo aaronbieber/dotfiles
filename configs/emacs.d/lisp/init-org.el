@@ -204,6 +204,7 @@ DEADLINE: %t")))
   (setq org-log-redeadline (quote time))
   (setq org-log-reschedule (quote time))
   (setq org-agenda-skip-scheduled-if-done t)
+  (setq org-insert-heading-respect-content t)
   (set-face-attribute 'org-upcoming-deadline nil :foreground "gold1")
 
   (evil-leader/set-key-for-mode 'org-mode
