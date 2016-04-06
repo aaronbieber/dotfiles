@@ -80,6 +80,8 @@
   (define-key evil-normal-state-map (kbd "[i")    'show-first-occurrence)
   (define-key evil-insert-state-map (kbd "C-e")   'end-of-line) ;; I know...
 
+  (define-key evil-normal-state-map (kbd "S-SPC") 'air-pop-to-org-agenda)
+
   (defun minibuffer-keyboard-quit ()
     "Abort recursive edit.
 In Delete Selection mode, if the mark is active, just deactivate it;
