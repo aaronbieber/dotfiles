@@ -45,22 +45,6 @@
   (interactive (list (org-read-property-value "CATEGORY")))
   (org-set-property "CATEGORY" value))
 
-(defun air-org-revert-all (&optional force)
-  "Revert all Org buffers.  If FORCE is non-nil, don't even ask."
-  (interactive)
-  (if (or force
-          (yes-or-no-p "Really revert all Org buffers? "))
-      (let ((buffers-touched 0))
-        (dolist (buffer (buffer-list))
-          (with-current-buffer buffer
-            (if (derived-mode-p 'org-mode)
-                (progn (revert-buffer t t)
-                       (setq buffers-touched (1+ buffers-touched))))))
-        (message "Reverted %s buffer%s."
-                 buffers-touched
-                 (if (not (= buffers-touched 1)) "s" "")))
-    (message "Nevermind, then.")))
-
 (defun air-org-insert-scheduled-heading (&optional force-heading)
   "Insert a new org heading scheduled for today.
 
@@ -226,6 +210,7 @@ DEADLINE: %t")))
               (define-key org-agenda-mode-map "n"         'org-agenda-next-date-line)
               (define-key org-agenda-mode-map "p"         'org-agenda-previous-date-line)
               (define-key org-agenda-mode-map "c"         'air-org-agenda-capture)
+              (define-key org-agenda-mode-map "R"         'org-revert-all-org-buffers)
               (define-key org-agenda-mode-map (kbd "RET") 'org-agenda-switch-to)))
 
   (add-hook 'org-capture-mode-hook
@@ -261,6 +246,7 @@ DEADLINE: %t")))
               (define-key org-mode-map (kbd "C-\\")  'org-insert-heading)
               (define-key org-mode-map (kbd "C-S-j") 'org-priority-down)
               (define-key org-mode-map (kbd "C-S-k") 'org-priority-up)
+              (define-key org-mode-map (kbd "S-r")   'org-revert-all-org-buffers)
 
               (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle)
               (evil-define-key 'normal org-mode-map ">>"        'org-metaright)
