@@ -29,9 +29,22 @@
 (setq vc-follow-symlinks t)
 (setq large-file-warning-threshold nil)
 (setq split-width-threshold nil)
-(setq visible-bell nil)
 (setq custom-safe-themes t)
 (put 'narrow-to-region 'disabled nil)
+
+;; The OS X visible bell is buggy as hell.
+(setq ring-bell-function (lambda ()
+                           (let* ((bg (face-background 'default))
+                                  (fg (face-foreground 'default))
+                                  (reset `(lambda ()
+                                            (set-face-background 'default ,bg)
+                                            (set-face-foreground 'default ,fg))))
+
+                             (set-face-background 'default "gray")
+                             (set-face-foreground 'default "black")
+
+                             (run-with-timer 0.05 nil reset))))
+
 
 (defun my-minibuffer-setup-hook ()
   "Increase GC cons threshold."
