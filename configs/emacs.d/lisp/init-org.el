@@ -179,8 +179,11 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-capture-templates
         '(("a" "My TODO task format." entry
            (file "todo.org")
-           "* ☛ TODO %?
-DEADLINE: %t")))
+           "* ☛ TODO %?\nDEADLINE: %t")
+          ("n" "A (work-related) note." entry
+           (file+headline "notes.org" "Work")
+           "* %?\n%u\n\n"
+           :jump-to-captured t)))
   (setq org-default-notes-file "~/Dropbox/org/todo.org")
   (setq org-directory "~/Dropbox/org")
   (setq org-enforce-todo-dependencies t)
