@@ -125,14 +125,6 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
   (evil-define-key 'visual php-mode-map (kbd "]n") 'next-conflict-marker)
   (evil-define-key 'visual php-mode-map (kbd "[n") 'previous-conflict-marker)
 
-  ;; Org
-  (evil-define-key 'normal org-mode-map (kbd "]n") 'org-forward-heading-same-level)
-  (evil-define-key 'normal org-mode-map (kbd "[n") 'org-backward-heading-same-level)
-  (evil-define-key 'normal org-mode-map (kbd "C-S-l") 'org-shiftright)
-  (evil-define-key 'normal org-mode-map (kbd "C-S-h") 'org-shiftleft)
-  (evil-define-key 'insert org-mode-map (kbd "C-S-l") 'org-shiftright)
-  (evil-define-key 'insert org-mode-map (kbd "C-S-h") 'org-shiftleft)
-
   ;; Dired
   (evil-define-key 'normal dired-mode-map (kbd "C-e") 'dired-toggle-read-only))
 
