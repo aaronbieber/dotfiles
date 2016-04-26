@@ -111,6 +111,11 @@
 (use-package elpy
   :ensure t)
 
+(use-package groovy-mode
+  :ensure t
+  :config
+  (c-set-offset 'label 4))
+
 (use-package rainbow-mode
   :ensure t)
 
