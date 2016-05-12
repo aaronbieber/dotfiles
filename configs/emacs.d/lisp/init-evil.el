@@ -84,13 +84,19 @@
 
   (require 'air-menu-run)
   (setq air-menu-run-items
-        '(("org-things" ((?t "Tag"   org-tags-view)
-                         (?i "ID"    air-org-goto-custom-id)))
-          ("org-files" ((?t "TODO"  (lambda () (air-pop-to-org-todo nil)))
-                        (?n "Notes" (lambda () (air-pop-to-org-notes nil)))
-                        (?v "Vault" (lambda () (air-pop-to-org-vault nil)))))))
+        '(("org-things"   ("Things"
+                           ((?t "Tag"   org-tags-view)
+                            (?i "ID"    air-org-goto-custom-id))))
+          ("org-files"    ("Files"
+                           ((?t "TODO"  (lambda () (air-pop-to-org-todo nil)))
+                            (?n "Notes" (lambda () (air-pop-to-org-notes nil)))
+                            (?v "Vault" (lambda () (air-pop-to-org-vault nil))))))
+          ("org-captures" ("Captures"
+                           ((?t "TODO"  air-org-task-capture)
+                            (?n "Note"  (lambda () (interactive) (org-capture nil "n"))))))))
   (evil-define-key 'normal global-map (kbd "\\ f") (lambda () (interactive) (air-menu-run "org-files")))
   (evil-define-key 'normal global-map (kbd "\\ t") (lambda () (interactive) (air-menu-run "org-things")))
+  (evil-define-key 'normal global-map (kbd "\\ c") (lambda () (interactive) (air-menu-run "org-captures")))
 
   (defun minibuffer-keyboard-quit ()
     "Abort recursive edit.
