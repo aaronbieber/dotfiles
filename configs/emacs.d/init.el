@@ -228,11 +228,14 @@
   :ensure t
   :commands twit
   :config
-  (define-key twittering-mode-map (kbd "C-c r") 'twittering-retweet)
+  (add-hook 'twittering-mode-hook
+            (lambda ()
+              (define-key twittering-mode-map (kbd ",o") 'delete-other-windows)
+              (define-key twittering-mode-map (kbd ",b") 'helm-mini)
+              (define-key twittering-mode-map (kbd "C-c r") 'twittering-retweet)))
   (setq twittering-use-native-retweet t)
   (setq twittering-default-show-replied-tweets 3)
-  (setq twittering-use-icon-storage t)
-  (setq twittering-icon-mode t))
+  (setq twittering-use-icon-storage t))
 
 (use-package web-mode
   :ensure t
