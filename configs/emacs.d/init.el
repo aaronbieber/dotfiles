@@ -7,11 +7,22 @@
 ;;
 ;;; Code:
 
-(package-initialize)
-
+(require 'package)
+(setq package-enable-at-startup nil)
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
 (add-to-list 'exec-path "/usr/local/bin")
+(require 'init-utils)
+(require 'init-elpa)
+
+(package-initialize)
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(eval-when-compile
+  (require 'use-package))
 
 ;; Essential settings.
 (setq inhibit-splash-screen t
@@ -66,17 +77,10 @@
 (add-to-list 'auto-mode-alist '("\\.twig$" . web-mode))
 
 ;;; My own configurations, which are bundled in my dotfiles.
-(require 'init-utils)
 (require 'init-platform)
 (require 'init-global-functions)
-(require 'init-elpa)
-
-(maybe-require-package 'use-package)
-(eval-when-compile
-  (require 'use-package))
 
 (require 'diminish)
-(require 'bind-key)
 (require 'init-fonts)
 (require 'init-gtags)
 (require 'init-evil)
