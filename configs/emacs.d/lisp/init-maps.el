@@ -5,7 +5,7 @@
 
 ;;; Code:
 (define-key global-map (kbd "C-x C-q") 'kill-emacs)
-(define-key global-map (kbd "C-c C-u") 'insert-char) ;; "u" for Unicode, get it?
+(define-key global-map (kbd "C-c u")   'insert-char) ;; "u" for Unicode, get it?
 (define-key global-map (kbd "C-c s")   (lambda () (interactive) (ansi-term "zsh")))
 (define-key global-map (kbd "s-e")     'eval-buffer)
 (define-key global-map (kbd "s-d")     'eval-defun)
