@@ -202,7 +202,6 @@ TAG is chosen interactively from the global tags completion table."
     "ns" 'org-narrow-to-subtree
     "p"  'org-set-property
     "s"  'org-schedule
-    "u"  'org-up-element
     "t"  'air-org-set-tags)
 
   (add-hook 'org-agenda-mode-hook
@@ -247,19 +246,24 @@ TAG is chosen interactively from the global tags completion table."
               (define-key org-mode-map (kbd "C-<")   'org-metaleft)
               (define-key org-mode-map (kbd "C->")   'org-metaright)
               (define-key org-mode-map (kbd "C-\\")  'org-insert-heading)
-              (define-key org-mode-map (kbd "C-S-j") 'org-priority-down)
-              (define-key org-mode-map (kbd "C-S-k") 'org-priority-up)
               (define-key org-mode-map (kbd "S-r")   'org-revert-all-org-buffers)
 
               (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle)
               (evil-define-key 'normal org-mode-map ">>"        'org-metaright)
               (evil-define-key 'normal org-mode-map "<<"        'org-metaleft)
-              (evil-define-key 'normal org-mode-map (kbd "]n") 'org-forward-heading-same-level)
-              (evil-define-key 'normal org-mode-map (kbd "[n") 'org-backward-heading-same-level)
               (evil-define-key 'normal org-mode-map (kbd "C-S-l") 'org-shiftright)
               (evil-define-key 'normal org-mode-map (kbd "C-S-h") 'org-shiftleft)
               (evil-define-key 'insert org-mode-map (kbd "C-S-l") 'org-shiftright)
               (evil-define-key 'insert org-mode-map (kbd "C-S-h") 'org-shiftleft)
+
+              ;; Navigation
+              (evil-define-key 'normal org-mode-map (kbd "]n") 'org-forward-heading-same-level)
+              (evil-define-key 'normal org-mode-map (kbd "[n") 'org-backward-heading-same-level)
+              (define-key org-mode-map (kbd "C-S-j") (lambda ()
+                                                       (interactive)
+                                                       (org-up-element)
+                                                       (org-forward-heading-same-level 1)))
+              (define-key org-mode-map (kbd "C-S-k") 'org-up-element)
 
               ;; Use fill column, but not in agenda
               (setq fill-column 100)
