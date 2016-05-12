@@ -82,6 +82,16 @@
 
   (define-key evil-normal-state-map (kbd "S-SPC") 'air-pop-to-org-agenda)
 
+  (require 'air-menu-run)
+  (setq air-menu-run-items
+        '(("org-things" ((?t "Tag"   org-tags-view)
+                         (?i "ID"    air-org-goto-custom-id)))
+          ("org-files" ((?t "TODO"  (lambda () (air-pop-to-org-todo nil)))
+                        (?n "Notes" (lambda () (air-pop-to-org-notes nil)))
+                        (?v "Vault" (lambda () (air-pop-to-org-vault nil)))))))
+  (evil-define-key 'normal global-map (kbd "\\ f") (lambda () (interactive) (air-menu-run "org-files")))
+  (evil-define-key 'normal global-map (kbd "\\ t") (lambda () (interactive) (air-menu-run "org-things")))
+
   (defun minibuffer-keyboard-quit ()
     "Abort recursive edit.
 In Delete Selection mode, if the mark is active, just deactivate it;
