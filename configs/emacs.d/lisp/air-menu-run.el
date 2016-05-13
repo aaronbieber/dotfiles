@@ -45,7 +45,7 @@ is displayed."
            (title (car menu))
            (items (append (cadr menu)
                           '((?q "Quit" nil))))
-           (prompt (concat title ": "
+           (prompt (concat (propertize (concat title ": ") 'face 'default)
                            (mapconcat (lambda (i)
                                         (concat
                                          (propertize (concat
