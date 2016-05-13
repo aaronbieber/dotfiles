@@ -69,7 +69,7 @@ explicitly."
   (let ((menu-key-char 97))
     `("Menus" ,(mapcar (lambda (i)
                 (prog1
-                    `(,menu-key-char ,(car i) (lambda () (air-menu-run ,(car i))))
+                    `(,menu-key-char ,(caadr i) (lambda () (air-menu-run ,(car i))))
                   (setq menu-key-char (1+ menu-key-char))))
               air-menu-run-items))))
 
