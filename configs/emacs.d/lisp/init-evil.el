@@ -94,6 +94,7 @@
           ("org-captures" ("Captures"
                            ((?t "TODO"  air-org-task-capture)
                             (?n "Note"  (lambda () (interactive) (org-capture nil "n"))))))))
+  (evil-define-key 'normal global-map (kbd "\\ \\") 'air-menu-run)
   (evil-define-key 'normal global-map (kbd "\\ f") (lambda () (interactive) (air-menu-run "org-files")))
   (evil-define-key 'normal global-map (kbd "\\ t") (lambda () (interactive) (air-menu-run "org-things")))
   (evil-define-key 'normal global-map (kbd "\\ c") (lambda () (interactive) (air-menu-run "org-captures")))
