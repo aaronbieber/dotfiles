@@ -85,8 +85,9 @@
   (require 'air-menu-run)
   (setq air-menu-run-items
         '(("org-things"   ("Things"
-                           ((?t "Tag"   org-tags-view)
-                            (?i "ID"    air-org-goto-custom-id))))
+                           ((?t "Tag"     org-tags-view)
+                            (?i "ID"      air-org-goto-custom-id)
+                            (?k "Keyword" org-search-view))))
           ("org-files"    ("Files"
                            ((?t "TODO"  (lambda () (air-pop-to-org-todo nil)))
                             (?n "Notes" (lambda () (air-pop-to-org-notes nil)))
