@@ -351,7 +351,6 @@ condition where the bell visualization never clears.")
             (define-key lisp-interaction-mode-map (kbd "<C-return>") 'eval-last-sexp)))
 
 ;;; Python mode:
-
 (use-package virtualenvwrapper
   :ensure t
   :config
