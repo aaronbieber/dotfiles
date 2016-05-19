@@ -102,6 +102,10 @@ condition where the bell visualization never clears.")
 (add-to-list 'load-path (expand-file-name "fence-edit" user-emacs-directory))
 (require 'fence-edit)
 
+;; Utilities
+(use-package s :ensure t)
+(use-package dash :ensure t)
+
 ;; Org prerequisites
 (use-package visual-fill-column
   :ensure t)
