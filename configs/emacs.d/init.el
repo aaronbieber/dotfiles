@@ -378,6 +378,33 @@ condition where the bell visualization never clears.")
             ;; Additional settings follow.
             (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
 
+;;; The Emacs Shell
+(defun company-eshell-history (command &optional arg &rest ignored)
+  "Complete from shell history when starting a new line.
+
+Provide COMMAND and ARG in keeping with the Company Mode backend spec.
+The IGNORED argument is... Ignored."
+  (interactive (list 'interactive))
+  (cl-case command
+    (interactive (company-begin-backend 'company-eshell-history))
+    (prefix (and (eq major-mode 'eshell-mode)
+                 (let ((word (company-grab-word)))
+                   (save-excursion
+                     (eshell-bol)
+                     (and (looking-at-p (s-concat word "$")) word)))))
+    (candidates (remove-duplicates
+                 (->> (ring-elements eshell-history-ring)
+                      (remove-if-not (lambda (item) (s-prefix-p arg item)))
+                      (mapcar 's-trim))
+                 :test 'string=))
+    (sorted t)))
+
+(add-hook 'eshell-mode-hook
+          (lambda ()
+            (set (make-local-variable 'pcomplete-ignore-case) t)
+            (set (make-local-variable 'company-backends)
+                 '((company-shell company-eshell-history)))))
+
 ;;; Magit mode (which does not open in evil-mode):
 (add-hook 'magit-mode-hook
           (lambda ()
