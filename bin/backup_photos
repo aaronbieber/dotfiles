@@ -40,9 +40,13 @@ for job in jobs:
     print("Syncing %s to %s..." % (job[0], job[1]))
 
     process = subprocess.Popen(["rsync",
-                                "-Waiv",
+                                "-WOaiv",
                                 "--no-p",
                                 "--delete",
+                                "--exclude",
+                                "@eaDir",
+                                "--exclude",
+                                "*@SynoResource",
                                 "-h",
                                 job[0],
                                 job[1]],
