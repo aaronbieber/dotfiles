@@ -637,3 +637,13 @@ is the buffer location at which the function was found."
 
 (provide 'init)
 ;;; init.el ends here
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(term ((t (:foreground "ivory1"))))
+ '(term-color-black ((t (:foreground "gray80"))))
+ '(term-color-cyan ((t (:foreground "cyan2"))))
+ '(term-color-green ((t (:foreground "OliveDrab3"))))
+ '(term-color-yellow ((t (:foreground "gold1")))))
