@@ -14,14 +14,10 @@ try:
 except ImportError:
     print("Could not load `ansicolor'; ensure that the module is installed.")
 
-all_jobs = [("/Volumes/Arcturus/Pictures/Lightroom/",
-             "/Volumes/Ares/Pictures/Lightroom/"),
-            ("/Volumes/Arcturus/Pictures/Photography/",
-             "/Volumes/Ares/Pictures/Photography/"),
-            ("/Volumes/Arcturus/Pictures/Lightroom/",
-             "/Volumes/Pictures/Lightroom/"),
-            ("/Volumes/Arcturus/Pictures/Photography/",
-             "/Volumes/Pictures/Photography/")]
+all_jobs = [("/Volumes/Arcturus/Pictures/",
+             "/Volumes/Ares/Pictures/"),
+            ("/Volumes/Arcturus/Pictures/",
+             "arecibo.skynet.net:/volume1/Pictures/")]
 
 #all_locations = [path for job in jobs for path in job]
 jobs = []
@@ -29,8 +25,11 @@ jobs = []
 print("Checking for sync locations...")
 
 for job in all_jobs:
-    if not os.path.exists(job[0]) \
-       or not os.path.exists(job[1]):
+    if (":" not in job[0]
+        and not os.path.exists(job[0])) \
+        or (":" not in job[1]
+            and not os.path.exists(job[1])):
+
         print(red("Excluding %s -> %s." % (job[0], job[1])))
         continue
     else:
