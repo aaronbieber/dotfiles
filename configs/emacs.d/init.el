@@ -406,6 +406,15 @@ The IGNORED argument is... Ignored."
                  :test 'string=))
     (sorted t)))
 
+(defadvice term-sentinel (around my-advice-term-sentinel (proc msg))
+  "Kill term buffer when term is ended."
+  (if (memq (process-status proc) '(signal exit))
+      (let ((buffer (process-buffer proc)))
+        ad-do-it
+        (kill-buffer buffer))
+    ad-do-it))
+(ad-activate 'term-sentinel)
+
 (add-hook 'eshell-mode-hook
           (lambda ()
             (set (make-local-variable 'pcomplete-ignore-case) t)
