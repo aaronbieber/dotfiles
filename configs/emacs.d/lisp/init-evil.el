@@ -6,7 +6,7 @@
   (evil-leader/set-leader ",")
   (setq evil-leader/in-all-states 1)
   (evil-leader/set-key
-    ","  'avy-goto-char-2
+    ","  (lambda () (interactive) (ansi-term (getenv "SHELL")))
     "."  'switch-to-previous-buffer
     ":"  'eval-expression
     "aa" 'align-regexp
@@ -71,16 +71,18 @@
   ;; Global bindings.
   (define-key evil-normal-state-map (kbd "<down>") 'evil-next-visual-line)
   (define-key evil-normal-state-map (kbd "<up>")   'evil-previous-visual-line)
-
   (define-key evil-normal-state-map (kbd "C-S-P") 'helm-projectile-switch-project)
   (define-key evil-normal-state-map (kbd "C-p")   'helm-projectile)
   (define-key evil-normal-state-map (kbd "-")     'helm-find-files)
   (define-key evil-normal-state-map (kbd "C-]")   'gtags-find-tag-from-here)
   (define-key evil-normal-state-map (kbd "g/")    'occur-last-search)
   (define-key evil-normal-state-map (kbd "[i")    'show-first-occurrence)
+  (define-key evil-normal-state-map (kbd "S-SPC") 'air-pop-to-org-agenda)
+
   (define-key evil-insert-state-map (kbd "C-e")   'end-of-line) ;; I know...
 
-  (define-key evil-normal-state-map (kbd "S-SPC") 'air-pop-to-org-agenda)
+  (evil-define-key 'insert global-map (kbd "s-d") 'eval-last-sexp)
+  (evil-define-key 'normal global-map (kbd "s-d") 'eval-defun)
 
   (require 'air-menu-run)
   (setq air-menu-run-items
