@@ -480,11 +480,6 @@ The IGNORED argument is... Ignored."
 (add-hook 'twittering-edit-mode-hook (lambda ()
                                        (flyspell-mode)))
 
-;;; Let me move the selection like a normal human in the Grizzl results buffer.
-(add-hook 'grizzl-mode-hook (lambda ()
-                              (define-key *grizzl-keymap* (kbd "C-j") 'grizzl-set-selection-1)
-                              (define-key *grizzl-keymap* (kbd "C-k") 'grizzl-set-selection+1)))
-
 ;;; Javascript mode:
 (add-hook 'javascript-mode-hook (lambda ()
                                   (set-fill-column 120)
