@@ -91,7 +91,7 @@
                             (?i "ID"      air-org-goto-custom-id)
                             (?k "Keyword" org-search-view))))
           ("org-files"    ("Files"
-                           ((?t "TODO"  (lambda () (air-pop-to-org-todo nil)))
+                           ((?c "TODO"  (lambda () (air-pop-to-org-todo nil)))
                             (?n "Notes" (lambda () (air-pop-to-org-notes nil)))
                             (?v "Vault" (lambda () (air-pop-to-org-vault nil))))))
           ("org-captures" ("Captures"
