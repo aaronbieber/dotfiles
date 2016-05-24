@@ -50,8 +50,11 @@
                   octopress-mode
                   octopress-server-mode
                   octopress-process-mode
-                  sunshine-mode))
+                  sunshine-mode
+                  term-mode))
     (add-to-list 'evil-emacs-state-modes mode))
+
+  (delete 'term-mode evil-insert-state-modes)
 
   ;; Use insert state in these additional modes.
   (dolist (mode '(twittering-edit-mode
