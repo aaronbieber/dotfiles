@@ -85,23 +85,23 @@
   (evil-define-key 'insert global-map (kbd "s-d") 'eval-last-sexp)
   (evil-define-key 'normal global-map (kbd "s-d") 'eval-defun)
 
-  (require 'air-menu-run)
-  (setq air-menu-run-items
+  (require 'tiny-menu-run)
+  (setq tiny-menu-run-items
         '(("org-things"   ("Things"
                            ((?t "Tag"     org-tags-view)
                             (?i "ID"      air-org-goto-custom-id)
                             (?k "Keyword" org-search-view))))
           ("org-files"    ("Files"
-                           ((?c "TODO"  (lambda () (air-pop-to-org-todo nil)))
+                           ((?t "TODO"  (lambda () (air-pop-to-org-todo nil)))
                             (?n "Notes" (lambda () (air-pop-to-org-notes nil)))
                             (?v "Vault" (lambda () (air-pop-to-org-vault nil))))))
           ("org-captures" ("Captures"
-                           ((?t "TODO"  air-org-task-capture)
+                           ((?c "TODO"  air-org-task-capture)
                             (?n "Note"  (lambda () (interactive) (org-capture nil "n"))))))))
-  (evil-define-key 'normal global-map (kbd "\\ \\") 'air-menu-run)
-  (evil-define-key 'normal global-map (kbd "\\ f") (lambda () (interactive) (air-menu-run "org-files")))
-  (evil-define-key 'normal global-map (kbd "\\ t") (lambda () (interactive) (air-menu-run "org-things")))
-  (evil-define-key 'normal global-map (kbd "\\ c") (lambda () (interactive) (air-menu-run "org-captures")))
+  (evil-define-key 'normal global-map (kbd "\\ \\") 'tiny-menu-run)
+  (evil-define-key 'normal global-map (kbd "\\ f") (tiny-menu-run-item "org-files"))
+  (evil-define-key 'normal global-map (kbd "\\ t") (tiny-menu-run-item "org-things"))
+  (evil-define-key 'normal global-map (kbd "\\ c") (tiny-menu-run-item "org-captures"))
 
   (defun minibuffer-keyboard-quit ()
     "Abort recursive edit.
