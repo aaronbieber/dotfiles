@@ -215,6 +215,12 @@ TAG is chosen interactively from the global tags completion table."
               (define-key org-agenda-mode-map "R"          'org-revert-all-org-buffers)
               (define-key org-agenda-mode-map (kbd "RET")  'org-agenda-switch-to)
 
+              (define-prefix-command 'air-org-run-shortcuts)
+              (define-key air-org-run-shortcuts "f" (lambda () (interactive) (air-menu-run "org-files")))
+              (define-key air-org-run-shortcuts "t" (lambda () (interactive) (air-menu-run "org-things")))
+              (define-key air-org-run-shortcuts "c" (lambda () (interactive) (air-menu-run "org-captures")))
+              (define-key org-agenda-mode-map (kbd "\\") air-org-run-shortcuts)))
+
   (add-hook 'org-capture-mode-hook
             (lambda ()
               (evil-define-key 'insert org-capture-mode-map (kbd "C-d") 'air-org-agenda-toggle-date)
