@@ -70,3 +70,26 @@ S.bind(
         }
     )
 );
+
+// Throw to other monitors
+S.bind(
+    'm:cmd,shift',
+    S.op('chain', {
+        'operations': [
+            S.op('move', {
+                'screen': 0,
+                'x': 'screenOriginX',
+                'y': 'screenOriginY',
+                'width': 'windowSizeX',
+                'height': 'windowSizeY'
+            }),
+            S.op('move', {
+                'screen': 1,
+                'x': 'screenOriginX',
+                'y': 'screenOriginY',
+                'width': 'windowSizeX',
+                'height': 'windowSizeY'
+            })
+        ]
+    })
+);
