@@ -234,6 +234,9 @@ condition where the bell visualization never clears.")
   (define-key markdown-mode-map (kbd "C-c 5") 'markdown-insert-header-atx-5)
   (define-key markdown-mode-map (kbd "C-c 6") 'markdown-insert-header-atx-6))
 
+(use-package markdown-preview-mode
+  :ensure t)
+
 (use-package php-extras :ensure t :defer t)
 (use-package sublime-themes :ensure t)
 (use-package sunshine
@@ -561,7 +564,7 @@ is the buffer location at which the function was found."
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
  '(package-selected-packages
    (quote
-    (markdown-preview-mode fzf xterm-color nlinum-relative company-shell pandoc-mode virtualenvwrapper counsel helm-swoop groovy-mode octopress zenburn-theme yaml-mode which-key wgrep-ag web-mode use-package twittering-mode sunshine sublime-themes rainbow-mode powerline-evil php-extras org-bullets mmm-mode markdown-mode magit highlight-symbol helm-projectile gtags fullframe flycheck-package exec-path-from-shell evil-surround evil-leader evil-jumper evil-indent-textobject emmet-mode elpy dictionary color-theme-sanityinc-tomorrow bpr auto-complete ag)))
+    (markdown-preview-mode fzf xterm-color nlinum-relative company-shell pandoc-mode virtualenvwrapper counsel helm-swoop groovy-mode octopress zenburn-theme yaml-mode which-key wgrep-ag web-mode w3m use-package twittering-mode sunshine sublime-themes rainbow-mode powerline-evil php-extras org-bullets mmm-mode markdown-mode magit highlight-symbol helm-projectile gtags fullframe flycheck-package exec-path-from-shell evil-surround evil-leader evil-jumper evil-indent-textobject emmet-mode elpy dictionary color-theme-sanityinc-tomorrow bpr auto-complete ag)))
  '(safe-local-variable-values (quote ((css-indent-offset . 2) (no-byte-compile t)))))
 
 ;; handle tmux's xterm-keys
