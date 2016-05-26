@@ -85,8 +85,8 @@
   (evil-define-key 'insert global-map (kbd "s-d") 'eval-last-sexp)
   (evil-define-key 'normal global-map (kbd "s-d") 'eval-defun)
 
-  (require 'tiny-menu-run)
-  (setq tiny-menu-run-items
+  (require 'tiny-menu)
+  (setq tiny-menu-items
         '(("org-things"   ("Things"
                            ((?t "Tag"     org-tags-view)
                             (?i "ID"      air-org-goto-custom-id)
