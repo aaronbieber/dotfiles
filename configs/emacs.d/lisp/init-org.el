@@ -179,7 +179,7 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-capture-templates
         '(("a" "My TODO task format." entry
            (file "todo.org")
-           "* ☛ TODO %?\nDEADLINE: %t")
+           "* ☛ TODO %?\nSCHEDULED: %t")
           ("n" "A (work-related) note." entry
            (file+headline "notes.org" "Work")
            "* %?\n%u\n\n"
