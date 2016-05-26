@@ -10,6 +10,17 @@
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+
+;; Also add all directories within "lisp"
+;; I use this for packages I'm actively working on, mostly.
+(let ((files (directory-files-and-attributes "~/.emacs.d/lisp" t)))
+  (dolist (file files)
+    (let ((filename (car file))
+          (dir (nth 1 file)))
+      (when (and dir
+                 (not (string-suffix-p "." filename)))
+        (add-to-list 'load-path (car file))))))
+
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
 (add-to-list 'exec-path "/usr/local/bin")
 (require 'init-utils)
