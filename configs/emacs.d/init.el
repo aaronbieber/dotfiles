@@ -225,6 +225,7 @@ condition where the bell visualization never clears.")
 (use-package markdown-mode
   :ensure t
   :config
+  (setq markdown-command "pandoc --from markdown_github-hard_line_breaks --to html")
   (define-key markdown-mode-map (kbd "C-\\")  'markdown-insert-list-item)
   (define-key markdown-mode-map (kbd "C-c '") 'fence-edit-code-at-point)
   (define-key markdown-mode-map (kbd "C-c 1") 'markdown-insert-header-atx-1)
@@ -235,7 +236,9 @@ condition where the bell visualization never clears.")
   (define-key markdown-mode-map (kbd "C-c 6") 'markdown-insert-header-atx-6))
 
 (use-package markdown-preview-mode
-  :ensure t)
+  :ensure t
+  :config
+  (setq markdown-preview-style "http://aaronbieber.com/assets/styles/github-markdown.css"))
 
 (use-package php-extras :ensure t :defer t)
 (use-package sublime-themes :ensure t)
@@ -555,16 +558,13 @@ is the buffer location at which the function was found."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(markdown-command "pandoc --from markdown_github --to html")
- '(markdown-preview-style
-   "http://aaronbieber.com/assets/styles/github-markdown.css")
  '(org-hide-emphasis-markers t)
  '(org-modules
    (quote
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
  '(package-selected-packages
    (quote
-    (markdown-preview-mode fzf xterm-color nlinum-relative company-shell pandoc-mode virtualenvwrapper counsel helm-swoop groovy-mode octopress zenburn-theme yaml-mode which-key wgrep-ag web-mode w3m use-package twittering-mode sunshine sublime-themes rainbow-mode powerline-evil php-extras org-bullets mmm-mode markdown-mode magit highlight-symbol helm-projectile gtags fullframe flycheck-package exec-path-from-shell evil-surround evil-leader evil-jumper evil-indent-textobject emmet-mode elpy dictionary color-theme-sanityinc-tomorrow bpr auto-complete ag)))
+    (fzf xterm-color nlinum-relative company-shell pandoc-mode virtualenvwrapper counsel helm-swoop groovy-mode octopress zenburn-theme yaml-mode which-key wgrep-ag web-mode w3m use-package twittering-mode sunshine sublime-themes rainbow-mode powerline-evil php-extras org-bullets mmm-mode markdown-mode magit highlight-symbol helm-projectile gtags fullframe flycheck-package exec-path-from-shell evil-surround evil-leader evil-jumper evil-indent-textobject emmet-mode elpy dictionary color-theme-sanityinc-tomorrow bpr auto-complete ag)))
  '(safe-local-variable-values (quote ((css-indent-offset . 2) (no-byte-compile t)))))
 
 ;; handle tmux's xterm-keys
