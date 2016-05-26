@@ -225,18 +225,6 @@ condition where the bell visualization never clears.")
 (use-package markdown-mode
   :ensure t
   :config
-  (defun air-markdown-live-preview-update ()
-    "Update the live preview buffer, if there is one."
-    (interactive)
-    (when markdown-live-preview-buffer
-      (with-current-buffer markdown-live-preview-buffer
-        (markdown-live-preview-re-export))))
-
-  (add-hook 'after-save-hook (lambda ()
-                               (when (and (eq major-mode 'markdown-mode)
-                                          markdown-live-preview-buffer)
-                                 (air-markdown-live-preview-update))))
-
   (define-key markdown-mode-map (kbd "C-\\")  'markdown-insert-list-item)
   (define-key markdown-mode-map (kbd "C-c '") 'fence-edit-code-at-point)
   (define-key markdown-mode-map (kbd "C-c 1") 'markdown-insert-header-atx-1)
