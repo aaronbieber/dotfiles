@@ -1,0 +1,11 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: doc-variable
+# key: doc_v
+# binding: direct-keybinding
+# --
+/**
+ * ${3:description}
+ *
+ * @var ${4:type}
+ */
+${1:$$(yas-choose-value '("public " "protected " "private "))} ${2:$variable};

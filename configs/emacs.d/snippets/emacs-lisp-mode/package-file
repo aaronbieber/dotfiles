@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: package-file
+# key: pack
+# --
+;;; ${1:package}.el --- ${2:Package description}
+;;; Commentary:
+
+;;; Code:
+
+(provide '$1)
+;;; $1.el ends here
