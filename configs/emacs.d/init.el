@@ -219,7 +219,9 @@ condition where the bell visualization never clears.")
 (use-package swiper
   :ensure t
   :commands swiper
-  :bind ("C-s" . swiper))
+  :bind ("C-s" . swiper)
+  :config
+  (setq ivy-height 20))
 
 (use-package dictionary :ensure t)
 (use-package emmet-mode :ensure t)
