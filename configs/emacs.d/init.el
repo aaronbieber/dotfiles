@@ -136,9 +136,6 @@ condition where the bell visualization never clears.")
   :config
   (exec-path-from-shell-initialize))
 
-(use-package pandoc-mode
-  :ensure t)
-
 (use-package elpy
   :ensure t)
 
