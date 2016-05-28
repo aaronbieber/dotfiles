@@ -111,6 +111,14 @@ condition where the bell visualization never clears.")
 (require 'init-flycheck)
 (require 'init-tmux)
 
+(require 'markdown-preview-mode)
+(add-hook 'markdown-preview-mode-hook
+          (lambda ()
+            (setq markdown-preview-template
+                  (expand-file-name "~/.emacs.d/markdown-preview.html" user-emacs-directory))
+            (setq markdown-preview-style
+                  "http://aaronbieber.com/assets/styles/github-markdown.css")))
+
 (add-to-list 'load-path (expand-file-name "fence-edit" user-emacs-directory))
 (require 'fence-edit)
 
@@ -232,11 +240,6 @@ condition where the bell visualization never clears.")
   (define-key markdown-mode-map (kbd "C-c 4") 'markdown-insert-header-atx-4)
   (define-key markdown-mode-map (kbd "C-c 5") 'markdown-insert-header-atx-5)
   (define-key markdown-mode-map (kbd "C-c 6") 'markdown-insert-header-atx-6))
-
-(use-package markdown-preview-mode
-  :ensure t
-  :config
-  (setq markdown-preview-style "http://aaronbieber.com/assets/styles/github-markdown.css"))
 
 (use-package php-extras :ensure t :defer t)
 (use-package sublime-themes :ensure t)
