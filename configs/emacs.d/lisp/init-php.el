@@ -73,27 +73,62 @@
     (add-function :before-until (local 'eldoc-documentation-function)
                   'php-extras-eldoc-documentation-function))
 
-  (c-set-style "wf-php")
+  ;; Provide a style based on "php" that changes a couple of indent behaviors.
+  (c-add-style "wf-php"
+               '("php"
+                 (c-basic-offset . 2)
+                 (c-offsets-alist . ((arglist-intro . my-php-lineup-arglist-intro)
+                                     (arglist-close . my-php-lineup-arglist-close)
+                                     (arglist-cont-nonempty . my-php-lineup-arglist-cont-nonempty)
+                                     (statement-cont . my-php-lineup-statement-cont)
+                                     (topmost-intro-cont . my-php-lineup-statement-cont)))))
+  ;; (c-set-style "wf-php")
+  ;; (set-fill-column 120)
+  (air-set-php-group)
   (eldoc-mode t)
   (highlight-symbol-mode)
   (electric-pair-mode)
   (turn-on-auto-fill)
-  (set-fill-column 120)
   (add-to-list 'write-file-functions 'delete-trailing-whitespace)
   (gtags-mode t)
   (flycheck-mode)
   (yas-minor-mode t))
 
-;; Provide a style based on "php" that changes a couple of indent behaviors.
-(c-add-style "wf-php"
-             '("php"
-               (c-basic-offset . 2)
-               (c-offsets-alist . ((arglist-intro . my-php-lineup-arglist-intro)
-                                   (arglist-close . my-php-lineup-arglist-close)
-                                   (arglist-cont-nonempty . my-php-lineup-arglist-cont-nonempty)
-                                   (statement-cont . my-php-lineup-statement-cont)
-                                   (topmost-intro-cont . my-php-lineup-statement-cont)))))
+(defvar php-settings-groups
+  '(("air"
+     (lambda ()
+       (c-set-style "php")
+       (setq flycheck-phpcs-standard "PEAR")
+       (set-fill-column 85)))
+    ("wf"
+     (lambda ()
+       (c-set-style "wf-php")
+       (setq flycheck-phpcs-standard "CSNStores")
+       (set-fill-column 120))))
+  "Groups of PHP settings.
 
+Settings are expressed as an alist of settings group names and functions to call
+to configure the necessary settings.")
+
+(defun air-set-php-group (&optional php-settings-group)
+  "Set all PHP settings appropriate for PHP-SETTINGS-GROUP.
+
+If PHP-SETTINGS-GROUP is given, that group will be used.
+
+If a group is not given, but the file `~/.emacs.d/php-settings-group' exists, is
+readable, and contains a string matching one of the available settings groups, that
+group will be used.  Otherwise, the first group in `php-settings-groups' will be
+used."
+  (let* ((group-file (expand-file-name "php-settings-group" user-emacs-directory))
+         (group (or php-settings-group
+                    (and (file-readable-p group-file)
+                         (with-temp-buffer
+                           (insert-file-contents group-file)
+                           (buffer-substring (point-min) (point-max))))
+                    (nth 0 php-settings-groups)))
+         (settings (assoc group php-settings-groups)))
+    (message "Applying PHP settings group `%s'" group)
+    (ignore-errors (funcall (cadr settings)))))
 
 (use-package php-mode
   :mode "\\.php\\'"
