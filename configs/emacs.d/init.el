@@ -164,7 +164,16 @@ condition where the bell visualization never clears.")
 (use-package wgrep
   :ensure t
   :config
-  (setq wgrep-auto-save-buffer t))
+  (setq wgrep-auto-save-buffer t)
+  (defadvice wgrep-change-to-wgrep-mode (after wgrep-set-normal-state)
+    (if (fboundp 'evil-normal-state)
+        (evil-normal-state)))
+  (ad-activate 'wgrep-change-to-wgrep-mode)
+
+  (defadvice wgrep-finish-edit (after wgrep-set-motion-state)
+    (if (fboundp 'evil-motion-state)
+        (evil-motion-state)))
+  (ad-activate 'wgrep-finish-edit))
 
 (use-package wgrep-ag
   :ensure t
