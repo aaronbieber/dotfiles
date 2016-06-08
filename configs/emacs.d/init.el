@@ -193,6 +193,11 @@ condition where the bell visualization never clears.")
   (setq ag-reuse-buffers t)
   (setq ag-reuse-window t))
 
+(use-package js2-mode
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
+
 (use-package exec-path-from-shell
   :ensure t
   :defer t
