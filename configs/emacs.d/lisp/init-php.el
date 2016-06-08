@@ -98,7 +98,7 @@
   '(("air"
      (lambda ()
        (c-set-style "php")
-       (setq flycheck-phpcs-standard "PEAR")
+       (setq flycheck-phpcs-standard "PSR2")
        (set-fill-column 85)))
     ("wf"
      (lambda ()
