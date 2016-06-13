@@ -241,6 +241,10 @@ condition where the bell visualization never clears.")
 (use-package emmet-mode :ensure t)
 (use-package flycheck :ensure t)
 (use-package helm-projectile
+  :bind (("C-S-P" . helm-projectile-switch-project)
+         :map evil-normal-state-map
+         ("C-p" . helm-projectile))
+  :after (helm projectile evil)
   :commands (helm-projectile helm-projectile-switch-project)
   :ensure t)
 
@@ -329,8 +333,10 @@ condition where the bell visualization never clears.")
 
 (use-package fzf
   :ensure t
+  :after (projectile init-evil)
   :config
   (require 'projectile)
+  (require 'init-evil)
   (defun air-fzf-projectile-project-root ()
     "Start `fzf' from the root of a known Projectile project."
     (interactive)
@@ -340,9 +346,8 @@ condition where the bell visualization never clears.")
                                               (projectile-relevant-known-projects))
                                       projectile-known-projects))))
 
-  (require 'init-evil) ;; For safety
-  (define-evil-or-global-key (kbd "C-p") 'fzf)
-  (define-evil-or-global-key (kbd "C-S-p") 'air-fzf-projectile-project-root))
+  (define-evil-or-global-key (kbd "C-c C-p") 'fzf)
+  (define-evil-or-global-key (kbd "C-c C-S-p") 'air-fzf-projectile-project-root))
 
 (use-package highlight-symbol
   :ensure t
