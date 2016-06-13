@@ -591,30 +591,8 @@ is the buffer location at which the function was found."
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
  '(package-selected-packages
    (quote
-    (telephone-line mustache-mode fzf xterm-color nlinum-relative company-shell pandoc-mode virtualenvwrapper counsel helm-swoop groovy-mode octopress zenburn-theme yaml-mode which-key wgrep-ag web-mode w3m use-package twittering-mode sunshine sublime-themes rainbow-mode powerline-evil php-extras org-bullets mmm-mode markdown-mode magit highlight-symbol helm-projectile gtags fullframe flycheck-package exec-path-from-shell evil-surround evil-leader evil-jumper evil-indent-textobject emmet-mode elpy dictionary color-theme-sanityinc-tomorrow bpr auto-complete ag)))
- '(safe-local-variable-values (quote ((css-indent-offset . 2) (no-byte-compile t))))
- '(vc-annotate-background nil)
- '(vc-annotate-color-map
-   (quote
-    ((20 . "#c82829")
-     (40 . "#f5871f")
-     (60 . "#eab700")
-     (80 . "#718c00")
-     (100 . "#3e999f")
-     (120 . "#4271ae")
-     (140 . "#8959a8")
-     (160 . "#c82829")
-     (180 . "#f5871f")
-     (200 . "#eab700")
-     (220 . "#718c00")
-     (240 . "#3e999f")
-     (260 . "#4271ae")
-     (280 . "#8959a8")
-     (300 . "#c82829")
-     (320 . "#f5871f")
-     (340 . "#eab700")
-     (360 . "#718c00"))))
- '(vc-annotate-very-old-color nil))
+    (color-moccur fzf xterm-color nlinum-relative company-shell pandoc-mode virtualenvwrapper counsel helm-swoop groovy-mode octopress zenburn-theme yaml-mode which-key wgrep-ag web-mode w3m use-package twittering-mode sunshine sublime-themes rainbow-mode powerline-evil php-extras org-bullets mmm-mode markdown-mode magit highlight-symbol helm-projectile gtags fullframe flycheck-package exec-path-from-shell evil-surround evil-leader evil-jumper evil-indent-textobject emmet-mode elpy dictionary color-theme-sanityinc-tomorrow bpr auto-complete ag)))
+ '(safe-local-variable-values (quote ((css-indent-offset . 2) (no-byte-compile t)))))
 
 (put 'narrow-to-region 'disabled nil)
 (diminish 'undo-tree-mode)
