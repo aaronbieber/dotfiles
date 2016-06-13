@@ -82,8 +82,6 @@
                                      (arglist-cont-nonempty . my-php-lineup-arglist-cont-nonempty)
                                      (statement-cont . my-php-lineup-statement-cont)
                                      (topmost-intro-cont . my-php-lineup-statement-cont)))))
-  ;; (c-set-style "wf-php")
-  ;; (set-fill-column 120)
   (air-set-php-group)
   (eldoc-mode t)
   (highlight-symbol-mode)
@@ -98,12 +96,12 @@
   '(("air"
      (lambda ()
        (c-set-style "php")
-       (setq flycheck-phpcs-standard "PSR2")
+       (setq-local flycheck-phpcs-standard "PSR2")
        (set-fill-column 85)))
     ("wf"
      (lambda ()
        (c-set-style "wf-php")
-       (setq flycheck-phpcs-standard "CSNStores")
+       (setq-local flycheck-phpcs-standard "CSNStores")
        (set-fill-column 120))))
   "Groups of PHP settings.
 
@@ -127,7 +125,6 @@ used."
                            (buffer-substring (point-min) (point-max))))
                     (nth 0 php-settings-groups)))
          (settings (assoc group php-settings-groups)))
-    (message "Applying PHP settings group `%s'" group)
     (ignore-errors (funcall (cadr settings)))))
 
 (use-package php-mode
