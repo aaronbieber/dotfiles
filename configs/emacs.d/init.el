@@ -362,7 +362,8 @@ condition where the bell visualization never clears.")
   :config
   (setq magit-branch-arguments nil)
   (setq magit-push-always-verify nil)
-  (setq magit-last-seen-setup-instructions "1.4.0"))
+  (setq magit-last-seen-setup-instructions "1.4.0")
+  (magit-define-popup-switch 'magit-log-popup ?f "first parent" "--first-parent"))
 
 (use-package mmm-mode
   :ensure t
