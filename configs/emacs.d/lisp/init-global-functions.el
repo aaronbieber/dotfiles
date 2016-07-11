@@ -164,6 +164,24 @@ Repeated invocations toggle between the two most recently open buffers."
       (progn (evil-normal-state nil)
              (evil-goto-first-line))))
 
+(defun narrow-to-region-or-subtree ()
+  "Narrow to a region, if set, otherwise to an Org subtree, if present."
+  (interactive)
+  (if (and mark-active
+           (not (= (region-beginning) (region-end))))
+      (narrow-and-set-normal)
+    (if (derived-mode-p 'org-mode)
+        (org-narrow-to-subtree))))
+
+(defun air-narrow-dwim ()
+  "Narrow to a thing or widen based on context.
+
+Attempts to follow the Do What I Mean philosophy."
+  (interactive)
+  (if (buffer-narrowed-p)
+      (widen)
+    (narrow-to-region-or-subtree)))
+
 (defun open-current-line-in-codebase-search ()
   "Go to the current file's current line on the codebase site."
   (interactive)

@@ -20,7 +20,7 @@
     "g"  'magit-status
     "h"  'fontify-and-browse    ;; HTML-ize the buffer and browse the result
     "l"  'whitespace-mode       ;; Show invisible characters
-    "nn" 'narrow-and-set-normal ;; Narrow to region and enter normal mode
+    "nn" 'air-narrow-dwim       ;; Narrow to region and enter normal mode
     "nw" 'widen
     "o"  'delete-other-windows  ;; C-w o
     "s"  'ag-project            ;; Ag search from project's root
