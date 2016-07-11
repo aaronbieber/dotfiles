@@ -91,6 +91,10 @@
                            ((?t "Tag"     org-tags-view)
                             (?i "ID"      air-org-goto-custom-id)
                             (?k "Keyword" org-search-view))))
+          ("org-links"    ("Links"
+                           ((?c "Capture"   org-store-link)
+                            (?l "Insert"    org-insert-link)
+                            (?i "Custom ID" air-org-insert-custom-id-link))))
           ("org-files"    ("Files"
                            ((?t "TODO"  (lambda () (air-pop-to-org-todo nil)))
                             (?n "Notes" (lambda () (air-pop-to-org-notes nil)))
@@ -102,6 +106,7 @@
   (evil-define-key 'normal global-map (kbd "\\ f") (tiny-menu-run-item "org-files"))
   (evil-define-key 'normal global-map (kbd "\\ t") (tiny-menu-run-item "org-things"))
   (evil-define-key 'normal global-map (kbd "\\ c") (tiny-menu-run-item "org-captures"))
+  (evil-define-key 'normal global-map (kbd "\\ l") (tiny-menu-run-item "org-links"))
 
   (defun minibuffer-keyboard-quit ()
     "Abort recursive edit.

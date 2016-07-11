@@ -40,6 +40,20 @@
         (org-reveal)
         (org-up-element)))))
 
+(defun air-org-insert-custom-id-link ()
+  "Insert an Org link to a custom ID selected interactively."
+  (interactive)
+  (let* ((all-custom-ids (air--org-global-custom-ids))
+         (custom-id (completing-read
+                     "Custom ID: "
+                     all-custom-ids)))
+    (when custom-id
+      (let* ((val (cadr (assoc custom-id all-custom-ids)))
+             (id-parts (split-string val ":"))
+             (file (car id-parts))
+             (line (string-to-int (cadr id-parts))))
+        (org-insert-link nil (concat file "::#" custom-id) custom-id)))))
+
 (defun air-org-set-category-property (value)
   "Set the category property of the current item to VALUE."
   (interactive (list (org-read-property-value "CATEGORY")))
@@ -219,6 +233,7 @@ TAG is chosen interactively from the global tags completion table."
               (define-key air-org-run-shortcuts "f" (tiny-menu-run-item "org-files"))
               (define-key air-org-run-shortcuts "t" (tiny-menu-run-item "org-things"))
               (define-key air-org-run-shortcuts "c" (tiny-menu-run-item "org-captures"))
+              (define-key air-org-run-shortcuts "l" (tiny-menu-run-item "org-links"))
               (define-key org-agenda-mode-map (kbd "\\") air-org-run-shortcuts)))
 
   (add-hook 'org-capture-mode-hook
@@ -245,14 +260,15 @@ TAG is chosen interactively from the global tags completion table."
                     (interactive)
                     (air--org-insert-list-leader-or-self ,char))))
               ;; Normal maps
-              (define-key org-mode-map (kbd "C-c d") (lambda ()
+              (define-key org-mode-map (kbd "C-c d")   (lambda ()
                                                          (interactive) (air-org-agenda-toggle-date t)))
-              (define-key org-mode-map (kbd "C-c ,") 'org-time-stamp-inactive)
-              (define-key org-mode-map (kbd "C-|")   'air-org-insert-scheduled-heading)
-              (define-key org-mode-map (kbd "C-<")   'org-metaleft)
-              (define-key org-mode-map (kbd "C->")   'org-metaright)
-              (define-key org-mode-map (kbd "C-\\")  'org-insert-heading)
-              (define-key org-mode-map (kbd "S-r")   'org-revert-all-org-buffers)
+              (define-key org-mode-map (kbd "C-c ,")   'org-time-stamp-inactive)
+              (define-key org-mode-map (kbd "C-|")     'air-org-insert-scheduled-heading)
+              (define-key org-mode-map (kbd "C-<")     'org-metaleft)
+              (define-key org-mode-map (kbd "C->")     'org-metaright)
+              (define-key org-mode-map (kbd "C-\\")    'org-insert-heading)
+              (define-key org-mode-map (kbd "S-r")     'org-revert-all-org-buffers)
+              (define-key org-mode-map (kbd "C-c C-l") (tiny-menu-run-item "org-links"))
 
               (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle)
               (evil-define-key 'normal org-mode-map ">>"        'org-metaright)
