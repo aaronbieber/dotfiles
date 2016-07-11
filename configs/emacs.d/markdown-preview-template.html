@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Markdown preview</title>
+    <link href="http://aaronbieber.com/assets/styles/github-markdown.css" rel="stylesheet"></link>
+    <style>
+      code.json {
+        line-height: 1.2em;
+      }
+      #markdown-body {
+        margin: 1em 5em;
+      }
+    </style>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script>
+     (function($, undefined) {
+         var socket = new WebSocket("ws://localhost:7379");
+         socket.onopen = function() {
+             console.log("Connection established.");
+         };
+         socket.onclose = function(event) {
+             if (event.wasClean) {
+                 alert('Connection closed gracefully.');
+             } else {
+                 alert('Connection terminated.');
+             }
+             console.log('Code: ' + event.code + ' reason: ' + event.reason);
+         };
+         socket.onmessage = function(event) {
+             loadCSS($(event.data).find("#style").text());
+             $("#markdown-body").html($(event.data).find("#content").html());
+             var scroll = $(document).height() * ($(event.data).find("#position-percentage").html() / 100);
+             $("html, body").animate({ scrollTop: scroll }, 600);
+         };
+         socket.onerror = function(error) {
+             alert("Error: " + error.message);
+         };
+
+         loadCSS = function(href) {
+             var cssLink = $("<link rel='stylesheet' type='text/css' href='"+href+"'>");
+             $("link[rel='stylesheet']").remove();
+             $("head").append(cssLink);
+         };
+     })(jQuery);
+    </script>
+  </head>
+  <body class="markdown-body">
+    <article id="markdown-body">
+      <p>Markdown preview</p>
+    </article>
+  </body>
+</html>
