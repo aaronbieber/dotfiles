@@ -586,6 +586,7 @@ is the buffer location at which the function was found."
  '(ansi-color-names-vector
    (vector "#4d4d4c" "#c82829" "#718c00" "#eab700" "#4271ae" "#8959a8" "#3e999f" "#d6d6d6"))
  '(fci-rule-color "#d6d6d6")
+ '(markdown-preview-custom-template "/Users/abieber/.emacs.d/markdown-preview-template.html")
  '(org-hide-emphasis-markers t)
  '(org-modules
    (quote
