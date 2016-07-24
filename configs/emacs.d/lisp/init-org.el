@@ -206,6 +206,7 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-log-reschedule (quote time))
   (setq org-agenda-skip-scheduled-if-done t)
   (setq org-insert-heading-respect-content t)
+  (setq org-ellipsis " …")
   (set-face-attribute 'org-upcoming-deadline nil :foreground "gold1")
 
   (evil-leader/set-key-for-mode 'org-mode
@@ -298,7 +299,8 @@ TAG is chosen interactively from the global tags completion table."
 (use-package org-bullets
   :ensure t
   :config
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+  (setq org-bullets-bullet-list '("•")))
 
 (provide 'init-org)
 ;;; init-org.el ends here
