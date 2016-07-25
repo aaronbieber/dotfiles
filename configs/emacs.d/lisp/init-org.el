@@ -59,13 +59,25 @@
   (interactive (list (org-read-property-value "CATEGORY")))
   (org-set-property "CATEGORY" value))
 
-(defun air-org-insert-scheduled-heading (&optional force-heading)
+(defun air-org-insert-heading (&optional subheading)
+  "Insert a heading or a subheading.
+
+If the optional SUBHEADING is t, insert a subheading.  Inserting
+headings always respects content."
+  (interactive "P")
+  (if subheading
+      (org-insert-subheading t)
+    (org-insert-heading t)))
+
+(defun air-org-insert-scheduled-heading (&optional subheading)
   "Insert a new org heading scheduled for today.
 
 Insert the new heading at the end of the current subtree if
 FORCE-HEADING is non-nil."
   (interactive "P")
-  (org-insert-todo-heading t force-heading)
+  (if subheading
+      (org-insert-subheading t)
+    (org-insert-todo-heading t t))
   (org-schedule nil (format-time-string "%Y-%m-%d")))
 
 (defun air-org-task-capture ()
