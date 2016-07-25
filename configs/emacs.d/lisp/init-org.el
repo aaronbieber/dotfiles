@@ -245,29 +245,21 @@ TAG is chosen interactively from the global tags completion table."
 
   (add-hook 'org-mode-hook
             (lambda ()
-              (setq-local my-timer
-                          (run-with-idle-timer 1 t
-                                               (lambda ()
-                                                 (when (and (eq major-mode 'org-mode)
-                                                            (and evil-state
-                                                                 (not (eq evil-state 'insert)))
-                                                            (buffer-file-name)
-                                                            (buffer-modified-p))
-                                                   (save-buffer)))))
               ;; Special plain list leader inserts
               (dolist (char '("+" "-"))
                 (define-key org-mode-map (kbd char)
                   `(lambda ()
                     (interactive)
                     (air--org-insert-list-leader-or-self ,char))))
+
               ;; Normal maps
               (define-key org-mode-map (kbd "C-c d")   (lambda ()
                                                          (interactive) (air-org-agenda-toggle-date t)))
               (define-key org-mode-map (kbd "C-c ,")   'org-time-stamp-inactive)
               (define-key org-mode-map (kbd "C-|")     'air-org-insert-scheduled-heading)
+              (define-key org-mode-map (kbd "C-\\")    'air-org-insert-heading)
               (define-key org-mode-map (kbd "C-<")     'org-metaleft)
               (define-key org-mode-map (kbd "C->")     'org-metaright)
-              (define-key org-mode-map (kbd "C-\\")    'org-insert-heading)
               (define-key org-mode-map (kbd "S-r")     'org-revert-all-org-buffers)
               (define-key org-mode-map (kbd "C-c C-l") (tiny-menu-run-item "org-links"))
 
