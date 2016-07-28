@@ -79,11 +79,12 @@
   (define-key evil-normal-state-map (kbd "g/")    'occur-last-search)
   (define-key evil-normal-state-map (kbd "[i")    'show-first-occurrence)
   (define-key evil-normal-state-map (kbd "S-SPC") 'air-pop-to-org-agenda)
-
   (define-key evil-insert-state-map (kbd "C-e")   'end-of-line) ;; I know...
 
   (evil-define-key 'insert global-map (kbd "s-d") 'eval-last-sexp)
   (evil-define-key 'normal global-map (kbd "s-d") 'eval-defun)
+
+  (evil-define-key 'normal global-map (kbd "z d") 'dictionary-lookup-definition)
 
   (require 'tiny-menu)
   (setq tiny-menu-items
@@ -161,8 +162,7 @@ If the Evil map for STATE is defined (or `normal' if STATE is not
 provided) the key will be defined in that map.  Failing that, it will
 be defined globally.
 
-Note that STATE should be provided as an unquoted symbol because of
-the way macros work.
+Note that STATE should be provided as an unquoted symbol.
 
 This macro provides a way to override Evil mappings in the appropriate
 Evil map in a manner that is compatible with environments where Evil
