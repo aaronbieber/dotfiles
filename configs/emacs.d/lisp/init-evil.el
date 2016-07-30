@@ -128,6 +128,15 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
   (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
   (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
+  (defun evil-visual-line--mark-org-element-when-heading ()
+    (interactive)
+    (if (and (derived-mode-p 'org-mode)
+             (org-on-heading-p))
+        (not (org-mark-element))
+      t))
+
+  (advice-add 'evil-visual-line :before-while #'evil-visual-line--mark-org-element-when-heading)
+
   ;; My own Ex commands.
   (evil-ex-define-cmd "om" 'octopress-status))
 
