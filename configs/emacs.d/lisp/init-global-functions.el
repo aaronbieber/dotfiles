@@ -126,8 +126,7 @@ If optional argument FOCUS is non-nil, give Chrome the focus as well."
                 (replace-regexp-in-string
                  "[ \t\n]*\\'"
                  ""
-                 (thing-at-point 'line t)
-                 ))))))
+                 (thing-at-point 'line t)))))))
 
 (defun selective-display-increase ()
   (interactive)
