@@ -89,7 +89,7 @@ echo ""
 
 for script in `find $BINPATH -mindepth 1 -maxdepth 1`; do
   linkfile="${script##*/}"
-  echo -n "Linking $dotfile -> $linkfile... "
+  echo -n "Linking $script -> $linkfile... "
   ln -s $LNOPTS "$script" "$linkfile" > /dev/null 2>&1
   if [ $? -eq 0 ]; then
     echo "OK"
