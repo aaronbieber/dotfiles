@@ -73,15 +73,6 @@
     (add-function :before-until (local 'eldoc-documentation-function)
                   'php-extras-eldoc-documentation-function))
 
-  ;; Provide a style based on "php" that changes a couple of indent behaviors.
-  (c-add-style "wf-php"
-               '("php"
-                 (c-basic-offset . 2)
-                 (c-offsets-alist . ((arglist-intro . my-php-lineup-arglist-intro)
-                                     (arglist-close . my-php-lineup-arglist-close)
-                                     (arglist-cont-nonempty . my-php-lineup-arglist-cont-nonempty)
-                                     (statement-cont . my-php-lineup-statement-cont)
-                                     (topmost-intro-cont . my-php-lineup-statement-cont)))))
   (air-set-php-group)
   (eldoc-mode t)
   (highlight-symbol-mode)
@@ -95,11 +86,22 @@
 (defvar php-settings-groups
   '(("air"
      (lambda ()
+       ;; Use the default PHP style.
        (c-set-style "php")
        (setq-local flycheck-phpcs-standard "PSR2")
        (set-fill-column 85)))
     ("wf"
      (lambda ()
+       ;; Provide a style based on "php" that changes a couple of indent behaviors.
+       (c-add-style "wf-php"
+                    '("php"
+                      (c-basic-offset . 2)
+                      (c-offsets-alist . ((arglist-intro . my-php-lineup-arglist-intro)
+                                          (arglist-close . my-php-lineup-arglist-close)
+                                          (arglist-cont-nonempty . my-php-lineup-arglist-cont-nonempty)
+                                          (statement-cont . my-php-lineup-statement-cont)
+                                          (topmost-intro-cont . my-php-lineup-statement-cont)))))
+       ;; Use that style.
        (c-set-style "wf-php")
        (setq-local flycheck-phpcs-standard "CSNStores")
        (set-fill-column 120))))
