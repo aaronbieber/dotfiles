@@ -331,24 +331,6 @@ condition where the bell visualization never clears.")
   (projectile-global-mode)
   (setq projectile-enable-caching t))
 
-(use-package fzf
-  :ensure t
-  :after (projectile init-evil)
-  :config
-  (require 'projectile)
-  (require 'init-evil)
-  (defun air-fzf-projectile-project-root ()
-    "Start `fzf' from the root of a known Projectile project."
-    (interactive)
-    (fzf-directory (completing-read "Select a project: "
-                                    (if (projectile-project-p)
-                                        (cons (abbreviate-file-name (projectile-project-root))
-                                              (projectile-relevant-known-projects))
-                                      projectile-known-projects))))
-
-  (define-evil-or-global-key (kbd "C-c C-p") 'fzf)
-  (define-evil-or-global-key (kbd "C-c C-S-p") 'air-fzf-projectile-project-root))
-
 (use-package highlight-symbol
   :ensure t
   :defer t
