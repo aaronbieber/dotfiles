@@ -219,6 +219,7 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-agenda-skip-scheduled-if-done t)
   (setq org-insert-heading-respect-content t)
   (setq org-ellipsis " …")
+  (setq org-startup-with-inline-images t)
   (set-face-attribute 'org-upcoming-deadline nil :foreground "gold1")
 
   (evil-leader/set-key-for-mode 'org-mode
