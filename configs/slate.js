@@ -36,7 +36,7 @@ function getCycleStates(states) {
     return function(win) {
         if (win.pid in windowStates &&
             windowStates[win.pid] !== undefined &&
-            states.indexOf(windowStates[win.pid]) !== -1 
+            states.indexOf(windowStates[win.pid]) !== -1
            ) {
             var nextIndex = (states.indexOf(windowStates[win.pid]) + 1) % 3;
             var nextState = states[nextIndex];
@@ -59,7 +59,7 @@ S.bind('l:cmd,shift', rightCycleOp);
 
 // Full-screen.
 S.bind(
-    'f:cmd,shift',
+    'up:cmd',
     S.op(
         'move',
         {
