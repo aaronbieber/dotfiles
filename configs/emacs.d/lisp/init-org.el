@@ -261,6 +261,7 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-insert-heading-respect-content t)
   (setq org-ellipsis " …")
   (setq org-startup-with-inline-images t)
+  (setq org-export-initial-scope 'subtree)
   (set-face-attribute 'org-upcoming-deadline nil :foreground "gold1")
 
   (evil-leader/set-key-for-mode 'org-mode
