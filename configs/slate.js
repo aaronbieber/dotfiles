@@ -54,8 +54,8 @@ var leftCycleOp = getCycleStates([leftBarHalf, leftBarThird, leftBarTwoThirds]);
 var rightCycleOp = getCycleStates([rightBarHalf, rightBarThird, rightBarTwoThirds]);
 
 // Bind the window cycling functions.
-S.bind('h:cmd,shift', leftCycleOp);
-S.bind('l:cmd,shift', rightCycleOp);
+S.bind('left:cmd', leftCycleOp);
+S.bind('right:cmd', rightCycleOp);
 
 // Full-screen.
 S.bind(
