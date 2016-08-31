@@ -7,7 +7,7 @@
   (setq evil-leader/in-all-states 1)
   (evil-leader/set-key
     ","  (lambda () (interactive) (ansi-term (getenv "SHELL")))
-    "."  'switch-to-previous-buffer
+    "."  'mode-line-other-buffer
     ":"  'eval-expression
     "aa" 'align-regexp
     "a=" 'my-align-single-equals

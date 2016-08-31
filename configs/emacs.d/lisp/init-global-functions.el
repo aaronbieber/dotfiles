@@ -129,12 +129,6 @@ If optional argument FOCUS is non-nil, give Chrome the focus as well."
                  (thing-at-point 'line t)
                  ))))))
 
-(defun switch-to-previous-buffer ()
-  "Switch to previously open buffer.
-Repeated invocations toggle between the two most recently open buffers."
-  (interactive)
-  (switch-to-buffer (other-buffer (current-buffer) 1)))
-
 (defun selective-display-increase ()
   (interactive)
   (set-selective-display
