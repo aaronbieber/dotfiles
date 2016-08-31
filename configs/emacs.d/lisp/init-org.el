@@ -174,6 +174,23 @@ tag format specifications, or nil to remove all tags."
       (replace-match tags)
       (org-set-tags t))))
 
+(defun air-org-goto-first-child ()
+  "Goto the first child, even if it is invisible.
+
+Return t when a child was found.  Otherwise don't move point and
+return nil."
+  (interactive)
+  (let ((pos (point))
+        (re (concat "^" outline-regexp))
+        level)
+    (when (condition-case nil (org-back-to-heading t) (error nil))
+      (setq level (outline-level))
+      (forward-char 1)
+      (if (and (re-search-forward re nil t) (> (outline-level) level))
+          (progn (goto-char (match-beginning 0)) t)
+        (goto-char pos) nil))))
+
+
 (defun air-org-set-tags (tag)
   "Add TAG if it is not in the list of tags, remove it otherwise.
 
