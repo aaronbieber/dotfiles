@@ -7,6 +7,10 @@
 ;;
 ;;; Code:
 
+
+;; Leave this here, or package.el will just add it again.
+(package-initialize)
+
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
