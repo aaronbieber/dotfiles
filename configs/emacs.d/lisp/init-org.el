@@ -56,11 +56,14 @@
 
 (defun air-org-nmom-capture-template ()
   "Return a Nine Minutes on Monday weekly agenda template suitable for capture."
-  (concat (format "* Week %02d\n\n" (org-days-to-iso-week (org-today)))
-          "** ☛ TODO Care\n\n"
-          "** ☛ TODO Mastery\n\n"
-          "** ☛ TODO Purpose\n\n"
-          "** ☛ TODO Freedom"))
+  (let* ((deadline-timestamp (format-time-string "<%Y-%m-%d %a>"
+                                                 (air-calendar-next-day-of-week 5)))
+         (deadline (format "   DEADLINE: %s\n\n" deadline-timestamp)))
+    (concat (format "* Week %02d\n\n" (org-days-to-iso-week (org-today)))
+            (concat "** ☛ TODO Care\n" deadline
+                    "** ☛ TODO Mastery\n" deadline
+                    "** ☛ TODO Purpose\n" deadline
+                    "** ☛ TODO Freedom\n" deadline))))
 
 (defun air-org-set-category-property (value)
   "Set the category property of the current item to VALUE."
