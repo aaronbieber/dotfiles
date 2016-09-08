@@ -4,7 +4,6 @@
 (defun air--config-evil-leader ()
   "Configure evil leader mode."
   (evil-leader/set-leader ",")
-  (setq evil-leader/in-all-states 1)
   (evil-leader/set-key
     ","  (lambda () (interactive) (ansi-term (getenv "SHELL")))
     "."  'mode-line-other-buffer
