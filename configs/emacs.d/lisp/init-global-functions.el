@@ -114,6 +114,25 @@ If optional argument FOCUS is non-nil, give Chrome the focus as well."
         (occur term)
       (message "No term to search for."))))
 
+(defun air-calendar-next-day-of-week (&optional day)
+  "Get the date of the next occurrence of DAY.
+
+DAY is an integer where 0 is Sunday and 6 is Saturday.  If DAY is not
+given, get the date one week from today."
+  (let* ((day (or day
+                  (nth 6 (decode-time))))
+         (time (decode-time))
+         (dow (nth 6 time))
+         (day-of-month (nth 3 time))
+         (new-dow (if (> day dow)        ; Check what's the new dow's index
+                       (- day dow)       ; In the same week
+                     (+ (- 7 dow) day))) ; In the next week
+         (new-time (encode-time 0 0 0
+                                (+ new-dow day-of-month)
+                                (nth 4 time)
+                                (nth 5 time))))
+    new-time))
+
 (defun show-first-occurrence ()
   "Display the location of the word at point's first occurrence in the buffer."
   (interactive)
