@@ -54,6 +54,14 @@
              (line (string-to-int (cadr id-parts))))
         (org-insert-link nil (concat file "::#" custom-id) custom-id)))))
 
+(defun air-org-nmom-capture-template ()
+  "Return a Nine Minutes on Monday weekly agenda template suitable for capture."
+  (concat (format "* Week %02d\n\n" (org-days-to-iso-week (org-today)))
+          "** ☛ TODO Care\n\n"
+          "** ☛ TODO Mastery\n\n"
+          "** ☛ TODO Purpose\n\n"
+          "** ☛ TODO Freedom"))
+
 (defun air-org-set-category-property (value)
   "Set the category property of the current item to VALUE."
   (interactive (list (org-read-property-value "CATEGORY")))
@@ -80,16 +88,24 @@ FORCE-HEADING is non-nil."
     (org-insert-todo-heading t t))
   (org-schedule nil (format-time-string "%Y-%m-%d")))
 
-(defun air-org-task-capture ()
-  "Capture a task with my default template."
-  (interactive)
-  (org-capture nil "a"))
+(defun air-org-task-capture (&optional vanilla)
+  "Capture a task with my default template.
 
-(defun air-org-agenda-capture ()
-  "Capture a task in agenda mode, using the date at point."
-  (interactive)
-  (let ((org-overriding-default-time (org-get-cursor-date)))
+If VANILLA is non-nil, run the standard `org-capture'."
+  (interactive "P")
+  (if vanilla
+      (org-capture)
     (org-capture nil "a")))
+
+(defun air-org-agenda-capture (&optional vanilla)
+  "Capture a task in agenda mode, using the date at point.
+
+If VANILLA is non-nil, run the standard `org-capture'."
+  (interactive "P")
+  (if vanilla
+      (org-capture)
+    (let ((org-overriding-default-time (org-get-cursor-date)))
+      (org-capture nil "a"))))
 
 (defun air-org-agenda-toggle-date (current-line)
   "Toggle `SCHEDULED' and `DEADLINE' tag in the capture buffer."
@@ -206,10 +222,15 @@ TAG is chosen interactively from the global tags completion table."
         '(("a" "My TODO task format." entry
            (file "todo.org")
            "* ☛ TODO %?\nSCHEDULED: %t")
+
           ("n" "A (work-related) note." entry
            (file+headline "notes.org" "Work")
            "* %?\n%u\n\n"
-           :jump-to-captured t)))
+           :jump-to-captured t)
+
+          ("w" "Nine Minutes on Monday weekly agenda." entry
+           (id "9A6DDE04-90B8-49ED-90B9-A55A0D1E7B28")
+           (function air-org-nmom-capture-template))))
   (setq org-default-notes-file "~/Dropbox/org/todo.org")
   (setq org-directory "~/Dropbox/org")
   (setq org-enforce-todo-dependencies t)
