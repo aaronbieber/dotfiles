@@ -235,7 +235,7 @@ condition where the bell visualization never clears.")
 (use-package swiper
   :ensure t
   :commands swiper
-  :bind ("C-s" . swiper)
+  :bind ("C-s" . counsel-grep-or-swiper)
   :config
   (setq ivy-height 20))
 
