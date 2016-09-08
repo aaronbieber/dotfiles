@@ -313,27 +313,34 @@ TAG is chosen interactively from the global tags completion table."
               (define-key org-mode-map (kbd "C-c ,")   'org-time-stamp-inactive)
               (define-key org-mode-map (kbd "C-|")     'air-org-insert-scheduled-heading)
               (define-key org-mode-map (kbd "C-\\")    'air-org-insert-heading)
-              (define-key org-mode-map (kbd "C-<")     'org-metaleft)
-              (define-key org-mode-map (kbd "C->")     'org-metaright)
-              (define-key org-mode-map (kbd "S-r")     'org-revert-all-org-buffers)
+              (define-key org-mode-map (kbd "s-r")     'org-revert-all-org-buffers)
               (define-key org-mode-map (kbd "C-c C-l") (tiny-menu-run-item "org-links"))
 
-              (evil-define-key 'normal org-mode-map (kbd "TAB") 'org-cycle)
-              (evil-define-key 'normal org-mode-map ">>"        'org-metaright)
-              (evil-define-key 'normal org-mode-map "<<"        'org-metaleft)
+              (define-key org-mode-map (kbd "C-<")                'org-shiftmetaleft)
+              (define-key org-mode-map (kbd "C->")                'org-shiftmetaright)
+
+              ;; These are set as evil keys because they conflict with
+              ;; existing commands I don't use, or are superseded by
+              ;; some evil function that org-mode-map is shadowed by.
+              (evil-define-key 'normal org-mode-map (kbd "TAB")   'org-cycle)
+
+              (evil-define-key 'normal org-mode-map (kbd "C-,")   'org-metaleft)
+              (evil-define-key 'normal org-mode-map (kbd "C-.")   'org-metaright)
+
+              (evil-define-key 'insert org-mode-map (kbd "C-,")   'org-metaleft)
+              (evil-define-key 'insert org-mode-map (kbd "C-.")   'org-metaright)
+
               (evil-define-key 'normal org-mode-map (kbd "C-S-l") 'org-shiftright)
               (evil-define-key 'normal org-mode-map (kbd "C-S-h") 'org-shiftleft)
+
               (evil-define-key 'insert org-mode-map (kbd "C-S-l") 'org-shiftright)
               (evil-define-key 'insert org-mode-map (kbd "C-S-h") 'org-shiftleft)
 
               ;; Navigation
-              (evil-define-key 'normal org-mode-map (kbd "]n") 'org-forward-heading-same-level)
-              (evil-define-key 'normal org-mode-map (kbd "[n") 'org-backward-heading-same-level)
-              (define-key org-mode-map (kbd "C-S-j") (lambda ()
-                                                       (interactive)
-                                                       (org-up-element)
-                                                       (org-forward-heading-same-level 1)))
-              (define-key org-mode-map (kbd "C-S-k") 'org-up-element)
+              (define-key org-mode-map (kbd "M-h") 'org-up-element)
+              (define-key org-mode-map (kbd "M-j") 'org-forward-heading-same-level)
+              (define-key org-mode-map (kbd "M-k") 'org-backward-heading-same-level)
+              (define-key org-mode-map (kbd "M-l") 'air-org-goto-first-child)
 
               ;; Use fill column, but not in agenda
               (setq fill-column 100)
