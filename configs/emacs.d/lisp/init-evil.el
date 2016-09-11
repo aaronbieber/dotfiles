@@ -87,19 +87,20 @@
 
   (require 'tiny-menu)
   (setq tiny-menu-items
-        '(("org-things"   ("Things"
-                           ((?t "Tag"     org-tags-view)
-                            (?i "ID"      air-org-goto-custom-id)
-                            (?k "Keyword" org-search-view))))
-          ("org-links"    ("Links"
+        '(("org-things"   ("Org Things"
+                           ((?t "Tag"      org-tags-view)
+                            (?i "ID"       air-org-goto-custom-id)
+                            (?k "Keyword"  org-search-view)
+                            (?h "Headings" helm-org-agenda-files-headings))))
+          ("org-links"    ("Org Links"
                            ((?c "Capture"   org-store-link)
                             (?l "Insert"    org-insert-link)
                             (?i "Custom ID" air-org-insert-custom-id-link))))
-          ("org-files"    ("Files"
+          ("org-files"    ("Org Files"
                            ((?t "TODO"  (lambda () (air-pop-to-org-todo nil)))
                             (?n "Notes" (lambda () (air-pop-to-org-notes nil)))
                             (?v "Vault" (lambda () (air-pop-to-org-vault nil))))))
-          ("org-captures" ("Captures"
+          ("org-captures" ("Org Captures"
                            ((?c "TODO"  air-org-task-capture)
                             (?n "Note"  (lambda () (interactive) (org-capture nil "n"))))))))
   (evil-define-key 'normal global-map (kbd "\\ \\") 'tiny-menu)
