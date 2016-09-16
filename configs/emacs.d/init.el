@@ -379,6 +379,14 @@ condition where the bell visualization never clears.")
 (use-package gruvbox-theme :ensure t)
 (use-package color-theme-sanityinc-tomorrow :ensure t)
 
+(use-package undo-tree
+  :ensure t
+  :diminish t
+  :config
+  (setq undo-tree-auto-save-history t)
+  (setq undo-tree-history-directory-alist
+        (list (cons "." (expand-file-name "undo-tree-history" user-emacs-directory)))))
+
 ;;; Helpers for GNUPG, which I use for encrypting/decrypting secrets.
 (require 'epa-file)
 (epa-file-enable)
