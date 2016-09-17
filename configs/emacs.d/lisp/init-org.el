@@ -161,7 +161,7 @@ If VANILLA is non-nil, run the standard `org-capture'."
 (defun air-pop-to-org-agenda (split)
   "Visit the org agenda, in the current window or a SPLIT."
   (interactive "P")
-  (org-agenda-list nil "today" 'day)
+  (org-agenda nil "d")
   (when (not split)
     (delete-other-windows)))
 
@@ -250,6 +250,7 @@ TAG is chosen interactively from the global tags completion table."
          ("C-c f t" . org-tags-view)
          ("C-c f i" . air-org-goto-custom-id))
   :config
+  (set-face-attribute 'org-upcoming-deadline nil :foreground "gold1")
   (setq org-agenda-text-search-extra-files '(agenda-archives))
   (setq org-agenda-files '("~/Dropbox/org/"))
   (setq org-todo-keywords
@@ -281,7 +282,17 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-startup-with-inline-images t)
   (setq org-export-initial-scope 'subtree)
   (setq org-use-tag-inheritance nil) ;; Use the list form, which happens to be blank
-  (set-face-attribute 'org-upcoming-deadline nil :foreground "gold1")
+  (setq org-agenda-custom-commands
+        '(("d" "Daily agenda and all TODOs"
+           ((tags "PRIORITY=\"A\""
+                  ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                   (org-agenda-overriding-header "High-priority unfinished tasks:")))
+            (agenda "" ((org-agenda-ndays 1)))
+            (alltodo ""
+                     ((org-agenda-skip-function '(or (air-org-skip-subtree-if-habit)
+                                                     (air-org-skip-subtree-if-priority ?A)))
+                      (org-agenda-overriding-header "ALL normal priority tasks:"))))
+           ((org-agenda-compact-blocks t)))))
 
   (evil-leader/set-key-for-mode 'org-mode
     "$"  'org-archive-subtree
