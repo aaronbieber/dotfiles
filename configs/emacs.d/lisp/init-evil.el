@@ -195,6 +195,7 @@ is not used."
 
 (use-package evil
   :ensure t
+  :commands (evil-mode evil-define-key)
   :config
   (add-hook 'evil-mode-hook 'air--config-evil)
   (evil-mode 1)
