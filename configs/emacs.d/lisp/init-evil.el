@@ -71,19 +71,21 @@
     (kbd "C-w C-w") 'other-window)
 
   ;; Global bindings.
-  (define-key evil-normal-state-map (kbd "<down>") 'evil-next-visual-line)
-  (define-key evil-normal-state-map (kbd "<up>")   'evil-previous-visual-line)
-  (define-key evil-normal-state-map (kbd "-")     'helm-find-files)
-  (define-key evil-normal-state-map (kbd "C-]")   'gtags-find-tag-from-here)
-  (define-key evil-normal-state-map (kbd "g/")    'occur-last-search)
-  (define-key evil-normal-state-map (kbd "[i")    'show-first-occurrence)
-  (define-key evil-normal-state-map (kbd "S-SPC") 'air-pop-to-org-agenda)
-  (define-key evil-insert-state-map (kbd "C-e")   'end-of-line) ;; I know...
+  (define-key evil-normal-state-map (kbd "<down>")  'evil-next-visual-line)
+  (define-key evil-normal-state-map (kbd "<up>")    'evil-previous-visual-line)
+  (define-key evil-normal-state-map (kbd "-")       'helm-find-files)
+  (define-key evil-normal-state-map (kbd "C-]")     'gtags-find-tag-from-here)
+  (define-key evil-normal-state-map (kbd "g/")      'occur-last-search)
+  (define-key evil-normal-state-map (kbd "[i")      'show-first-occurrence)
+  (define-key evil-normal-state-map (kbd "S-SPC")   'air-pop-to-org-agenda)
+  (define-key evil-insert-state-map (kbd "C-e")     'end-of-line) ;; I know...
 
-  (evil-define-key 'insert global-map (kbd "s-d") 'eval-last-sexp)
-  (evil-define-key 'normal global-map (kbd "s-d") 'eval-defun)
+  (evil-define-key 'normal global-map (kbd "C-p")   'helm-projectile)
+  (evil-define-key 'normal global-map (kbd "C-S-p") 'helm-projectile-switch-project)
+  (evil-define-key 'insert global-map (kbd "s-d")   'eval-last-sexp)
+  (evil-define-key 'normal global-map (kbd "s-d")   'eval-defun)
 
-  (evil-define-key 'normal global-map (kbd "z d") 'dictionary-lookup-definition)
+  (evil-define-key 'normal global-map (kbd "z d")   'dictionary-lookup-definition)
 
   (require 'tiny-menu)
   (setq tiny-menu-items
