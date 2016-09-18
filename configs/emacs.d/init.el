@@ -125,19 +125,19 @@ condition where the bell visualization never clears.")
 (require 'fence-edit)
 
 ;; Utilities
-(use-package s :ensure t)
+(use-package s
+  :ensure t
+  :defer 1)
 (use-package dash :ensure t)
 
-;; Org prerequisites
-(use-package visual-fill-column
-  :ensure t)
-
+;; Org Mode
 (require 'init-org)
 
 ;; Just while I'm working on it.
 ;;(add-to-list 'load-path (expand-file-name "octopress" user-emacs-directory))
 (use-package octopress
   :ensure t
+  :commands (octopress-status octopress-mode)
   :config
   (setq octopress-blog-root (expand-file-name "~/Blog")))
 
@@ -147,15 +147,18 @@ condition where the bell visualization never clears.")
   (exec-path-from-shell-initialize))
 
 (use-package elpy
-  :ensure t)
+  :ensure t
+  :mode ("\\.py\\'" . elpy-mode))
 
 (use-package groovy-mode
   :ensure t
+  :mode "\\.groovy\\'"
   :config
   (c-set-offset 'label 4))
 
 (use-package rainbow-mode
-  :ensure t)
+  :ensure t
+  :commands rainbow-mode)
 
 (use-package css-mode
   :ensure t
@@ -183,7 +186,7 @@ condition where the bell visualization never clears.")
 
 (use-package ag
   :ensure t
-  :defer t
+  :commands (ag ag-project)
   :config
   (add-hook 'ag-mode-hook
             (lambda ()
@@ -197,8 +200,7 @@ condition where the bell visualization never clears.")
 
 (use-package js2-mode
   :ensure t
-  :config
-  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
+  :mode "\\.js\\'")
 
 (use-package exec-path-from-shell
   :ensure t
@@ -210,6 +212,7 @@ condition where the bell visualization never clears.")
 (use-package helm
   :ensure t
   :diminish helm-mode
+  :commands helm-mode
   :config
   (helm-mode 1)
   (setq helm-buffers-fuzzy-matching t)
@@ -240,18 +243,22 @@ condition where the bell visualization never clears.")
   (setq ivy-height 20))
 
 (use-package dictionary :ensure t)
-(use-package emmet-mode :ensure t)
-(use-package flycheck :ensure t)
+
+(use-package emmet-mode
+  :ensure t
+  :commands emmet-mode)
+
+(use-package flycheck
+  :ensure t
+  :commands flycheck-mode)
+
 (use-package helm-projectile
-  :bind (("C-S-P" . helm-projectile-switch-project)
-         :map evil-normal-state-map
-         ("C-p" . helm-projectile))
-  :after (helm projectile evil)
   :commands (helm-projectile helm-projectile-switch-project)
   :ensure t)
 
 (use-package markdown-mode
   :ensure t
+  :mode "\\.md\\'"
   :config
   (setq markdown-command "pandoc --from markdown_github-hard_line_breaks --to html")
   (define-key markdown-mode-map (kbd "C-\\")  'markdown-insert-list-item)
@@ -328,7 +335,7 @@ condition where the bell visualization never clears.")
 
 (use-package projectile
   :ensure t
-  :defer t
+  :defer 1
   :config
   (projectile-global-mode)
   (setq projectile-enable-caching t))
