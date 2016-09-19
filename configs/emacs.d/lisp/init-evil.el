@@ -93,7 +93,9 @@
                            ((?t "Tag"      org-tags-view)
                             (?i "ID"       air-org-goto-custom-id)
                             (?k "Keyword"  org-search-view)
-                            (?h "Headings" helm-org-agenda-files-headings))))
+                            (?h "Headings" helm-org-agenda-files-headings)
+                            (?d "Directs"  air-org-display-directs)
+                            (?m "Managers" air-org-display-managers))))
           ("org-links"    ("Org Links"
                            ((?c "Capture"   org-store-link)
                             (?l "Insert"    org-insert-link)

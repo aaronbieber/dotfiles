@@ -4,6 +4,29 @@
 ;; Basic Org Mode configuration, assuming presence of Evil & Evil Leader.
 
 ;; Helper functions
+(defun air--org-display-tag (tag &optional focus)
+  "Display entries tagged with TAG in a fit window.
+
+Do not make the new window current unless FOCUS is set."
+  (org-tags-view nil tag)
+  (fit-window-to-buffer)
+  (unless focus
+    (other-window 1)))
+
+(defun air-org-display-directs (&optional focus)
+  "Display entries tagged with `direct'.
+
+Do not make the new window current unless FOCUS is set."
+  (interactive "P")
+  (air--org-display-tag "direct" focus))
+
+(defun air-org-display-managers (&optional focus)
+  "Display entries tagged with `manager'.
+
+Do not make the new window current unless FOCUS is set."
+  (interactive "P")
+  (air--org-display-tag "manager" focus))
+
 (defun air-org-skip-subtree-if-habit ()
   "Skip an agenda entry if it has a STYLE property equal to \"habit\"."
   (let ((subtree-end (save-excursion (org-end-of-subtree t))))
