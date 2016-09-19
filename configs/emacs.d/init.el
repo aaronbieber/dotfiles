@@ -596,7 +596,6 @@ is the buffer location at which the function was found."
  '(safe-local-variable-values (quote ((css-indent-offset . 2) (no-byte-compile t)))))
 
 (put 'narrow-to-region 'disabled nil)
-(diminish 'undo-tree-mode)
 
 ;;; sRGB doesn't blend with Powerline's pixmap colors, but is only
 ;;; used in OS X. Disable sRGB before setting up Powerline.
@@ -612,6 +611,7 @@ is the buffer location at which the function was found."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((t (:background "#282828" :foreground "#fdf4c1"))))
  '(powerline-evil-normal-face ((t (:inherit powerline-evil-base-face :background "chartreuse3"))))
  '(term ((t (:foreground "ivory1"))))
  '(term-color-black ((t (:foreground "gray80"))))

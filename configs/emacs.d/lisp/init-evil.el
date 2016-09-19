@@ -104,7 +104,8 @@
                             (?v "Vault" (lambda () (air-pop-to-org-vault nil))))))
           ("org-captures" ("Org Captures"
                            ((?c "TODO"  air-org-task-capture)
-                            (?n "Note"  (lambda () (interactive) (org-capture nil "n"))))))))
+                            (?n "Note"  (lambda () (interactive) (org-capture nil "n")))
+                            (?w "NMOM"  (lambda () (interactive) (org-capture nil "w"))))))))
   (evil-define-key 'normal global-map (kbd "\\ \\") 'tiny-menu)
   (evil-define-key 'normal global-map (kbd "\\ f") (tiny-menu-run-item "org-files"))
   (evil-define-key 'normal global-map (kbd "\\ t") (tiny-menu-run-item "org-things"))
