@@ -349,6 +349,8 @@ TAG is chosen interactively from the global tags completion table."
   (add-hook 'org-capture-mode-hook
             (lambda ()
               (evil-define-key '(normal insert) org-capture-mode-map (kbd "C-d") 'air-org-agenda-toggle-date)
+              (evil-define-key 'normal org-capture-mode-map "+" 'org-priority-up)
+              (evil-define-key 'normal org-capture-mode-map "-" 'org-priority-down)
               ;; TODO this seems like a hack
               (evil-insert-state)))
 
