@@ -283,7 +283,7 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-capture-templates
         '(("a" "My TODO task format." entry
            (file "todo.org")
-           "* ☛ TODO %?\nSCHEDULED: %t")
+           "* ☛ TODO %?")
 
           ("n" "A (work-related) note." entry
            (file+headline "notes.org" "Work")
@@ -347,8 +347,8 @@ TAG is chosen interactively from the global tags completion table."
 
   (add-hook 'org-capture-mode-hook
             (lambda ()
-              (evil-define-key 'insert org-capture-mode-map (kbd "C-d") 'air-org-agenda-toggle-date)
-              (evil-define-key 'normal org-capture-mode-map (kbd "C-d") 'air-org-agenda-toggle-date)
+              (evil-define-key '(normal insert) org-capture-mode-map (kbd "C-d") 'air-org-agenda-toggle-date)
+              ;; TODO this seems like a hack
               (evil-insert-state)))
 
   (add-hook 'org-mode-hook
