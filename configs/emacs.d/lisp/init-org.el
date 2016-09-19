@@ -313,7 +313,8 @@ TAG is chosen interactively from the global tags completion table."
             (agenda "" ((org-agenda-ndays 1)))
             (alltodo ""
                      ((org-agenda-skip-function '(or (air-org-skip-subtree-if-habit)
-                                                     (air-org-skip-subtree-if-priority ?A)))
+                                                     (air-org-skip-subtree-if-priority ?A)
+                                                     (org-agenda-skip-if nil '(scheduled deadline))))
                       (org-agenda-overriding-header "ALL normal priority tasks:"))))
            ((org-agenda-compact-blocks t)))))
 
