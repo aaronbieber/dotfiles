@@ -101,10 +101,10 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
                                                  (air-calendar-next-day-of-week 5)))
          (deadline (format "   DEADLINE: %s\n\n" deadline-timestamp)))
     (concat (format "* Week %02d\n\n" (org-days-to-iso-week (org-today)))
-            (concat "** ☛ TODO Care, \n" deadline
-                    "** ☛ TODO Mastery, \n" deadline
-                    "** ☛ TODO Recognition, \n" deadline
-                    "** ☛ TODO Purpose, \n" deadline))))
+            (concat "** ☛ TODO Care: \n" deadline
+                    "** ☛ TODO Mastery: \n" deadline
+                    "** ☛ TODO Recognition: \n" deadline
+                    "** ☛ TODO Purpose: \n" deadline))))
 
 (defun air-org-set-category-property (value)
   "Set the category property of the current item to VALUE."
