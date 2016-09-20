@@ -57,6 +57,20 @@ Do not make the new window current unless FOCUS is set."
   (interactive "P")
   (air--org-display-tag "manager" focus))
 
+(defun air-org-skip-if-not-closed-today (&optional subtree)
+  "Skip entries that were not closed today.
+
+Skip the current entry unless SUBTREE is not nil, in which case skip
+the entire subtree."
+  (let ((end (if subtree (subtree-end (save-excursion (org-end-of-subtree t)))
+               (save-excursion (progn (outline-next-heading) (1- (point))))))
+        (today-prefix (format-time-string "%Y-%m-%d")))
+    (if (save-excursion
+          (and (re-search-forward org-closed-time-regexp end t)
+               (string= (substring (match-string-no-properties 1) 0 10) today-prefix)))
+        nil
+      end)))
+
 (defun air-org-skip-if-habit (&optional subtree)
   "Skip an agenda entry if it has a STYLE property equal to \"habit\".
 
@@ -352,7 +366,13 @@ TAG is chosen interactively from the global tags completion table."
                      ((org-agenda-skip-function '(or (air-org-skip-if-habit)
                                                      (air-org-skip-if-priority ?A)
                                                      (org-agenda-skip-if nil '(scheduled deadline))))
-                      (org-agenda-overriding-header "ALL normal priority tasks:"))))
+                      (org-agenda-overriding-header "ALL normal priority tasks:")))
+
+            (todo "✓ DONE"
+                     ((org-agenda-skip-function 'air-org-skip-if-not-closed-today)
+                      (org-agenda-overriding-header "Closed today:"))
+                     )
+            )
            ((org-agenda-compact-blocks t)))))
 
   (evil-leader/set-key-for-mode 'org-mode
