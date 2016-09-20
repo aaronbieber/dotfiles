@@ -4,6 +4,36 @@
 ;; Basic Org Mode configuration, assuming presence of Evil & Evil Leader.
 
 ;; Helper functions
+(defun air-org-agenda-next-header ()
+  "Jump to the next header in an agenda series."
+  (interactive)
+  (air--org-agenda-goto-header))
+
+(defun air-org-agenda-previous-header ()
+  "Jump to the previous header in an agenda series."
+  (interactive)
+  (air--org-agenda-goto-header t))
+
+(defun air--org-agenda-goto-header (&optional backwards)
+  "Find the next agenda series header forwards or BACKWARDS."
+  (let ((pos (save-excursion
+               (goto-char (if backwards
+                              (line-beginning-position)
+                            (line-end-position)))
+               (let* ((find-func (if backwards
+                                     'previous-single-property-change
+                                   'next-single-property-change))
+                      (end-func (if backwards
+                                    'max
+                                  'min))
+                      (all-pos-raw (list (funcall find-func (point) 'org-agenda-structural-header)
+                                         (funcall find-func (point) 'org-agenda-date-header)))
+                      (all-pos (cl-remove-if-not 'numberp all-pos-raw))
+                      (prop-pos (if all-pos (apply end-func all-pos) nil)))
+                 prop-pos))))
+    (if pos (goto-char pos))
+    (if backwards (goto-char (line-beginning-position)))))
+
 (defun air--org-display-tag (tag &optional focus)
   "Display entries tagged with TAG in a fit window.
 
@@ -334,6 +364,8 @@ TAG is chosen interactively from the global tags completion table."
               (define-key org-agenda-mode-map "H"          'beginning-of-buffer)
               (define-key org-agenda-mode-map "j"          'org-agenda-next-item)
               (define-key org-agenda-mode-map "k"          'org-agenda-previous-item)
+              (define-key org-agenda-mode-map "J"          'air-org-agenda-next-header)
+              (define-key org-agenda-mode-map "K"          'air-org-agenda-previous-header)
               (define-key org-agenda-mode-map "n"          'org-agenda-next-date-line)
               (define-key org-agenda-mode-map "p"          'org-agenda-previous-date-line)
               (define-key org-agenda-mode-map "c"          'air-org-agenda-capture)
