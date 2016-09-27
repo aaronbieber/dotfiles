@@ -185,7 +185,7 @@ Skips the current entry unless SUBTREE is not nil."
   "Return a Nine Minutes on Monday weekly agenda template suitable for capture."
   (let* ((deadline-timestamp (format-time-string "<%Y-%m-%d %a>"
                                                  (air-calendar-next-day-of-week 5)))
-         (deadline (format "   DEADLINE: %s\n\n" deadline-timestamp)))
+         (deadline (format "DEADLINE: %s\n\n" deadline-timestamp)))
     (concat (format "* Week %02d\n\n" (org-days-to-iso-week (org-today)))
             (concat "** ☛ TODO Care: \n" deadline
                     "** ☛ TODO Mastery: \n" deadline
