@@ -22,6 +22,7 @@
     "nn" 'air-narrow-dwim       ;; Narrow to region and enter normal mode
     "nw" 'widen
     "o"  'delete-other-windows  ;; C-w o
+    "p"  'helm-show-kill-ring
     "s"  'ag-project            ;; Ag search from project's root
     "r"  'chrome-reload
     "R"  (lambda () (interactive) (font-lock-fontify-buffer) (redraw-display))
