@@ -240,6 +240,8 @@ condition where the bell visualization never clears.")
   :commands swiper
   :bind ("C-s" . counsel-grep-or-swiper)
   :config
+  (require 'counsel)
+  (setq counsel-grep-base-command "grep -niE \"%s\" %s")
   (setq ivy-height 20))
 
 (use-package dictionary :ensure t)
