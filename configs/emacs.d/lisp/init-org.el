@@ -4,6 +4,41 @@
 ;; Basic Org Mode configuration, assuming presence of Evil & Evil Leader.
 
 ;; Helper functions
+
+(defun air-org-bulk-copy-headlines (&optional strip-tags)
+  "Copy the headline text of the marked headlines in an agenda view.
+
+This function is designed to be called interactively from an agenda
+view with marked items.
+
+If STRIP-TAGS is not nil, remove tags and trailing spaces from
+the headlines."
+  (interactive "P")
+  (unless org-agenda-bulk-marked-entries (user-error "No entries are marked"))
+  (let ((entries "")
+        entry)
+    (dolist (entry-marker (reverse org-agenda-bulk-marked-entries))
+      (with-current-buffer (marker-buffer entry-marker)
+        (save-excursion
+          (goto-char (marker-position entry-marker))
+          (when (re-search-forward org-heading-regexp (line-end-position) t)
+            (setq entry (match-string-no-properties 2))
+            (if strip-tags
+                (setq entry (replace-regexp-in-string
+                             (rx (0+ " ")
+                                 (0+ (any alpha ":"))
+                                 line-end)
+                             "" entry)))
+            (setq entries (concat entries entry "\n"))))))
+    (if (length entries)
+        (kill-new entries)))
+  (message "Acted on %s entries%s"
+           (length org-agenda-bulk-marked-entries)
+           (if org-agenda-persistent-marks
+               " (kept marked)" ""))
+  (unless org-agenda-persistent-marks
+    (org-agenda-bulk-unmark-all)))
+
 (defun air-org-agenda-next-header ()
   "Jump to the next header in an agenda series."
   (interactive)
@@ -407,6 +442,8 @@ TAG is chosen interactively from the global tags completion table."
               (define-key org-agenda-mode-map "p"          'org-agenda-previous-date-line)
               (define-key org-agenda-mode-map "c"          'air-org-agenda-capture)
               (define-key org-agenda-mode-map "R"          'org-revert-all-org-buffers)
+              (define-key org-agenda-mode-map "y"          'air-org-bulk-copy-headlines)
+              (define-key org-agenda-mode-map "/"          'counsel-grep-or-swiper)
               (define-key org-agenda-mode-map (kbd "RET")  'org-agenda-switch-to)
 
               (define-prefix-command 'air-org-run-shortcuts)
