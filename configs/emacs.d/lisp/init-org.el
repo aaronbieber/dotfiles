@@ -324,9 +324,9 @@ TAG is chosen interactively from the global tags completion table."
          ("C-c f t" . org-tags-view)
          ("C-c f i" . air-org-goto-custom-id))
   :config
-  (set-face-attribute 'org-upcoming-deadline nil :foreground "gold1")
-  (setq org-agenda-text-search-extra-files '(agenda-archives))
-  (setq org-agenda-files '("~/Dropbox/org/"))
+  (setq org-hide-emphasis-markers t)
+  (setq org-modules
+        '(org-bbdb org-bibtex org-docview org-habit org-info org-w3m))
   (setq org-todo-keywords
         '((sequence "☛ TODO" "○ IN-PROGRESS" "⚑ WAITING" "|" "✓ DONE" "✗ CANCELED")))
   (setq org-blank-before-new-entry '((heading . t)
@@ -347,15 +347,23 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-default-notes-file "~/Dropbox/org/todo.org")
   (setq org-directory "~/Dropbox/org")
   (setq org-enforce-todo-dependencies t)
+
+  ;; Logging of state changes
   (setq org-log-done (quote time))
   (setq org-log-redeadline (quote time))
   (setq org-log-reschedule (quote time))
-  (setq org-agenda-skip-scheduled-if-done t)
+  (setq org-log-into-drawer t)
+
   (setq org-insert-heading-respect-content t)
   (setq org-ellipsis " …")
   (setq org-startup-with-inline-images t)
   (setq org-export-initial-scope 'subtree)
   (setq org-use-tag-inheritance nil) ;; Use the list form, which happens to be blank
+
+  ;; Agenda configuration
+  (setq org-agenda-text-search-extra-files '(agenda-archives))
+  (setq org-agenda-files '("~/Dropbox/org/"))
+  (setq org-agenda-skip-scheduled-if-done t)
   (setq org-agenda-custom-commands
         '(("d" "Daily agenda and all TODOs"
            ((tags "PRIORITY=\"A\""
@@ -374,6 +382,8 @@ TAG is chosen interactively from the global tags completion table."
                      )
             )
            ((org-agenda-compact-blocks t)))))
+
+  (set-face-attribute 'org-upcoming-deadline nil :foreground "gold1")
 
   (evil-leader/set-key-for-mode 'org-mode
     "$"  'org-archive-subtree
