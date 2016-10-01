@@ -1,0 +1,16 @@
+"3.14.0 (created: 2016/06/07 23:58:16)
+
+cmap <C-g> <Esc>
+highlight Hint background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(255, 247, 133)), to(rgb(255, 197, 66))); border: 1px solid rgb(227, 190, 35); border-radius: 2px; font-family: "Helvetica Neue"; font-weight: bold; box-shadow: rgba(0, 0, 0, 0.298039) 0px 3px 7px 0px; overflow: hidden; padding: 1px 3px 0px;
+highlight HintElem color: black;
+map x :tabclose<Return>
+map <C-g> <Esc>
+nmap d 2j
+nmap u 2k
+nnoremap U u
+nnoremap h 2h
+nnoremap l 2l
+set hintchars=HJKLASDFGYUIOPQWERTNMZXCVB
+source! /Users/airborne/.vimperatorrc.local
+
+" vim: set ft=vimperator:
