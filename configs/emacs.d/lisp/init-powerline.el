@@ -24,7 +24,6 @@
 
 (defun air--powerline-default-theme ()
   "Set up my custom Powerline with Evil indicators."
-  (interactive)
   (setq-default mode-line-format
                 '("%e"
                   (:eval
