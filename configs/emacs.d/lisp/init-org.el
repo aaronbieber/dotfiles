@@ -404,13 +404,19 @@ TAG is chosen interactively from the global tags completion table."
            ((tags "PRIORITY=\"A\""
                   ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                    (org-agenda-overriding-header "High-priority unfinished tasks:")))
-            (agenda "" ((org-agenda-ndays 1)))
+            (agenda ""
+                    ((org-agenda-ndays 1)
+                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'nottodo 'any))))
             (alltodo ""
                      ((org-agenda-skip-function '(or (air-org-skip-if-habit)
                                                      (air-org-skip-if-priority ?A)
                                                      (org-agenda-skip-if nil '(scheduled deadline))))
                       (org-agenda-overriding-header "ALL normal priority tasks:")))
 
+            (agenda ""
+                    ((org-agenda-ndays 1)
+                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'any))
+                     (org-agenda-overriding-header "Reminders for today:")))
             (todo "✓ DONE"
                      ((org-agenda-skip-function 'air-org-skip-if-not-closed-today)
                       (org-agenda-overriding-header "Closed today:"))
