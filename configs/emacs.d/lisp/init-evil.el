@@ -5,7 +5,7 @@
   "Configure evil leader mode."
   (evil-leader/set-leader ",")
   (evil-leader/set-key
-    ","  (lambda () (interactive) (ansi-term (getenv "SHELL")))
+    ","  'other-window
     "."  'mode-line-other-buffer
     ":"  'eval-expression
     "aa" 'align-regexp
@@ -85,6 +85,7 @@
   (evil-define-key 'normal global-map (kbd "C-S-p") 'helm-projectile-switch-project)
   (evil-define-key 'insert global-map (kbd "s-d")   'eval-last-sexp)
   (evil-define-key 'normal global-map (kbd "s-d")   'eval-defun)
+  (evil-define-key 'normal global-map (kbd "C-t")   (lambda () (interactive) (ansi-term (getenv "SHELL"))))
 
   (evil-define-key 'normal global-map (kbd "z d")   'dictionary-lookup-definition)
 
