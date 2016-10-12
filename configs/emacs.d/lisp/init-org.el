@@ -381,7 +381,6 @@ TAG is chosen interactively from the global tags completion table."
            (function air-org-nmom-capture-template))))
   (setq org-default-notes-file "~/Dropbox/org/todo.org")
   (setq org-directory "~/Dropbox/org")
-  (setq org-enforce-todo-dependencies t)
 
   ;; Logging of state changes
   (setq org-log-done (quote time))
