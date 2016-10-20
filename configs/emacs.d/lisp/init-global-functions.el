@@ -1,6 +1,15 @@
 ;;; init-global-functions.el --- Global functions mostly used by mappings.
 ;;; Commentary:
 ;;; Code:
+(defun air-transpose-word-forward ()
+  "Transpose word at point one word forward."
+  (interactive)
+  (transpose-words 1))
+
+(defun air-transpose-word-backward ()
+  "Transpose word at point one word backward."
+  (interactive)
+  (transpose-words -1))
 (defun air--pop-to-file (file &optional split)
   "Visit a FILE, either in the current window or a SPLIT."
   (if split
