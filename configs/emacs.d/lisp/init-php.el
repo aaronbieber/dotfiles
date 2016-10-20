@@ -61,7 +61,6 @@
 (defun configure-php-mode ()
   "Set up all of my PHP mode preferences."
   (require 'newcomment)
-  (setq comment-auto-fill-only-comments 1)
   (setq auto-fill-function 'do-auto-fill)
   (setq flycheck-disabled-checkers '(php-phpmd))
 
@@ -76,7 +75,6 @@
   (air-set-php-group)
   (eldoc-mode t)
   (highlight-symbol-mode)
-  (electric-pair-mode)
   (turn-on-auto-fill)
   (add-to-list 'write-file-functions 'delete-trailing-whitespace)
   (gtags-mode t)

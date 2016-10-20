@@ -413,6 +413,13 @@ condition where the bell visualization never clears.")
           (lambda ()
             (define-key lisp-interaction-mode-map (kbd "<C-return>") 'eval-last-sexp)))
 
+;;; All programming modes
+(defun air--set-up-prog-mode ()
+  "Configure global prog-mode."
+  (setq-local comment-auto-fill-only-comments t)
+  (electric-pair-local-mode))
+(add-hook 'prog-mode-hook 'air--set-up-prog-mode)
+
 (use-package nlinum-relative
   :ensure t
   :config
