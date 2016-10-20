@@ -378,6 +378,11 @@ TAG is chosen interactively from the global tags completion table."
            "* %?\n%u\n\n"
            :jump-to-captured t)
 
+          ("l" "A link, for reading later." entry
+           (file+headline "notes.org" "Reading List")
+           "* %:description\n%u\n\n%c\n\n%i"
+           :empty-lines 1)
+
           ("w" "Nine Minutes on Monday weekly agenda." entry
            (id "9A6DDE04-90B8-49ED-90B9-A55A0D1E7B28")
            (function air-org-nmom-capture-template))))
