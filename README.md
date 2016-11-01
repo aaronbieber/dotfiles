@@ -1,8 +1,10 @@
 # All Hail Dotfiles
-These are my UNIX-y configuration files, known colloquially as "dotfiles" 
-because most of them begin with a period (a "dot"). These configurations are 
-also used in OS X, so not all of them are even applicable to Linux (such as 
-`.slate`), but linking them shouldn't hurt.
+
+These are my UNIX-y configuration files, known colloquially as "dotfiles"
+because most of them begin with a period (a "dot"). These configurations are
+used in OS X, so some may not be applicable or may not work properly at all in
+other environments. Most should work in flavors of Linux, though.
+
 
 *Important note:* These are my personal configuration files, which are in a
 constant state of change as I develop my environment across several systems. I
@@ -18,6 +20,7 @@ directory as an isolated git repository and also function as configuration files
 in your home directory at the same time. Simply run `linkall` and you're done.
 
 ## Usage
+
 Usage is straightforward.
 
 ```bash
@@ -25,8 +28,8 @@ $ git clone https://github.com/aaronbieber/dotfiles.git ~/dotfiles
 $ ~/dotfiles/linkall
 ```
 
-My `.bashrc` file is now capable of environments. To take advantage of 
-environment partitions, export the `MY_LOCATION` environment variable from your 
+My `.bashrc` file is now capable of environments. To take advantage of
+environment partitions, export the `MY_LOCATION` environment variable from your
 `.bash_profile` and then source the `.bashrc` file, like so:
 
 ```bash
