@@ -187,10 +187,10 @@ Skips the current entry unless SUBTREE is not nil."
                                                  (air-calendar-next-day-of-week 5)))
          (deadline (format "DEADLINE: %s\n\n" deadline-timestamp)))
     (concat (format "* Week %02d\n\n" (org-days-to-iso-week (org-today)))
-            (concat "** ☛ TODO Care: \n" deadline
-                    "** ☛ TODO Mastery: \n" deadline
-                    "** ☛ TODO Recognition: \n" deadline
-                    "** ☛ TODO Purpose: \n" deadline))))
+            (concat "** TODO Care: \n" deadline
+                    "** TODO Mastery: \n" deadline
+                    "** TODO Recognition: \n" deadline
+                    "** TODO Purpose: \n" deadline))))
 
 (defun air-org-set-category-property (value)
   "Set the category property of the current item to VALUE."
@@ -365,13 +365,13 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-modules
         '(org-bbdb org-bibtex org-docview org-habit org-info org-w3m))
   (setq org-todo-keywords
-        '((sequence "☛ TODO" "○ IN-PROGRESS" "⚑ WAITING" "|" "✓ DONE" "✗ CANCELED")))
+        '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED")))
   (setq org-blank-before-new-entry '((heading . t)
                                      (plain-list-item . t)))
   (setq org-capture-templates
         '(("a" "My TODO task format." entry
            (file "todo.org")
-           "* ☛ TODO %?")
+           "* TODO %?")
 
           ("n" "A (work-related) note." entry
            (file+headline "notes.org" "Work")
@@ -403,7 +403,7 @@ TAG is chosen interactively from the global tags completion table."
 
   ;; Agenda configuration
   (setq org-agenda-text-search-extra-files '(agenda-archives))
-  (setq org-agenda-files '("~/Dropbox/org/"))
+  (setq org-agenda-files '("~/Dropbox/org/" "~/Dropbox/org/orgzly/"))
   (setq org-agenda-skip-scheduled-if-done t)
   (setq org-agenda-custom-commands
         '(("d" "Daily agenda and all TODOs"
