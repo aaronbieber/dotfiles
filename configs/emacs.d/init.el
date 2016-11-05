@@ -118,14 +118,6 @@ condition where the bell visualization never clears.")
 (require 'init-flycheck)
 (require 'init-tmux)
 
-(require 'markdown-preview-mode)
-(add-hook 'markdown-preview-mode-hook
-          (lambda ()
-            (setq markdown-preview-template
-                  (expand-file-name "~/.emacs.d/markdown-preview.html" user-emacs-directory))
-            (setq markdown-preview-style
-                  "http://aaronbieber.com/assets/styles/github-markdown.css")))
-
 (add-to-list 'load-path (expand-file-name "fence-edit" user-emacs-directory))
 (require 'fence-edit)
 
