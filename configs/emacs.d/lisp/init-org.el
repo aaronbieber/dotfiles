@@ -149,23 +149,34 @@ Skips the current entry unless SUBTREE is not nil."
                              ,(concat file ":" (number-to-string (line-number-at-pos))))))))))
     air-all-org-custom-ids))
 
+(defun air--org-find-custom-id (custom-id)
+  "Return the location of CUSTOM-ID."
+  (let* ((all-custom-ids (air--org-global-custom-ids)))
+    (let* ((val (cadr (assoc custom-id all-custom-ids)))
+           (id-parts (split-string val ":"))
+           (file (car id-parts))
+           (line (string-to-int (cadr id-parts))))
+      (with-current-buffer (org-get-agenda-file-buffer file)
+        (goto-char (point-min))
+        (forward-line line)
+        (org-reveal)
+        (org-up-element)
+        (list (current-buffer) (point))))))
+
 (defun air-org-goto-custom-id ()
-  "Go to the location of CUSTOM-ID, or prompt interactively."
+  "Go to the location of a custom ID, read interactively."
   (interactive)
   (let* ((all-custom-ids (air--org-global-custom-ids))
          (custom-id (completing-read
                      "Custom ID: "
-                     all-custom-ids)))
-    (when custom-id
-      (let* ((val (cadr (assoc custom-id all-custom-ids)))
-             (id-parts (split-string val ":"))
-             (file (car id-parts))
-             (line (string-to-int (cadr id-parts))))
-        (pop-to-buffer (org-get-agenda-file-buffer file))
-        (goto-char (point-min))
-        (forward-line line)
-        (org-reveal)
-        (org-up-element)))))
+                     all-custom-ids))
+         (id-location (air--org-find-custom-id custom-id)))
+    (when id-location
+      (let* ((buf (car id-location))
+             (loc (cadr id-location)))
+        (pop-to-buffer buf)
+        (goto-char loc)
+        (org-reveal)))))
 
 (defun air-org-insert-custom-id-link ()
   "Insert an Org link to a custom ID selected interactively."
