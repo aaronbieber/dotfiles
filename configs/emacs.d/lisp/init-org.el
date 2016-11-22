@@ -92,6 +92,13 @@ Do not make the new window current unless FOCUS is set."
   (interactive "P")
   (air--org-display-tag "manager" focus))
 
+(defun air-org-display-engineers (&optional focus)
+  "Display entries tagged with `engineer'.
+
+Do not make the new window current unless FOCUS is set."
+  (interactive "P")
+  (air--org-display-tag "engineer" focus))
+
 (defun air-org-skip-if-not-closed-today (&optional subtree)
   "Skip entries that were not closed today.
 

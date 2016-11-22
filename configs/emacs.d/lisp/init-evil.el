@@ -95,12 +95,13 @@
   (require 'tiny-menu)
   (setq tiny-menu-items
         '(("org-things"   ("Org Things"
-                           ((?t "Tag"      org-tags-view)
-                            (?i "ID"       air-org-goto-custom-id)
-                            (?k "Keyword"  org-search-view)
-                            (?h "Headings" helm-org-agenda-files-headings)
-                            (?d "Directs"  air-org-display-directs)
-                            (?m "Managers" air-org-display-managers))))
+                           ((?t "Tag"       org-tags-view)
+                            (?i "ID"        air-org-goto-custom-id)
+                            (?k "Keyword"   org-search-view)
+                            (?h "Headings"  helm-org-agenda-files-headings)
+                            (?d "Directs"   air-org-display-directs)
+                            (?m "Managers"  air-org-display-managers)
+                            (?e "Engineers" air-org-display-engineers))))
           ("org-links"    ("Org Links"
                            ((?c "Capture"   org-store-link)
                             (?l "Insert"    org-insert-link)
