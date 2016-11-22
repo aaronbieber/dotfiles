@@ -400,7 +400,7 @@ TAG is chosen interactively from the global tags completion table."
 
           ("l" "A link, for reading later." entry
            (file+headline "notes.org" "Reading List")
-           "* %:description\n%u\n\n%c\n\n%i"
+           "* %c\n:PROPERTIES:\n:Added: %u\n:END:\n\n%i"
            :empty-lines 1)
 
           ("w" "Nine Minutes on Monday weekly agenda." entry
