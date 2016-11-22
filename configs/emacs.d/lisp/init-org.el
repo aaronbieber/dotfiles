@@ -450,6 +450,29 @@ TAG is chosen interactively from the global tags completion table."
             )
            ((org-agenda-compact-blocks t)))))
 
+  (add-to-list 'org-structure-template-alist
+               (list "p" (concat ":PROPERTIES:\n"
+                                 "?\n"
+                                 ":END:")))
+
+  (add-to-list 'org-structure-template-alist
+               (list "eb" (concat ":EXPORT_FILE_NAME: ?\n"
+                                  ":EXPORT_TITLE:\n"
+                                  ":EXPORT_OPTIONS: H:1 toc:nil\n"
+                                  ":EXPORT_BEAMER_COLOR_THEME: seahorse\n"
+                                  ":EXPORT_BEAMER_FONT_THEME:\n"
+                                  ":EXPORT_BEAMER_HEADER:\n"
+                                  ":EXPORT_BEAMER_INNER_THEME:\n"
+                                  ":EXPORT_BEAMER_OUTER_THEME:\n"
+                                  ":EXPORT_BEAMER_THEME: default\n"
+                                  ":EXPORT_LATEX_CLASS: beamer\n"
+                                  ":EXPORT_LATEX_HEADER: \\setbeamertemplate{navigation symbols}{}")))
+
+  (add-to-list 'org-structure-template-alist
+               (list "eh" (concat ":EXPORT_FILE_NAME: ?\n"
+                                  ":EXPORT_TITLE:\n"
+                                  ":EXPORT_OPTIONS: toc:nil html-postamble:nil num:nil")))
+
   (set-face-attribute 'org-upcoming-deadline nil :foreground "gold1")
 
   (evil-leader/set-key-for-mode 'org-mode
