@@ -389,12 +389,14 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-capture-templates
         '(("a" "My TODO task format." entry
            (file "todo.org")
-           "* TODO %?")
+           "* TODO %?"
+           :empty-lines 1)
 
           ("n" "A (work-related) note." entry
            (file+headline "notes.org" "Work")
            "* %?\n%u\n\n"
-           :jump-to-captured t)
+           :jump-to-captured t
+           :empty-lines 1)
 
           ("l" "A link, for reading later." entry
            (file+headline "notes.org" "Reading List")
