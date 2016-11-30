@@ -104,7 +104,7 @@ Do not make the new window current unless FOCUS is set."
 
 Skip the current entry unless SUBTREE is not nil, in which case skip
 the entire subtree."
-  (let ((end (if subtree (subtree-end (save-excursion (org-end-of-subtree t)))
+  (let ((end (if subtree (save-excursion (org-end-of-subtree t))
                (save-excursion (progn (outline-next-heading) (1- (point))))))
         (today-prefix (format-time-string "%Y-%m-%d")))
     (if (save-excursion
@@ -118,7 +118,7 @@ the entire subtree."
 
 Skip the current entry unless SUBTREE is not nil, in which case skip
 the entire subtree."
-  (let ((end (if subtree (subtree-end (save-excursion (org-end-of-subtree t)))
+  (let ((end (if subtree (save-excursion (org-end-of-subtree t))
                 (save-excursion (progn (outline-next-heading) (1- (point)))))))
     (if (string= (org-entry-get nil "STYLE") "habit")
         end
@@ -130,7 +130,7 @@ the entire subtree."
 PRIORITY may be one of the characters ?A, ?B, or ?C.
 
 Skips the current entry unless SUBTREE is not nil."
-  (let ((end (if subtree (subtree-end (save-excursion (org-end-of-subtree t)))
+  (let ((end (if subtree (save-excursion (org-end-of-subtree t))
                 (save-excursion (progn (outline-next-heading) (1- (point))))))
         (pri-value (* 1000 (- org-lowest-priority priority)))
         (pri-current (org-get-priority (thing-at-point 'line t))))
