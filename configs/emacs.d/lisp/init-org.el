@@ -443,7 +443,7 @@ TAG is chosen interactively from the global tags completion table."
                     ((org-agenda-ndays 1)
                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'any))
                      (org-agenda-overriding-header "Reminders for today:")))
-            (todo "✓ DONE"
+            (todo "DONE"
                      ((org-agenda-skip-function 'air-org-skip-if-not-closed-today)
                       (org-agenda-overriding-header "Closed today:"))
                      )
