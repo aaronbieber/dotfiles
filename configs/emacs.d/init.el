@@ -127,6 +127,8 @@ condition where the bell visualization never clears.")
   :defer 1)
 (use-package dash :ensure t)
 
+(use-package visual-fill-column :ensure t)
+
 ;; Org Mode
 (require 'init-org)
 
