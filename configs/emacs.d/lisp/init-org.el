@@ -458,15 +458,11 @@ TAG is chosen interactively from the global tags completion table."
   (add-to-list 'org-structure-template-alist
                (list "eb" (concat ":EXPORT_FILE_NAME: ?\n"
                                   ":EXPORT_TITLE:\n"
+                                  ":EXPORT_BEAMER_HEADER: \subtitle{}\n"
+                                  ":EXPORT_AUTHOR: Aaron Bieber\n"
                                   ":EXPORT_OPTIONS: H:1 toc:nil\n"
-                                  ":EXPORT_BEAMER_COLOR_THEME: seahorse\n"
-                                  ":EXPORT_BEAMER_FONT_THEME:\n"
-                                  ":EXPORT_BEAMER_HEADER:\n"
-                                  ":EXPORT_BEAMER_INNER_THEME:\n"
-                                  ":EXPORT_BEAMER_OUTER_THEME:\n"
-                                  ":EXPORT_BEAMER_THEME: default\n"
-                                  ":EXPORT_LATEX_CLASS: beamer\n"
-                                  ":EXPORT_LATEX_HEADER: \\setbeamertemplate{navigation symbols}{}")))
+                                  ":EXPORT_BEAMER_THEME: wayfair\n"
+                                  ":EXPORT_LATEX_CLASS: beamer")))
 
   (add-to-list 'org-structure-template-alist
                (list "eh" (concat ":EXPORT_FILE_NAME: ?\n"
