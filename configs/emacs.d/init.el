@@ -114,7 +114,10 @@ condition where the bell visualization never clears.")
 (require 'init-maps)
 (require 'init-w3m)
 (require 'init-php)
-(require 'init-powerline)
+
+;; TODO Experiment with smart-mode-line
+;;(require 'init-powerline)
+
 (require 'init-flycheck)
 (require 'init-tmux)
 
@@ -620,6 +623,13 @@ is the buffer location at which the function was found."
   (setq ns-use-srgb-colorspace nil))
 
 (load-theme 'gruvbox)
+
+(use-package smart-mode-line
+  :ensure t
+  :config
+  (setq powerline-default-separator 'arrow-fade)
+  (setq sml/theme 'powerline)
+  (sml/setup))
 
 (provide 'init)
 ;;; init.el ends here
