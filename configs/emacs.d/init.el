@@ -142,6 +142,7 @@ condition where the bell visualization never clears.")
 
 (use-package tiny-menu
   :ensure t
+  :commands (tiny-menu-run-item)
   :config
   (setq tiny-menu-items
         '(("reverts"      ("Revert"
