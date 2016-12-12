@@ -529,7 +529,6 @@ TAG is chosen interactively from the global tags completion table."
               (define-key org-mode-map (kbd "C-c ,")   'org-time-stamp-inactive)
               (define-key org-mode-map (kbd "C-|")     'air-org-insert-scheduled-heading)
               (define-key org-mode-map (kbd "C-\\")    'air-org-insert-heading)
-              (define-key org-mode-map (kbd "s-r")     'org-revert-all-org-buffers)
               (define-key org-mode-map (kbd "C-c C-l") (tiny-menu-run-item "org-links"))
 
               (define-key org-mode-map (kbd "C-<")                'org-shiftmetaleft)

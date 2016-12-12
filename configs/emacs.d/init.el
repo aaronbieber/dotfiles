@@ -140,6 +140,34 @@ condition where the bell visualization never clears.")
   :config
   (setq octopress-blog-root (expand-file-name "~/Blog")))
 
+(use-package tiny-menu
+  :ensure t
+  :config
+  (setq tiny-menu-items
+        '(("reverts"      ("Revert"
+                           ((?r "This buffer"     revert-buffer)
+                            (?o "All Org buffers" org-revert-all-org-buffers))))
+          ("org-things"   ("Org Things"
+                           ((?t "Tag"       org-tags-view)
+                            (?i "ID"        air-org-goto-custom-id)
+                            (?k "Keyword"   org-search-view)
+                            (?h "Headings"  helm-org-agenda-files-headings)
+                            (?d "Directs"   air-org-display-directs)
+                            (?m "Managers"  air-org-display-managers)
+                            (?e "Engineers" air-org-display-engineers))))
+          ("org-links"    ("Org Links"
+                           ((?c "Capture"   org-store-link)
+                            (?l "Insert"    org-insert-link)
+                            (?i "Custom ID" air-org-insert-custom-id-link))))
+          ("org-files"    ("Org Files"
+                           ((?t "TODO"  (lambda () (air-pop-to-org-todo nil)))
+                            (?n "Notes" (lambda () (air-pop-to-org-notes nil)))
+                            (?v "Vault" (lambda () (air-pop-to-org-vault nil))))))
+          ("org-captures" ("Org Captures"
+                           ((?c "TODO"  air-org-task-capture)
+                            (?n "Note"  (lambda () (interactive) (org-capture nil "n")))
+                            (?w "NMOM"  (lambda () (interactive) (org-capture nil "w")))))))))
+
 (use-package exec-path-from-shell
   :ensure t
   :config

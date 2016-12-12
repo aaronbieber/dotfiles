@@ -89,31 +89,7 @@
 
   (evil-define-key 'normal global-map "gl" 'air-transpose-word-forward)
   (evil-define-key 'normal global-map "gh" 'air-transpose-word-backward)
-
   (evil-define-key 'normal global-map (kbd "z d")   'dictionary-lookup-definition)
-
-  (require 'tiny-menu)
-  (setq tiny-menu-items
-        '(("org-things"   ("Org Things"
-                           ((?t "Tag"       org-tags-view)
-                            (?i "ID"        air-org-goto-custom-id)
-                            (?k "Keyword"   org-search-view)
-                            (?h "Headings"  helm-org-agenda-files-headings)
-                            (?d "Directs"   air-org-display-directs)
-                            (?m "Managers"  air-org-display-managers)
-                            (?e "Engineers" air-org-display-engineers))))
-          ("org-links"    ("Org Links"
-                           ((?c "Capture"   org-store-link)
-                            (?l "Insert"    org-insert-link)
-                            (?i "Custom ID" air-org-insert-custom-id-link))))
-          ("org-files"    ("Org Files"
-                           ((?t "TODO"  (lambda () (air-pop-to-org-todo nil)))
-                            (?n "Notes" (lambda () (air-pop-to-org-notes nil)))
-                            (?v "Vault" (lambda () (air-pop-to-org-vault nil))))))
-          ("org-captures" ("Org Captures"
-                           ((?c "TODO"  air-org-task-capture)
-                            (?n "Note"  (lambda () (interactive) (org-capture nil "n")))
-                            (?w "NMOM"  (lambda () (interactive) (org-capture nil "w"))))))))
   (evil-define-key 'normal global-map (kbd "\\ \\") 'tiny-menu)
   (evil-define-key 'normal global-map (kbd "\\ f") (tiny-menu-run-item "org-files"))
   (evil-define-key 'normal global-map (kbd "\\ t") (tiny-menu-run-item "org-things"))
