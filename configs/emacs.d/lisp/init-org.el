@@ -78,6 +78,11 @@ Do not make the new window current unless FOCUS is set."
   (unless focus
     (other-window 1)))
 
+(defun air-org-display-any-tag ()
+  "Display entries tagged with a tag selected interactively."
+  (interactive)
+  (air--org-display-tag (air--org-select-tag)))
+
 (defun air-org-display-directs (&optional focus)
   "Display entries tagged with `direct'.
 
@@ -335,21 +340,23 @@ return nil."
           (progn (goto-char (match-beginning 0)) t)
         (goto-char pos) nil))))
 
+(defun air--org-select-tag ()
+  "Interactively select or enter a single tag."
+  (let ((org-last-tags-completion-table
+         (if (derived-mode-p 'org-mode)
+             (org-uniquify
+              (delq nil (append (org-get-buffer-tags)
+                                (org-global-tags-completion-table))))
+           (org-global-tags-completion-table))))
+    (completing-read
+     "Tag: " 'org-tags-completion-function nil nil nil
+     'org-tags-history)))
 
 (defun air-org-set-tags (tag)
   "Add TAG if it is not in the list of tags, remove it otherwise.
 
 TAG is chosen interactively from the global tags completion table."
-  (interactive
-   (list (let ((org-last-tags-completion-table
-                (if (derived-mode-p 'org-mode)
-                    (org-uniquify
-                     (delq nil (append (org-get-buffer-tags)
-                                       (org-global-tags-completion-table))))
-                  (org-global-tags-completion-table))))
-           (completing-read
-            "Tag: " 'org-tags-completion-function nil nil nil
-            'org-tags-history))))
+  (interactive (list (air--org-select-tag)))
   (let* ((cur-list (org-get-tags))
          (new-tags (mapconcat 'identity
                               (if (member tag cur-list)
@@ -359,7 +366,6 @@ TAG is chosen interactively from the global tags completion table."
          (new (if (> (length new-tags) 1) (concat " :" new-tags ":")
                 nil)))
     (air--org-swap-tags new)))
-
 
 ;;; Code:
 (use-package org
