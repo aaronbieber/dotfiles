@@ -266,6 +266,8 @@ condition where the bell visualization never clears.")
   (define-key company-active-map (kbd "C-n") 'company-select-next)
   (define-key company-active-map (kbd "C-p") 'company-select-previous))
 
+(use-package counsel :ensure t)
+
 (use-package swiper
   :ensure t
   :commands swiper
