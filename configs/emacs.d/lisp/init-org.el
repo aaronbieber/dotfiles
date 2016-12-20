@@ -290,10 +290,21 @@ If VANILLA is non-nil, run the standard `org-capture'."
   (interactive "P")
   (air--pop-to-file "~/Dropbox/org/vault.gpg" split))
 
-(defun air-pop-to-org-agenda (split)
-  "Visit the org agenda, in the current window or a SPLIT."
+(defun air-pop-to-org-agenda-default (split)
+  "Pop to the default agenda in the current window or a SPLIT."
   (interactive "P")
-  (org-agenda nil "d")
+  (air--pop-to-org-agenda-view "d" split))
+
+(defun air-pop-to-org-agenda-projects (split)
+  "Pop to the projects agenda in the current window or a SPLIT."
+  (interactive "P")
+  (air--pop-to-org-agenda-view "p" split))
+
+(defun air--pop-to-org-agenda-view (key &optional split)
+  "Visit the org agenda KEY, in the current window or a SPLIT."
+  ;; I don't know why this works, but it works.
+  (let ((current-prefix-arg nil))
+    (org-agenda nil key))
   (when (not split)
     (delete-other-windows)))
 
