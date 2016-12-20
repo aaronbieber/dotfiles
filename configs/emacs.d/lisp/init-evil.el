@@ -116,22 +116,6 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
   (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
   (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
-  (defun evil-visual-line--mark-org-element-when-heading (&rest args)
-    "When marking a visual line in Org, mark the current element.
-
-This function is used as a `:before-while' advice on
-`evil-visual-line'; if the current mode is derived from Org Mode and
-point is resting on an Org heading, mark the whole element instead of
-the line. ARGS are passed to `evil-visual-line' when text objects are
-used, but this function ignores them."
-    (interactive)
-    (if (and (derived-mode-p 'org-mode)
-             (org-on-heading-p))
-        (not (org-mark-element))
-      t))
-
-  (advice-add 'evil-visual-line :before-while #'evil-visual-line--mark-org-element-when-heading)
-
   ;; My own Ex commands.
   (evil-ex-define-cmd "om" 'octopress-status))
 
