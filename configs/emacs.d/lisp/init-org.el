@@ -534,6 +534,7 @@ TAG is chosen interactively from the global tags completion table."
               (define-key org-agenda-mode-map (kbd "RET")  'org-agenda-switch-to)
 
               (define-prefix-command 'air-org-run-shortcuts)
+              (define-key air-org-run-shortcuts "a" (tiny-menu-run-item "org-agendas"))
               (define-key air-org-run-shortcuts "f" (tiny-menu-run-item "org-files"))
               (define-key air-org-run-shortcuts "t" (tiny-menu-run-item "org-things"))
               (define-key air-org-run-shortcuts "c" (tiny-menu-run-item "org-captures"))
