@@ -507,6 +507,18 @@ TAG is chosen interactively from the global tags completion table."
 
   (set-face-attribute 'org-upcoming-deadline nil :foreground "gold1")
 
+  (evil-define-text-object evil-org-outer-element (count &optional beg end type)
+    "One whole org element, from headline to final newline."
+    (let ((el (org-element-at-point)))
+      (if (eq 'headline (car el))
+          (let* ((plist (nth 1 el))
+                 (begin (plist-get plist :begin))
+                 (end (plist-get plist :end)))
+            (list begin end)))))
+
+  (define-key evil-outer-text-objects-map "*" 'evil-org-outer-element)
+  (define-key evil-inner-text-objects-map "*" 'evil-org-outer-element)
+
   (evil-leader/set-key-for-mode 'org-mode
     "$"  'org-archive-subtree
     "a"  'org-agenda
@@ -593,13 +605,21 @@ TAG is chosen interactively from the global tags completion table."
               (define-key org-mode-map (kbd "M-k") 'org-backward-heading-same-level)
               (define-key org-mode-map (kbd "M-l") 'air-org-goto-first-child)
 
+              ;; "gh" goes up a level, and is defined by org-evil-mode.
+              ;; "gH" goes to the top level, and is defined by org-evil-mode.
+              (evil-define-key 'normal org-mode-map (kbd "gl") 'air-org-goto-first-child)
+
               ;; Use fill column, but not in agenda
               (setq fill-column 100)
               (when (not (eq major-mode 'org-agenda-mode))
+                (org-evil-mode)
                 (visual-line-mode)
                 (visual-fill-column-mode))
               (flyspell-mode)
               (org-indent-mode))))
+
+(use-package org-evil
+  :ensure t)
 
 (use-package org-bullets
   :ensure t

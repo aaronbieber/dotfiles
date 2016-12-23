@@ -87,8 +87,6 @@
   (evil-define-key 'normal global-map (kbd "s-d")   'eval-defun)
   (evil-define-key 'normal global-map (kbd "C-t")   (lambda () (interactive) (ansi-term (getenv "SHELL"))))
 
-  (evil-define-key 'normal global-map "gl" 'air-transpose-word-forward)
-  (evil-define-key 'normal global-map "gh" 'air-transpose-word-backward)
   (evil-define-key 'normal global-map (kbd "z d")   'dictionary-lookup-definition)
   (evil-define-key 'normal global-map (kbd "\\ \\") 'tiny-menu)
   (evil-define-key 'normal global-map (kbd "\\ a") (tiny-menu-run-item "org-agendas"))
