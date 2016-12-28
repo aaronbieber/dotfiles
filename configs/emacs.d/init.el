@@ -153,10 +153,6 @@ condition where the bell visualization never clears.")
 (require 'init-maps)
 (require 'init-w3m)
 (require 'init-php)
-
-;; TODO Experiment with smart-mode-line
-;;(require 'init-powerline)
-
 (require 'init-flycheck)
 (require 'init-tmux)
 
@@ -636,12 +632,22 @@ is the buffer location at which the function was found."
 
 (load-theme 'gruvbox)
 
+(use-package powerline
+  :ensure t)
+
 (use-package smart-mode-line
   :ensure t
   :config
+  (require 'powerline)
   (setq powerline-default-separator 'arrow-fade)
   (setq sml/theme 'powerline)
-  (sml/setup))
+  (sml/setup)
+  ;; These colors are more pleasing (for gruvbox)
+  (custom-theme-set-faces
+   'user
+   '(sml/folder ((t (:inherit sml/global :background "grey22" :foreground "gold4" :weight normal))) t)
+   '(sml/git ((t (:background "grey22" :foreground "chartreuse3"))) t)))
+
 
 (provide 'init)
 ;;; init.el ends here
