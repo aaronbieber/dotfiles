@@ -60,6 +60,7 @@
 (setq split-width-threshold nil)
 (setq custom-safe-themes t)
 (put 'narrow-to-region 'disabled nil)
+(column-number-mode t)
 
 ;; The OS X visible bell is buggy as hell.
 (defvar air-bell-ringing nil
