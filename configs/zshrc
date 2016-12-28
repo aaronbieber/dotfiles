@@ -184,16 +184,23 @@ fi
 
 # OS X things.
 if [[ `uname` == "Darwin" ]]; then
-	# This is really only for OS X, so don't use it at work.
-	function top() {
-		if [ $# -eq 0 ]; then
-			/usr/bin/top -o cpu
-		else
-			/usr/bin/top "$@"
-		fi
-	}
+  function top() {
+    if [ $# -eq 0 ]; then
+      /usr/bin/top -o cpu
+    else
+      /usr/bin/top "$@"
+    fi
+  }
+
+  # Always use:
+  #   l: List in long format
+  #   h: Sizes in human-readable form
+  #   F: Dir, symlink, executable, etc., symbols
+  #   G: Colorize!
   alias l="ls -lhFG"
-  alias la="ls -Alh -G"
+  alias la="ls -lhFGA"   # All files
+  alias ltr="ls -lhFGtr" # By time, reverse
+  alias lsr="ls -lhFGSr" # By size, reverse
 else
   # Non-OS X things.
   alias l="ls -lhF --group-directories-first --color=always"
