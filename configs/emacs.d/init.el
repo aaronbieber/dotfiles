@@ -176,6 +176,12 @@ condition where the bell visualization never clears.")
   :ensure t
   :commands (octopress-status octopress-mode)
   :config
+  (require 'markdown-mode)
+  (add-hook 'markdown-mode-hook (lambda ()
+                                  (define-key
+                                    markdown-mode-map
+                                    (kbd "C-c o l")
+                                    'octopress-insert-post-url)))
   (setq octopress-blog-root (expand-file-name "~/Blog")))
 
 (use-package exec-path-from-shell
