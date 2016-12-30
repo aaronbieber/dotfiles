@@ -275,27 +275,27 @@ If VANILLA is non-nil, run the standard `org-capture'."
         (and (search-forward "SCHEDULED:" search-limit t)
              (replace-match "DEADLINE:"))))))
 
-(defun air-pop-to-org-todo (split)
+(defun air-pop-to-org-todo (&optional split)
   "Visit my main TODO list, in the current window or a SPLIT."
   (interactive "P")
   (air--pop-to-file "~/Dropbox/org/todo.org" split))
 
-(defun air-pop-to-org-notes (split)
+(defun air-pop-to-org-notes (&optional split)
   "Visit my main notes file, in the current window or a SPLIT."
   (interactive "P")
   (air--pop-to-file "~/Dropbox/org/notes.org" split))
 
-(defun air-pop-to-org-vault (split)
+(defun air-pop-to-org-vault (&optional split)
   "Visit my encrypted vault file, in the current window or a SPLIT."
   (interactive "P")
   (air--pop-to-file "~/Dropbox/org/vault.gpg" split))
 
-(defun air-pop-to-org-agenda-default (split)
+(defun air-pop-to-org-agenda-default (&optional split)
   "Pop to the default agenda in the current window or a SPLIT."
   (interactive "P")
   (air--pop-to-org-agenda-view "d" split))
 
-(defun air-pop-to-org-agenda-projects (split)
+(defun air-pop-to-org-agenda-projects (&optional split)
   "Pop to the projects agenda in the current window or a SPLIT."
   (interactive "P")
   (air--pop-to-org-agenda-view "p" split))
