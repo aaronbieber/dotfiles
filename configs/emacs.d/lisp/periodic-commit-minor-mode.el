@@ -30,7 +30,9 @@
   (let ((buf (get-buffer-create "*PCMM*")))
     (with-current-buffer buf
       (erase-buffer)
-      (insert (format-time-string "%s"))
+      (if (file-exists-p file)
+          (insert (format-time-string "%s"))
+        (insert "0"))
       (write-region (point-min) (point-max) file nil 0)
       (string-to-int (buffer-substring (point-min) (point-max))))))
 
