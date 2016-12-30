@@ -635,6 +635,9 @@ is the buffer location at which the function was found."
 (use-package powerline
   :ensure t)
 
+(use-package smart-mode-line-powerline-theme
+  :ensure t)
+
 (use-package smart-mode-line
   :ensure t
   :config
