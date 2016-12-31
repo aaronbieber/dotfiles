@@ -123,22 +123,36 @@ be committed no matter what)."
   (format "Committed automatically at %s"
           (format-time-string "%F %r")))
 
+;;;###autoload
 (defun pcmm-commit ()
-  "Commit all changed files, if possible."
+  "Force a commit of all changed files to the current file's repository.
+
+This is a convenience in case you wish to force an automatic commit
+with the auto-generated commit message without waiting for the
+`pcmm-commit-frequency' to elapse."
+  (interactive)
+  (pcmm--commit t))
+
+(defun pcmm--commit (&optional force)
+  "Commit all changed files after some interval.
+
+A commit will be made if this function is called from a buffer that is
+visiting a file that is already part of a Git repository and this
+function has never been called before, or it was last called longer
+than `pcmm-commit-frequency' seconds ago.
+
+If FORCE is not nil, a commit will be made and the interval time will
+be refreshed, no matter what."
+  (interactive)
   (if (or (not (buffer-file-name))
           (not (magit-file-tracked-p (buffer-file-name))))
       (error "Periodic Commit can only work on a saved file in a Git repository")
-    (if (pcmm--commit-overdue-p)
+    (if (or force (pcmm--commit-overdue-p))
         (progn
-          (magit-stage-modified t)
+          (magit-stage-modified pcmm-commit-all)
           (magit-commit (list "-m" (pcmm--make-commit-message)))
           (pcmm--update-log)
           (message "Automatically committed.")))))
-
-(defun pcmm-handle-save ()
-  "Respond to a buffer being saved."
-  (when periodic-commit-minor-mode
-    (pcmm-commit)))
 
 ;;;###autoload
 (define-minor-mode periodic-commit-minor-mode
