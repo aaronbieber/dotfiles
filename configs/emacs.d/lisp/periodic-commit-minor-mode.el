@@ -9,6 +9,39 @@
 
 ;;; Commentary:
 
+;; Description:
+;;
+;; Periodic Commit Minor Mode is a simple tool for automatically
+;; committing all changes to a Git repository periodically.  This might be
+;; useful if, for example, you use a local Git repository as a safeguard
+;; against unwanted data loss or corruption within files that are not
+;; part of a project that changes in a predictable, atomic manner (like a
+;; software project does).
+;;
+;; I store all of my Org Mode notes in Dropbox, but if I were to
+;; accidentally delete a file's contents, Dropbox would happily sync
+;; that with all of my other devices and I would lose that data
+;; permanently.  Therefore, using Git locally, within Dropbox, is a
+;; nice way to hedge against that possibility.
+;;
+;; Periodic Commit Minor Mode, when activated, will create an
+;; automatic commit of all changes within the current file's
+;; repository when:
+;;
+;; 1. The file is saved, and
+;; 2. It has been greater than `pcmm-commit-frequency' since the last commit.
+;;
+;; The default commit frequency is 30 minutes.
+;;
+;; Usage:
+;;
+;; To use Periodic Commit Minor Mode, simply activate it in a buffer
+;; that is a part of some repository that you wish to commit to.
+;;
+;; There are a couple of customizable options, which you can configure
+;; through the `customize' facility by running
+;; `M-x customize-group RET pcmm RET'.
+
 ;;; Code:
 (require 'magit)
 
@@ -16,8 +49,28 @@
   "Customizations for Periodic Commit Minor Mode")
 
 (defcustom pcmm-commit-frequency 1800
-  "How often to commit upon save."
+  "How often to commit upon save, in seconds.
+
+This is the minimum length of time that must pass between commits.
+Saving files before this amount of time has elapsed will not trigger a
+commit.  You can set this value to zero to commit every time you
+save."
+  :group 'pcmm
   :type 'integer)
+
+(defcustom pcmm-commit-all t
+  "Commit untracked files?
+
+If t, untracked files will be added and committed upon commit.  If
+nil, only tracked files will be committed (but all changed files will
+be committed no matter what)."
+  :group 'pcmm
+  :type 'boolean)
+
+(defun pcmm-handle-save ()
+  "Respond to a buffer being saved."
+  (when periodic-commit-minor-mode
+    (pcmm--commit)))
 
 (defun pcmm--commit-overdue-p ()
   "Are we due for a commit in this repository?"
