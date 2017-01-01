@@ -184,6 +184,15 @@ condition where the bell visualization never clears.")
                                     'octopress-insert-post-url)))
   (setq octopress-blog-root (expand-file-name "~/Blog")))
 
+(use-package dired
+  :config
+  (require 'dired-x)
+  (setq dired-omit-files "^\\.?#\\|^\\.$\\|^\\.\\.$\\|^\\..*")
+
+  (add-hook 'dired-mode-hook (lambda ()
+                               (dired-omit-mode t)))
+  (define-key dired-mode-map (kbd "C-.") 'dired-omit-mode))
+
 (use-package exec-path-from-shell
   :ensure t
   :config
