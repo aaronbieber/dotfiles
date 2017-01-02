@@ -45,6 +45,7 @@
 
   ;; Use Emacs state in these additional modes.
   (dolist (mode '(ag-mode
+                  dired-mode
                   flycheck-error-list-mode
                   git-rebase-mode
                   octopress-mode
