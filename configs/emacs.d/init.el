@@ -191,11 +191,14 @@ condition where the bell visualization never clears.")
 (use-package dired
   :config
   (require 'dired-x)
-  (setq dired-omit-files "^\\.?#\\|^\\.$\\|^\\.\\.$\\|^\\..*")
+  (setq dired-omit-files "^\\.?#\\|^\\.[^.].*")
 
   (add-hook 'dired-mode-hook (lambda ()
                                (dired-omit-mode t)))
-  (define-key dired-mode-map (kbd "C-.") 'dired-omit-mode))
+  (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
+  (define-key dired-mode-map (kbd "^")   (lambda () (interactive) (find-alternate-file "..")))
+  (define-key dired-mode-map (kbd "C-.") 'dired-omit-mode)
+  (define-key dired-mode-map (kbd "/")   'counsel-grep-or-swiper))
 
 (use-package exec-path-from-shell
   :ensure t
