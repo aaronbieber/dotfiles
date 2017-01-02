@@ -7,6 +7,7 @@ configs/xmonad/*
 configs/emacs.d/*
 *.elc
 # But don't ignore these specific locations.
+!configs/emacs.d/eshell
 !configs/emacs.d/lisp
 !configs/emacs.d/snippets
 !configs/emacs.d/init.el
