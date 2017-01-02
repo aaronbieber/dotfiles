@@ -209,6 +209,17 @@ condition where the bell visualization never clears.")
   :ensure t
   :mode ("\\.py\\'" . elpy-mode))
 
+(use-package go-mode
+  :ensure t
+  :config
+  (add-hook 'go-mode-hook (lambda ()
+                            (if (not (string-match "go" compile-command))
+                                (set (make-local-variable 'compile-command)
+                                     "go build -v && go test -v && go vet"))
+                            (setq compilation-read-command nil)
+                            (add-hook 'before-save-hook 'gofmt-before-save nil t)
+                            (define-key go-mode-map (kbd "C-c C-C") 'compile))))
+
 (use-package groovy-mode
   :ensure t
   :mode "\\.groovy\\'"
