@@ -1,3 +1,4 @@
+alias e for i in ${eshell-flatten-list $*} {find-file $i}
 alias lsr ls -lhSr $*
 alias ltr ls -lhtr $*
 alias la ls -lha $*
