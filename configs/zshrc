@@ -70,6 +70,7 @@ PATH="/usr/local/bin:$PATH"
 [ -d "/usr/local/share/npm/bin" ]   && PATH="/usr/local/share/npm/bin:$PATH"
 [ -d "$HOME/PebbleSDK-2.0.0/bin" ]  && PATH="$HOME/PebbleSDK-2.0.0/bin:$PATH"
 [ -d "$HOME/.composer/vendor/bin" ] && PATH="$PATH:$HOME/.composer/vendor/bin"
+[ -d "$HOME/go/bin" ]               && PATH="$PATH:$HOME/go/bin"
 
 # Add my scripts directory to my path if it's there.
 if [ -d "$HOME/bin" ]; then
@@ -83,6 +84,14 @@ if [ -d $HOME/.rbenv/shims ] && [[ ! "$PATH" =~ "rbenv" ]]; then
   export PATH="$HOME/.rbenv/shims:$PATH"
   type rbenv >/dev/null 2>&1
   [[ "$?" == 0 ]] && eval "$(rbenv init -)"
+fi
+
+# Configure my Go workspace, if I have it.
+if [ -d $HOME/go ]; then
+  type go >/dev/null 2>&1
+  if [[ "$?" == 0 ]]; then
+    export GOPATH=$HOME/go
+  fi
 fi
 
 function nicediff {
