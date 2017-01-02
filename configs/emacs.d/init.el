@@ -59,8 +59,12 @@
 (setq large-file-warning-threshold nil)
 (setq split-width-threshold nil)
 (setq custom-safe-themes t)
-(put 'narrow-to-region 'disabled nil)
 (column-number-mode t)
+(setq tab-width 4)
+
+;; Allow confusing functions
+(put 'narrow-to-region 'disabled nil)
+(put 'dired-find-alternate-file 'disabled nil)
 
 ;; The OS X visible bell is buggy as hell.
 (defvar air-bell-ringing nil
