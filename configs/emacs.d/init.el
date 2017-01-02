@@ -684,6 +684,5 @@ is the buffer location at which the function was found."
    '(sml/folder ((t (:inherit sml/global :background "grey22" :foreground "gold4" :weight normal))) t)
    '(sml/git ((t (:background "grey22" :foreground "chartreuse3"))) t)))
 
-
 (provide 'init)
 ;;; init.el ends here
