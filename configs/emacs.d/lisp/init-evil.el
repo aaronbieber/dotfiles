@@ -46,6 +46,7 @@
   ;; Use Emacs state in these additional modes.
   (dolist (mode '(ag-mode
                   dired-mode
+                  eshell-mode
                   flycheck-error-list-mode
                   git-rebase-mode
                   octopress-mode
@@ -56,6 +57,7 @@
     (add-to-list 'evil-emacs-state-modes mode))
 
   (delete 'term-mode evil-insert-state-modes)
+  (delete 'eshell-mode evil-insert-state-modes)
 
   ;; Use insert state in these additional modes.
   (dolist (mode '(twittering-edit-mode
@@ -91,7 +93,7 @@
   (evil-define-key 'normal global-map (kbd "C-S-p")   'helm-projectile-switch-project)
   (evil-define-key 'insert global-map (kbd "s-d")     'eval-last-sexp)
   (evil-define-key 'normal global-map (kbd "s-d")     'eval-defun)
-  (evil-define-key 'normal global-map (kbd "C-t")     (lambda () (interactive) (ansi-term (getenv "SHELL"))))
+  (evil-define-key 'normal global-map (kbd "C-t")     'air-open-eshell)
   (evil-define-key 'normal global-map (kbd "z d")     'dictionary-lookup-definition)
   (evil-define-key 'normal global-map (kbd "\\ \\")   'tiny-menu)
   (evil-define-key 'normal global-map (kbd "\\ a")    (tiny-menu-run-item "org-agendas"))

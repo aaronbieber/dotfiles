@@ -16,6 +16,15 @@
       (find-file-other-window file)
     (find-file file)))
 
+(defun air-open-eshell (&optional same-window)
+  "Start EShell, in a split window unless SAME-WINDOW is not nil."
+  (interactive "P")
+  (if same-window
+      (eshell)
+    (let ((buf (eshell)))
+      (switch-to-buffer (other-buffer buf))
+      (switch-to-buffer-other-window buf))))
+
 (require 'htmlfontify)
 (defun fontify-and-browse ()
   "Fontify the current buffer into HTML, write it to a temp file, and open it in a browser."

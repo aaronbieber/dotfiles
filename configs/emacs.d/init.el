@@ -558,11 +558,27 @@ The IGNORED argument is... Ignored."
     ad-do-it))
 (ad-activate 'term-sentinel)
 
-(add-hook 'eshell-mode-hook
-          (lambda ()
-            (set (make-local-variable 'pcomplete-ignore-case) t)
-            (set (make-local-variable 'company-backends)
-                 '((company-shell company-eshell-history)))))
+;; Eshell things
+(defun air--eshell-clear ()
+  "Clear an eshell buffer and re-display the prompt."
+  (interactive)
+  (let ((inhibit-read-only t))
+    (erase-buffer)
+    (eshell-send-input)))
+
+(defun air--eshell-mode-hook ()
+  "Eshell mode settings."
+  (define-key eshell-mode-map (kbd "C-u") 'eshell-kill-input)
+  (define-key eshell-mode-map (kbd "C-l") 'air--eshell-clear)
+  (define-key eshell-mode-map (kbd "C-d") (lambda () (interactive)
+                                            (kill-this-buffer)
+                                            (if (not (one-window-p))
+                                                (delete-window))))
+  (set (make-local-variable 'pcomplete-ignore-case) t)
+  (set (make-local-variable 'company-backends)
+       '((company-shell company-eshell-history))))
+
+(add-hook 'eshell-mode-hook 'air--eshell-mode-hook)
 
 ;;; Magit mode (which does not open in evil-mode):
 (add-hook 'magit-mode-hook
