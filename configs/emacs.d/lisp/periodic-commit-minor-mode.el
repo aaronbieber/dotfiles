@@ -144,15 +144,18 @@ than `pcmm-commit-frequency' seconds ago.
 If FORCE is not nil, a commit will be made and the interval time will
 be refreshed, no matter what."
   (interactive)
-  (if (or (not (buffer-file-name))
-          (not (magit-file-tracked-p (buffer-file-name))))
-      (error "Periodic Commit can only work on a saved file in a Git repository")
-    (if (or force (pcmm--commit-overdue-p))
-        (progn
-          (magit-stage-modified pcmm-commit-all)
-          (magit-commit (list "-m" (pcmm--make-commit-message)))
-          (pcmm--update-log)
-          (message "Automatically committed.")))))
+  (cond ((or (not (buffer-file-name))
+             (not (magit-file-tracked-p (buffer-file-name))))
+         (error "Periodic Commit can only work on a saved file in a Git repository"))
+        ((= 0 (length (magit-unstaged-files)))
+         (message "There are no changes to commit"))
+        (t
+         (if (or force (pcmm--commit-overdue-p))
+             (progn
+               (magit-stage-modified pcmm-commit-all)
+               (magit-commit (list "-m" (pcmm--make-commit-message)))
+               (pcmm--update-log)
+               (message "Automatically committed."))))))
 
 ;;;###autoload
 (define-minor-mode periodic-commit-minor-mode
