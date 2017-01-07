@@ -507,17 +507,45 @@ TAG is chosen interactively from the global tags completion table."
 
   (set-face-attribute 'org-upcoming-deadline nil :foreground "gold1")
 
+  (defun air--org-element-motion (count)
+    "Return the bounds of an element; traverse upward COUNT levels."
+    (save-excursion
+      ;; get to the top of the tree
+      (org-with-limited-levels
+       (cond ((org-at-heading-p) (beginning-of-line))
+             ((org-before-first-heading-p) (user-error "Not in a subtree"))
+             (t (outline-previous-visible-heading 1))))
+
+      (decf count)
+      (when count (while (and (> count 0) (org-up-heading-safe)) (decf count)))
+
+      ;; extract the beginning and end of the tree
+      (let* ((element (org-element-at-point))
+             (begin (org-element-property :begin element))
+             (end (org-element-property :end element)))
+        (list end begin))))
+
   (evil-define-text-object evil-org-outer-element (count &optional beg end type)
     "One whole org element, from headline to final newline."
-    (let ((el (org-element-at-point)))
-      (if (eq 'headline (car el))
-          (let* ((plist (nth 1 el))
-                 (begin (plist-get plist :begin))
-                 (end (plist-get plist :end)))
-            (list begin end)))))
+    :type line
+    (air--org-element-motion count))
+
+  (evil-define-text-object evil-org-inner-element (count &optional beg end type)
+    "An Org subtree, minus its header and concluding line break.  Uses code from `org-mark-subtree`"
+    :type line
+    (let* ((outer-points (air--org-element-motion count))
+           (begin (save-excursion
+                     (goto-char (cadr outer-points))
+                     (next-line)
+                     (point)))
+           (end (save-excursion
+                   (goto-char (car outer-points))
+                   (backward-char 1)
+                   (point))))
+      (list end begin)))
 
   (define-key evil-outer-text-objects-map "*" 'evil-org-outer-element)
-  (define-key evil-inner-text-objects-map "*" 'evil-org-outer-element)
+  (define-key evil-inner-text-objects-map "*" 'evil-org-inner-element)
 
   (evil-leader/set-key-for-mode 'org-mode
     "$"  'org-archive-subtree
