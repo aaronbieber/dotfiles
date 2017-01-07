@@ -641,6 +641,7 @@ TAG is chosen interactively from the global tags completion table."
               (setq fill-column 100)
               (when (not (eq major-mode 'org-agenda-mode))
                 (if (buffer-file-name)
+                    (require 'periodic-commit-minor-mode)
                     (periodic-commit-minor-mode t))
                 (org-evil-mode)
                 (visual-line-mode)
