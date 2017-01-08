@@ -5,6 +5,27 @@
 
 ;; Helper functions
 
+(defun air-export-top-subtree ()
+  "Export the nearest parent subtree with export options.
+
+By \"with export options\" we mean any entry with a property that
+contains \"EXPORT\".
+
+This exports as a Beamer PDF and opens it, because that's what I always do."
+  (interactive)
+  (let ((failed))
+    (save-excursion
+      (org-with-limited-levels
+       (outline-previous-visible-heading 1)
+       (while (and (not failed)
+                   (not (air--alist-key-match-p
+                         (org-entry-properties) "EXPORT")))
+         (or (org-up-heading-safe)
+             (setq failed t)))
+       (if failed
+           (message "No exportable heading found.")
+         (org-open-file (org-beamer-export-to-pdf nil t)))))))
+
 (defun air-org-bulk-copy-headlines (&optional strip-tags)
   "Copy the headline text of the marked headlines in an agenda view.
 
