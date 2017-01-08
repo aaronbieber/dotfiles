@@ -641,6 +641,7 @@ TAG is chosen interactively from the global tags completion table."
 
               ;; Use fill column, but not in agenda
               (setq fill-column 100)
+              (setq show-trailing-whitespace t)
               (when (not (eq major-mode 'org-agenda-mode))
                 (if (buffer-file-name)
                     (require 'periodic-commit-minor-mode)
