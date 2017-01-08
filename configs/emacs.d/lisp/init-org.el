@@ -473,18 +473,7 @@ TAG is chosen interactively from the global tags completion table."
                       (org-agenda-overriding-header "Closed today:"))
                      )
             )
-           ((org-agenda-compact-blocks t)
-            (org-agenda-category-filter-preset '("-projects"))))
-
-          ("p" "Projects overview"
-           ((todo "OPEN"
-                  ((org-agenda-files '("~/Dropbox/org/projects.org"))
-                   (org-agenda-overriding-header "Open projects:")))
-            (todo "PAUSED"
-                  ((org-agenda-files '("~/Dropbox/org/projects.org"))
-                   (org-agenda-overriding-header "Paused projects:"))))
-           ((org-agenda-compact-blocks t)))
-          ))
+           ((org-agenda-compact-blocks t)))))
 
   (add-to-list 'org-structure-template-alist
                (list "p" (concat ":PROPERTIES:\n"
