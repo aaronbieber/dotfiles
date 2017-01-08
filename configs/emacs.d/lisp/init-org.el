@@ -494,7 +494,7 @@ TAG is chosen interactively from the global tags completion table."
   (add-to-list 'org-structure-template-alist
                (list "eb" (concat ":EXPORT_FILE_NAME: ?\n"
                                   ":EXPORT_TITLE:\n"
-                                  ":EXPORT_BEAMER_HEADER: \subtitle{}\n"
+                                  ":EXPORT_BEAMER_HEADER: \\subtitle{}\n"
                                   ":EXPORT_AUTHOR: Aaron Bieber\n"
                                   ":EXPORT_OPTIONS: H:1 toc:nil\n"
                                   ":EXPORT_BEAMER_THEME: wayfair\n"
