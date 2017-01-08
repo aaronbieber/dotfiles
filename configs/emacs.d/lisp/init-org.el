@@ -523,14 +523,27 @@ TAG is chosen interactively from the global tags completion table."
     "An Org subtree, minus its header and concluding line break.  Uses code from `org-mark-subtree`"
     :type line
     (let* ((outer-points (air--org-element-motion count))
+           (outer-begin (cadr outer-points))
+           (outer-end (car outer-points))
            (begin (save-excursion
-                     (goto-char (cadr outer-points))
-                     (next-line)
-                     (point)))
+                    (goto-char outer-begin)
+                    (next-line)
+                    (while (and (< (point) outer-end)
+                                (string-match-p "^\\s-*$"
+                                                (buffer-substring (line-beginning-position)
+                                                                  (line-end-position))))
+                      (forward-line 1))
+                    (point)))
            (end (save-excursion
-                   (goto-char (car outer-points))
-                   (backward-char 1)
-                   (point))))
+                  (goto-char outer-end)
+                  (backward-char 1)
+                  (while (and (> (point) outer-begin)
+                              (string-match-p "^\\s-*$"
+                                              (buffer-substring (line-beginning-position)
+                                                                (line-end-position))))
+                    (forward-line -1))
+                  (goto-char (line-end-position))
+                  (point))))
       (list end begin)))
 
   (define-key evil-outer-text-objects-map "*" 'evil-org-outer-element)
