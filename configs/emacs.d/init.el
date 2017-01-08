@@ -207,7 +207,8 @@ condition where the bell visualization never clears.")
 
 (use-package elpy
   :ensure t
-  :mode ("\\.py\\'" . elpy-mode))
+  :config
+  (elpy-enable))
 
 (use-package go-mode
   :ensure t
