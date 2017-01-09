@@ -172,6 +172,7 @@ condition where the bell visualization never clears.")
 (use-package visual-fill-column :ensure t)
 
 ;; Org Mode
+(require 'periodic-commit-minor-mode)
 (require 'init-org)
 
 ;; Just while I'm working on it.
