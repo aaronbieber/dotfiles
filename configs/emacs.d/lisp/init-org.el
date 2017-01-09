@@ -139,6 +139,27 @@ the entire subtree."
         nil
       end)))
 
+(defun air-org-skip-if-not-closed-this-week (&optional subtree)
+  "Skip entries that were not closed this week.
+
+Skip the current entry unless SUBTREE is not nil, in which case skip
+the entire subtree."
+  (let ((end (if subtree (save-excursion (org-end-of-subtree t))
+               (save-excursion (progn (outline-next-heading) (1- (point)))))))
+    (if (not (save-excursion (re-search-forward org-closed-time-regexp end t)))
+        end
+      (let* ((closed-day (time-to-day-in-year (date-to-time (match-string-no-properties 1))))
+             (today-day (time-to-day-in-year (current-time)))
+             (today-dow (format-time-string "%w" (current-time)))
+             (start-day (- today-day
+                           (string-to-int today-dow)))
+             (end-day (+ today-day
+                         (- 6 (string-to-int today-dow)))))
+        (if (and (>= closed-day start-day)
+                 (<= closed-day end-day))
+            nil
+          end)))))
+
 (defun air-org-skip-if-habit (&optional subtree)
   "Skip an agenda entry if it has a STYLE property equal to \"habit\".
 
@@ -490,8 +511,8 @@ TAG is chosen interactively from the global tags completion table."
                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'any))
                      (org-agenda-overriding-header "Reminders for today:")))
             (todo "DONE"
-                     ((org-agenda-skip-function 'air-org-skip-if-not-closed-today)
-                      (org-agenda-overriding-header "Closed today:"))
+                     ((org-agenda-skip-function 'air-org-skip-if-not-closed-this-week)
+                      (org-agenda-overriding-header "Closed this week:"))
                      )
             )
            ((org-agenda-compact-blocks t)))))
