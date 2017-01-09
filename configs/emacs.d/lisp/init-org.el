@@ -481,7 +481,6 @@ TAG is chosen interactively from the global tags completion table."
 
   (setq org-insert-heading-respect-content t)
   (setq org-ellipsis " …")
-  (setq org-startup-with-inline-images t)
   (setq org-export-initial-scope 'subtree)
   (setq org-use-tag-inheritance nil) ;; Use the list form, which happens to be blank
   (setq org-todo-keyword-faces
