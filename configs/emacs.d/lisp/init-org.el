@@ -5,7 +5,7 @@
 
 ;; Helper functions
 
-(defun air-export-top-subtree ()
+(defun air-org-export-top-subtree ()
   "Export the nearest parent subtree with export options.
 
 By \"with export options\" we mean any entry with a property that
@@ -632,6 +632,8 @@ TAG is chosen interactively from the global tags completion table."
 
               (define-key org-mode-map (kbd "C-<")                'org-shiftmetaleft)
               (define-key org-mode-map (kbd "C->")                'org-shiftmetaright)
+
+              (define-key org-mode-map (kbd "C-c SPC") 'air-org-export-top-subtree)
 
               ;; These are set as evil keys because they conflict with
               ;; existing commands I don't use, or are superseded by
