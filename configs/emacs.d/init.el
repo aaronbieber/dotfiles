@@ -702,5 +702,9 @@ is the buffer location at which the function was found."
    '(sml/folder ((t (:inherit sml/global :background "grey22" :foreground "gold4" :weight normal))) t)
    '(sml/git ((t (:background "grey22" :foreground "chartreuse3"))) t)))
 
+
+(setq server-socket-dir (expand-file-name "server" user-emacs-directory))
+(server-start)
+
 (provide 'init)
 ;;; init.el ends here
