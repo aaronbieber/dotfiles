@@ -58,7 +58,7 @@
     (message "Running `%s'..." command)
     (air--rbt-run-command command)))
 
-(defun configure-php-mode ()
+(defun air--configure-php-mode ()
   "Set up all of my PHP mode preferences."
   (require 'newcomment)
   (setq auto-fill-function 'do-auto-fill)
@@ -130,7 +130,7 @@ used."
 (use-package php-mode
   :mode "\\.php\\'"
   :config
-  (add-hook 'php-mode-hook 'configure-php-mode))
+  (add-hook 'php-mode-hook 'air--configure-php-mode))
 
 (provide 'init-php)
 ;;; init-php.el ends here
