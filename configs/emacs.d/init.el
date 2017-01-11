@@ -132,15 +132,15 @@ condition where the bell visualization never clears.")
                             (?m "Managers"  air-org-display-managers)
                             (?e "Engineers" air-org-display-engineers))))
           ("org-agendas"  ("Org Agenda Views"
-                           ((?a "Default"   air-pop-to-org-agenda-default)
-                            (?p "Projects"  air-pop-to-org-agenda-projects))))
+                           ((?a "Default"   air-pop-to-org-agenda-default))))
           ("org-links"    ("Org Links"
                            ((?c "Capture"   org-store-link)
                             (?l "Insert"    org-insert-link)
                             (?i "Custom ID" air-org-insert-custom-id-link))))
           ("org-files"    ("Org Files"
-                           ((?t "TODO"  (lambda () (air-pop-to-org-todo nil)))
-                            (?n "Notes" (lambda () (interactive) (air-pop-to-org-notes nil)))
+                           ((?t "TODO"     (lambda () (air-pop-to-org-todo nil)))
+                            (?n "Notes"    (lambda () (interactive) (air-pop-to-org-notes nil)))
+                            (?p "Projects" (lambda () (interactive) (air-pop-to-org-projects nil)))
                             (?v "Vault" (lambda () (interactive) (air-pop-to-org-vault nil))))))
           ("org-captures" ("Org Captures"
                            ((?c "TODO"    air-org-task-capture)
