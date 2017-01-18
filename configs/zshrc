@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh -f
 
 # For tramp et al., don't do anything fancy.
 if [[ "$TERM" == "dumb"  ]]
@@ -76,6 +76,9 @@ PATH="/usr/local/bin:$PATH"
 if [ -d "$HOME/bin" ]; then
   PATH="$HOME/bin:$PATH"
 fi
+
+# Set Emacs server path if it's there.
+[ -d "$HOME/.emacs.d" ] && export EMACS_SERVER_FILE="$HOME/.emacs.d/server"
 
 # Initialize rbenv if it exists on this system and isn't yet in our path.
 # This prevents path duplication in tmux when a sub-shell runs this script
@@ -163,10 +166,8 @@ alias cpr="rsync -aP"
 command -v xdg-open >/dev/null 2>&1 && alias open="xdg-open"
 
 ## Emacs:
-#alias e="emacsclient -t"          # Preferred
-alias ed="`which emacs` --daemon" # Start the daemon
-#alias emacs="`which emacs` -nw"   # Failsafe
-export EDITOR="emacsclient"
+alias e="emacsclient -s ~/.emacs.d/server/server"
+export EDITOR="emacsclient -s ~/.emacs.d/server/server"
 export ALTERNATE_EDITOR=""
 export VISUAL="emacsclient"
 
