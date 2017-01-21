@@ -53,6 +53,7 @@
 (show-paren-mode 1)
 (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
 (setq-default left-fringe-width nil)
+(setq-default indicate-empty-lines t)
 (setq-default indent-tabs-mode nil)
 (eval-after-load "vc" '(setq vc-handled-backends nil))
 (setq vc-follow-symlinks t)
