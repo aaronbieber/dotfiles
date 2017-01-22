@@ -510,7 +510,7 @@ condition where the bell visualization never clears.")
   (venv-initialize-interactive-shells)
   (venv-initialize-eshell)
   (setq venv-location
-        (expand-file-name "~/Projects/virtualenvs/")))
+        (expand-file-name "~/CloudStation/Projects/virtualenvs/")))
 
 (add-hook 'python-mode-hook
           (lambda ()
