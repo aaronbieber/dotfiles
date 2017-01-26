@@ -200,7 +200,9 @@ condition where the bell visualization never clears.")
   (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
   (define-key dired-mode-map (kbd "^")   (lambda () (interactive) (find-alternate-file "..")))
   (define-key dired-mode-map (kbd "C-.") 'dired-omit-mode)
-  (define-key dired-mode-map (kbd "/")   'counsel-grep-or-swiper))
+  (define-key dired-mode-map (kbd "c")   'find-file)
+  (define-key dired-mode-map (kbd "/")   'evil-search-forward)
+  (define-key dired-mode-map (kbd "?")   'evil-search-backward))
 
 (use-package exec-path-from-shell
   :ensure t
