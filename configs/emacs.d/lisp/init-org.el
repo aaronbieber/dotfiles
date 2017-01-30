@@ -462,7 +462,6 @@ TAG is chosen interactively from the global tags completion table."
          ("C-c f i" . air-org-goto-custom-id))
   :config
   (require 'org-protocol)
-  (server-start)
   (setq org-hide-emphasis-markers t)
   (setq org-modules
         '(org-bbdb org-bibtex org-docview org-habit org-info org-w3m))
