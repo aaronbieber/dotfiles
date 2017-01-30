@@ -5,6 +5,14 @@
 
 ;; Helper functions
 
+(defun air--alist-key-match-p (list substring)
+  "Return t if any key in LIST contains SUBSTRING."
+  (let ((found))
+    (dolist (item list)
+      (if (string-match-p substring (car item))
+          (setq found t)))
+    found))
+
 (defun air-org-export-top-subtree ()
   "Export the nearest parent subtree with export options.
 
