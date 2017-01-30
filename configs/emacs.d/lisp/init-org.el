@@ -26,6 +26,13 @@ This exports as a Beamer PDF and opens it, because that's what I always do."
            (message "No exportable heading found.")
          (org-open-file (org-beamer-export-to-pdf nil t)))))))
 
+(defun air--beamer-bold (contents backend info)
+  "Beamer export filter to use the correct LaTeX markup for bold.
+
+CONTENTS BACKEND INFO are required arguments for filter functions."
+  (when (eq backend 'beamer)
+    (replace-regexp-in-string "\\`\\\\[A-Za-z0-9]+" "\\\\textbf" contents)))
+
 (defun air-org-bulk-copy-headlines (&optional strip-tags)
   "Copy the headline text of the marked headlines in an agenda view.
 
@@ -684,6 +691,9 @@ TAG is chosen interactively from the global tags completion table."
 
               ;; Settings for all Org-derived modes
               (setq show-trailing-whitespace t)
+
+              (require 'ox)
+              (add-to-list 'org-export-filter-bold-functions 'air--beamer-bold)
 
               ;; Settings for non-agenda modes only
               (when (not (eq major-mode 'org-agenda-mode))
