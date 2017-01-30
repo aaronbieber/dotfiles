@@ -347,6 +347,11 @@ If VANILLA is non-nil, run the standard `org-capture'."
   (interactive "P")
   (air--pop-to-file "~/Dropbox/org/notes.org" split))
 
+(defun air-pop-to-org-projects (&optional split)
+  "Visit my main projects file, in the current window or a SPLIT."
+  (interactive "P")
+  (air--pop-to-file "~/Dropbox/org/projects.org" split))
+
 (defun air-pop-to-org-vault (&optional split)
   "Visit my encrypted vault file, in the current window or a SPLIT."
   (interactive "P")
