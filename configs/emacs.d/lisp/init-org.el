@@ -163,14 +163,19 @@ the entire subtree."
                (save-excursion (progn (outline-next-heading) (1- (point)))))))
     (if (not (save-excursion (re-search-forward org-closed-time-regexp end t)))
         end
-      (let* ((closed-day (time-to-day-in-year (date-to-time (match-string-no-properties 1))))
-             (today-day (time-to-day-in-year (current-time)))
-             (today-dow (format-time-string "%w" (current-time)))
+      (let* ((now (current-time))
+             (closed-time (date-to-time (match-string-no-properties 1)))
+             (closed-day (time-to-day-in-year closed-time))
+             (closed-year (format-time-string "%Y" closed-time))
+             (today-day (time-to-day-in-year now))
+             (today-year (format-time-string "%Y" now))
+             (today-dow (format-time-string "%w" now))
              (start-day (- today-day
                            (string-to-int today-dow)))
              (end-day (+ today-day
                          (- 6 (string-to-int today-dow)))))
-        (if (and (>= closed-day start-day)
+        (if (and (string= closed-year today-year)
+                 (>= closed-day start-day)
                  (<= closed-day end-day))
             nil
           end)))))
