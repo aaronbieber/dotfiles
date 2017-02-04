@@ -12,6 +12,20 @@ then
   return
 fi
 
+# Try to attach to Tmux, or start a new Tmux. It won't be necessary to
+# do anything else here, as the rest of this file will only run in the
+# shells started within Tmux (or if Tmux isn't installed).
+if hash tmux 2>/dev/null; then
+  if [[ -z "$TMUX" ]]; then
+    ID="`tmux ls | grep -vm1 attached | cut -d: -f1`"
+    if [[ -z "$ID" ]]; then
+      tmux new-session
+    else
+      tmux attach-session -t "$ID"
+    fi
+  fi
+fi
+
 # Path to your oh-my-zsh configuration.
 ZSH=$HOME/.oh-my-zsh
 
