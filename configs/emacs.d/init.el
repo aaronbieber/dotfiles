@@ -195,6 +195,13 @@ condition where the bell visualization never clears.")
   (require 'dired-x)
   (setq dired-omit-files "^\\.?#\\|^\\.[^.].*")
 
+  (defun air-dired-buffer-dir-or-home ()
+    "Open dired to the current buffer's dir, or $HOME."
+    (interactive)
+    (let ((cwd (or (file-name-directory (or (buffer-file-name) ""))
+                   (expand-file-name "~"))))
+      (dired cwd)))
+
   (add-hook 'dired-mode-hook (lambda ()
                                (dired-omit-mode t)))
   (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
