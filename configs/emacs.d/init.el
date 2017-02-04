@@ -706,9 +706,9 @@ is the buffer location at which the function was found."
   ;; These colors are more pleasing (for gruvbox)
   (custom-theme-set-faces
    'user
-   '(sml/folder ((t (:inherit sml/global :background "grey22" :foreground "gold4" :weight normal))) t)
+   '(powerline-evil-normal-face ((t (:inherit powerline-evil-base-face :background "chartreuse3"))))
+   '(sml/folder ((t (:inherit sml/global :background "grey22" :foreground "grey50" :weight normal))) t)
    '(sml/git ((t (:background "grey22" :foreground "chartreuse3"))) t)))
-
 
 (setq server-socket-dir (expand-file-name "server" user-emacs-directory))
 (server-start)

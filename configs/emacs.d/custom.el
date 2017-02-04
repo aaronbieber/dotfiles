@@ -24,9 +24,6 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Hack" :foundry "nil" :slant normal :weight normal :height 140 :width normal))))
- '(powerline-evil-normal-face ((t (:inherit powerline-evil-base-face :background "chartreuse3"))))
- '(sml/folder ((t (:inherit sml/global :background "grey22" :foreground "gold4" :weight normal))))
- '(sml/git ((t (:background "grey22" :foreground "chartreuse3"))))
  '(term ((t (:foreground "ivory1"))))
  '(term-color-black ((t (:foreground "gray80"))))
  '(term-color-cyan ((t (:foreground "cyan2"))))
