@@ -15,16 +15,23 @@ fi
 # Try to attach to Tmux, or start a new Tmux. It won't be necessary to
 # do anything else here, as the rest of this file will only run in the
 # shells started within Tmux (or if Tmux isn't installed).
-if hash tmux 2>/dev/null; then
-  if [[ -z "$TMUX" ]] && [[ -z "$SSH_CLIENT" ]] && [[ -z "$SSH_TTY" ]]; then
-    ID="`tmux ls | grep -vm1 attached | cut -d: -f1`"
-    if [[ -z "$ID" ]]; then
-      tmux new-session
-    else
-      tmux attach-session -t "$ID"
+function t {
+  if hash tmux 2>/dev/null; then
+    if [[ -z "$TMUX" ]] && [[ -z "$SSH_CLIENT" ]] && [[ -z "$SSH_TTY" ]]; then
+      ID="`tmux ls | grep -vm1 attached | cut -d: -f1`"
+      if [[ -z "$ID" ]]; then
+        tmux new-session
+      else
+        tmux attach-session -t "$ID"
+      fi
     fi
   fi
-fi
+}
+
+# Reattach or start a new Tmux.
+# This function name is short because I want to call it this way
+# interactively.
+t
 
 # Path to your oh-my-zsh configuration.
 ZSH=$HOME/.oh-my-zsh
@@ -188,12 +195,7 @@ export VISUAL="emacsclient"
 ## I don't know why this isn't configured by default.
 export LD_LIBRARY_PATH=/usr/local/lib
 
-## Todo:
-alias t="todo -d $HOME/.todo.cfg"
-alias tw="todo | grep @work"
-export TODOTXT_DEFAULT_ACTION=ls
-
-function stock () {
+function stock {
   if [ -z "$1" ]; then
     echo "Supply a ticker symbol as the only argument, e.g. stock GOOG."
     return
