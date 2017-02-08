@@ -6,6 +6,21 @@
   (interactive)
   (transpose-words 1))
 
+(defun air-insert-week-number-heading (&optional bare)
+  "Insert current week number/percent heading, unless BARE.
+
+If a single prefix argument is given, the week number as a single
+integer will be inserted rather than the full human-readable phrase
+with percentage."
+  (interactive "P")
+  (let* ((week-str (format-time-string "%U"))
+         (week-int (string-to-int week-str))
+         (percent (truncate (fceiling (* (/ week-int 52.0) 100)))))
+    (insert (concat
+             (or bare "Week ")
+             (number-to-string (string-to-int (format-time-string "%U")))
+             (or bare (concat " (" (number-to-string percent) "%)"))))))
+
 (defun air-transpose-word-backward ()
   "Transpose word at point one word backward."
   (interactive)
