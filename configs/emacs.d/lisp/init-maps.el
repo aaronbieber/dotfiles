@@ -9,8 +9,6 @@
 (define-key global-map (kbd "C-c s")   (lambda () (interactive) (ansi-term "zsh")))
 (define-key global-map (kbd "s-e")     'eval-buffer)
 (define-key global-map (kbd "C-}")     'air-cycle-theme)
-(define-key global-map (kbd "s-r")     (tiny-menu-run-item "reverts"))
-(define-key global-map (kbd "C-c C-l") (tiny-menu-run-item "org-links"))
 
 (evil-define-key 'insert global-map (kbd "C-v") 'yank)
 
