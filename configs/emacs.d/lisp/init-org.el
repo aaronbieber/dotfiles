@@ -362,6 +362,11 @@ If VANILLA is non-nil, run the standard `org-capture'."
   (interactive "P")
   (air--pop-to-org-agenda-view "d" split))
 
+(defun air-pop-to-org-agenda-goals (&optional no-split)
+  "Pop to the goals agenda in a split window unless NO-SPLIT."
+  (interactive "P")
+  (air--pop-to-org-agenda-view "g" (not no-split)))
+
 (defun air-pop-to-org-agenda-projects (&optional split)
   "Pop to the projects agenda in the current window or a SPLIT."
   (interactive "P")
@@ -534,10 +539,13 @@ TAG is chosen interactively from the global tags completion table."
 
             (todo "DONE"
                      ((org-agenda-skip-function 'air-org-skip-if-not-closed-this-week)
-                      (org-agenda-overriding-header "Closed this week:"))
-                     )
-            )
-           ((org-agenda-compact-blocks t)))))
+                      (org-agenda-overriding-header "Closed this week:"))))
+           ((org-agenda-compact-blocks t)))
+
+          ("g" "Individuals' current goals"
+           ((tags "perfgoal+TODO=\"TODO\"|perfgoal+TODO=\"IN-PROGRESS\""
+                  ((org-agenda-overriding-header "Individuals' current goals:")))))
+          ))
 
   (add-to-list 'org-structure-template-alist
                (list "p" (concat ":PROPERTIES:\n"
