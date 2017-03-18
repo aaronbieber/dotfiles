@@ -519,6 +519,10 @@ TAG is chosen interactively from the global tags completion table."
   ;; Agenda configuration
   (setq org-agenda-text-search-extra-files '(agenda-archives))
   (setq org-agenda-files '("~/Dropbox/org/" "~/Dropbox/org/orgzly/"))
+  (setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
+  (setq org-refile-use-outline-path 'file)
+  (setq org-refile-allow-creating-parent-nodes 'confirm)
+  (setq org-outline-path-complete-in-steps nil)
   (setq org-agenda-skip-scheduled-if-done t)
   (setq org-agenda-custom-commands
         '(("d" "Daily agenda and all TODOs"
