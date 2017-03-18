@@ -1,0 +1,9 @@
+#!/bin/zsh
+
+wincount="$(tmux list-windows | wc -l | awk '{print $1}')"
+
+if [[ "$wincount" -gt 1 ]]; then
+  tmux kill-window
+else
+  tmux detach
+fi
