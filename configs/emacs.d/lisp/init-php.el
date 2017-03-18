@@ -76,7 +76,6 @@
   (eldoc-mode t)
   (highlight-symbol-mode)
   (turn-on-auto-fill)
-  (add-to-list 'write-file-functions 'delete-trailing-whitespace)
   (gtags-mode t)
   (flycheck-mode)
   (yas-minor-mode t))

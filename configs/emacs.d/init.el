@@ -67,6 +67,14 @@
 (put 'narrow-to-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
 
+
+(defun air--delete-trailing-whitespace-in-proc-and-org-files ()
+  "Delete trailing whitespace if the buffer is in `prog-' or `org-mode'."
+  (if (or (derived-mode-p 'prog-mode)
+          (derived-mode-p 'org-mode))
+      (delete-trailing-whitespace)))
+(add-to-list 'write-file-functions 'air--delete-trailing-whitespace-in-proc-and-org-files)
+
 ;; The OS X visible bell is buggy as hell.
 (defvar air-bell-ringing nil
   "Whether my visual bell is currently being rung.
