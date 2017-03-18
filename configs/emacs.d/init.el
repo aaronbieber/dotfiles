@@ -55,7 +55,12 @@
 (setq-default left-fringe-width nil)
 (setq-default indicate-empty-lines t)
 (setq-default indent-tabs-mode nil)
-(eval-after-load "vc" '(setq vc-handled-backends nil))
+
+;; Why did I do this? Perhaps to keep vc from meddling with things
+;; that Magit does, but it's convenient to be able to lean on vc for
+;; certain things, so let's try it again with this turned on.
+;; (eval-after-load "vc" '(setq vc-handled-backends nil))
+
 (setq vc-follow-symlinks t)
 (setq large-file-warning-threshold nil)
 (setq split-width-threshold nil)
@@ -182,6 +187,7 @@ condition where the bell visualization never clears.")
 (use-package visual-fill-column :ensure t)
 
 ;; Org Mode
+(add-to-list 'load-path (expand-file-name "periodic-commit-minor-mode" user-emacs-directory))
 (require 'periodic-commit-minor-mode)
 (require 'init-org)
 
