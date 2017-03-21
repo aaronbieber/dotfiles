@@ -237,9 +237,9 @@ Skips the current entry unless SUBTREE is not nil."
         (org-up-element)
         (list (current-buffer) (point))))))
 
-(defun air-org-goto-custom-id ()
-  "Go to the location of a custom ID, read interactively."
-  (interactive)
+(defun air-org-goto-custom-id (&optional split)
+  "Go to the location of a custom ID read interactively, maybe in a SPLIT."
+  (interactive "P")
   (let* ((all-custom-ids (air--org-global-custom-ids))
          (custom-id (completing-read
                      "Custom ID: "
@@ -248,7 +248,7 @@ Skips the current entry unless SUBTREE is not nil."
     (when id-location
       (let* ((buf (car id-location))
              (loc (cadr id-location)))
-        (pop-to-buffer buf)
+        (pop-to-buffer buf (if split t nil))
         (goto-char loc)
         (org-reveal)))))
 
