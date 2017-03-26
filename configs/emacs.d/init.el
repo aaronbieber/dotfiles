@@ -122,7 +122,8 @@ condition where the bell visualization never clears.")
 (add-to-list 'auto-mode-alist '("\\.twig$" . web-mode))
 
 ;;; Use pcomplete because it helps in org-mode
-(add-to-list 'completion-at-point-functions 'pcomplete)
+;;; TODO find out if there is a way to feed this into Company instead
+;; (add-to-list 'completion-at-point-functions 'pcomplete)
 
 ;;; My own configurations, which are bundled in my dotfiles.
 (require 'init-platform)
