@@ -1,4 +1,5 @@
-log = hs.logger.new("hs", "debug")
+log = hs.logger.new("hs")
+hs.logger.setGlobalLogLevel("warning")
 hs.window.animationDuration = 0
 windowStates = {}
 
