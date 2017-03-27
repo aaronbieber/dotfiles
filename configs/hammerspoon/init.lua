@@ -130,6 +130,32 @@ function moveRight()
    end
 end
 
+home = os.getenv("HOME")
+function usbEventHandler(update)
+   local task = nil
+   if update.productName == "USB Keyboard" then
+      if update.eventType == "added" then
+         task = hs.task.new(home .. "/bin/karabiner-switcher",
+                            function () end, -- Fake callback
+                            function () end, -- Fake stream callback
+                            {"0"} -- USB Keyboard profile
+         )
+         task:start()
+         hs.alert("Activated USB Keyboard profile")
+      elseif update.eventType == "removed" then
+         task = hs.task.new(home .. "/bin/karabiner-switcher",
+                            function () end, -- Fake callback
+                            function () end, -- Fake stream callback
+                            {"1"} -- Internal Keyboard profile
+         )
+         task:start()
+         hs.alert("Activated Internal Keyboard profile")
+      end
+   end
+end
+usbWatcher = hs.usb.watcher.new(usbEventHandler)
+usbWatcher:start()
+
 hs.hotkey.bind("cmd", "left", resizeLeft)
 hs.hotkey.bind("cmd", "right", resizeRight)
 hs.hotkey.bind("cmd", "up", resizeUp)
