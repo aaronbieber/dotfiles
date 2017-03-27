@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+require 'json'
+
+select = ARGV[0].to_i
+
+filename = "#{ENV["HOME"]}/.config/karabiner/karabiner.json"
+file = File.open(filename)
+data = JSON.parse(file.read)
+file.close
+
+data["profiles"][0]["selected"] = select == 0
+data["profiles"][1]["selected"] = select == 1
+
+json = JSON.generate(data)
+file = File.new(filename, "w")
+file.write(json)
+file.close
