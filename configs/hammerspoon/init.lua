@@ -1,11 +1,9 @@
 log = hs.logger.new("hs")
 hs.logger.setGlobalLogLevel("warning")
 hs.window.animationDuration = 0
+hs.grid.setGrid("4x3")
+hs.grid.setMargins("0x0")
 windowStates = {}
-
-hs.hotkey.bind({"cmd", "alt", "ctrl"}, "W", function()
-      hs.alert.show("Hello, world!")
-end)
 
 function leftBarHalf(win)
    log.d("Half width left")
@@ -139,3 +137,4 @@ hs.hotkey.bind("cmd", "down", resizeDown)
 hs.hotkey.bind({"cmd", "shift"}, "right", moveRight)
 hs.hotkey.bind({"cmd", "shift"}, "left", moveLeft)
 hs.hotkey.bind({"cmd", "shift"}, "up", fullScreen)
+hs.hotkey.bind({"ctrl", "shift"}, "f", function() hs.grid.show() end)
