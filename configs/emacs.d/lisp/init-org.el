@@ -741,7 +741,10 @@ TAG is chosen interactively from the global tags completion table."
                 (org-indent-mode)))))
 
 (use-package org-evil
-  :ensure t)
+  :ensure t
+  :config
+  (evil-define-minor-mode-key 'normal 'org-evil-heading-mode
+    "@" 'org-refile))
 
 (use-package org-bullets
   :ensure t
