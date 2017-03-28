@@ -1,38 +1,47 @@
 log = hs.logger.new("hs")
 hs.logger.setGlobalLogLevel("warning")
 hs.window.animationDuration = 0
-hs.grid.setGrid("4x3")
+hs.grid.setGrid("6x4")
 hs.grid.setMargins("0x0")
 windowStates = {}
 
+require "usb_watcher"
+
+function setCustomGrid(win, grid, geometry)
+   local oldGrid = hs.grid.getGrid()
+   hs.grid.setGrid(grid)
+   hs.grid.set(win, geometry)
+   hs.grid.setGrid(oldGrid)
+end
+
 function leftBarHalf(win)
    log.d("Half width left")
-   win:move({0, 0, 0.5, 1}, win:screen())
+   setCustomGrid(win, "2x1", {0, 0, 1, 1})
 end
 
 function leftBarThird(win)
    log.d("One third width left")
-   win:move({0, 0, 1/3, 1}, win:screen())
+   setCustomGrid(win, "3x1", {0, 0, 1, 1})
 end
 
 function leftBarTwoThirds(win)
    log.d("Two thirds width left")
-   win:move({0, 0, 2/3, 1}, win:screen())
+   setCustomGrid(win, "3x1", {0, 0, 2, 1})
 end
 
 function rightBarHalf(win)
    log.d("Half width right")
-   win:move({0.5, 0, 0.5, 1}, win:screen())
+   setCustomGrid(win, "2x1", {1, 0, 1, 1})
 end
 
 function rightBarThird(win)
    log.d("One third width right")
-   win:move({2/3, 0, 1/3, 1}, win:screen())
+   setCustomGrid(win, "3x1", {2, 0, 1, 1})
 end
 
 function rightBarTwoThirds(win)
    log.d("Two thirds width right")
-   win:move({0.33, 0, 2/3, 1}, win:screen())
+   setCustomGrid(win, "3x1", {1, 0, 2, 1})
 end
 
 function topHalf(win)
@@ -130,32 +139,6 @@ function moveRight()
    end
 end
 
-home = os.getenv("HOME")
-function usbEventHandler(update)
-   local task = nil
-   if update.productName == "USB Keyboard" then
-      if update.eventType == "added" then
-         task = hs.task.new(home .. "/bin/karabiner-switcher",
-                            function () end, -- Fake callback
-                            function () end, -- Fake stream callback
-                            {"0"} -- USB Keyboard profile
-         )
-         task:start()
-         hs.alert("Activated USB Keyboard profile")
-      elseif update.eventType == "removed" then
-         task = hs.task.new(home .. "/bin/karabiner-switcher",
-                            function () end, -- Fake callback
-                            function () end, -- Fake stream callback
-                            {"1"} -- Internal Keyboard profile
-         )
-         task:start()
-         hs.alert("Activated Internal Keyboard profile")
-      end
-   end
-end
-usbWatcher = hs.usb.watcher.new(usbEventHandler)
-usbWatcher:start()
-
 hs.hotkey.bind("cmd", "left", resizeLeft)
 hs.hotkey.bind("cmd", "right", resizeRight)
 hs.hotkey.bind("cmd", "up", resizeUp)
@@ -164,4 +147,7 @@ hs.hotkey.bind({"cmd", "shift"}, "right", moveRight)
 hs.hotkey.bind({"cmd", "shift"}, "left", moveLeft)
 hs.hotkey.bind({"cmd", "shift"}, "up", fullScreen)
 hs.hotkey.bind({"ctrl", "shift"}, "f", function() hs.grid.show() end)
+
+-- 117 is "forward delete" (the "delete" key on a 104-key keyboard)
 hs.hotkey.bind({"ctrl", "cmd"}, "delete", hs.caffeinate.startScreensaver)
+hs.hotkey.bind({"ctrl", "cmd"}, 117, hs.caffeinate.startScreensaver)
