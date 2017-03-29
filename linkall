@@ -1,5 +1,11 @@
 #!/usr/bin/env zsh
 
+# Color constants
+yellow="\e[33;40m"
+red="\e[31;40m"
+green="\e[32;40m"
+reset="\e[39;49m"
+
 # Who am I?
 me=`basename $0`
 
@@ -58,18 +64,18 @@ for dotfile in `find $SCRIPTPATH -mindepth 1 -maxdepth 1`; do
 
   if [ -d "./$linkfile" ]
 
-  echo -n "Linking $dotfile -> $linkfile... "
   if [ -e "$linkfile" ]; then
-    echo "Exists"
+    echo -n "${yellow}Exists${reset}"
   else
     ln -s $LNOPTS "$dotfile" "./$linkfile" > /dev/null 2>&1
 
     if [ $? -eq 0 ]; then
-      echo "OK"
+      echo -n "${green}OK${reset}    "
     else
-      echo "Failed"
+      echo -n "${red}Failed${reset}"
     fi
   fi
+  echo " $dotfile -> $linkfile... "
 done
 
 if [ ! -d "$HOME/bin" ]; then
@@ -89,17 +95,17 @@ echo ""
 
 for script in `find $BINPATH -mindepth 1 -maxdepth 1`; do
   linkfile="${script##*/}"
-  echo -n "Linking $script -> $linkfile... "
   ln -s $LNOPTS "$script" "$linkfile" > /dev/null 2>&1
   if [ $? -eq 0 ]; then
-    echo "OK"
+    echo -n "${green}OK${reset}    "
   else
     if [ -f "$linkfile" ]; then
-      echo "Exists"
+      echo -n "${yellow}Exists${reset}"
     else
-      echo "Failed"
+      echo -n "${red}Failed${reset}"
     fi
   fi
+  echo " $script -> $linkfile... "
 done
 
 # Return to original pwd.
