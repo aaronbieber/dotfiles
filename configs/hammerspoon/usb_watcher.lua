@@ -1,7 +1,7 @@
 home = os.getenv("HOME")
 function usbEventHandler(update)
    local task = nil
-   if update.productName == "USB Keyboard" then
+   if update.productName == "USB Keyboard" or update.productName == "Das Keyboard" then
       if update.eventType == "added" then
          task = hs.task.new(home .. "/bin/karabiner-switcher",
                             function () end, -- Fake callback
