@@ -94,6 +94,18 @@ PATH="/usr/local/bin:$PATH"
 [ -d "$HOME/.composer/vendor/bin" ] && PATH="$PATH:$HOME/.composer/vendor/bin"
 [ -d "$HOME/go/bin" ]               && PATH="$PATH:$HOME/go/bin"
 
+if [ -d "$HOME/Library/Android/sdk" ]; then
+  export ANDROID_HOME="$HOME/Library/Android/sdk"
+fi
+
+if [ -d "$ANDROID_HOME/tools" ]; then
+  PATH="$PATH:${ANDROID_HOME}/tools"
+fi
+
+if [ -d "$ANDROID_HOME/platform-tools" ]; then
+  PATH="$PATH:${ANDROID_HOME}/platform-tools"
+fi
+
 # Add my scripts directory to my path if it's there.
 if [ -d "$HOME/bin" ]; then
   PATH="$HOME/bin:$PATH"
