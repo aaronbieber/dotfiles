@@ -203,6 +203,12 @@ condition where the bell visualization never clears.")
             (lambda ()
               (define-key markdown-mode-map (kbd "C-c o l") 'octopress-insert-post-url))))
 
+(use-package all-the-icons
+  :ensure t)
+
+(use-package all-the-icons-dired
+  :ensure t)
+
 (use-package dired
   :config
   (require 'dired-x)
@@ -216,7 +222,8 @@ condition where the bell visualization never clears.")
       (dired cwd)))
 
   (add-hook 'dired-mode-hook (lambda ()
-                               (dired-omit-mode t)))
+                               (dired-omit-mode t)
+                               (all-the-icons-dired-mode t)))
   (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
   (define-key dired-mode-map (kbd "^")   (lambda () (interactive) (find-alternate-file "..")))
   (define-key dired-mode-map (kbd "C-.") 'dired-omit-mode)
