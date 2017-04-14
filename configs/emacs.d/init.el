@@ -246,6 +246,15 @@ condition where the bell visualization never clears.")
                             (add-hook 'before-save-hook 'gofmt-before-save nil t)
                             (define-key go-mode-map (kbd "C-c C-C") 'compile))))
 
+(use-package rjsx-mode
+  :ensure t
+  :config
+  (defun rjsx-mode-config ()
+    "Configure RJSX Mode"
+    (define-key rjsx-mode-map (kbd "C-j") 'rjsx-delete-creates-full-tag))
+
+  (add-hook 'rjsx-mode-hook 'rjsx-mode-config))
+
 (use-package groovy-mode
   :ensure t
   :mode "\\.groovy\\'"
