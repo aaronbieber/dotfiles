@@ -2,8 +2,8 @@
 
 wincount="$(tmux list-windows | wc -l | awk '{print $1}')"
 
-if [[ "$wincount" -gt 1 ]]; then
-  tmux kill-window
-else
+if [[ "$wincount" -eq 1 ]]; then
   tmux detach
+else
+  tmux send-keys "C-d"
 fi
