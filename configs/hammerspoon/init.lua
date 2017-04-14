@@ -139,6 +139,17 @@ function moveRight()
    end
 end
 
+do
+   io.input("chromeprofile.osascript")
+   local script = io.read("*all")
+
+   function switchChromeProfile()
+      hs.osascript.applescript(script)
+   end
+end
+
+hs.hotkey.bind({"ctrl", "shift"}, "m", switchChromeProfile)
+
 hs.hotkey.bind("cmd", "left", resizeLeft)
 hs.hotkey.bind("cmd", "right", resizeRight)
 hs.hotkey.bind("cmd", "up", resizeUp)

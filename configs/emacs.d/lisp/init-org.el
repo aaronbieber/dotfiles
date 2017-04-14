@@ -527,24 +527,39 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-agenda-skip-scheduled-if-done t)
   (setq org-agenda-custom-commands
         '(("d" "Daily agenda and all TODOs"
-           ((tags "PRIORITY=\"A\""
+           (;; Not-yet-done priority "A" entries (will also display
+            ;; non-todo entries).
+            (tags "PRIORITY=\"A\""
                   ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                    (org-agenda-overriding-header "High-priority unfinished tasks:")))
+            ;; Only todo entries (must be dated to appear in agenda)
+            ;; These are usually habits; entries that are marked todo,
+            ;; have a date in scope, and do not have a priority of "A".
             (agenda ""
-                    ((org-agenda-ndays 1)
+                    ((org-agenda-span 1)
                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'nottodo 'any))))
+            ;; Only non-todo entries (still must be dated to appear in
+            ;; here). These are things I just want to be aware of,
+            ;; like anniversaries, vacations, or other peripheral
+            ;; events.
             (agenda ""
-                    ((org-agenda-ndays 1)
+                    ((org-agenda-span 1)
                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'any))))
-            (alltodo ""
+            ;; Items completed during this work week. My skip function
+            ;; here goes through some contortions that may not be
+            ;; necessary; it would be faster to simply show "closed in
+            ;; the last 7 days". Maybe some other time.
+            (todo "DONE"
+                  ((org-agenda-skip-function 'air-org-skip-if-not-closed-this-week)
+                   (org-agenda-overriding-header "Closed this week:"))))
+           ((org-agenda-compact-blocks t)))
+
+          ("b" "Backlog items"
+           ((alltodo ""
                      ((org-agenda-skip-function '(or (air-org-skip-if-habit)
                                                      (air-org-skip-if-priority ?A)
                                                      (org-agenda-skip-if nil '(scheduled deadline))))
-                      (org-agenda-overriding-header "ALL normal priority tasks:")))
-
-            (todo "DONE"
-                     ((org-agenda-skip-function 'air-org-skip-if-not-closed-this-week)
-                      (org-agenda-overriding-header "Closed this week:"))))
+                      (org-agenda-overriding-header "ALL normal priority tasks:"))))
            ((org-agenda-compact-blocks t)))
 
           ("g" "Individuals' current goals"
