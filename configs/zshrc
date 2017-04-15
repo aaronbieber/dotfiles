@@ -42,13 +42,7 @@ COMPLETION_WAITING_DOTS="true"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # Load these oh-my-zsh plugins.
-plugins=(git colorize themes)
-
-source $ZSH/oh-my-zsh.sh
-
-# Use VI mode.
-bindkey -v
-bindkey '^R' history-incremental-search-backward
+plugins=(git colorize themes virtualenv virtualenvwrapper)
 
 # Configure zsh options #######################################################
 setopt autolist       # Display completion candidates immediately.
@@ -66,18 +60,14 @@ setopt nolistbeep     # No bell on ambiguous completion!!
 # I like my slow locomotive.
 unalias sl > /dev/null 2>&1
 
-# Adjust widget behaviors. ####################################################
-# While selecting from menu completion, pressing enter accepts the selection
-# and executes the command.
-bindkey -M menuselect '^M' .accept-line
-
 # Add locations to the $PATH that actually exist.
 PATH="/usr/local/bin:$PATH"
-[ -d "/usr/texbin" ]                && PATH="/usr/texbin:$PATH"
-[ -d "/usr/local/share/npm/bin" ]   && PATH="/usr/local/share/npm/bin:$PATH"
-[ -d "$HOME/PebbleSDK-2.0.0/bin" ]  && PATH="$HOME/PebbleSDK-2.0.0/bin:$PATH"
-[ -d "$HOME/.composer/vendor/bin" ] && PATH="$PATH:$HOME/.composer/vendor/bin"
-[ -d "$HOME/go/bin" ]               && PATH="$PATH:$HOME/go/bin"
+[ -d "/usr/texbin" ]                  && PATH="/usr/texbin:$PATH"
+[ -d "/usr/local/share/npm/bin" ]     && PATH="/usr/local/share/npm/bin:$PATH"
+[ -d "$HOME/PebbleSDK-2.0.0/bin" ]    && PATH="$HOME/PebbleSDK-2.0.0/bin:$PATH"
+[ -d "$HOME/.composer/vendor/bin" ]   && PATH="$PATH:$HOME/.composer/vendor/bin"
+[ -d "$HOME/go/bin" ]                 && PATH="$PATH:$HOME/go/bin"
+[ -d "$HOME/Library/Python/2.7/bin" ] && PATH="$PATH:$HOME/Library/Python/2.7/bin"
 
 if [ -d "$HOME/Library/Android/sdk" ]; then
   export ANDROID_HOME="$HOME/Library/Android/sdk"
@@ -95,6 +85,17 @@ fi
 if [ -d "$HOME/bin" ]; then
   PATH="$HOME/bin:$PATH"
 fi
+
+source $ZSH/oh-my-zsh.sh
+
+# Use VI mode.
+bindkey -v
+bindkey '^R' history-incremental-search-backward
+
+# Adjust widget behaviors. ####################################################
+# While selecting from menu completion, pressing enter accepts the selection
+# and executes the command.
+bindkey -M menuselect '^M' .accept-line
 
 # Set Emacs server path if it's there.
 [ -d "$HOME/.emacs.d" ] && export EMACS_SERVER_FILE="$HOME/.emacs.d/server"
