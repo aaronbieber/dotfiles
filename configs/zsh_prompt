@@ -3,22 +3,28 @@
 # The theme will put square brackets around the venv string unless
 # these values are non-null (according to the zsh docs). Ironically,
 # the null byte is not considered to be null for ${name:=word}
-ZSH_THEME_VIRTUALENV_PREFIX=" %F{015}❱%f \xF0\x9F\x90\x8D "
+ZSH_THEME_VIRTUALENV_PREFIX=" %F{033}❮%f \xF0\x9F\x90\x8D "
 ZSH_THEME_VIRTUALENV_SUFFIX="%f\0"
-ZSH_THEME_GIT_PROMPT_PREFIX=" %F{015}❱%f %F{yellow}"
+ZSH_THEME_GIT_PROMPT_PREFIX=" %F{033}❮%f %F{yellow}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%U%K{235} %u%k"
 ZSH_THEME_GIT_PROMPT_DIRTY=" %F{red}%B✗%b%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_CLEAN=" %F{green}%B✔%b%{$reset_color%}"
 
 function theme_precmd {
-  current_pwd="$(pwd)"
-  if [[ "${current_pwd}" != "$HOME" ]]; then
-    current_pwd="${current_pwd/$HOME/~}"
+  local cwd="$(pwd)"
+  cwd_string="${cwd}"
+  if [[ "${cwd}" != "$HOME" ]]; then
+    cwd_string="${cwd_string/$HOME/~}"
+  fi
+
+  cwd_string="%F{255}${cwd_string//\//%F{245\} ❯ %F{255\}}"
+  if [[ "${cwd}" == "$HOME" ]]; then
+    cwd_string="/${cwd_string}"
   fi
 }
 
 spaces="$(printf ' %.0s' {1..500})"
-PROMPT=$'\e[?7l%U%K{235}${current_pwd}%f$(virtualenv_prompt_info)$(git_prompt_info)%U%K{235}${spaces}\e[?7h%u%k\n%#%f%k '
+PROMPT=$'\e[?7l%U%K{235}%F{255}${cwd_string}%f$(virtualenv_prompt_info)$(git_prompt_info)%U%K{235}${spaces}\e[?7h%u%k\n%#%f%k '
 PS2='%F{084}%_%f > '
 
 autoload -U add-zsh-hook
