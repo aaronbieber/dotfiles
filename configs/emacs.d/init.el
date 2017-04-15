@@ -339,8 +339,26 @@ condition where the bell visualization never clears.")
   :init
   (global-company-mode)
   :config
-  ;(setq company-tooltip-common-selection ((t (:inherit company-tooltip-selection :background "yellow2" :foreground "#c82829"))))
-  ;(setq company-tooltip-selection ((t (:background "yellow2"))))
+
+  (defun org-keyword-backend (command &optional arg &rest ignored)
+    "Company backend for org keywords.
+
+COMMAND, ARG, IGNORED are the arguments required by the variable
+`company-backends', which see."
+    (interactive (list 'interactive))
+    (cl-case command
+      (interactive (company-begin-backend 'org-keyword-backend))
+      (prefix (and (eq major-mode 'org-mode)
+                   (let ((p (company-grab-line "^#\\+\\(\\w*\\)" 1)))
+                     (if p (cons p t)))))
+      (candidates (mapcar #'upcase
+                          (cl-remove-if-not
+                           (lambda (c) (string-prefix-p arg c))
+                           (pcomplete-completions))))
+      (ignore-case t)
+      (duplicates t)))
+  (add-to-list 'company-backends 'org-keyword-backend)
+
   (setq company-idle-delay 0.2)
   (setq company-selection-wrap-around t)
   (define-key company-active-map [tab] 'company-complete)
