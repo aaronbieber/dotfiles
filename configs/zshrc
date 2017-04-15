@@ -12,22 +12,7 @@ then
   return
 fi
 
-# Try to attach to Tmux, or start a new Tmux. It won't be necessary to
-# do anything else here, as the rest of this file will only run in the
-# shells started within Tmux (or if Tmux isn't installed).
-function t {
-  if hash tmux 2>/dev/null; then
-    if [[ -z "$TMUX" ]] && [[ -z "$SSH_CLIENT" ]] && [[ -z "$SSH_TTY" ]]; then
-
-      tmux ls | grep "^default:" >/dev/null 2>&1
-      if [[ "$?" == 1 ]]; then
-        tmux new-session -s default
-      else
-        tmux attach-session -t default
-      fi
-    fi
-  fi
-}
+source ~/.zsh_functions
 
 # Reattach or start a new Tmux.
 # This function name is short because I want to call it this way
@@ -145,34 +130,6 @@ function serve {
   which python > /dev/null && python -m SimpleHTTPServer $port
 }
 
-# In case you want to see a new MOTD, you can just call this function.
-function motd () {
-  # Set up some ANSI colors real quick.
-  WHITE="\e[38;5;255m"
-  GRAY="\e[38;5;239m"
-  SILVER="\e[38;5;245m"
-
-  # Output a fortune on login if the program exists.
-  # This generates a very elaborate box. Perl is used to pad each line of fortune
-  # with spaces so that the right edge of the box aligns. This proved to be
-  # difficult if not impossible to do with awk/sed. I obviously hold my ASCII
-  # boxes in very high regard.
-  #
-  # This should really be replaced with a small ruby or python script.
-  which fortune > /dev/null 2>&1 && which sed > /dev/null 2>&1
-  if (( $? == 0 )); then
-    HEAD="╡ ${WHITE}M${SILVER}essage ${WHITE}O${SILVER}f ${WHITE}T${SILVER}he ${WHITE}D${SILVER}ay${GRAY} ╞"
-    TOP_LEN=$(( $COLUMNS - 32 ))
-    BOTTOM_LEN=$(( $COLUMNS - 10 ))
-    TOP_LINE=${(l:$TOP_LEN::═:)}
-    BOTTOM_LINE=${(l:$BOTTOM_LEN::═:)}
-
-    echo "$WHITE╒═$SILVER════$GRAY$TOP_LINE$HEAD$SILVER═$WHITE═╕"
-    fortune -s | perl -e 'my $cols=shift @ARGV; while (<>) { chomp; s/\t/    /g; print "│ ".$_.(" " x ($cols-length()-4))."│\n"; }' ${COLUMNS}
-    echo "$WHITE╘═$SILVER═$GRAY$BOTTOM_LINE$SILVER════$WHITE═╛"
-  fi
-}
-
 # Put the SSH agent socket in a predictable location. If we have an
 # $SSH_AUTH_SOCK value already, link to it from a known path in /tmp. If we do
 # not have an $SSH_AUTH_SOCK value but the socket link exists in /tmp, set the
@@ -207,15 +164,6 @@ export VISUAL="emacsclient"
 
 ## I don't know why this isn't configured by default.
 export LD_LIBRARY_PATH=/usr/local/lib
-
-function stock {
-  if [ -z "$1" ]; then
-    echo "Supply a ticker symbol as the only argument, e.g. stock GOOG."
-    return
-  fi
-
-  curl -s "http://download.finance.yahoo.com/d/quotes.csv\?s\=$1\&f\=l1"
-}
 
 if [ -f "$HOME/.zshrc_$MY_LOCATION" ]; then
   source "$HOME/.zshrc_$MY_LOCATION"
