@@ -361,7 +361,7 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
 
   (setq company-idle-delay 0.2)
   (setq company-selection-wrap-around t)
-  (define-key company-active-map [tab] 'company-complete)
+  (define-key company-active-map [tab] 'company-complete-common-or-cycle)
   (define-key company-active-map (kbd "C-n") 'company-select-next)
   (define-key company-active-map (kbd "C-p") 'company-select-previous))
 
