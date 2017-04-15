@@ -508,6 +508,7 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-log-reschedule (quote time))
   (setq org-log-into-drawer t)
 
+  (setq org-pretty-entities t)
   (setq org-insert-heading-respect-content t)
   (setq org-ellipsis " …")
   (setq org-export-initial-scope 'subtree)
