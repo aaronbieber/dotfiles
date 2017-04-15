@@ -120,6 +120,7 @@ condition where the bell visualization never clears.")
 ;;; File type overrides.
 (add-to-list 'auto-mode-alist '("\\.html$" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.twig$" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.restclient$" . restclient-mode))
 
 ;;; Use pcomplete because it helps in org-mode
 ;;; TODO find out if there is a way to feed this into Company instead
