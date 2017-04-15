@@ -1,0 +1,18 @@
+#!/bin/zsh
+
+# Try to attach to Tmux, or start a new Tmux. It won't be necessary to
+# do anything else here, as the rest of this file will only run in the
+# shells started within Tmux (or if Tmux isn't installed).
+function t {
+  if hash tmux 2>/dev/null; then
+    if [[ -z "$TMUX" ]] && [[ -z "$SSH_CLIENT" ]] && [[ -z "$SSH_TTY" ]]; then
+
+      tmux ls | grep "^default:" >/dev/null 2>&1
+      if [[ "$?" == 1 ]]; then
+        tmux new-session -s default
+      else
+        tmux attach-session -t default
+      fi
+    fi
+  fi
+}

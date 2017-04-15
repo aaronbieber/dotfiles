@@ -3,6 +3,12 @@ configs/xmonad/*
 # But don't ignore the actual config file.
 !configs/xmonad/xmonad.hs
 
+# Macs...
+.DS_Store
+
+# Emacs things
+\#*#
+
 # Ignore all of emacs.d, which is mostly compiled/downloaded scripts.
 configs/emacs.d/*
 *.elc
