@@ -64,7 +64,6 @@ unalias sl > /dev/null 2>&1
 PATH="/usr/local/bin:$PATH"
 [ -d "/usr/texbin" ]                  && PATH="/usr/texbin:$PATH"
 [ -d "/usr/local/share/npm/bin" ]     && PATH="/usr/local/share/npm/bin:$PATH"
-[ -d "$HOME/PebbleSDK-2.0.0/bin" ]    && PATH="$HOME/PebbleSDK-2.0.0/bin:$PATH"
 [ -d "$HOME/.composer/vendor/bin" ]   && PATH="$PATH:$HOME/.composer/vendor/bin"
 [ -d "$HOME/go/bin" ]                 && PATH="$PATH:$HOME/go/bin"
 [ -d "$HOME/Library/Python/2.7/bin" ] && PATH="$PATH:$HOME/Library/Python/2.7/bin"
