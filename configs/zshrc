@@ -160,6 +160,10 @@ export EDITOR="emacsclient -s ~/.emacs.d/server/server"
 export ALTERNATE_EDITOR=""
 export VISUAL="emacsclient"
 
+## Python virtualenvs
+# Not to be confused with ~/.virtualenvs
+export WORKON_HOME="$HOME/virtualenvs"
+
 ## I don't know why this isn't configured by default.
 export LD_LIBRARY_PATH=/usr/local/lib
 
