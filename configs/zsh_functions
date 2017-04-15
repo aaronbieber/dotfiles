@@ -47,11 +47,33 @@ function motd () {
 
 function stock {
   if [ -z "$1" ]; then
-    echo "Supply a ticker symbol as the only argument, e.g. stock GOOG."
-    return
+    echo "Display current stock prices from Yahoo! Finance."
+    echo
+    echo "Usage: $0 SYMBOL [SYMBOL ...]"
+    echo
+    echo "  SYMBOL  A valid stock ticker symbol. You may supply several"
+    echo "          symbols separated by spaces."
+    return 1
   fi
 
-  curl -s "http://download.finance.yahoo.com/d/quotes.csv\?s\=$1\&f\=l1"
+  stocks="${(j:+:)@}"
+  values="$(curl -s "http://download.finance.yahoo.com/d/quotes.csv?s=${stocks}&f=nl1c1")"
+
+  printf '\e[1;4m%+30s %+7s %+7s\e[0m\n' 'Name' 'Price' 'Change'
+  for line in "${(f)values}"; do
+    columns=("${(@s:,:)line}")
+    name="${columns[1]:1:-1}"
+    price="${columns[2]}"
+    change="${columns[3]}"
+
+    if [[ "${change[1]}" == "-" ]]; then
+      color='\e[31m'
+    else
+      color='\e[32m'
+    fi
+
+    printf '%+30s $%-7.2f %b$%-7.2f%b\n' "${name}" "${price}" "${color}" "${change}" '\e[0m'
+  done
 }
 
 function print_colors {
