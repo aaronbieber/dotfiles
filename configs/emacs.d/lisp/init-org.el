@@ -698,7 +698,13 @@ TAG is chosen interactively from the global tags completion table."
               ;; These are set as evil keys because they conflict with
               ;; existing commands I don't use, or are superseded by
               ;; some evil function that org-mode-map is shadowed by.
-              (evil-define-key 'normal org-mode-map (kbd "TAB")   'org-cycle)
+              (defun company-complete-or-org-cycle ()
+                "Call `company-complete' then `org-cycle'."
+                (interactive)
+                (or (company-complete)
+                    (org-cycle)))
+              (evil-define-key 'normal org-mode-map (kbd "<tab>") 'org-cycle)
+              (evil-define-key 'insert org-mode-map (kbd "<tab>") 'company-complete-or-org-cycle)
 
               (evil-define-key 'normal org-mode-map (kbd "C-,")   'org-metaleft)
               (evil-define-key 'normal org-mode-map (kbd "C-.")   'org-metaright)
