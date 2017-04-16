@@ -17,14 +17,15 @@ function theme_precmd {
     cwd_string="${cwd_string/$HOME/~}"
   fi
 
-  cwd_string="%F{255}${cwd_string//\//%F{245\} ❯ %F{255\}}"
+  arrow="%F{245}❯%f"
+  cwd_string="%F{250}${${cwd_string%/*}//\// ${arrow} } ${arrow} %F{255}${cwd_string##*/}"
   if [[ "${cwd}" == "$HOME" ]]; then
     cwd_string="/${cwd_string}"
   fi
 }
 
 spaces="$(printf ' %.0s' {1..500})"
-PROMPT=$'\e[?7l%U%K{235}%F{255}${cwd_string}%f$(virtualenv_prompt_info)$(git_prompt_info)%U%K{235}${spaces}\e[?7h%u%k\n%#%f%k '
+PROMPT=$'\e[?7l%U%K{235}${cwd_string}%f$(virtualenv_prompt_info)$(git_prompt_info)%U%K{235}${spaces}\e[?7h%u%k\n%#%f%k '
 PS2='%F{084}%_%f > '
 
 autoload -U add-zsh-hook
