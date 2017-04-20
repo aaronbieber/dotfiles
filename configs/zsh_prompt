@@ -26,6 +26,7 @@ function theme_precmd {
 
 spaces="$(printf ' %.0s' {1..500})"
 PROMPT=$'\e[?7l%U%K{235}${cwd_string}%f$(virtualenv_prompt_info)$(git_prompt_info)%U%K{235}${spaces}\e[?7h%u%k\n%#%f%k '
+RPROMPT="%m"
 PS2='%F{084}%_%f > '
 
 autoload -U add-zsh-hook
