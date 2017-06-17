@@ -1,3 +1,9 @@
 #!/bin/zsh -f
 
-emacsclient -s ~/.emacs.d/server/server "$@"
+if [ -z "$@" ]; then
+  file=`pwd`
+else
+  file="$@"
+fi
+
+emacsclient -s ~/.emacs.d/server/server "${file}"
