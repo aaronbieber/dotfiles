@@ -155,8 +155,8 @@ alias cpr="rsync -aP"
 command -v xdg-open >/dev/null 2>&1 && alias open="xdg-open"
 
 ## Emacs:
-alias e="emacsclient -s ~/.emacs.d/server/server"
-export EDITOR="emacsclient -s ~/.emacs.d/server/server"
+export EDITOR="$HOME/bin/editor"
+alias e="$EDITOR"
 export ALTERNATE_EDITOR=""
 export VISUAL="emacsclient"
 
