@@ -57,31 +57,6 @@ setopt nolistbeep     # No bell on ambiguous completion!!
 # I like my slow locomotive.
 unalias sl > /dev/null 2>&1
 
-# Add locations to the $PATH that actually exist.
-PATH="/usr/local/bin:$PATH"
-[ -d "/usr/texbin" ]                  && PATH="/usr/texbin:$PATH"
-[ -d "/usr/local/share/npm/bin" ]     && PATH="/usr/local/share/npm/bin:$PATH"
-[ -d "$HOME/.composer/vendor/bin" ]   && PATH="$PATH:$HOME/.composer/vendor/bin"
-[ -d "$HOME/go/bin" ]                 && PATH="$PATH:$HOME/go/bin"
-[ -d "$HOME/Library/Python/2.7/bin" ] && PATH="$PATH:$HOME/Library/Python/2.7/bin"
-
-if [ -d "$HOME/Library/Android/sdk" ]; then
-  export ANDROID_HOME="$HOME/Library/Android/sdk"
-fi
-
-if [ -d "$ANDROID_HOME/tools" ]; then
-  PATH="$PATH:${ANDROID_HOME}/tools"
-fi
-
-if [ -d "$ANDROID_HOME/platform-tools" ]; then
-  PATH="$PATH:${ANDROID_HOME}/platform-tools"
-fi
-
-# Add my scripts directory to my path if it's there.
-if [ -d "$HOME/bin" ]; then
-  PATH="$HOME/bin:$PATH"
-fi
-
 source $ZSH/oh-my-zsh.sh
 source $HOME/.zsh_prompt
 
@@ -93,26 +68,6 @@ bindkey '^R' history-incremental-search-backward
 # While selecting from menu completion, pressing enter accepts the selection
 # and executes the command.
 bindkey -M menuselect '^M' .accept-line
-
-# Set Emacs server path if it's there.
-[ -d "$HOME/.emacs.d" ] && export EMACS_SERVER_FILE="$HOME/.emacs.d/server"
-
-# Initialize rbenv if it exists on this system and isn't yet in our path.
-# This prevents path duplication in tmux when a sub-shell runs this script
-# again.
-if [ -d $HOME/.rbenv/shims ] && [[ ! "$PATH" =~ "rbenv" ]]; then
-  export PATH="$HOME/.rbenv/shims:$PATH"
-  type rbenv >/dev/null 2>&1
-  [[ "$?" == 0 ]] && eval "$(rbenv init -)"
-fi
-
-# Configure my Go workspace, if I have it.
-if [ -d $HOME/go ]; then
-  type go >/dev/null 2>&1
-  if [[ "$?" == 0 ]]; then
-    export GOPATH=$HOME/go
-  fi
-fi
 
 function nicediff {
   diff -W `tput cols` -y "$@" | colordiff | less
@@ -127,21 +82,6 @@ function serve {
 
   which python > /dev/null && python -m SimpleHTTPServer $port
 }
-
-# Put the SSH agent socket in a predictable location. If we have an
-# $SSH_AUTH_SOCK value already, link to it from a known path in /tmp. If we do
-# not have an $SSH_AUTH_SOCK value but the socket link exists in /tmp, set the
-# value to that link. The first case typically takes place when first
-# connecting to a remote host and the second case typically takes place when
-# re-attaching a previously detached tmux session.
-SOCK="/tmp/ssh-agent-$USER-socket"
-if [ $SSH_AUTH_SOCK ] && [ $SSH_AUTH_SOCK != $SOCK ]; then
-  rm -f "/tmp/ssh-agent-$USER-socket"
-  ln -sf $SSH_AUTH_SOCK $SOCK
-  export SSH_AUTH_SOCK=$SOCK
-elif [ -h $SOCK ] && [ ! $SSH_AUTH_SOCK ]; then
-  export SSH_AUTH_SOCK=$SOCK
-fi
 
 ### Aliases.
 ## Tmux:
@@ -163,9 +103,6 @@ export VISUAL="emacsclient"
 ## Python virtualenvs
 # Not to be confused with ~/.virtualenvs
 export WORKON_HOME="$HOME/virtualenvs"
-
-## I don't know why this isn't configured by default.
-export LD_LIBRARY_PATH=/usr/local/lib
 
 if [ -f "$HOME/.zshrc_$MY_LOCATION" ]; then
   source "$HOME/.zshrc_$MY_LOCATION"
@@ -195,24 +132,4 @@ else
   alias l="ls -lhF --group-directories-first --color=always"
 fi
 
-# Finally, remove duplicate PATH entries.
-typeset -a paths result
-paths=($path)
-
-while [[ ${#paths} -gt 0 ]]; do
-  p="${paths[1]}"
-  shift paths
-  [[ -z ${paths[(r)$p]} ]] && result+="$p"
-done
-
-clean_path=${(j+:+)result}
-export PATH
-export PATH=$clean_path
-
 # vim: set et ts=2 sw=2 tw=79 cc=+1 :
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/airborne/google-cloud-sdk/path.zsh.inc' ]; then source '/Users/airborne/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/airborne/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/airborne/google-cloud-sdk/completion.zsh.inc'; fi
