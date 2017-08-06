@@ -9,6 +9,7 @@
     ","  'other-window
     "."  'mode-line-other-buffer
     ":"  'eval-expression
+    "#"  'server-edit
     "aa" 'align-regexp
     "a=" 'my-align-single-equals
     "b"  'helm-mini             ;; Switch to another buffer
