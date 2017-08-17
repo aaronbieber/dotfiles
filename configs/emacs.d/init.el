@@ -458,7 +458,11 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
   (setq web-mode-markup-indent-offset 2)
   (setq web-mode-sql-indent-offset 2))
 
+(use-package sublime-themes :ensure t)
+(use-package gruvbox-theme :ensure t)
+(use-package color-theme-sanityinc-tomorrow :ensure t)
 (use-package zenburn-theme :ensure t :defer t)
+
 (use-package mmm-mode :ensure t :defer t)
 (use-package yaml-mode :ensure t :defer t)
 
@@ -522,10 +526,6 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
       :back "^```$")))
   (mmm-add-mode-ext-class 'markdown-mode nil 'markdown-cl)
   (mmm-add-mode-ext-class 'markdown-mode nil 'markdown-php))
-
-(use-package sublime-themes :ensure t)
-(use-package gruvbox-theme :ensure t)
-(use-package color-theme-sanityinc-tomorrow :ensure t)
 
 (use-package undo-tree
   :ensure t
@@ -747,27 +747,29 @@ is the buffer location at which the function was found."
 (when (memq window-system '(mac ns))
   (setq ns-use-srgb-colorspace nil))
 
-(load-theme 'gruvbox)
-
-(use-package powerline
-  :ensure t)
-
-(use-package smart-mode-line-powerline-theme
-  :ensure t)
+(load-theme 'challenger-deep)
+(with-eval-after-load 'challenger-deep-theme
+  (dolist (level (number-sequence 1 8))
+    (let ((face-name (concat "org-level-"
+                             (number-to-string level))))
+      (set-face-attribute (intern face-name) nil
+                          :box nil
+                          :background nil)))
+  (set-face-attribute 'company-tooltip-selection nil
+                      :foreground "black")
+  (set-face-attribute 'company-tooltip-common-selection nil
+                      :foreground "black"
+                      :weight 'bold)
+  (set-face-attribute 'helm-selection nil
+                      :foreground "black")
+  (set-face-attribute 'lazy-highlight nil
+                      :foreground "gray20"))
 
 (use-package smart-mode-line
   :ensure t
   :config
-  (require 'powerline)
-  (setq powerline-default-separator 'arrow-fade)
-  (setq sml/theme 'powerline)
-  (sml/setup)
-  ;; These colors are more pleasing (for gruvbox)
-  (custom-theme-set-faces
-   'user
-   '(powerline-evil-normal-face ((t (:inherit powerline-evil-base-face :background "chartreuse3"))))
-   '(sml/folder ((t (:inherit sml/global :background "grey22" :foreground "grey50" :weight normal))) t)
-   '(sml/git ((t (:background "grey22" :foreground "chartreuse3"))) t)))
+  (setq sml/theme 'dark)
+  (sml/setup))
 
 (setq server-socket-dir (expand-file-name "server" user-emacs-directory))
 (server-start)
