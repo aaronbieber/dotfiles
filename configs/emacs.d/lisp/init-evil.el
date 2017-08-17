@@ -5,6 +5,7 @@
   "Configure evil leader mode."
   (evil-leader/set-leader ",")
   (evil-leader/set-key
+    "#"  'server-edit
     ","  'other-window
     "."  'mode-line-other-buffer
     ":"  'eval-expression
@@ -45,6 +46,8 @@
 
   ;; Use Emacs state in these additional modes.
   (dolist (mode '(ag-mode
+                  custom-mode
+                  custom-new-theme-mode
                   dired-mode
                   eshell-mode
                   flycheck-error-list-mode
