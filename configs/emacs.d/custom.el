@@ -7,6 +7,10 @@
    [default bold shadow italic underline bold bold-italic bold])
  '(ansi-color-names-vector
    ["#3c3836" "#fb4934" "#b8bb26" "#fabd2f" "#83a598" "#d3869b" "#8ec07c" "#ebdbb2"])
+ '(custom-enabled-themes (quote (challenger-deep-overrides)))
+ '(custom-safe-themes
+   (quote
+    ("91ce1e1533921a31778b95d1626371499e42d46833d703e25a07dcb8c283f4af" . t)))
  '(fci-rule-color "#d6d6d6")
  '(markdown-preview-custom-template "/Users/abieber/.emacs.d/markdown-preview-template.html")
  '(org-hide-emphasis-markers t)
@@ -23,11 +27,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Hack" :foundry "nil" :slant normal :weight normal :height 140 :width normal))))
- '(all-the-icons-dired-dir-face ((t (:foreground "khaki2"))))
- '(powerline-evil-normal-face ((t (:inherit powerline-evil-base-face :background "chartreuse3"))))
- '(sml/folder ((t (:inherit sml/global :background "grey22" :foreground "grey50" :weight normal))))
- '(sml/git ((t (:background "grey22" :foreground "chartreuse3"))))
  '(term ((t (:foreground "ivory1"))))
  '(term-color-black ((t (:foreground "gray80"))))
  '(term-color-cyan ((t (:foreground "cyan2"))))
