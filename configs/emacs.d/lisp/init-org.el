@@ -476,7 +476,7 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-modules
         '(org-bbdb org-bibtex org-docview org-habit org-info org-w3m))
   (setq org-todo-keywords
-        '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED")))
+        '((sequence "TODO" "WAITING" "|" "DONE" "CANCELED")))
   (setq org-blank-before-new-entry '((heading . t)
                                      (plain-list-item . t)))
   (setq org-capture-templates
@@ -550,13 +550,20 @@ TAG is chosen interactively from the global tags completion table."
             (agenda ""
                     ((org-agenda-span 1)
                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'any))))
+
+            (alltodo ""
+                     ((org-agenda-skip-function '(or (air-org-skip-if-habit)
+                                                     (air-org-skip-if-priority ?A)
+                                                     (org-agenda-skip-if nil '(scheduled deadline))))
+                      (org-agenda-overriding-header "ALL normal priority tasks:")))
             ;; Items completed during this work week. My skip function
             ;; here goes through some contortions that may not be
             ;; necessary; it would be faster to simply show "closed in
             ;; the last 7 days". Maybe some other time.
-            (todo "DONE"
-                  ((org-agenda-skip-function 'air-org-skip-if-not-closed-this-week)
-                   (org-agenda-overriding-header "Closed this week:"))))
+            ;; (todo "DONE"
+            ;;       ((org-agenda-skip-function 'air-org-skip-if-not-closed-this-week)
+            ;;        (org-agenda-overriding-header "Closed this week:")))
+            )
            ((org-agenda-compact-blocks t)))
 
           ("b" "Backlog items"
