@@ -46,12 +46,12 @@ If VANILLA is non-nil, run the standard `org-capture'."
   (find-file "~/Dropbox/org/gtd/inbox.org"))
 
 (setq org-capture-templates
-      '(("t" "An incoming GTD item." entry
+      `(("t" "An incoming GTD item." entry
          (file "gtd/inbox.org")
-         (concat "* %?\n"
-                 ":PROPERTIES:\n"
-                 ":ORDERED:  t\n"
-                 ":END:\n")
+         ,(concat "* %?\n"
+                  ":PROPERTIES:\n"
+                  ":ORDERED:  t\n"
+                  ":END:\n")
          :empty-lines 1)
 
         ("r" "A Reminder (tickler)." entry
