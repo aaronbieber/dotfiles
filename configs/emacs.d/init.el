@@ -154,9 +154,10 @@ condition where the bell visualization never clears.")
                             (?r "Review"      air-org-pop-to-inbox)
                             )))
           ("org-links"    ("Org Links"
-                           ((?c "Capture"   org-store-link)
-                            (?l "Insert"    org-insert-link)
-                            (?i "Custom ID" air-org-insert-custom-id-link))))
+                           ((?c "Capture"      org-store-link)
+                            (?l "Insert first" air-org-insert-first-link)
+                            (?L "Insert any"   org-insert-link)
+                            (?i "Custom ID"    air-org-insert-custom-id-link))))
           ("org-files"    ("Org Files"
                            ((?t "TODO"     (lambda () (air-pop-to-org-todo nil)))
                             (?n "Notes"    (lambda () (interactive) (air-pop-to-org-notes nil)))

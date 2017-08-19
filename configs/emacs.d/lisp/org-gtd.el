@@ -4,6 +4,10 @@
 
 ;;; Code:
 
+(defun air-org-gtd-refile-targets ()
+  "Return a list of GTD files available for refile."
+  (directory-files "~/Dropbox/org/gtd" 'full "^[^.].*org$"))
+
 (setq org-agenda-files '("~/Dropbox/org/gtd/inbox.org"
                          "~/Dropbox/org/gtd/tickler.org"
                          "~/Dropbox/org/gtd/team.org"))
@@ -12,6 +16,11 @@
                            ("~/Dropbox/org/gtd/projects.org" :maxlevel . 1)
                            ("~/Dropbox/org/gtd/someday.org" :maxlevel . 1)
                            ("~/Dropbox/org/gtd/tickler.org" :maxlevel . 1)))
+
+(setq org-refile-targets (list (cons (air-org-gtd-refile-targets) '(:maxlevel . 1))))
+
+(setq org-enforce-todo-dependencies t)
+(setq org-agenda-dim-blocked-tasks t)
 
 (defun air-org-task-capture (&optional vanilla)
   "Capture a task with my default template.

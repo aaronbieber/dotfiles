@@ -5,6 +5,12 @@
 
 ;; Helper functions
 
+(defun air-org-insert-first-link ()
+  "Insert the first link in `org-stored-links', or do nothing."
+  (interactive)
+  (let ((link (car org-stored-links)))
+    (org-insert-link nil (car link) (cadr link))))
+
 (defun air--alist-key-match-p (list substring)
   "Return t if any key in LIST contains SUBSTRING."
   (let ((found))
@@ -783,7 +789,7 @@ TAG is chosen interactively from the global tags completion table."
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
   (setq org-bullets-bullet-list '("•")))
 
-;; (require 'org-gtd)
+(require 'org-gtd)
 
 (provide 'init-org)
 ;;; init-org.el ends here
