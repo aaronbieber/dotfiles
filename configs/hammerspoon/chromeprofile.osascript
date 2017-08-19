@@ -1,0 +1,13 @@
+if (frontmost of application "Google Chrome") is false then
+	tell application "Google Chrome" to activate
+end if
+
+delay 0.1
+
+tell application "System Events"
+	key code 46 using {shift down, command down}
+	delay 0.1
+	key code 125
+	key code 125
+	key code 36
+end tell
