@@ -25,6 +25,7 @@ with percentage."
   "Transpose word at point one word backward."
   (interactive)
   (transpose-words -1))
+
 (defun air--pop-to-file (file &optional split)
   "Visit a FILE, either in the current window or a SPLIT."
   (if split

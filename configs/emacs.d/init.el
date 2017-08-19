@@ -148,9 +148,11 @@ condition where the bell visualization never clears.")
                             (?m "Managers"  air-org-display-managers)
                             (?e "Engineers" air-org-display-engineers))))
           ("org-agendas"  ("Org Agenda Views"
-                           ((?a "Default"    air-pop-to-org-agenda-default)
-                            (?b "Backlog"    air-pop-to-org-agenda-backlog)
-                            (?g "Team Goals" air-pop-to-org-agenda-goals))))
+                           ((?a "Tasks"       air-pop-to-org-agenda-default)
+                            (?c "Add task"    air-org-task-capture)
+                            (?t "Add tickler" air-org-tickler-capture)
+                            (?r "Review"      air-org-pop-to-inbox)
+                            )))
           ("org-links"    ("Org Links"
                            ((?c "Capture"   org-store-link)
                             (?l "Insert"    org-insert-link)
@@ -161,10 +163,9 @@ condition where the bell visualization never clears.")
                             (?p "Projects" (lambda () (interactive) (air-pop-to-org-projects nil)))
                             (?v "Vault" (lambda () (interactive) (air-pop-to-org-vault nil))))))
           ("org-captures" ("Org Captures"
-                           ((?c "TODO"    air-org-task-capture)
-                            (?p "Project" (lambda () (interactive) (org-capture nil "p")))
-                            (?n "Note"    (lambda () (interactive) (org-capture nil "n")))
-                            (?w "NMOM"    (lambda () (interactive) (org-capture nil "w")))))))))
+                           ((?c "Task/idea" air-org-task-capture)
+                            (?t "Tickler"   air-org-tickler-capture)
+                            (?n "Note"      (lambda () (interactive) (org-capture nil "n")))))))))
 
 ;;; Larger package-specific configurations.
 (require 'diminish)

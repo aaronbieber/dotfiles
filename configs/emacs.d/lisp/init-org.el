@@ -320,7 +320,7 @@ If VANILLA is non-nil, run the standard `org-capture'."
   (if vanilla
       (org-capture)
     (let ((org-overriding-default-time (org-get-cursor-date)))
-      (org-capture nil "a"))))
+      (org-capture nil "t"))))
 
 (defun air-org-agenda-toggle-date (current-line)
   "Toggle `SCHEDULED' and `DEADLINE' tag in the capture buffer."
@@ -346,7 +346,6 @@ If VANILLA is non-nil, run the standard `org-capture'."
   "Visit my main notes file, in the current window or a SPLIT."
   (interactive "P")
   (air--pop-to-file "~/Dropbox/org/notes.org" split))
-
 (defun air-pop-to-org-projects (&optional split)
   "Visit my main projects file, in the current window or a SPLIT."
   (interactive "P")
@@ -476,7 +475,7 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-modules
         '(org-bbdb org-bibtex org-docview org-habit org-info org-w3m))
   (setq org-todo-keywords
-        '((sequence "TODO" "WAITING" "|" "DONE" "CANCELED")))
+        '((sequence "TODO(!)" "WAITING(!)" "|" "DONE(!)" "CANCELED(!)")))
   (setq org-blank-before-new-entry '((heading . t)
                                      (plain-list-item . t)))
   (setq org-capture-templates
@@ -566,6 +565,8 @@ TAG is chosen interactively from the global tags completion table."
             )
            ((org-agenda-compact-blocks t)))
 
+          ("i" "GTD immediate tasks" todo "TODO")
+
           ("b" "Backlog items"
            ((alltodo ""
                      ((org-agenda-skip-function '(or (air-org-skip-if-habit)
@@ -573,10 +574,6 @@ TAG is chosen interactively from the global tags completion table."
                                                      (org-agenda-skip-if nil '(scheduled deadline))))
                       (org-agenda-overriding-header "ALL normal priority tasks:"))))
            ((org-agenda-compact-blocks t)))
-
-          ("g" "Individuals' current goals"
-           ((tags "perfgoal+TODO=\"TODO\"|perfgoal+TODO=\"IN-PROGRESS\""
-                  ((org-agenda-overriding-header "Individuals' current goals:")))))
           ))
 
   (add-to-list 'org-structure-template-alist
@@ -785,6 +782,8 @@ TAG is chosen interactively from the global tags completion table."
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
   (setq org-bullets-bullet-list '("•")))
+
+;; (require 'org-gtd)
 
 (provide 'init-org)
 ;;; init-org.el ends here
