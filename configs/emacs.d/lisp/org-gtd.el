@@ -22,6 +22,10 @@
 (setq org-enforce-todo-dependencies t)
 (setq org-agenda-dim-blocked-tasks t)
 
+(setq org-tag-alist '(("@home" . ?h)
+                      ("@work" . ?w)
+                      ("@anywhere" . ?a)))
+
 (defun air-org-task-capture (&optional vanilla)
   "Capture a task with my default template.
 
