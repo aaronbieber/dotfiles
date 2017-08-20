@@ -445,6 +445,16 @@ return nil."
      "Tag: " 'org-tags-completion-function nil nil nil
      'org-tags-history)))
 
+(defun air-org-agenda-filter-tag-interactive ()
+  "Filter the agenda view by a tag selected interactively."
+  (interactive)
+  (if (derived-mode-p 'org-agenda-mode)
+      (let* ((tag (air--org-select-tag))
+             (org-tag-alist-for-agenda (list (cons tag ?z))))
+        (if tag
+            (org-agenda-filter-by-tag nil ?z)))
+    (error "Tag filtering only works in an agenda view")))
+
 (defun air-org-set-tags (tag)
   "Add TAG if it is not in the list of tags, remove it otherwise.
 
@@ -669,20 +679,21 @@ TAG is chosen interactively from the global tags completion table."
   (add-hook 'org-agenda-mode-hook
             (lambda ()
               (setq org-habit-graph-column 50)
-              (define-key org-agenda-mode-map "/"          'counsel-grep-or-swiper)
-              (define-key org-agenda-mode-map "H"          'beginning-of-buffer)
-              (define-key org-agenda-mode-map "J"          'air-org-agenda-next-header)
-              (define-key org-agenda-mode-map "K"          'air-org-agenda-previous-header)
-              (define-key org-agenda-mode-map "M"          'org-agenda-bulk-unmark)
-              (define-key org-agenda-mode-map "R"          'org-revert-all-org-buffers)
-              (define-key org-agenda-mode-map "c"          'air-org-agenda-capture)
-              (define-key org-agenda-mode-map "j"          'org-agenda-next-item)
-              (define-key org-agenda-mode-map "k"          'org-agenda-previous-item)
-              (define-key org-agenda-mode-map "n"          'org-agenda-next-date-line)
-              (define-key org-agenda-mode-map "p"          'org-agenda-previous-date-line)
-              (define-key org-agenda-mode-map "u"          'org-agenda-undo)
-              (define-key org-agenda-mode-map "y"          'air-org-bulk-copy-headlines)
-              (define-key org-agenda-mode-map (kbd "RET")  'org-agenda-switch-to)
+              (define-key org-agenda-mode-map (kbd "@")   'air-org-agenda-filter-tag-interactive)
+              (define-key org-agenda-mode-map (kbd "/")   'counsel-grep-or-swiper)
+              (define-key org-agenda-mode-map (kbd "H")   'beginning-of-buffer)
+              (define-key org-agenda-mode-map (kbd "J")   'air-org-agenda-next-header)
+              (define-key org-agenda-mode-map (kbd "K")   'air-org-agenda-previous-header)
+              (define-key org-agenda-mode-map (kbd "M")   'org-agenda-bulk-unmark)
+              (define-key org-agenda-mode-map (kbd "R")   'org-revert-all-org-buffers)
+              (define-key org-agenda-mode-map (kbd "c")   'air-org-agenda-capture)
+              (define-key org-agenda-mode-map (kbd "j")   'org-agenda-next-item)
+              (define-key org-agenda-mode-map (kbd "k")   'org-agenda-previous-item)
+              (define-key org-agenda-mode-map (kbd "n")   'org-agenda-next-date-line)
+              (define-key org-agenda-mode-map (kbd "p")   'org-agenda-previous-date-line)
+              (define-key org-agenda-mode-map (kbd "u")   'org-agenda-undo)
+              (define-key org-agenda-mode-map (kbd "y")   'air-org-bulk-copy-headlines)
+              (define-key org-agenda-mode-map (kbd "RET") 'org-agenda-switch-to)
 
               (define-prefix-command 'air-org-run-shortcuts)
               (define-key air-org-run-shortcuts "a" (tiny-menu-run-item "org-agendas"))
