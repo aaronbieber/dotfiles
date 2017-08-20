@@ -148,9 +148,7 @@ condition where the bell visualization never clears.")
                             (?m "Managers"  air-org-display-managers)
                             (?e "Engineers" air-org-display-engineers))))
           ("org-agendas"  ("Org Agenda Views"
-                           ((?a "Tasks"       air-pop-to-org-agenda-default)
-                            (?c "Add task"    air-org-task-capture)
-                            (?t "Add tickler" air-org-tickler-capture)
+                           ((?a "All"         air-pop-to-org-agenda-default)
                             (?r "Review"      air-org-pop-to-inbox)
                             )))
           ("org-links"    ("Org Links"
