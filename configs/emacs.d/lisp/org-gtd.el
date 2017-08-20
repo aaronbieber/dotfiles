@@ -43,7 +43,10 @@ If VANILLA is non-nil, run the standard `org-capture'."
 (defun air-org-pop-to-inbox ()
   "Open the GTD inbox Org file."
   (interactive)
-  (find-file "~/Dropbox/org/gtd/inbox.org"))
+  (find-file "~/Dropbox/org/gtd/inbox.org")
+  (org-cycle '(16))
+  (goto-char 1)
+  (org-evil-motion-forward-heading))
 
 (setq org-capture-templates
       `(("t" "An incoming GTD item." entry
