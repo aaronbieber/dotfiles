@@ -63,6 +63,12 @@ If VANILLA is non-nil, run the standard `org-capture'."
         ("r" "A Reminder (tickler)." entry
          (file "gtd/tickler.org")
          "* %?\nSCHEDULED: %^t"
+         :empty-lines 1)
+
+        ("l" "A link to read later." entry
+         (file "gtd/reading.org")
+         ,(concat "* %c\n\n"
+                  "%i")
          :empty-lines 1)))
 
 (setq org-agenda-custom-commands
