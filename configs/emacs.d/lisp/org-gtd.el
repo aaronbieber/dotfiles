@@ -78,7 +78,8 @@ If VANILLA is non-nil, run the standard `org-capture'."
                            (org-agenda-overriding-header "Waiting for")))
           (agenda "" ((org-agenda-span 1)
                       (org-agenda-files '("~/Dropbox/org/gtd/team.org"
-                                          "~/Dropbox/org/gtd/tickler.org")))))
+                                          "~/Dropbox/org/gtd/tickler.org"
+                                          "~/Dropbox/org/diary.org")))))
          ((org-agenda-compact-blocks t)))))
 
 (define-key global-map (kbd "C-c c") 'air-org-task-capture)
