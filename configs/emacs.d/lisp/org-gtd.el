@@ -71,7 +71,8 @@ If VANILLA is non-nil, run the standard `org-capture'."
 
 (setq org-agenda-custom-commands
       '(("d" "GTD immediate tasks"
-         ((todo "TODO" ((org-agenda-skip-function 'air-org-skip-if-habit)
+         ((todo "TODO" ((org-agenda-skip-function '(or (air-org-skip-if-habit)
+                                                       (org-agenda-skip-if nil '(scheduled))))
                         (org-agenda-overriding-header "Immediate tasks")))
           (todo "WAITING" ((org-agenda-skip-function 'air-org-skip-if-habit)
                            (org-agenda-overriding-header "Waiting for")))
