@@ -20,7 +20,7 @@
 
 (setq org-enforce-todo-dependencies t)
 (setq org-agenda-dim-blocked-tasks t)
-
+(setq org-stuck-projects '("+LEVEL=1/-DONE" ("TODO" "WAITING") nil ""))
 (setq org-tag-alist '(("@home" . ?h)
                       ("@work" . ?w)
                       ("@anywhere" . ?a)))
