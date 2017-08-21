@@ -9,9 +9,7 @@
   (directory-files "~/Dropbox/org/gtd" 'full "^[^.].*org$"))
 (setq org-refile-targets (list (cons (air-org-gtd-refile-targets) '(:maxlevel . 1))))
 
-(setq org-agenda-files '("~/Dropbox/org/gtd/inbox.org"
-                         "~/Dropbox/org/gtd/tickler.org"
-                         "~/Dropbox/org/gtd/team.org"))
+(setq org-agenda-files '("~/Dropbox/org/gtd/inbox.org"))
 
 (setq org-refile-targets '(("~/Dropbox/org/gtd/inbox.org" :maxlevel . 1)
                            ("~/Dropbox/org/gtd/projects.org" :maxlevel . 1)
@@ -54,7 +52,7 @@ If VANILLA is non-nil, run the standard `org-capture'."
 (setq org-capture-templates
       `(("t" "An incoming GTD item." entry
          (file "gtd/inbox.org")
-         ,(concat "* %?\n"
+         ,(concat "* IDEA %?\n"
                   ":PROPERTIES:\n"
                   ":ORDERED:  t\n"
                   ":END:\n")
@@ -77,7 +75,9 @@ If VANILLA is non-nil, run the standard `org-capture'."
                         (org-agenda-overriding-header "Immediate tasks")))
           (todo "WAITING" ((org-agenda-skip-function 'air-org-skip-if-habit)
                            (org-agenda-overriding-header "Waiting for")))
-          (agenda "" ((org-agenda-span 1))))
+          (agenda "" ((org-agenda-span 1)
+                      (org-agenda-files '("~/Dropbox/org/gtd/team.org"
+                                          "~/Dropbox/org/gtd/tickler.org")))))
          ((org-agenda-compact-blocks t)))))
 
 (define-key global-map (kbd "C-c c") 'air-org-task-capture)
