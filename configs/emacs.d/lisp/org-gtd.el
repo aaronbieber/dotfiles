@@ -85,7 +85,8 @@ If VANILLA is non-nil, run the standard `org-capture'."
          ((org-agenda-compact-blocks t)))
 
         ("r" "Weekly review"
-         ((agenda "" ((org-agenda-span 7)))
+         ((agenda "" ((org-agenda-span 7)
+                      (org-agenda-start-on-weekday 0)))
           (stuck "" ((org-stuck-projects
                       '("+LEVEL=1/-DONE"
                         ("TODO" "WAITING" "SOMEDAY") nil ""))
