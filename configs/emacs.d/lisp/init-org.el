@@ -343,49 +343,20 @@ If VANILLA is non-nil, run the standard `org-capture'."
         (and (search-forward "SCHEDULED:" search-limit t)
              (replace-match "DEADLINE:"))))))
 
-(defun air-pop-to-org-todo (&optional split)
-  "Visit my main TODO list, in the current window or a SPLIT."
-  (interactive "P")
-  (air--pop-to-file "~/Dropbox/org/todo.org" split))
-
-(defun air-pop-to-org-notes (&optional split)
-  "Visit my main notes file, in the current window or a SPLIT."
-  (interactive "P")
-  (air--pop-to-file "~/Dropbox/org/notes.org" split))
-(defun air-pop-to-org-projects (&optional split)
-  "Visit my main projects file, in the current window or a SPLIT."
-  (interactive "P")
-  (air--pop-to-file "~/Dropbox/org/projects.org" split))
-
 (defun air-pop-to-org-vault (&optional split)
   "Visit my encrypted vault file, in the current window or a SPLIT."
   (interactive "P")
   (air--pop-to-file "~/Dropbox/org/vault.gpg" split))
-
-(defun air-pop-to-org-agenda-default (&optional split)
-  "Pop to the default agenda in the current window or a SPLIT."
-  (interactive "P")
-  (air--pop-to-org-agenda-view "d" split))
 
 (defun air-pop-to-org-agenda-review (&optional split)
   "Pop to the default agenda in the current window or a SPLIT."
   (interactive "P")
   (air--pop-to-org-agenda-view "r" split))
 
-(defun air-pop-to-org-agenda-backlog (&optional split)
-  "Pop to the default agenda in the current window or a SPLIT."
+(defun air-pop-to-org-agenda-default (&optional nosplit)
+  "Pop to the default agenda in a split window unless NOSPLIT."
   (interactive "P")
-  (air--pop-to-org-agenda-view "b" split))
-
-(defun air-pop-to-org-agenda-goals (&optional no-split)
-  "Pop to the goals agenda in a split window unless NO-SPLIT."
-  (interactive "P")
-  (air--pop-to-org-agenda-view "g" (not no-split)))
-
-(defun air-pop-to-org-agenda-projects (&optional split)
-  "Pop to the projects agenda in the current window or a SPLIT."
-  (interactive "P")
-  (air--pop-to-org-agenda-view "p" split))
+  (air--pop-to-org-agenda-view "d" (not nosplit)))
 
 (defun air--pop-to-org-agenda-view (key &optional split)
   "Visit the org agenda KEY, in the current window or a SPLIT."
