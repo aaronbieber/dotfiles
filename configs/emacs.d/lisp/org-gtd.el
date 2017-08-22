@@ -66,7 +66,10 @@ If VANILLA is non-nil, run the standard `org-capture'."
 
         ("l" "A link to read later." entry
          (file "gtd/reading.org")
-         ,(concat "* %c\n\n"
+         ,(concat "* TODO %c\n"
+                  ":PROPERTIES:\n"
+                  ":CREATED:  %u\n"
+                  ":END:\n\n"
                   "%i")
          :empty-lines 1)))
 
@@ -90,10 +93,14 @@ If VANILLA is non-nil, run the standard `org-capture'."
           (stuck "" ((org-stuck-projects
                       '("+LEVEL=1/-DONE"
                         ("TODO" "WAITING" "SOMEDAY") nil ""))
-                     (org-agenda-overriding-header "Stuck projects and new items")))
+                     (org-agenda-overriding-header (concat "Stuck projects and new items"
+                                                           (make-string 72 ?-)))))
           (todo "SOMEDAY"
-                ((org-agenda-overriding-header
-                  "Maybe someday is today..."))))
+                ((org-agenda-overriding-header (concat "Maybe someday is today... "
+                                                       (make-string 74 ?-)))))
+          (todo "" ((org-agenda-files '("~/Dropbox/org/gtd/reading.org"))
+                    (org-agenda-overriding-header (concat "Reading list "
+                                                          (make-string 87 ?-))))))
          ((org-agenda-compact-blocks t)))))
 
 (define-key global-map (kbd "C-c c") 'air-org-task-capture)
