@@ -72,15 +72,27 @@ If VANILLA is non-nil, run the standard `org-capture'."
 
 (setq org-agenda-custom-commands
       '(("d" "GTD immediate tasks"
-         ((todo "TODO" ((org-agenda-skip-function '(or (air-org-skip-if-habit)
-                                                       (org-agenda-skip-if nil '(scheduled))))
-                        (org-agenda-overriding-header "Immediate tasks")))
+         ((todo "TODO"
+                ((org-agenda-skip-function '(or (air-org-skip-if-habit)
+                                                (org-agenda-skip-if nil '(scheduled))))
+                 (org-agenda-overriding-header "Immediate tasks")))
           (todo "WAITING" ((org-agenda-skip-function 'air-org-skip-if-habit)
                            (org-agenda-overriding-header "Waiting for")))
           (agenda "" ((org-agenda-span 1)
                       (org-agenda-files '("~/Dropbox/org/gtd/team.org"
                                           "~/Dropbox/org/gtd/tickler.org"
                                           "~/Dropbox/org/diary.org")))))
+         ((org-agenda-compact-blocks t)))
+
+        ("r" "Weekly review"
+         ((agenda "" ((org-agenda-span 7)))
+          (stuck "" ((org-stuck-projects
+                      '("+LEVEL=1/-DONE"
+                        ("TODO" "WAITING" "SOMEDAY") nil ""))
+                     (org-agenda-overriding-header "Stuck projects and new items")))
+          (todo "SOMEDAY"
+                ((org-agenda-overriding-header
+                  "Maybe someday is today..."))))
          ((org-agenda-compact-blocks t)))))
 
 (define-key global-map (kbd "C-c c") 'air-org-task-capture)
