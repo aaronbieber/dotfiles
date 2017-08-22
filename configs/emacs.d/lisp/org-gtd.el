@@ -55,6 +55,7 @@ If VANILLA is non-nil, run the standard `org-capture'."
          ,(concat "* IDEA %?\n"
                   ":PROPERTIES:\n"
                   ":ORDERED:  t\n"
+                  ":CREATED:  %u\n"
                   ":END:\n")
          :empty-lines 1)
 
