@@ -149,7 +149,7 @@ condition where the bell visualization never clears.")
                             (?e "Engineers" air-org-display-engineers))))
           ("org-agendas"  ("Org Agenda Views"
                            ((?a "All"         air-pop-to-org-agenda-default)
-                            (?r "Review"      org-agenda-list-stuck-projects)
+                            (?r "Review"      air-pop-to-org-agenda-review)
                             )))
           ("org-links"    ("Org Links"
                            ((?c "Capture"      org-store-link)

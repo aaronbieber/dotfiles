@@ -367,6 +367,11 @@ If VANILLA is non-nil, run the standard `org-capture'."
   (interactive "P")
   (air--pop-to-org-agenda-view "d" split))
 
+(defun air-pop-to-org-agenda-review (&optional split)
+  "Pop to the default agenda in the current window or a SPLIT."
+  (interactive "P")
+  (air--pop-to-org-agenda-view "r" split))
+
 (defun air-pop-to-org-agenda-backlog (&optional split)
   "Pop to the default agenda in the current window or a SPLIT."
   (interactive "P")
