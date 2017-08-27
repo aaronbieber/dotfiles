@@ -150,6 +150,7 @@ condition where the bell visualization never clears.")
           ("org-agendas"  ("Org Agenda Views"
                            ((?a "All"         air-pop-to-org-agenda-default)
                             (?r "Review"      air-pop-to-org-agenda-review)
+                            (?h "Home"        air-pop-to-org-agenda-home)
                             )))
           ("org-links"    ("Org Links"
                            ((?c "Capture"      org-store-link)

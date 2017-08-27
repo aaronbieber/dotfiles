@@ -76,7 +76,7 @@ If VANILLA is non-nil, run the standard `org-capture'."
 
 (setq org-agenda-custom-commands
       '(("d" "GTD immediate tasks"
-         ((todo "TODO"
+         ((tags-todo "-@home/TODO"
                 ((org-agenda-skip-function '(or (air-org-skip-if-habit)
                                                 (org-agenda-skip-if nil '(scheduled))))
                  (org-agenda-overriding-header "Immediate tasks")
@@ -93,6 +93,9 @@ If VANILLA is non-nil, run the standard `org-capture'."
                                        "~/Dropbox/org/gtd/tickler.org"
                                        "~/Dropbox/org/diary.org")))))
          ((org-agenda-compact-blocks t)))
+
+        ("h" "Home/personal tasks"
+         ((tags-todo "@home/TODO")))
 
         ("r" "Weekly review"
          ((agenda "" ((org-agenda-span 7)

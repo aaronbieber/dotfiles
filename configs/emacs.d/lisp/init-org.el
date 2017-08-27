@@ -348,15 +348,20 @@ If VANILLA is non-nil, run the standard `org-capture'."
   (interactive "P")
   (air--pop-to-file "~/Dropbox/org/vault.gpg" split))
 
+(defun air-pop-to-org-agenda-default (&optional nosplit)
+  "Pop to the default agenda in a split window unless NOSPLIT."
+  (interactive "P")
+  (air--pop-to-org-agenda-view "d" (not nosplit)))
+
 (defun air-pop-to-org-agenda-review (&optional nosplit)
   "Pop to the default agenda in a split window unless NOSPLIT."
   (interactive "P")
   (air--pop-to-org-agenda-view "r" (not nosplit)))
 
-(defun air-pop-to-org-agenda-default (&optional nosplit)
-  "Pop to the default agenda in a split window unless NOSPLIT."
+(defun air-pop-to-org-agenda-home (&optional nosplit)
+  "Pop to the personal agenda in a split unless NOSPLIT."
   (interactive "P")
-  (air--pop-to-org-agenda-view "d" (not nosplit)))
+  (air--pop-to-org-agenda-view "h" (not nosplit)))
 
 (defun air--pop-to-org-agenda-view (key &optional split)
   "Visit the org agenda KEY, in the current window or a SPLIT."
