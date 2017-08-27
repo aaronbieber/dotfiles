@@ -21,7 +21,6 @@
                              (800 1000 1200 1400 1600)))
 (setq org-enforce-todo-dependencies t)
 (setq org-agenda-dim-blocked-tasks t)
-(setq org-stuck-projects '("+LEVEL=1/-DONE" ("TODO" "WAITING") nil ""))
 (setq org-tag-alist '(("@cal" . ?c)
                       ("@home" . ?h)))
 
@@ -99,7 +98,7 @@ If VANILLA is non-nil, run the standard `org-capture'."
          ((agenda "" ((org-agenda-span 7)
                       (org-agenda-files '("~/Dropbox/org/gtd/inbox.org"))))
           (stuck "" ((org-stuck-projects
-                      '("+LEVEL=1/-DONE"
+                      '("+LEVEL=1/-DONE-CANCELED"
                         ("TODO" "WAITING" "SOMEDAY") nil ""))
                      (org-agenda-overriding-header (concat "Stuck projects and new items"
                                                            (make-string 72 ?-)))
