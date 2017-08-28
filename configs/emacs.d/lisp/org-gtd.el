@@ -9,19 +9,21 @@
   (directory-files "~/Dropbox/org/gtd" 'full "^[^.].*org$"))
 (setq org-refile-targets (list (cons (air-org-gtd-refile-targets) '(:maxlevel . 1))))
 
-(setq org-agenda-files '("~/Dropbox/org/gtd/inbox.org"))
+(setq org-agenda-files '("~/Dropbox/org/gtd/inbox.org"
+                         "~/Dropbox/org/gtd/team.org"))
 
 (setq org-refile-targets '(("~/Dropbox/org/gtd/inbox.org" :maxlevel . 1)
-                           ("~/Dropbox/org/gtd/projects.org" :maxlevel . 1)
                            ("~/Dropbox/org/gtd/someday.org" :maxlevel . 1)
                            ("~/Dropbox/org/gtd/tickler.org" :maxlevel . 1)))
 
+(setq org-agenda-time-grid '((daily today require-timed)
+                             ""
+                             (800 1000 1200 1400 1600)))
 (setq org-enforce-todo-dependencies t)
 (setq org-agenda-dim-blocked-tasks t)
 (setq org-stuck-projects '("+LEVEL=1/-DONE" ("TODO" "WAITING") nil ""))
-(setq org-tag-alist '(("@home" . ?h)
-                      ("@work" . ?w)
-                      ("@anywhere" . ?a)))
+(setq org-tag-alist '(("@cal" . ?c)
+                      ("@home" . ?h)))
 
 (defun air-org-task-capture (&optional vanilla)
   "Capture a task with my default template.
@@ -78,23 +80,30 @@ If VANILLA is non-nil, run the standard `org-capture'."
          ((todo "TODO"
                 ((org-agenda-skip-function '(or (air-org-skip-if-habit)
                                                 (org-agenda-skip-if nil '(scheduled))))
-                 (org-agenda-overriding-header "Immediate tasks")))
-          (todo "WAITING" ((org-agenda-skip-function 'air-org-skip-if-habit)
-                           (org-agenda-overriding-header "Waiting for")))
-          (agenda "" ((org-agenda-span 1)
-                      (org-agenda-files '("~/Dropbox/org/gtd/team.org"
-                                          "~/Dropbox/org/gtd/tickler.org"
-                                          "~/Dropbox/org/diary.org")))))
+                 (org-agenda-overriding-header "Immediate tasks")
+                 (org-agenda-files '("~/Dropbox/org/gtd/inbox.org"))))
+          (todo "WAITING"
+                ((org-agenda-skip-function 'air-org-skip-if-habit)
+                 (org-agenda-overriding-header "Waiting for")
+                 (org-agenda-files '("~/Dropbox/org/gtd/inbox.org"))))
+          (agenda ""
+                  ((org-agenda-span 1)
+                   (org-agenda-use-time-grid nil)
+                   (org-agenda-files '("~/Dropbox/org/gtd/inbox.org"
+                                       "~/Dropbox/org/gtd/team.org"
+                                       "~/Dropbox/org/gtd/tickler.org"
+                                       "~/Dropbox/org/diary.org")))))
          ((org-agenda-compact-blocks t)))
 
         ("r" "Weekly review"
          ((agenda "" ((org-agenda-span 7)
-                      (org-agenda-start-on-weekday 0)))
+                      (org-agenda-files '("~/Dropbox/org/gtd/inbox.org"))))
           (stuck "" ((org-stuck-projects
                       '("+LEVEL=1/-DONE"
                         ("TODO" "WAITING" "SOMEDAY") nil ""))
                      (org-agenda-overriding-header (concat "Stuck projects and new items"
-                                                           (make-string 72 ?-)))))
+                                                           (make-string 72 ?-)))
+                     (org-agenda-files '("~/Dropbox/org/gtd/inbox.org"))))
           (todo "SOMEDAY"
                 ((org-agenda-overriding-header (concat "Maybe someday is today... "
                                                        (make-string 74 ?-)))))
