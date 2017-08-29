@@ -769,7 +769,9 @@ TAG is chosen interactively from the global tags completion table."
   :ensure t
   :config
   (evil-define-minor-mode-key 'normal 'org-evil-heading-mode
-    "@" 'org-refile))
+    "@" 'org-refile)
+  (evil-define-minor-mode-key 'normal 'org-evil-heading-mode
+    "#" 'org-add-note))
 
 (use-package org-bullets
   :ensure t

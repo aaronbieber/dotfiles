@@ -56,6 +56,7 @@
                   octopress-mode
                   octopress-server-mode
                   octopress-process-mode
+                  org-capture-mode
                   sunshine-mode
                   term-mode))
     (add-to-list 'evil-emacs-state-modes mode))
