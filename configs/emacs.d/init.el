@@ -752,6 +752,7 @@ is the buffer location at which the function was found."
 (when (memq window-system '(mac ns))
   (setq ns-use-srgb-colorspace nil))
 
+;; (load-theme 'sanityinc-tomorrow-day)
 (load-theme 'challenger-deep)
 (with-eval-after-load 'challenger-deep-theme
   (dolist (level (number-sequence 1 8))
