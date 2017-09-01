@@ -7,7 +7,6 @@
    [default bold shadow italic underline bold bold-italic bold])
  '(ansi-color-names-vector
    ["#3c3836" "#fb4934" "#b8bb26" "#fabd2f" "#83a598" "#d3869b" "#8ec07c" "#ebdbb2"])
- '(custom-enabled-themes (quote (challenger-deep-overrides)))
  '(custom-safe-themes
    (quote
     ("91ce1e1533921a31778b95d1626371499e42d46833d703e25a07dcb8c283f4af" . t)))
@@ -28,7 +27,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((((class color) (min-colors 16777215)) (:background "#282828" :foreground "#fdf4c1")) (((class color) (min-colors 255)) (:background "#262626" :foreground "#ffffaf"))))
  '(term ((t (:foreground "ivory1"))))
  '(term-color-black ((t (:foreground "gray80"))))
  '(term-color-cyan ((t (:foreground "cyan2"))))
