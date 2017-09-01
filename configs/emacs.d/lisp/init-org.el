@@ -685,6 +685,13 @@ TAG is chosen interactively from the global tags completion table."
               (define-key air-org-run-shortcuts "t" (tiny-menu-run-item "org-things"))
               (define-key org-agenda-mode-map (kbd "\\") air-org-run-shortcuts)))
 
+  ;; This is the hook called after a TODO or state change note capture
+  ;; window has been configured. We use it here simply to enter insert
+  ;; mode.
+  (add-hook 'org-log-buffer-setup-hook
+            (lambda ()
+              (evil-insert-state)))
+
   (add-hook 'org-capture-mode-hook
             (lambda ()
               (evil-define-key '(normal insert) org-capture-mode-map (kbd "C-d") 'air-org-agenda-toggle-date)
@@ -692,7 +699,9 @@ TAG is chosen interactively from the global tags completion table."
               (evil-define-key 'normal org-capture-mode-map "-" 'org-priority-down)
               (evil-define-key '(normal insert) org-capture-mode-map (kbd "C-=" ) 'org-priority-up)
               (evil-define-key '(normal insert) org-capture-mode-map (kbd "C--" ) 'org-priority-down)
-              ;; TODO this seems like a hack
+              ;; We have to do it like this because `org-capture-mode' is a
+              ;; minor mode, thus `evil-emacs-state-modes' has no effect.
+              ;; Recommendation from https://emacs.stackexchange.com/questions/10732/start-in-insert-state-based-on-minor-mode
               (evil-insert-state)))
 
   (add-hook 'org-mode-hook
