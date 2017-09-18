@@ -494,31 +494,30 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-blank-before-new-entry '((heading . t)
                                      (plain-list-item . t)))
   (setq org-capture-templates
-        '(("a" "My TODO task format." entry
-           (file "todo.org")
-           "* TODO %?"
-           :empty-lines 1)
+      `(("t" "An incoming GTD item." entry
+         (file "gtd/inbox.org")
+         ,(concat "* IDEA %?\n"
+                  ":PROPERTIES:\n"
+                  ":ORDERED:  t\n"
+                  ":CREATED:  %u\n"
+                  ":END:\n")
+         :empty-lines 1)
 
-          ("p" "A new project." entry
-           (file "projects.org")
-           "* OPEN %?"
-           :empty-lines 1)
+        ("r" "A Reminder (tickler)." entry
+         (file "gtd/tickler.org")
+         "* %?\nSCHEDULED: %^t"
+         :empty-lines 1)
 
-          ("n" "A (work-related) note." entry
-           (file+headline "notes.org" "Work")
-           "* %?\n%u\n\n"
-           :jump-to-captured t
-           :empty-lines 1)
+        ("l" "A link to read later." entry
+         (file "gtd/reading.org")
+         ,(concat "* TODO %c\n"
+                  ":PROPERTIES:\n"
+                  ":CREATED:  %u\n"
+                  ":END:\n\n"
+                  "%i")
+         :empty-lines 1)))
 
-          ("l" "A link, for reading later." entry
-           (file+headline "notes.org" "Reading List")
-           "* %c\n:PROPERTIES:\n:Added: %u\n:END:\n\n%i"
-           :empty-lines 1)
-
-          ("w" "Nine Minutes on Monday weekly agenda." entry
-           (id "9A6DDE04-90B8-49ED-90B9-A55A0D1E7B28")
-           (function air-org-nmom-capture-template))))
-  (setq org-default-notes-file "~/Dropbox/org/todo.org")
+  (setq org-default-notes-file "~/Dropbox/org/gtd/inbox.org")
   (setq org-directory "~/Dropbox/org")
 
   ;; Logging of state changes
