@@ -316,7 +316,16 @@ If VANILLA is non-nil, run the standard `org-capture'."
   (interactive "P")
   (if vanilla
       (org-capture)
-    (org-capture nil "a")))
+    (org-capture nil "t")))
+
+(defun air-org-tickler-capture (&optional vanilla)
+  "Capture a new scheduled (tickler) item.
+
+If VANILLA is non-nil, run the standard `org-capture'."
+  (interactive "P")
+  (if vanilla
+      (org-capture)
+    (org-capture nil "r")))
 
 (defun air-org-agenda-capture (&optional vanilla)
   "Capture a task in agenda mode, using the date at point.
