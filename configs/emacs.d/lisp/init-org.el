@@ -352,6 +352,14 @@ If VANILLA is non-nil, run the standard `org-capture'."
         (and (search-forward "SCHEDULED:" search-limit t)
              (replace-match "DEADLINE:"))))))
 
+(defun air-org-pop-to-inbox ()
+  "Open the GTD inbox Org file."
+  (interactive)
+  (find-file "~/Dropbox/org/gtd/inbox.org")
+  (org-cycle '(16))
+  (goto-char 1)
+  (org-evil-motion-forward-heading))
+
 (defun air-pop-to-org-vault (&optional split)
   "Visit my encrypted vault file, in the current window or a SPLIT."
   (interactive "P")
