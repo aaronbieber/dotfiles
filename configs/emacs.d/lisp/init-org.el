@@ -537,58 +537,62 @@ TAG is chosen interactively from the global tags completion table."
 
   ;; Agenda configuration
   (setq org-agenda-text-search-extra-files '(agenda-archives))
-  (setq org-agenda-files '("~/Dropbox/org/" "~/Dropbox/org/orgzly/"))
-  (setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
+  (setq org-agenda-files '("~/Dropbox/org/gtd/inbox.org"
+                           "~/Dropbox/org/gtd/team.org"))
+  (setq org-refile-targets '(("~/Dropbox/org/gtd/inbox.org" :maxlevel . 1)
+                             ("~/Dropbox/org/gtd/someday.org" :maxlevel . 1)
+                             ("~/Dropbox/org/gtd/tickler.org" :maxlevel . 1)))
   (setq org-refile-use-outline-path 'file)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-outline-path-complete-in-steps nil)
+  (setq org-agenda-time-grid '((daily today require-timed)
+                               ""
+                               (800 1000 1200 1400 1600)))
+  (setq org-enforce-todo-dependencies t)
+  (setq org-agenda-dim-blocked-tasks t)
+  (setq org-tag-alist '(("@cal" . ?c)
+                        ("@home" . ?h)))
   (setq org-agenda-skip-scheduled-if-done t)
+
   (setq org-agenda-custom-commands
-        '(("d" "Daily agenda and all TODOs"
-           (;; Not-yet-done priority "A" entries (will also display
-            ;; non-todo entries).
-            (tags "PRIORITY=\"A\""
-                  ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                   (org-agenda-overriding-header "High-priority unfinished tasks:")))
-            ;; Only todo entries (must be dated to appear in agenda)
-            ;; These are usually habits; entries that are marked todo,
-            ;; have a date in scope, and do not have a priority of "A".
+        '(("d" "GTD immediate tasks"
+           ((tags-todo "-@home/TODO"
+                       ((org-agenda-skip-function '(or (air-org-skip-if-habit)
+                                                       (org-agenda-skip-if nil '(scheduled))))
+                        (org-agenda-overriding-header "Immediate tasks")
+                        (org-agenda-files '("~/Dropbox/org/gtd/inbox.org"))))
+            (todo "WAITING"
+                  ((org-agenda-skip-function 'air-org-skip-if-habit)
+                   (org-agenda-overriding-header "Waiting for")
+                   (org-agenda-files '("~/Dropbox/org/gtd/inbox.org"))))
             (agenda ""
                     ((org-agenda-span 1)
-                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'nottodo 'any))))
-            ;; Only non-todo entries (still must be dated to appear in
-            ;; here). These are things I just want to be aware of,
-            ;; like anniversaries, vacations, or other peripheral
-            ;; events.
-            (agenda ""
-                    ((org-agenda-span 1)
-                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'any))))
-
-            (alltodo ""
-                     ((org-agenda-skip-function '(or (air-org-skip-if-habit)
-                                                     (air-org-skip-if-priority ?A)
-                                                     (org-agenda-skip-if nil '(scheduled deadline))))
-                      (org-agenda-overriding-header "ALL normal priority tasks:")))
-            ;; Items completed during this work week. My skip function
-            ;; here goes through some contortions that may not be
-            ;; necessary; it would be faster to simply show "closed in
-            ;; the last 7 days". Maybe some other time.
-            ;; (todo "DONE"
-            ;;       ((org-agenda-skip-function 'air-org-skip-if-not-closed-this-week)
-            ;;        (org-agenda-overriding-header "Closed this week:")))
-            )
+                     (org-agenda-use-time-grid nil)
+                     (org-agenda-files '("~/Dropbox/org/gtd/inbox.org"
+                                         "~/Dropbox/org/gtd/team.org"
+                                         "~/Dropbox/org/gtd/tickler.org"
+                                         "~/Dropbox/org/diary.org")))))
            ((org-agenda-compact-blocks t)))
 
-          ("i" "GTD immediate tasks" todo "TODO")
+          ("h" "Home/personal tasks"
+           ((tags-todo "@home/TODO")))
 
-          ("b" "Backlog items"
-           ((alltodo ""
-                     ((org-agenda-skip-function '(or (air-org-skip-if-habit)
-                                                     (air-org-skip-if-priority ?A)
-                                                     (org-agenda-skip-if nil '(scheduled deadline))))
-                      (org-agenda-overriding-header "ALL normal priority tasks:"))))
-           ((org-agenda-compact-blocks t)))
-          ))
+          ("r" "Weekly review"
+           ((agenda "" ((org-agenda-span 7)
+                        (org-agenda-files '("~/Dropbox/org/gtd/inbox.org"))))
+            (stuck "" ((org-stuck-projects
+                        '("+LEVEL=1/-DONE-CANCELED"
+                          ("TODO" "WAITING" "SOMEDAY") nil ""))
+                       (org-agenda-overriding-header (concat "Stuck projects and new items"
+                                                             (make-string 72 ?-)))
+                       (org-agenda-files '("~/Dropbox/org/gtd/inbox.org"))))
+            (todo "SOMEDAY"
+                  ((org-agenda-overriding-header (concat "Maybe someday is today... "
+                                                         (make-string 74 ?-)))))
+            (todo "" ((org-agenda-files '("~/Dropbox/org/gtd/reading.org"))
+                      (org-agenda-overriding-header (concat "Reading list "
+                                                            (make-string 87 ?-))))))
+           ((org-agenda-compact-blocks t)))))
 
   (add-to-list 'org-structure-template-alist
                (list "p" (concat ":PROPERTIES:\n"
@@ -808,8 +812,6 @@ TAG is chosen interactively from the global tags completion table."
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
   (setq org-bullets-bullet-list '("•")))
-
-(require 'org-gtd)
 
 (provide 'init-org)
 ;;; init-org.el ends here
