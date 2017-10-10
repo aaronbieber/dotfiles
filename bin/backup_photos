@@ -17,7 +17,7 @@ except ImportError:
 all_jobs = [("/Volumes/Arcturus/Pictures/",
              "/Volumes/Ares/Pictures/"),
             ("/Volumes/Arcturus/Pictures/",
-             "arecibo.skynet.net:/volume1/Pictures/")]
+             "kepler.skynet.net:/volume1/Pictures/")]
 
 #all_locations = [path for job in jobs for path in job]
 jobs = []
