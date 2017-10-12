@@ -56,11 +56,7 @@
 (setq-default indicate-empty-lines t)
 (setq-default indent-tabs-mode nil)
 
-;; Why did I do this? Perhaps to keep vc from meddling with things
-;; that Magit does, but it's convenient to be able to lean on vc for
-;; certain things, so let's try it again with this turned on.
-;; (eval-after-load "vc" '(setq vc-handled-backends nil))
-
+(setq visible-bell t)
 (setq vc-follow-symlinks t)
 (setq large-file-warning-threshold nil)
 (setq split-width-threshold nil)
@@ -72,35 +68,12 @@
 (put 'narrow-to-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
 
-
 (defun air--delete-trailing-whitespace-in-proc-and-org-files ()
   "Delete trailing whitespace if the buffer is in `prog-' or `org-mode'."
   (if (or (derived-mode-p 'prog-mode)
           (derived-mode-p 'org-mode))
       (delete-trailing-whitespace)))
 (add-to-list 'write-file-functions 'air--delete-trailing-whitespace-in-proc-and-org-files)
-
-;; The OS X visible bell is buggy as hell.
-(defvar air-bell-ringing nil
-  "Whether my visual bell is currently being rung.
-
-This prevents simultaneously ringing two bells and falling into a race
-condition where the bell visualization never clears.")
-
-(setq ring-bell-function (lambda ()
-                           (if (not air-bell-ringing)
-                               (let* ((bg (face-background 'default))
-                                      (fg (face-foreground 'default))
-                                      (reset `(lambda ()
-                                                (set-face-background 'default ,bg)
-                                                (set-face-foreground 'default ,fg)
-                                                (setq air-bell-ringing nil))))
-
-                                 (set-face-background 'default "NavajoWhite4")
-                                 ;(set-face-foreground 'default "black")
-                                 (setq air-bell-ringing t)
-
-                                 (run-with-timer 0.05 nil reset)))))
 
 (defun my-minibuffer-setup-hook ()
   "Increase GC cons threshold."
