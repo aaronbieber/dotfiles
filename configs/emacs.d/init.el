@@ -344,7 +344,7 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
       (duplicates t)))
   (add-to-list 'company-backends 'org-keyword-backend)
 
-  (setq company-idle-delay 0.2)
+  (setq company-idle-delay 0.4)
   (setq company-selection-wrap-around t)
   (define-key company-active-map (kbd "ESC") 'company-abort)
   (define-key company-active-map [tab] 'company-complete-common-or-cycle)
