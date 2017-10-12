@@ -12,11 +12,22 @@
 
 (custom-theme-set-faces
  'challenger-deep-overrides
+ '(company-tooltip-selection ((t (:foreground "black"))))
+ '(company-tooltip-common-selection ((t (:foreground "black" :weight 'bold))))
+ '(lazy-highlight ((t (:foreground "gray20"))))
  '(all-the-icons-dired-dir-face ((t (:foreground "khaki2"))))
  '(sml/folder ((t (:inherit sml/global :background "grey22" :foreground "grey50" :weight normal))))
  '(sml/git ((t (:background "grey22" :foreground "chartreuse3"))))
  '(default ((t (:family "Hack" :foundry "nil" :slant normal :weight normal :height 140 :width normal))))
  '(org-level-1 ((t (:foreground "#91ddff" :weight bold :height 1.1))))
+ '(org-level-1 ((t (:box nil :background nil))))
+ '(org-level-2 ((t (:box nil :background nil))))
+ '(org-level-3 ((t (:box nil :background nil))))
+ '(org-level-4 ((t (:box nil :background nil))))
+ '(org-level-5 ((t (:box nil :background nil))))
+ '(org-level-6 ((t (:box nil :background nil))))
+ '(org-level-7 ((t (:box nil :background nil))))
+ '(org-level-8 ((t (:box nil :background nil))))
  '(helm-selection ((t (:background "#65b2ff" :foreground "black")))))
 
 (provide-theme 'challenger-deep-overrides)

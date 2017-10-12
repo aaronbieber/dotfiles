@@ -728,24 +728,6 @@ is the buffer location at which the function was found."
 (load-theme 'sanityinc-tomorrow-day)
 (load-theme 'sanityinc-tomorrow-day-overrides)
 
-;; (load-theme 'challenger-deep)
-;; (with-eval-after-load 'challenger-deep-theme
-;;   (dolist (level (number-sequence 1 8))
-;;     (let ((face-name (concat "org-level-"
-;;                              (number-to-string level))))
-;;       (set-face-attribute (intern face-name) nil
-;;                           :box nil
-;;                           :background nil)))
-;;   (set-face-attribute 'company-tooltip-selection nil
-;;                       :foreground "black")
-;;   (set-face-attribute 'company-tooltip-common-selection nil
-;;                       :foreground "black"
-;;                       :weight 'bold)
-;;   (set-face-attribute 'helm-selection nil
-;;                       :foreground "black")
-;;   (set-face-attribute 'lazy-highlight nil
-;;                       :foreground "gray20"))
-
 (use-package smart-mode-line
   :ensure t
   :config
