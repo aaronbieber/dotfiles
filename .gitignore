@@ -18,3 +18,4 @@ configs/emacs.d/*
 !configs/emacs.d/snippets
 !configs/emacs.d/init.el
 !configs/emacs.d/custom.el
+!configs/emacs.d/themes
