@@ -1,3 +1,7 @@
+;;; sanityinc-tomorrow-day-overrides-theme.el --- Override theme!
+;;; Commentary:
+
+;;; Code:
 (deftheme sanityinc-tomorrow-day-overrides
   "Overrides to be applied over `sanityinc-tomorrow-day'.")
 
@@ -6,4 +10,5 @@
  '(org-agenda-date-today ((t (:foreground "gold3"))))
  '(minibuffer-prompt ((t (:background "white")))))
 
-(provide 'sanityinc-tomorrow-day-overrides)
+(provide-theme 'sanityinc-tomorrow-day-overrides)
+;;; sanityinc-tomorrow-day-overrides-theme.el ends here

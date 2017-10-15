@@ -1,3 +1,7 @@
+;;; challenger-deep-overrides-theme.el --- Theme overrides
+;;; Commentary:
+
+;;; Code:
 (deftheme challenger-deep-overrides
   "Created 2017-04-27.")
 
@@ -31,3 +35,4 @@
  '(helm-selection ((t (:background "#65b2ff" :foreground "black")))))
 
 (provide-theme 'challenger-deep-overrides)
+;;; challenger-deep-overrides-theme.el ends here
