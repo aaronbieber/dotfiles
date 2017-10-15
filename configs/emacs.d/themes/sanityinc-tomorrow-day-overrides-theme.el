@@ -7,6 +7,8 @@
 
 (custom-theme-set-faces
  'sanityinc-tomorrow-day-overrides
+ '(highlight-symbol-face ((t (:foreground "black" :background "gray90"))))
+ '(line-number-current-line ((t (:background "#f7f7f7" :foreground "black"))))
  '(org-agenda-date-today ((t (:foreground "gold3"))))
  '(minibuffer-prompt ((t (:background "white")))))
 
