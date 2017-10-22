@@ -538,7 +538,7 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
 
 ;;; All programming modes
 (defun air--set-up-prog-mode ()
-  "Configure global prog-mode."
+  "Configure global `prog-mode'."
   (setq-local comment-auto-fill-only-comments t)
   (electric-pair-local-mode))
 (add-hook 'prog-mode-hook 'air--set-up-prog-mode)
