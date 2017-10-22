@@ -467,8 +467,12 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
   :ensure t
   :defer 1
   :config
-  (projectile-global-mode)
-  (setq projectile-enable-caching t))
+  (projectile-mode)
+  (setq projectile-enable-caching t)
+  (setq projectile-mode-line
+        '(:eval
+          (format " Proj[%s]"
+                  (projectile-project-name)))))
 
 (use-package highlight-symbol
   :ensure t
