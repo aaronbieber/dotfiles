@@ -543,12 +543,18 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
   (electric-pair-local-mode))
 (add-hook 'prog-mode-hook 'air--set-up-prog-mode)
 
-(use-package nlinum-relative
-  :ensure t
-  :config
-  (nlinum-relative-setup-evil)
-  (setq nlinum-relative-redisplay-delay 0)
-  (add-hook 'prog-mode-hook #'nlinum-relative-mode))
+;;; If `display-line-numbers-mode' is available (only in Emacs 26),
+;;; use it! Otherwise, install and run nlinum-relative.
+(if (functionp 'display-line-numbers-mode)
+    (and (add-hook 'display-line-numbers-mode-hook
+                   (lambda () (setq display-line-numbers-type 'relative)))
+         (add-hook 'prog-mode-hook #'display-line-numbers-mode))
+  (use-package nlinum-relative
+    :ensure t
+    :config
+    (nlinum-relative-setup-evil)
+    (setq nlinum-relative-redisplay-delay 0)
+    (add-hook 'prog-mode-hook #'nlinum-relative-mode)))
 
 ;;; Python mode:
 (use-package virtualenvwrapper
