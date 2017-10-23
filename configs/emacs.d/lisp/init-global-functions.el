@@ -230,7 +230,7 @@ Attempts to follow the Do What I Mean philosophy."
                      (expand-file-name (vc-find-root (buffer-file-name) ".git"))
                      ""
                      (buffer-file-name)))
-         (args (concat "http://dox.wayfair.com/source/xref/php/" file-path "#" line-num)))
+         (args (concat "http://codesearch.csnzoo.com/source/xref/php/" file-path "#" line-num)))
     (call-process "open" nil nil nil args)))
 
 ;;; From http://beatofthegeek.com/2014/02/my-setup-for-using-emacs-as-web-browser.html
