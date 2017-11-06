@@ -1,0 +1,21 @@
+#!/bin/zsh
+
+if [ ! -f ~/.freedns.token.txt ]; then
+  echo "Run `make decrypt` to create ~/.freedns.token.txt!"
+fi
+
+TOKEN_FILE=`cat ~/.freedns.token.txt`
+TOKEN="${TOKEN_FILE%$'\n'}"
+URL="http://freedns.afraid.org/dynamic/update.php?${TOKEN}"
+
+if [ ! -f ~/.my-ip ]; then
+  curl -s icanhazip.com > ~/.my-ip
+fi
+
+OLDIP=`cat ~/.my-ip`
+NEWIP=`curl -s icanhazip.com`
+
+if [[ "$OLDIP" != "$NEWIP" ]]; then
+  echo "$NEWIP" > ~/.my-ip
+  curl -s "$URL" > /dev/null
+fi
