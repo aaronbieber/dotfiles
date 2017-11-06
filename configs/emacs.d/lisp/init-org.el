@@ -473,7 +473,7 @@ TAG is chosen interactively from the global tags completion table."
   :ensure t
   :defer t
   :commands (org-capture)
-  :bind (("C-c c" .   air-org-task-capture)
+  :bind (("C-c c" .   org-capture)
          ("C-c l" .   org-store-link)
          ("C-c t n" . air-pop-to-org-notes)
          ("C-c t t" . air-pop-to-org-todo)
@@ -515,7 +515,14 @@ TAG is chosen interactively from the global tags completion table."
                   ":CREATED:  %u\n"
                   ":END:\n\n"
                   "%i")
-         :empty-lines 1)))
+         :empty-lines 1)
+
+        ("n" "A note." entry
+         (file "notes.org")
+         ,(concat "* %?\n"
+                  ":PROPERTIES:\n"
+                  ":CREATED:  %u\n"
+                  ":END:\n\n"))))
 
   (setq org-default-notes-file "~/Dropbox/org/gtd/inbox.org")
   (setq org-directory "~/Dropbox/org")
