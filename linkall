@@ -93,7 +93,7 @@ echo ""
 echo "Creating symlinks for executable scripts in $BINPATH."
 echo ""
 
-for script in `find $BINPATH -mindepth 1 -maxdepth 1`; do
+for script in `find $BINPATH -mindepth 1 -maxdepth 1 -not -name 'Makefile'`; do
   linkfile="${script##*/}"
   ln -s $LNOPTS "$script" "$linkfile" > /dev/null 2>&1
   if [ $? -eq 0 ]; then
