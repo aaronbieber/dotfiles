@@ -96,6 +96,7 @@ command -v xdg-open >/dev/null 2>&1 && alias open="xdg-open"
 
 ## Emacs:
 export EDITOR="$HOME/bin/editor"
+export VISUAL="$HOME/bin/editor"
 alias e="$EDITOR"
 export ALTERNATE_EDITOR=""
 export VISUAL="emacsclient"
