@@ -13,18 +13,22 @@ arrow="%F{245}❯%f"
 
 function theme_precmd {
   local cwd="$(pwd)"
-  cwd_string="${cwd}"
-  if [[ "${cwd}" != "$HOME" ]]; then
+  cwd_string="$(pwd)"
+
+  if [[ "$cwd_string" == *"$HOME"* ]]; then
     cwd_string="${cwd_string/$HOME/~}"
+  else
+    cwd_string="${cwd_string#/*}"
   fi
 
-  cwd_string="%F{250}${${cwd_string%/*}//\// ${arrow} } ${arrow} %F{255}${cwd_string##*/}"
-  if [[ "${cwd}" == "$HOME" ]]; then
-    cwd_string="/${cwd_string}"
+  if [[ "$cwd_string" != "~" ]]; then
+    cwd_string="%F{250}${${cwd_string%/*}//\// ${arrow} } ${arrow} %F{255}${cwd_string##*/}"
+    if [[ "$cwd_string" != "%F{250}~"* ]]; then
+      cwd_string="/ ${arrow} ${cwd_string//\// ${arrow} }"
+    fi
   fi
 }
 
-spaces="$(printf ' %.0s' {1..500})"
 PROMPT=$'\e[?7l%K{235}%m ${arrow} ${cwd_string}%f$(virtualenv_prompt_info)$(git_prompt_info)%K{235}\e[?7h%k\n%#%f%k '
 RPROMPT=""
 PS2='%F{084}%_%f > '
