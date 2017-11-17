@@ -177,9 +177,9 @@ the entire subtree."
              (today-year (format-time-string "%Y" now))
              (today-dow (format-time-string "%w" now))
              (start-day (- today-day
-                           (string-to-int today-dow)))
+                           (string-to-number today-dow)))
              (end-day (+ today-day
-                         (- 6 (string-to-int today-dow)))))
+                         (- 6 (string-to-number today-dow)))))
         (if (and (string= closed-year today-year)
                  (>= closed-day start-day)
                  (<= closed-day end-day))
@@ -235,7 +235,7 @@ Skips the current entry unless SUBTREE is not nil."
     (let* ((val (cadr (assoc custom-id all-custom-ids)))
            (id-parts (split-string val ":"))
            (file (car id-parts))
-           (line (string-to-int (cadr id-parts))))
+           (line (string-to-number (cadr id-parts))))
       (with-current-buffer (org-get-agenda-file-buffer file)
         (goto-char (point-min))
         (forward-line line)
@@ -269,7 +269,7 @@ Skips the current entry unless SUBTREE is not nil."
       (let* ((val (cadr (assoc custom-id all-custom-ids)))
              (id-parts (split-string val ":"))
              (file (car id-parts))
-             (line (string-to-int (cadr id-parts))))
+             (line (string-to-number (cadr id-parts))))
         (org-insert-link nil (concat file "::#" custom-id) custom-id)))))
 
 (defun air-org-nmom-capture-template ()
