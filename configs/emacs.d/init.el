@@ -138,7 +138,12 @@
           ("org-captures" ("Org Captures"
                            ((?c "Task/idea" air-org-task-capture)
                             (?t "Tickler"   air-org-tickler-capture)
-                            (?n "Note"      (lambda () (interactive) (org-capture nil "n")))))))))
+                            (?n "Note"      (lambda () (interactive) (org-capture nil "n"))))))
+          ("org-personal-captures" ("Org Personal Captures"
+                                    ((?c "Task/idea" (lambda () (interactive (org-capture nil "h"))))
+                                     (?n "Note" (lambda () (interactive (org-capture nil "o")))))))
+
+          )))
 
 ;;; Larger package-specific configurations.
 (require 'diminish)

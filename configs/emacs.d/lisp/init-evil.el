@@ -102,6 +102,7 @@
   (evil-define-key 'normal global-map (kbd "\\ f")    (tiny-menu-run-item "org-files"))
   (evil-define-key 'normal global-map (kbd "\\ t")    (tiny-menu-run-item "org-things"))
   (evil-define-key 'normal global-map (kbd "\\ c")    (tiny-menu-run-item "org-captures"))
+  (evil-define-key 'normal global-map (kbd "\\ h")    (tiny-menu-run-item "org-personal-captures"))
   (evil-define-key 'normal global-map (kbd "\\ l")    (tiny-menu-run-item "org-links"))
 
   (defun minibuffer-keyboard-quit ()

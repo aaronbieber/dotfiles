@@ -494,14 +494,23 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-blank-before-new-entry '((heading . t)
                                      (plain-list-item . t)))
   (setq org-capture-templates
-      `(("t" "An incoming GTD item." entry
-         (file "gtd/inbox.org")
-         ,(concat "* IDEA %?\n"
-                  ":PROPERTIES:\n"
-                  ":ORDERED:  t\n"
-                  ":CREATED:  %u\n"
-                  ":END:\n")
-         :empty-lines 1)
+        `(("t" "An incoming GTD item." entry
+           (file "gtd/inbox.org")
+           ,(concat "* IDEA %?\n"
+                    ":PROPERTIES:\n"
+                    ":ORDERED:  t\n"
+                    ":CREATED:  %u\n"
+                    ":END:\n")
+           :empty-lines 1)
+
+          ("h" "An incoming personal GTD item." entry
+           (file "personal/inbox.org")
+           ,(concat "* %?\n"
+                    ":PROPERTIES:\n"
+                    ":ORDERED:  t\n"
+                    ":CREATED:  %u\n"
+                    ":END:\n")
+           :empty-lines 1)
 
         ("r" "A Reminder (tickler)." entry
          (file "gtd/tickler.org")
@@ -519,6 +528,13 @@ TAG is chosen interactively from the global tags completion table."
 
         ("n" "A note." entry
          (file "notes.org")
+         ,(concat "* %?\n"
+                  ":PROPERTIES:\n"
+                  ":CREATED:  %u\n"
+                  ":END:\n\n"))
+
+        ("o" "A personal note." entry
+         (file "personal/notes.org")
          ,(concat "* %?\n"
                   ":PROPERTIES:\n"
                   ":CREATED:  %u\n"
@@ -563,7 +579,7 @@ TAG is chosen interactively from the global tags completion table."
 
   (setq org-agenda-custom-commands
         '(("d" "GTD immediate tasks"
-           ((tags-todo "-@home/TODO"
+           ((todo "TODO"
                        ((org-agenda-skip-function '(or (air-org-skip-if-habit)
                                                        (org-agenda-skip-if nil '(scheduled))))
                         (org-agenda-overriding-header "Immediate tasks")
@@ -582,9 +598,13 @@ TAG is chosen interactively from the global tags completion table."
            ((org-agenda-compact-blocks t)))
 
           ("h" "Home/personal tasks"
-           ((tags-todo "@home/TODO")))
+           ((todo "TODO"
+                       ((org-agenda-skip-function '(or (air-org-skip-if-habit)
+                                                       (org-agenda-skip-if nil '(scheduled))))
+                        (org-agenda-overriding-header "Immediate tasks")
+                        (org-agenda-files '("~/Dropbox/org/personal/inbox.org"))))))
 
-          ("r" "Weekly review"
+          ("r" "Inbox review"
            ((agenda "" ((org-agenda-span 7)
                         (org-agenda-files '("~/Dropbox/org/gtd/inbox.org"))))
             (stuck "" ((org-stuck-projects
@@ -599,6 +619,21 @@ TAG is chosen interactively from the global tags completion table."
             (todo "" ((org-agenda-files '("~/Dropbox/org/gtd/reading.org"))
                       (org-agenda-overriding-header (concat "Reading list "
                                                             (make-string 87 ?-))))))
+           ((org-agenda-compact-blocks t)))
+
+          ("e" "Personal inbox review"
+           ((agenda "" ((org-agenda-span 7)
+                        (org-agenda-files '("~/Dropbox/org/personal/inbox.org"))))
+            (stuck "" ((org-stuck-projects
+                        '("+LEVEL=1/-DONE-CANCELED"
+                          ("TODO" "WAITING" "SOMEDAY") nil ""))
+                       (org-agenda-overriding-header (concat "Stuck projects and new items"
+                                                             (make-string 72 ?-)))
+                       (org-agenda-files '("~/Dropbox/org/personal/inbox.org"))))
+            (todo "SOMEDAY"
+                  ((org-agenda-overriding-header (concat "Maybe someday is today... "
+                                                         (make-string 74 ?-)))
+                   (org-agenda-files '("~/Dropbox/org/personal/inbox.org")))))
            ((org-agenda-compact-blocks t)))))
 
   (add-to-list 'org-structure-template-alist
