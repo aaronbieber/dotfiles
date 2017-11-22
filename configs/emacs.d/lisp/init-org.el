@@ -458,7 +458,7 @@ return nil."
 
 TAG is chosen interactively from the global tags completion table."
   (interactive (list (air--org-select-tag)))
-  (let* ((cur-list (org-get-tags))
+  (let* ((cur-list (delq "" (org-get-tags)))
          (new-tags (mapconcat 'identity
                               (if (member tag cur-list)
                                   (delete tag cur-list)
