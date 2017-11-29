@@ -39,7 +39,12 @@ COMPLETION_WAITING_DOTS="true"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # Load these oh-my-zsh plugins.
-plugins=(git colorize themes virtualenv virtualenvwrapper)
+plugins=(git colorize themes virtualenv)
+
+which virtualenvwrapper 2>&1 >/dev/null
+if [[ "$?" -eq 0 ]]; then
+  plugins=($plugins virtualenvwrapper)
+fi
 
 # Configure zsh options #######################################################
 setopt autolist       # Display completion candidates immediately.
