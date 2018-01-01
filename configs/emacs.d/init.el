@@ -146,7 +146,6 @@
           )))
 
 ;;; Larger package-specific configurations.
-(require 'diminish)
 (require 'init-fonts)
 (require 'init-gtags)
 (require 'init-evil)
@@ -170,7 +169,6 @@
 
 ;; Org Mode
 (add-to-list 'load-path (expand-file-name "periodic-commit-minor-mode" user-emacs-directory))
-(require 'periodic-commit-minor-mode)
 (require 'init-org)
 
 ;; Just while I'm working on it.
@@ -494,6 +492,8 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
   (setq magit-push-always-verify nil)
   (setq magit-last-seen-setup-instructions "1.4.0")
   (magit-define-popup-switch 'magit-log-popup ?f "first parent" "--first-parent"))
+
+(require 'periodic-commit-minor-mode)
 
 (use-package mmm-mode
   :ensure t
