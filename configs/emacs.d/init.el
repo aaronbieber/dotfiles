@@ -63,6 +63,7 @@
 (setq custom-safe-themes t)
 (column-number-mode t)
 (setq tab-width 4)
+(setq tramp-default-method "ssh")
 
 ;; Allow confusing functions
 (put 'narrow-to-region 'disabled nil)
