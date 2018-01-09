@@ -134,7 +134,6 @@
           ("org-files"    ("Org Files"
                            ((?t "TODO"     (lambda () (air-pop-to-org-todo nil)))
                             (?n "Notes"    (lambda () (interactive) (air-pop-to-org-notes nil)))
-                            (?p "Projects" (lambda () (interactive) (air-pop-to-org-projects nil)))
                             (?v "Vault" (lambda () (interactive) (air-pop-to-org-vault nil))))))
           ("org-captures" ("Org Captures"
                            ((?c "Task/idea" air-org-task-capture)

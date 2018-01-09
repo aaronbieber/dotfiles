@@ -365,6 +365,16 @@ If VANILLA is non-nil, run the standard `org-capture'."
   (interactive "P")
   (air--pop-to-file "~/Dropbox/org/vault.gpg" split))
 
+(defun air-pop-to-org-notes (&optional split)
+  "Visit my notes file, in the current window or SPLIT."
+  (interactive "P")
+  (air--pop-to-file "~/Dropbox/org/notes.org" split))
+
+(defun air-pop-to-org-todo (&optional split)
+  "Visit my TODO file, in the current window or SPLIT."
+  (interactive "P")
+  (air--pop-to-file "~/Dropbox/org/gtd/inbox.org" split))
+
 (defun air-pop-to-org-agenda-default (&optional nosplit)
   "Pop to the default agenda in a split window unless NOSPLIT."
   (interactive "P")
