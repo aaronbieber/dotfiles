@@ -615,7 +615,7 @@ TAG is chosen interactively from the global tags completion table."
                         (org-agenda-files '("~/Dropbox/org/personal/inbox.org"))))))
 
           ("r" "Inbox review"
-           ((agenda "" ((org-agenda-span 7)
+           ((agenda "" ((org-agenda-span 8)
                         (org-agenda-files '("~/Dropbox/org/gtd/inbox.org"))))
             (stuck "" ((org-stuck-projects
                         '("+LEVEL=1/-DONE-CANCELED"
@@ -632,7 +632,7 @@ TAG is chosen interactively from the global tags completion table."
            ((org-agenda-compact-blocks t)))
 
           ("e" "Personal inbox review"
-           ((agenda "" ((org-agenda-span 7)
+           ((agenda "" ((org-agenda-span 8)
                         (org-agenda-files '("~/Dropbox/org/personal/inbox.org"))))
             (stuck "" ((org-stuck-projects
                         '("+LEVEL=1/-DONE-CANCELED"
