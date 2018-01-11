@@ -41,8 +41,14 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # Load these oh-my-zsh plugins.
 plugins=(git colorize themes virtualenv)
 
-which virtualenvwrapper 2>&1 >/dev/null
-if [[ "$?" -eq 0 ]]; then
+vew_on_path=$(type virtualenvwrapper >/dev/null; echo $?)
+vnw_script="/usr/share/virtualenvwrapper/virtualenvwrapper.sh"
+if [[ "$vew_on_path" -eq 0 || -e "$vnw_script" ]]; then
+  # This guy needs to be defined for virtualenvwrapper to work. The way I use 
+  # it, the directory doesn't need to exist, but the oh-my-zsh plugin requires 
+  # the variable to be defined.
+  export WORKON_HOME="$HOME/virtualenvs"
+
   plugins=($plugins virtualenvwrapper)
 fi
 
@@ -105,10 +111,6 @@ export VISUAL="$HOME/bin/editor"
 alias e="$EDITOR"
 export ALTERNATE_EDITOR=""
 export VISUAL="emacsclient"
-
-## Python virtualenvs
-# Not to be confused with ~/.virtualenvs
-export WORKON_HOME="$HOME/virtualenvs"
 
 if [ -f "$HOME/.zshrc_$MY_LOCATION" ]; then
   source "$HOME/.zshrc_$MY_LOCATION"
