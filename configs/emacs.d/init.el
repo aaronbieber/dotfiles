@@ -412,7 +412,7 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
       (buffer-string)))
   (setq sunshine-appid (get-string-from-file
                         (expand-file-name "sunshine-appid" user-emacs-directory)))
-  (setq sunshine-location "Brookline, MA")
+  (setq sunshine-location "Boston, MA, USA")
   (setq sunshine-show-icons t))
 
 (use-package twittering-mode
