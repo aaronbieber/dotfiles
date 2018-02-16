@@ -111,11 +111,22 @@ the headlines."
     (if pos (goto-char pos))
     (if backwards (goto-char (line-beginning-position)))))
 
+(defun air-org-helm-headings ()
+  "Call `helm-org-agenda-files-headings' with a longer list of files."
+  (interactive)
+  (let ((org-agenda-files '("~/Dropbox/org/gtd/inbox.org"
+                            "~/Dropbox/org/gtd/team.org"
+                            "~/Dropbox/org/notes.org")))
+    (call-interactively 'helm-org-agenda-files-headings)))
+
 (defun air--org-display-tag (tag &optional focus)
   "Display entries tagged with TAG in a fit window.
 
 Do not make the new window current unless FOCUS is set."
-  (org-tags-view nil tag)
+  (let ((org-agenda-files '("~/Dropbox/org/gtd/inbox.org"
+                            "~/Dropbox/org/gtd/team.org"
+                            "~/Dropbox/org/notes.org")))
+    (org-tags-view nil tag))
   (fit-window-to-buffer)
   (unless focus
     (other-window 1)))

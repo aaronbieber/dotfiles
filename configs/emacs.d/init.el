@@ -117,7 +117,7 @@
                            ((?t "Tag"       air-org-display-any-tag)
                             (?i "ID"        air-org-goto-custom-id)
                             (?k "Keyword"   org-search-view)
-                            (?h "Headings"  helm-org-agenda-files-headings)
+                            (?h "Headings"  air-org-helm-headings)
                             (?d "Directs"   air-org-display-directs)
                             (?m "Managers"  air-org-display-managers)
                             (?e "Engineers" air-org-display-engineers))))
