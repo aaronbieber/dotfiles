@@ -110,7 +110,6 @@ export EDITOR="$HOME/bin/editor"
 export VISUAL="$HOME/bin/editor"
 alias e="$EDITOR"
 export ALTERNATE_EDITOR=""
-export VISUAL="emacsclient"
 
 ## Heuristic to compute location because I am lazy.
 if [[ `whoami` == "abieber" ]]; then
