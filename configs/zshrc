@@ -42,7 +42,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 plugins=(git colorize themes virtualenv)
 
 vew_on_path=$(type virtualenvwrapper >/dev/null; echo $?)
-vnw_script="/usr/share/virtualenvwrapper/virtualenvwrapper.sh"
+vnw_script="/usr/local/bin/virtualenvwrapper.sh"
 if [[ "$vew_on_path" -eq 0 || -e "$vnw_script" ]]; then
   # This guy needs to be defined for virtualenvwrapper to work. The way I use
   # it, the directory doesn't need to exist, but the oh-my-zsh plugin requires
