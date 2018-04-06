@@ -9,6 +9,7 @@
  'sanityinc-tomorrow-day-overrides
  '(highlight-symbol-face ((t (:foreground "black" :background "gray90"))))
  '(highlight-indentation-face ((t :background "gray90")))
+ '(flycheck-error-list-highlight ((t (:foreground "gray10" :background "gray90"))))
  '(line-number-current-line ((t (:background "#f7f7f7" :foreground "black"))))
  '(org-agenda-date-today ((t (:foreground "gold3"))))
  '(minibuffer-prompt ((t (:background "white")))))
