@@ -570,6 +570,15 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
   (setq venv-location
         (expand-file-name "~/CloudStation/Projects/virtualenvs/")))
 
+(defun air-python-setup ()
+  (let* ((root (vc-call-backend
+                (vc-responsible-backend (buffer-file-name))
+                'root (buffer-file-name)))
+         (venvpath (expand-file-name ".venv" root)))
+    (if (file-exists-p venvpath)
+        (setq-local venv-location (list venvpath)))))
+
+(add-hook 'python-mode-hook #'air-python-setup)
 (add-hook 'python-mode-hook
           (lambda ()
             ;; I'm rudely redefining this function to do a comparison of `point'
