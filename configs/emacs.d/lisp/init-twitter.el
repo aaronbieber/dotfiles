@@ -9,7 +9,10 @@
   (add-hook 'twittering-mode-hook
             (lambda ()
               (define-key twittering-mode-map (kbd ",o") 'delete-other-windows)
-              (define-key twittering-mode-map (kbd ",b") 'helm-mini))))
+              (define-key twittering-mode-map (kbd ",b") 'helm-mini)))
+  (add-hook 'twittering-edit-mode-hook
+            (lambda ()
+              (visual-line-mode t))))
 
 (provide 'init-twitter)
 ;;; init-twitter.el ends here
