@@ -606,7 +606,8 @@ TAG is chosen interactively from the global tags completion table."
                                                        (org-agenda-skip-if nil '(scheduled
                                                                                  deadline))))
                         (org-agenda-overriding-header "Immediate tasks")
-                        (org-agenda-files '("~/Dropbox/org/gtd/inbox.org"))))
+                        (org-agenda-files '("~/Dropbox/org/gtd/inbox.org"
+                                            "~/Dropbox/org/notes.org"))))
             (todo "WAITING"
                   ((org-agenda-skip-function 'air-org-skip-if-habit)
                    (org-agenda-overriding-header "Waiting for")
