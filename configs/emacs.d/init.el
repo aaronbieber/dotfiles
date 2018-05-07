@@ -243,11 +243,11 @@
 
 (use-package rjsx-mode
   :ensure t
+  :mode "\\.js\\'"
   :config
   (defun rjsx-mode-config ()
     "Configure RJSX Mode"
     (define-key rjsx-mode-map (kbd "C-j") 'rjsx-delete-creates-full-tag))
-
   (add-hook 'rjsx-mode-hook 'rjsx-mode-config))
 
 (use-package groovy-mode
@@ -299,8 +299,7 @@
   (setq ag-reuse-window t))
 
 (use-package js2-mode
-  :ensure t
-  :mode "\\.js\\'")
+  :ensure t)
 
 (use-package exec-path-from-shell
   :ensure t
@@ -646,7 +645,7 @@ The IGNORED argument is... Ignored."
                                                 (delete-window))))
   (set (make-local-variable 'pcomplete-ignore-case) t)
   (set (make-local-variable 'company-backends)
-       '((company-shell company-eshell-history))))
+       '((esh-autosuggest))))
 
 (add-hook 'eshell-mode-hook 'air--eshell-mode-hook)
 
