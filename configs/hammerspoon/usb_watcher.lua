@@ -6,7 +6,7 @@ function usbEventHandler(update)
          task = hs.task.new(home .. "/bin/karabiner-switcher",
                             function () end, -- Fake callback
                             function () end, -- Fake stream callback
-                            {"0"} -- USB Keyboard profile
+                            {"1"} -- USB Keyboard profile
          )
          task:start()
          hs.alert("Activated USB Keyboard profile", {radius = 5}, hs.screen.mainScreen(), 10)
@@ -14,7 +14,7 @@ function usbEventHandler(update)
          task = hs.task.new(home .. "/bin/karabiner-switcher",
                             function () end, -- Fake callback
                             function () end, -- Fake stream callback
-                            {"1"} -- Internal Keyboard profile
+                            {"0"} -- Internal Keyboard profile
          )
          task:start()
          hs.alert("Activated Internal Keyboard profile", {radius = 5}, hs.screen.mainScreen(), 10)
