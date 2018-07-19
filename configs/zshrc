@@ -84,16 +84,6 @@ function nicediff {
   diff -W `tput cols` -y "$@" | colordiff | less
 }
 
-function serve {
-  if [ $# -gt 0 ]; then
-    port="$1"
-  else
-    port=8000
-  fi
-
-  which python > /dev/null && python -m SimpleHTTPServer $port
-}
-
 ### Aliases.
 ## Tmux:
 alias ta="tmux attach"
