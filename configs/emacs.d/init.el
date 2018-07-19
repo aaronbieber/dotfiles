@@ -299,7 +299,10 @@
   (setq ag-reuse-window t))
 
 (use-package js2-mode
-  :ensure t)
+  :ensure t
+  :config
+  (setq js2-strict-missing-semi-warning nil)
+  (setq js2-missing-semi-one-line-override t))
 
 (use-package exec-path-from-shell
   :ensure t
