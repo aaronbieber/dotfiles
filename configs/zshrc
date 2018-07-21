@@ -41,14 +41,15 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # Load these oh-my-zsh plugins.
 plugins=(git colorize themes virtualenv)
 
+# If virtualenvwrapper is installed, also activate that plugin and make sure
+# things are set up to work properly.
 vew_on_path=$(type virtualenvwrapper >/dev/null; echo $?)
 vnw_script="/usr/local/bin/virtualenvwrapper.sh"
 if [[ "$vew_on_path" -eq 0 || -e "$vnw_script" ]]; then
-  # This guy needs to be defined for virtualenvwrapper to work. The way I use
-  # it, the directory doesn't need to exist, but the oh-my-zsh plugin requires
-  # the variable to be defined.
-  export WORKON_HOME="$HOME/virtualenvs"
-
+  if [[ ! -d "$HOME/.virtualenvs" ]]; then
+    mkdir "$HOME/.virtualenvs"
+  fi
+  export WORKON_HOME="$HOME/.virtualenvs"
   plugins=($plugins virtualenvwrapper)
 fi
 
