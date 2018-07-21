@@ -568,20 +568,8 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
   :ensure t
   :config
   (venv-initialize-interactive-shells)
-  (venv-initialize-eshell)
-  (setq venv-location
-        (expand-file-name "~/virtualenvs/")))
+  (venv-initialize-eshell))
 
-(defun air-python-setup ()
-  "Configure Python environment."
-  (let* ((root (vc-call-backend
-                (vc-responsible-backend (buffer-file-name))
-                'root (buffer-file-name)))
-         (venvpath (expand-file-name ".venv" root)))
-    (if (file-exists-p venvpath)
-        (venv-workon ".venv"))))
-
-(add-hook 'python-mode-hook #'air-python-setup)
 (add-hook 'python-mode-hook
           (lambda ()
             ;; I'm rudely redefining this function to do a comparison of `point'
