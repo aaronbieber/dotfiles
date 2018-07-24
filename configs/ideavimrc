@@ -1,0 +1,23 @@
+set ignorecase smartcase
+set incsearch
+
+let mapleader = ","
+
+nmap <Leader>w :w<CR>
+nmap <C-l> zz
+nmap <C-p> :action SearchEverywhere<CR>
+imap <C-l> <ESC>zza
+imap <C-e> <Esc>A
+vmap <C-t> :action SurroundWith<CR>
+nmap <Leader>. :e #<CR>
+nmap <Leader>si :action SelectIn<CR>
+nmap <Leader>rr :action Refactorings.QuickListPopupAction<CR>
+nmap ]e :action GotoNextError<CR>
+nmap [e :action GotoPreviousError<CR>
+
+# NB: requires that you close all tool windows
+# and save that view as your "Default Layout"
+# with Window -> Store Current Layout As Default
+nmap <C-W>o :action RestoreDefaultLayout<CR>
+
+nmap <Leader>n :action SelectIn<CR>
