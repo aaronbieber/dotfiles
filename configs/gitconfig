@@ -2,6 +2,7 @@
     name = Aaron Bieber
     email = aaron@aaronbieber.com
 [alias]
+    ai = add -i
     st = status
     ci = commit
     co = checkout
@@ -32,6 +33,7 @@
 [core]
     editor = vim
     excludesfile = ~/.gitignore_global
+    hooksPath = ~/.git_hooks
 [merge]
     tool = vimdiff
 [push]
