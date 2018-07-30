@@ -396,6 +396,7 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
   (define-key markdown-mode-map (kbd "C-c 6") 'markdown-insert-header-atx-6)
 
   (add-hook 'markdown-mode-hook (lambda ()
+                                  (visual-line-mode t)
                                   (yas-minor-mode t)
                                   (set-fill-column 80)
                                   (turn-on-auto-fill)
