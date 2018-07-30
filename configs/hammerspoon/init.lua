@@ -148,6 +148,27 @@ hs.hotkey.bind({"cmd", "shift"}, "left", moveLeft)
 hs.hotkey.bind({"cmd", "shift"}, "up", fullScreen)
 hs.hotkey.bind({"ctrl", "shift"}, "f", function() hs.grid.show() end)
 
+function spotifyCommandAndDisplay(command)
+	hs.spotify[command]()
+	hs.timer.doAfter(1, hs.spotify.displayCurrentTrack)
+end
+
+function spotifyPreviousAndDisplay()
+	spotifyCommandAndDisplay('previous')
+end
+
+function spotifyPlayPauseAndDisplay()
+	spotifyCommandAndDisplay('playpause')
+end
+
+function spotifyNextAndDisplay()
+	spotifyCommandAndDisplay('next')
+end
+
+hs.hotkey.bind({"ctrl", "shift"}, "z", spotifyPreviousAndDisplay)
+hs.hotkey.bind({"ctrl", "shift"}, "x", spotifyPlayPauseAndDisplay)
+hs.hotkey.bind({"ctrl", "shift"}, "c", spotifyNextAndDisplay)
+
 -- 117 is "forward delete" (the "delete" key on a 104-key keyboard)
 hs.hotkey.bind({"ctrl", "cmd"}, "delete", hs.caffeinate.startScreensaver)
 hs.hotkey.bind({"ctrl", "cmd"}, 117, hs.caffeinate.startScreensaver)
