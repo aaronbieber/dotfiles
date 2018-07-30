@@ -571,6 +571,26 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
   (venv-initialize-interactive-shells)
   (venv-initialize-eshell))
 
+(defun air--get-vc-root ()
+    "Get the root directory of the current VC project.
+
+This function assumes that the current buffer is visiting a file that
+is within a version controlled project."
+    (require 'vc)
+    (vc-call-backend
+     (vc-responsible-backend (buffer-file-name))
+     'root (buffer-file-name)))
+
+(defun air-python-setup ()
+  "Configure Python environment."
+  (let* ((root (air--get-vc-root))
+         (venv-name (car (last (remove "" (split-string root "/")))))
+         (venv-path (expand-file-name venv-name venv-location)))
+    (if (and venv-name
+             venv-path
+             (file-directory-p venv-path))
+        (venv-workon venv-name))))
+
 (add-hook 'python-mode-hook
           (lambda ()
             ;; I'm rudely redefining this function to do a comparison of `point'
@@ -588,7 +608,8 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
                       (throw 'found t))))))
 
             ;; Additional settings follow.
-            (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
+            (add-to-list 'write-file-functions 'delete-trailing-whitespace)
+            (air-python-setup)))
 
 ;;; The Emacs Shell
 (defun company-eshell-history (command &optional arg &rest ignored)
