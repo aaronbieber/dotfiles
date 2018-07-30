@@ -3,8 +3,13 @@
 
 ;; Basic Org Mode configuration, assuming presence of Evil & Evil Leader.
 
-;; Helper functions
+;; Defaults
+(defcustom air-org-root-location "~/Dropbox/org"
+  "The root location where Org files are stored."
+  :type 'directory
+  :group 'air-org)
 
+;; Helper functions
 (defun air-org-insert-first-link ()
   "Insert the first link in `org-stored-links', or do nothing."
   (interactive)
@@ -114,18 +119,18 @@ the headlines."
 (defun air-org-helm-headings ()
   "Call `helm-org-agenda-files-headings' with a longer list of files."
   (interactive)
-  (let ((org-agenda-files '("~/Dropbox/org/gtd/inbox.org"
-                            "~/Dropbox/org/gtd/team.org"
-                            "~/Dropbox/org/notes.org")))
+  (let ((org-agenda-files '((expand-file-name "gtd/inbox.org" org-directory)
+                            (expand-file-name "gtd/team.org" org-directory)
+                            (expand-file-name "notes.org" org-directory))))
     (call-interactively 'helm-org-agenda-files-headings)))
 
 (defun air--org-display-tag (tag &optional focus)
   "Display entries tagged with TAG in a fit window.
 
 Do not make the new window current unless FOCUS is set."
-  (let ((org-agenda-files '("~/Dropbox/org/gtd/inbox.org"
-                            "~/Dropbox/org/gtd/team.org"
-                            "~/Dropbox/org/notes.org")))
+  (let ((org-agenda-files '((expand-file-name "gtd/inbox.org" org-directory)
+                            (expand-file-name "gtd/team.org" org-directory)
+                            (expand-file-name "notes.org" org-directory))))
     (org-tags-view nil tag))
   (fit-window-to-buffer)
   (unless focus
@@ -366,7 +371,7 @@ If VANILLA is non-nil, run the standard `org-capture'."
 (defun air-org-pop-to-inbox ()
   "Open the GTD inbox Org file."
   (interactive)
-  (find-file "~/Dropbox/org/gtd/inbox.org")
+  (find-file (expand-file-name "gtd/inbox.org" org-directory))
   (org-cycle '(16))
   (goto-char 1)
   (org-evil-motion-forward-heading))
@@ -374,17 +379,17 @@ If VANILLA is non-nil, run the standard `org-capture'."
 (defun air-pop-to-org-vault (&optional split)
   "Visit my encrypted vault file, in the current window or a SPLIT."
   (interactive "P")
-  (air--pop-to-file "~/Dropbox/org/vault.gpg" split))
+  (air--pop-to-file (expand-file-name "vault.gpg" org-directory) split))
 
 (defun air-pop-to-org-notes (&optional split)
   "Visit my notes file, in the current window or SPLIT."
   (interactive "P")
-  (air--pop-to-file "~/Dropbox/org/notes.org" split))
+  (air--pop-to-file (expand-file-name "notes.org" org-directory) split))
 
 (defun air-pop-to-org-todo (&optional split)
   "Visit my TODO file, in the current window or SPLIT."
   (interactive "P")
-  (air--pop-to-file "~/Dropbox/org/gtd/inbox.org" split))
+  (air--pop-to-file (expand-file-name "gtd/inbox.org" org-directory) split))
 
 (defun air-pop-to-org-agenda-default (&optional nosplit)
   "Pop to the default agenda in a split window unless NOSPLIT."
@@ -561,8 +566,11 @@ TAG is chosen interactively from the global tags completion table."
                   ":CREATED:  %u\n"
                   ":END:\n\n"))))
 
-  (setq org-default-notes-file "~/Dropbox/org/gtd/inbox.org")
-  (setq org-directory "~/Dropbox/org")
+  (setq org-directory
+        (if (file-directory-p (expand-file-name "~/Dropbox (personal)"))
+            "~/Dropbox (personal)/org"
+          "~/Dropbox/org"))
+  (setq org-default-notes-file (expand-file-name "gtd/inbox.org" org-directory))
 
   ;; Logging of state changes
   (setq org-log-done (quote time))
@@ -582,11 +590,11 @@ TAG is chosen interactively from the global tags completion table."
 
   ;; Agenda configuration
   (setq org-agenda-text-search-extra-files '(agenda-archives))
-  (setq org-agenda-files '("~/Dropbox/org/gtd/inbox.org"
-                           "~/Dropbox/org/gtd/team.org"))
-  (setq org-refile-targets '(("~/Dropbox/org/gtd/inbox.org" :maxlevel . 1)
-                             ("~/Dropbox/org/gtd/someday.org" :maxlevel . 1)
-                             ("~/Dropbox/org/gtd/tickler.org" :maxlevel . 1)))
+  (setq org-agenda-files '((expand-file-name "gtd/inbox.org" org-directory)
+                           (expand-file-name "gtd/team.org" org-directory)))
+  (setq org-refile-targets '(((expand-file-name "gtd/inbox.org" org-directory) :maxlevel . 1)
+                             ((expand-file-name "gtd/someday.org" org-directory) :maxlevel . 1)
+                             ((expand-file-name "gtd/tickler.org" org-directory) :maxlevel . 1)))
   (setq org-refile-use-outline-path 'file)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-outline-path-complete-in-steps nil)
@@ -606,19 +614,19 @@ TAG is chosen interactively from the global tags completion table."
                                                        (org-agenda-skip-if nil '(scheduled
                                                                                  deadline))))
                         (org-agenda-overriding-header "Immediate tasks")
-                        (org-agenda-files '("~/Dropbox/org/gtd/inbox.org"
-                                            "~/Dropbox/org/notes.org"))))
+                        (org-agenda-files '((expand-file-name "gtd/inbox.org" org-directory)
+                                            (expand-file-name "notes.org" org-directory)))))
             (todo "WAITING"
                   ((org-agenda-skip-function 'air-org-skip-if-habit)
                    (org-agenda-overriding-header "Waiting for")
-                   (org-agenda-files '("~/Dropbox/org/gtd/inbox.org"))))
+                   (org-agenda-files '((expand-file-name "gtd/inbox.org" org-directory)))))
             (agenda ""
                     ((org-agenda-span 1)
                      (org-agenda-use-time-grid nil)
-                     (org-agenda-files '("~/Dropbox/org/gtd/inbox.org"
-                                         "~/Dropbox/org/gtd/team.org"
-                                         "~/Dropbox/org/gtd/tickler.org"
-                                         "~/Dropbox/org/diary.org")))))
+                     (org-agenda-files '((expand-file-name "gtd/inbox.org" org-directory)
+                                         (expand-file-name "gtd/team.org" org-directory)
+                                         (expand-file-name "gtd/tickler.org" org-directory)
+                                         (expand-file-name "diary.org" org-directory))))))
            ((org-agenda-compact-blocks t)))
 
           ("h" "Home/personal tasks"
@@ -626,38 +634,38 @@ TAG is chosen interactively from the global tags completion table."
                        ((org-agenda-skip-function '(or (air-org-skip-if-habit)
                                                        (org-agenda-skip-if nil '(scheduled))))
                         (org-agenda-overriding-header "Immediate tasks")
-                        (org-agenda-files '("~/Dropbox/org/personal/inbox.org"))))))
+                        (org-agenda-files '((expand-file-name "personal/inbox.org" org-directory)))))))
 
           ("r" "Inbox review"
            ((agenda "" ((org-agenda-span 8)
-                        (org-agenda-files '("~/Dropbox/org/gtd/inbox.org"))))
+                        (org-agenda-files '((expand-file-name "gtd/inbox.org" org-directory)))))
             (stuck "" ((org-stuck-projects
                         '("+LEVEL=1/-DONE-CANCELED"
                           ("TODO" "WAITING" "SOMEDAY") nil ""))
                        (org-agenda-overriding-header (concat "Stuck projects and new items"
                                                              (make-string 72 ?-)))
-                       (org-agenda-files '("~/Dropbox/org/gtd/inbox.org"))))
+                       (org-agenda-files '((expand-file-name "gtd/inbox.org" org-directory)))))
             (todo "SOMEDAY"
                   ((org-agenda-overriding-header (concat "Maybe someday is today... "
                                                          (make-string 74 ?-)))))
-            (todo "" ((org-agenda-files '("~/Dropbox/org/gtd/reading.org"))
+            (todo "" ((org-agenda-files '((expand-file-name "gtd/reading.org" org-directory)))
                       (org-agenda-overriding-header (concat "Reading list "
                                                             (make-string 87 ?-))))))
            ((org-agenda-compact-blocks t)))
 
           ("e" "Personal inbox review"
            ((agenda "" ((org-agenda-span 8)
-                        (org-agenda-files '("~/Dropbox/org/personal/inbox.org"))))
+                        (org-agenda-files '((expand-file-name "personal/inbox.org" org-directory)))))
             (stuck "" ((org-stuck-projects
                         '("+LEVEL=1/-DONE-CANCELED"
                           ("TODO" "WAITING" "SOMEDAY") nil ""))
                        (org-agenda-overriding-header (concat "Stuck projects and new items"
                                                              (make-string 72 ?-)))
-                       (org-agenda-files '("~/Dropbox/org/personal/inbox.org"))))
+                       (org-agenda-files '((expand-file-name "personal/inbox.org" org-directory)))))
             (todo "SOMEDAY"
                   ((org-agenda-overriding-header (concat "Maybe someday is today... "
                                                          (make-string 74 ?-)))
-                   (org-agenda-files '("~/Dropbox/org/personal/inbox.org")))))
+                   (org-agenda-files '((expand-file-name "personal/inbox.org" org-directory))))))
            ((org-agenda-compact-blocks t)))))
 
   (add-to-list 'org-structure-template-alist
