@@ -463,6 +463,9 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
                                yas-dropdown-prompt))
   (define-key yas-minor-mode-map (kbd "<escape>") 'yas-exit-snippet))
 
+(use-package 'yasnippet-snippets
+  :ensure t)
+
 (use-package which-key
   :ensure t
   :diminish ""
