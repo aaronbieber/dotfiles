@@ -64,6 +64,7 @@
 (column-number-mode t)
 (setq tab-width 4)
 (setq tramp-default-method "ssh")
+(setq tramp-syntax 'simplified)
 
 ;; Allow confusing functions
 (put 'narrow-to-region 'disabled nil)
@@ -463,7 +464,7 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
                                yas-dropdown-prompt))
   (define-key yas-minor-mode-map (kbd "<escape>") 'yas-exit-snippet))
 
-(use-package 'yasnippet-snippets
+(use-package yasnippet-snippets
   :ensure t)
 
 (use-package which-key
