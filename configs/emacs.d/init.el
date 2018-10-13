@@ -181,7 +181,10 @@
   (require 'markdown-mode)
   (add-hook 'markdown-mode-hook
             (lambda ()
-              (define-key markdown-mode-map (kbd "C-c o l") 'octopress-insert-post-url))))
+              (define-key markdown-mode-map (kbd "C-c o i") 'octopress-isolate)
+              (define-key markdown-mode-map (kbd "C-c o I") 'octopress-integrate)
+              (define-key markdown-mode-map (kbd "C-c o p") 'octopress-insert-post-url)
+              (define-key markdown-mode-map (kbd "C-c o m") 'octopress-insert-image-url))))
 
 (use-package all-the-icons
   :ensure t)
@@ -398,9 +401,10 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
 
   (add-hook 'markdown-mode-hook (lambda ()
                                   (visual-line-mode t)
-                                  (yas-minor-mode t)
                                   (set-fill-column 80)
                                   (turn-on-auto-fill)
+                                  ;; Don't wrap Liquid tags
+                                  (setq-local auto-fill-inhibit-regexp "{% [a-zA-Z]+")
                                   (flyspell-mode))))
 
 (use-package php-extras :ensure t :defer t)
