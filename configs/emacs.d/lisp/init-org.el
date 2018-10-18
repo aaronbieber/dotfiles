@@ -119,9 +119,9 @@ the headlines."
 (defun air-org-helm-headings ()
   "Call `helm-org-agenda-files-headings' with a longer list of files."
   (interactive)
-  (let ((org-agenda-files '((expand-file-name "gtd/inbox.org" org-directory)
-                            (expand-file-name "gtd/team.org" org-directory)
-                            (expand-file-name "notes.org" org-directory))))
+  (let ((org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
+                                (expand-file-name "gtd/team.org" org-directory)
+                                (expand-file-name "notes.org" org-directory))))
     (call-interactively 'helm-org-agenda-files-headings)))
 
 (defun air--org-display-tag (tag &optional focus)
@@ -590,11 +590,12 @@ TAG is chosen interactively from the global tags completion table."
 
   ;; Agenda configuration
   (setq org-agenda-text-search-extra-files '(agenda-archives))
-  (setq org-agenda-files '((expand-file-name "gtd/inbox.org" org-directory)
-                           (expand-file-name "gtd/team.org" org-directory)))
-  (setq org-refile-targets '(((expand-file-name "gtd/inbox.org" org-directory) :maxlevel . 1)
-                             ((expand-file-name "gtd/someday.org" org-directory) :maxlevel . 1)
-                             ((expand-file-name "gtd/tickler.org" org-directory) :maxlevel . 1)))
+  (setq org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
+                               (expand-file-name "gtd/team.org" org-directory)))
+  (setq org-refile-targets `((,(expand-file-name "notes.org" org-directory) :maxlevel . 1)
+                             (,(expand-file-name "gtd/inbox.org" org-directory) :maxlevel . 1)
+                             (,(expand-file-name "gtd/someday.org" org-directory) :maxlevel . 1)
+                             (,(expand-file-name "gtd/tickler.org" org-directory) :maxlevel . 1)))
   (setq org-refile-use-outline-path 'file)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-outline-path-complete-in-steps nil)
