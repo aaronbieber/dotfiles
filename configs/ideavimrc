@@ -4,6 +4,7 @@ set incsearch
 let mapleader = ","
 
 nmap <Leader>w :w<CR>
+nmap <Leader>f :action FileStructurePopup<CR>
 nmap <C-l> zz
 nmap <C-p> :action SearchEverywhere<CR>
 imap <C-l> <ESC>zza
