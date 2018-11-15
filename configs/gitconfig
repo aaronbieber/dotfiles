@@ -1,6 +1,6 @@
 [user]
     name = Aaron Bieber
-    email = aaron@aaronbieber.com
+    email = abieber@hubspot.com
 [alias]
     ai = add -i
     st = status
@@ -31,9 +31,9 @@
     interactive = auto
     status = auto
 [core]
-    editor = vim
+    editor = ~/bin/editor
     excludesfile = ~/.gitignore_global
-    hooksPath = ~/.git_hooks
+	hooksPath = /Users/abieber/.git_hooks
 [merge]
     tool = vimdiff
 [push]

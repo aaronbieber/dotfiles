@@ -529,6 +529,9 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
   (setq undo-tree-history-directory-alist
         (list (cons "." (expand-file-name "undo-tree-history" user-emacs-directory)))))
 
+(use-package atomic-chrome
+  :ensure t)
+
 ;;; Helpers for GNUPG, which I use for encrypting/decrypting secrets.
 (require 'epa-file)
 (epa-file-enable)
@@ -777,6 +780,9 @@ is the buffer location at which the function was found."
 
 (setq server-socket-dir (expand-file-name "server" user-emacs-directory))
 (server-start)
+
+(and (fboundp 'atomic-chrome-start-server)
+  (atomic-chrome-start-server))
 
 (provide 'init)
 ;;; init.el ends here

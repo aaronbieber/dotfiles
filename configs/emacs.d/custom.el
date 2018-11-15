@@ -13,6 +13,7 @@
  '(fci-rule-color "#d6d6d6")
  '(flycheck-color-mode-line-face-to-color (quote mode-line-buffer-id))
  '(flycheck-python-flake8-executable "flake8")
+ '(js-indent-level 2)
  '(magit-commit-arguments nil)
  '(markdown-preview-custom-template "/Users/abieber/.emacs.d/markdown-preview-template.html")
  '(org-hide-emphasis-markers t)
