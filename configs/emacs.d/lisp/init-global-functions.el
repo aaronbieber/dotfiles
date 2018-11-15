@@ -78,8 +78,8 @@ If optional argument FOCUS is non-nil, give Chrome the focus as well."
                              (mapcar 'symbol-name
                                      (custom-available-themes)))))
   (mapcar #'disable-theme custom-enabled-themes)
-  (load-theme (intern theme) nil nil)
-  (when (fboundp 'powerline-reset)
+  (load-theme (intern theme) t)
+  (if (fboundp 'powerline-reset)
     (powerline-reset)))
 
 (defun air-cycle-theme (&optional reverse)
