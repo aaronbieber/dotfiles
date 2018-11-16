@@ -14,10 +14,10 @@ try:
 except ImportError:
     print("Could not load `ansicolor'; ensure that the module is installed.")
 
-all_jobs = [("/Volumes/Arcturus/Pictures/",
-             "/Volumes/Ares/Pictures/"),
-            ("/Volumes/Arcturus/Pictures/",
-             "kepler.gquad.space:/volume1/Pictures/")]
+all_jobs = [("/Volumes/Travel/Photography/",
+             "kepler.gquad.space:/volume1/Pictures/Photography/"),
+            ("/Volumes/Travel/Lightroom/",
+             "kepler.gquad.space:/volume1/Pictures/Lightroom/")]
 
 #all_locations = [path for job in jobs for path in job]
 jobs = []
