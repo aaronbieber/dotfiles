@@ -173,7 +173,7 @@
 (require 'init-org)
 
 ;; Just while I'm working on it.
-;;(add-to-list 'load-path (expand-file-name "octopress" user-emacs-directory))
+(add-to-list 'load-path (expand-file-name "octopress-mode" user-emacs-directory))
 (use-package octopress
   :ensure t
   :commands (octopress-status octopress-mode)
@@ -782,7 +782,6 @@ is the buffer location at which the function was found."
   (setq sml/theme 'dark)
   (sml/setup))
 
-(setq server-socket-dir (expand-file-name "server" user-emacs-directory))
 (server-start)
 
 (and (fboundp 'atomic-chrome-start-server)
