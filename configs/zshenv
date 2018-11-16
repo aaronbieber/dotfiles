@@ -24,9 +24,6 @@ if [ -d "$HOME/bin" ]; then
   PATH="$HOME/bin:$PATH"
 fi
 
-# Set Emacs server path if it's there.
-[ -d "$HOME/.emacs.d" ] && export EMACS_SERVER_FILE="$HOME/.emacs.d/server"
-
 # Set up NPM locally-global paths
 if [ ! -d "${HOME}/.node_modules" ]; then
   mkdir "${HOME}/.node_modules"
