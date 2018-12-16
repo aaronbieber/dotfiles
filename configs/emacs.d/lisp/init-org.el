@@ -545,7 +545,7 @@ TAG is chosen interactively from the global tags completion table."
 
         ("l" "A link to read later." entry
          (file "gtd/reading.org")
-         ,(concat "* TODO %c\n"
+         ,(concat "* TODO %:annotation\n"
                   ":PROPERTIES:\n"
                   ":CREATED:  %u\n"
                   ":END:\n\n"
