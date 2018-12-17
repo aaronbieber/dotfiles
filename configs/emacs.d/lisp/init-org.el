@@ -830,7 +830,8 @@ TAG is chosen interactively from the global tags completion table."
                 "Call `company-complete' then `org-cycle'."
                 (interactive)
                 (or (and (looking-back "\\w" (line-beginning-position))
-                         (company-complete))
+                         (or (org-try-structure-completion)
+                             (company-complete)))
                     (org-cycle)))
               (evil-define-key 'normal org-mode-map (kbd "<tab>") 'org-cycle)
               (evil-define-key 'insert org-mode-map (kbd "<tab>") 'company-complete-or-org-cycle)
