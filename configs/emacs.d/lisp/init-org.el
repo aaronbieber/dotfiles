@@ -128,9 +128,9 @@ the headlines."
   "Display entries tagged with TAG in a fit window.
 
 Do not make the new window current unless FOCUS is set."
-  (let ((org-agenda-files '((expand-file-name "gtd/inbox.org" org-directory)
-                            (expand-file-name "gtd/team.org" org-directory)
-                            (expand-file-name "notes.org" org-directory))))
+  (let ((org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
+                                (expand-file-name "gtd/team.org" org-directory)
+                                (expand-file-name "notes.org" org-directory))))
     (org-tags-view nil tag))
   (fit-window-to-buffer)
   (unless focus
