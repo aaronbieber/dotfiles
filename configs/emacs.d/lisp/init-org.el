@@ -314,6 +314,14 @@ headings always respects content."
       (org-insert-subheading t)
     (org-insert-heading t)))
 
+(defun air-org-insert-thing-dwim (&optional subthing)
+  "Insert a heading or list item as appropriate; indent if SUBTHING."
+  (interactive "P")
+  (if (org-in-item-p)
+      (progn (org-insert-item)
+             (if subthing (org-shiftmetaright)))
+    (air-org-insert-heading subthing)))
+
 (defun air-org-insert-scheduled-heading (&optional subheading)
   "Insert a new org heading scheduled for today.
 
@@ -813,6 +821,7 @@ TAG is chosen interactively from the global tags completion table."
                                                          (interactive) (air-org-agenda-toggle-date t)))
               (define-key org-mode-map (kbd "C-c ,")   'org-time-stamp-inactive)
               (define-key org-mode-map (kbd "C-|")     'air-org-insert-scheduled-heading)
+              (define-key org-mode-map (kbd "<C-return>") 'air-org-insert-thing-dwim)
               (define-key org-mode-map (kbd "C-\\")    'air-org-insert-heading)
 
               (define-key org-mode-map (kbd "C-<")     'org-shiftmetaleft)
