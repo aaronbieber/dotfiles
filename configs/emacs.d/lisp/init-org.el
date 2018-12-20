@@ -817,20 +817,20 @@ TAG is chosen interactively from the global tags completion table."
                     (air--org-insert-list-leader-or-self ,char))))
 
               ;; Normal maps
-              (define-key org-mode-map (kbd "C-c d")   (lambda ()
-                                                         (interactive) (air-org-agenda-toggle-date t)))
-              (define-key org-mode-map (kbd "C-c ,")   'org-time-stamp-inactive)
-              (define-key org-mode-map (kbd "C-|")     'air-org-insert-scheduled-heading)
+              (define-key org-mode-map (kbd "C-c d")      (lambda ()
+                                                            (interactive) (air-org-agenda-toggle-date t)))
+              (define-key org-mode-map (kbd "C-c ,")      'org-time-stamp-inactive)
+              (define-key org-mode-map (kbd "C-|")        'air-org-insert-scheduled-heading)
               (define-key org-mode-map (kbd "<C-return>") 'air-org-insert-thing-dwim)
-              (define-key org-mode-map (kbd "C-\\")    'air-org-insert-heading)
+              (define-key org-mode-map (kbd "C-\\")       'air-org-insert-heading)
 
-              (define-key org-mode-map (kbd "C-<")     'org-shiftmetaleft)
-              (define-key org-mode-map (kbd "C->")     'org-shiftmetaright)
+              (define-key org-mode-map (kbd "C-<")        'org-shiftmetaleft)
+              (define-key org-mode-map (kbd "C->")        'org-shiftmetaright)
 
-              (define-key org-mode-map (kbd "C-c SPC") 'air-org-export-top-subtree)
+              (define-key org-mode-map (kbd "C-c SPC")    'air-org-export-top-subtree)
 
-              (define-key org-mode-map (kbd "s-r")       (tiny-menu-run-item "reverts"))
-              (define-key org-mode-map (kbd "C-c C-l")   (tiny-menu-run-item "org-links"))
+              (define-key org-mode-map (kbd "s-r")        (tiny-menu-run-item "reverts"))
+              (define-key org-mode-map (kbd "C-c C-l")    (tiny-menu-run-item "org-links"))
 
               ;; These are set as evil keys because they conflict with
               ;; existing commands I don't use, or are superseded by
