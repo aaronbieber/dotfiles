@@ -36,6 +36,7 @@ platform=`uname`
 pushd `dirname $0` > /dev/null
 SCRIPTPATH=`pwd`
 BINPATH="$SCRIPTPATH/bin"
+TEXMFPATH="$SCRIPTPATH/texmf"
 SCRIPTPATH="$SCRIPTPATH/configs"
 popd > /dev/null
 
@@ -110,3 +111,18 @@ done
 
 # Return to original pwd.
 popd > /dev/null
+
+echo ""
+echo "Installing texmf..."
+echo ""
+
+if [ -d "$HOME/Library/texmf" ]; then
+  echo "${red}Failed!${reset} A directory already exists."
+else
+  if [ ! -h "$HOME/Library/texmf" ]; then
+    ln -s $LNOPTS "$TEXMFPATH" "$HOME/Library/texmf" > /dev/null 2>&1
+    echo "${green}OK${reset} $HOME/Library/texmf"
+  else
+    echo "${yellow}Exists${reset} $HOME/Library/texmf"
+  fi
+fi
