@@ -1,0 +1,28 @@
+\mode<presentation>
+
+% Handling for bulleted lists
+\setbeamertemplate{itemize items}[circle]
+
+% Title page layout
+\defbeamertemplate*{title page}{hubspot}{
+  \vfill{
+    \centering
+    \usebeamerfont{title}\usebeamercolor[fg]{title}\textbf{\inserttitle}
+    \par
+  }
+  \vskip1em{
+    \centering
+    \usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle
+    \par
+  }
+  \vskip1.5em
+  \wfrule{wf-purple}
+  \vskip1.5em{
+    \centering
+    \usebeamercolor[fg]{date}\today
+    \par
+  }
+  \vfill
+}
+
+\mode<all>

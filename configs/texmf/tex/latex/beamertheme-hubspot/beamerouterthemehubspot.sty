@@ -1,0 +1,28 @@
+\mode<presentation>
+
+\setbeamertemplate{navigation symbols}{}
+
+\setbeamertemplate{frametitle}{
+  \nointerlineskip
+  \begin{beamercolorbox}[sep=0.5cm,ht=2.8em,wd=\paperwidth]{frametitle}
+    \ifx\insertframesubtitle\@empty{
+      \vbox{}\vskip-0.1ex%
+      \strut\textbf{\insertframetitle}\strut
+      \vskip-0.8ex%
+    }\else{
+      \vbox{}\vskip-0.1ex%
+      \strut\textbf{\insertframetitle}\strut\\
+      \normalsize\insertframesubtitle
+      \vskip-1.7ex%
+    }\fi
+  \end{beamercolorbox}
+}
+
+\setbeamertemplate{footline}{
+  \begin{beamercolorbox}[sep=0.5em,wd=\paperwidth,ht=2em]{footline}
+    \insertshortauthor\hfill\insertframenumber{} / \inserttotalframenumber
+    \vskip0.2em
+  \end{beamercolorbox}
+}
+
+\mode<all>
