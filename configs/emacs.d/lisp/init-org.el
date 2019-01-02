@@ -871,6 +871,8 @@ TAG is chosen interactively from the global tags completion table."
               (setq show-trailing-whitespace t)
 
               (require 'ox)
+              (require 'ox-beamer)
+              (setf org-export-dispatch-use-expert-ui t)
               (add-to-list 'org-export-filter-bold-functions 'air--beamer-bold)
 
               ;; Settings for non-agenda modes only
