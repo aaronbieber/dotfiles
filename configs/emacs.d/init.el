@@ -447,8 +447,6 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
   (setq web-mode-markup-indent-offset 2)
   (setq web-mode-sql-indent-offset 2))
 
-(use-package sublime-themes :ensure t)
-(use-package gruvbox-theme :ensure t)
 (use-package color-theme-sanityinc-tomorrow :ensure t)
 (use-package zenburn-theme :ensure t :defer t)
 
