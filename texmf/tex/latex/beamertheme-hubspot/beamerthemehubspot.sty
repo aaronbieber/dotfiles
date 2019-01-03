@@ -10,4 +10,14 @@
 \useoutertheme{hubspot}
 \usecolortheme{hubspot}
 
+\AtBeginSection{
+  \begin{frame}
+    \vfill
+    \centering
+    \usebeamerfont{subtitle}\insertsectionhead\par
+    \textcolor{hs-orange}{\rule{0.75\textwidth}{.4pt}}
+    \vfill
+  \end{frame}
+}
+
 \mode<all>
