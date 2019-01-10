@@ -17,7 +17,7 @@
 (custom-theme-set-faces
  'challenger-deep-overrides
  '(company-tooltip-selection ((t (:foreground "black"))))
- '(company-tooltip-common-selection ((t (:foreground "black" :weight 'bold))))
+ '(company-tooltip-common-selection ((t (:foreground "black" :weight bold))))
  '(lazy-highlight ((t (:foreground "gray20"))))
  '(all-the-icons-dired-dir-face ((t (:foreground "khaki2"))))
  '(sml/folder ((t (:inherit sml/global :background "grey22" :foreground "grey50" :weight normal))))
