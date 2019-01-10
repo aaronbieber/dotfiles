@@ -322,6 +322,15 @@ headings always respects content."
              (if subthing (org-shiftmetaright)))
     (air-org-insert-heading subthing)))
 
+(defun air-org-toggle-checkbox-dwim (&optional toggle-presence)
+  "Toggle checkbox presence and state, when TOGGLE-PRESENCE, do that."
+  (interactive "P")
+  (let ((toggle-presence-prefix (if (not (org-at-item-checkbox-p))
+                                    '(4)
+                                  toggle-presence)))
+    (setq current-prefix-arg toggle-presence-prefix)
+    (call-interactively 'org-toggle-checkbox)))
+
 (defun air-org-insert-scheduled-heading (&optional subheading)
   "Insert a new org heading scheduled for today.
 
@@ -856,6 +865,8 @@ TAG is chosen interactively from the global tags completion table."
 
               (evil-define-key 'insert org-mode-map (kbd "C-S-l") 'org-shiftright)
               (evil-define-key 'insert org-mode-map (kbd "C-S-h") 'org-shiftleft)
+
+              (evil-define-key 'normal org-mode-map (kbd "[[")    'air-org-toggle-checkbox-dwim)
 
               ;; Navigation
               (define-key org-mode-map (kbd "M-h") 'org-up-element)
