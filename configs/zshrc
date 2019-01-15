@@ -43,8 +43,16 @@ plugins=(git colorize themes virtualenv)
 
 # If virtualenvwrapper is installed, also activate that plugin and make sure
 # things are set up to work properly.
-vew_on_path=$(type virtualenvwrapper >/dev/null; echo $?)
+#
+# If it is NOT installed, you should `brew install
+# pyenv-virtualenvwrapper` and then reopen your shell a couple of
+# times for these checks to pass and set things up.
 vnw_script="/usr/local/bin/virtualenvwrapper.sh"
+if [[ -e "$vnw_script" ]]; then
+  source "$vnw_script"
+fi
+
+vew_on_path=$(type virtualenvwrapper >/dev/null; echo $?)
 if [[ "$vew_on_path" -eq 0 || -e "$vnw_script" ]]; then
   if [[ ! -d "$HOME/.virtualenvs" ]]; then
     mkdir "$HOME/.virtualenvs"
