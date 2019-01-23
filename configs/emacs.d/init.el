@@ -391,14 +391,14 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
   :mode "\\.md\\'"
   :config
   (setq markdown-command "pandoc --from markdown_github-hard_line_breaks --to html")
-  (define-key markdown-mode-map (kbd "C-\\")  'markdown-insert-list-item)
-  (define-key markdown-mode-map (kbd "C-c '") 'fence-edit-code-at-point)
-  (define-key markdown-mode-map (kbd "C-c 1") 'markdown-insert-header-atx-1)
-  (define-key markdown-mode-map (kbd "C-c 2") 'markdown-insert-header-atx-2)
-  (define-key markdown-mode-map (kbd "C-c 3") 'markdown-insert-header-atx-3)
-  (define-key markdown-mode-map (kbd "C-c 4") 'markdown-insert-header-atx-4)
-  (define-key markdown-mode-map (kbd "C-c 5") 'markdown-insert-header-atx-5)
-  (define-key markdown-mode-map (kbd "C-c 6") 'markdown-insert-header-atx-6)
+  (define-key markdown-mode-map (kbd "<C-return>") 'markdown-insert-list-item)
+  (define-key markdown-mode-map (kbd "C-c '")      'fence-edit-code-at-point)
+  (define-key markdown-mode-map (kbd "C-c 1")      'markdown-insert-header-atx-1)
+  (define-key markdown-mode-map (kbd "C-c 2")      'markdown-insert-header-atx-2)
+  (define-key markdown-mode-map (kbd "C-c 3")      'markdown-insert-header-atx-3)
+  (define-key markdown-mode-map (kbd "C-c 4")      'markdown-insert-header-atx-4)
+  (define-key markdown-mode-map (kbd "C-c 5")      'markdown-insert-header-atx-5)
+  (define-key markdown-mode-map (kbd "C-c 6")      'markdown-insert-header-atx-6)
 
   (add-hook 'markdown-mode-hook (lambda ()
                                   (visual-line-mode t)
