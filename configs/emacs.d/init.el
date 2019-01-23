@@ -181,11 +181,7 @@
   (require 'markdown-mode)
   (add-hook 'markdown-mode-hook
             (lambda ()
-              (define-key markdown-mode-map (kbd "C-c o i") 'octopress-isolate)
-              (define-key markdown-mode-map (kbd "C-c o I") 'octopress-integrate)
-              (define-key markdown-mode-map (kbd "C-c o p") 'octopress-insert-post-url)
-              (define-key markdown-mode-map (kbd "C-c o m") 'octopress-insert-image-url)
-              (define-key markdown-mode-map (kbd "C-c o b") 'octopress-browse))))
+              (octopress-minor-mode t))))
 
 (use-package all-the-icons
   :ensure t)
