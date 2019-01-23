@@ -324,8 +324,9 @@
   (setq helm-buffers-fuzzy-matching t)
   (setq helm-autoresize-mode t)
   (setq helm-buffer-max-length 40)
-  (define-key helm-map (kbd "S-SPC") 'helm-toggle-visible-mark)
-  (define-key helm-find-files-map (kbd "C-k") 'helm-find-files-up-one-level))
+  (define-key helm-map (kbd "S-SPC")          'helm-toggle-visible-mark)
+  (define-key helm-find-files-map (kbd "C-k") 'helm-find-files-up-one-level)
+  (define-key helm-read-file-map (kbd "C-k")  'helm-find-files-up-one-level))
 
 (use-package company
   :ensure t
