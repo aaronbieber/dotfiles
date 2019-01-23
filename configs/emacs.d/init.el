@@ -524,7 +524,9 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
         (list (cons "." (expand-file-name "undo-tree-history" user-emacs-directory)))))
 
 (use-package atomic-chrome
-  :ensure t)
+  :ensure t
+  :config
+  (setq atomic-chrome-default-major-mode 'markdown-mode))
 
 ;;; Helpers for GNUPG, which I use for encrypting/decrypting secrets.
 (require 'epa-file)
@@ -763,8 +765,10 @@ is the buffer location at which the function was found."
 (when (memq window-system '(mac ns))
   (setq ns-use-srgb-colorspace nil))
 
-(load-theme 'sanityinc-tomorrow-day)
-(load-theme 'sanityinc-tomorrow-day-overrides)
+;; (load-theme 'sanityinc-tomorrow-day)
+;; (load-theme 'sanityinc-tomorrow-day-overrides)
+(load-theme 'challenger-deep)
+(load-theme 'challenger-deep-overrides)
 
 (use-package smart-mode-line
   :ensure t
