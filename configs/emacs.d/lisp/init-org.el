@@ -315,12 +315,15 @@ headings always respects content."
     (org-insert-heading t)))
 
 (defun air-org-insert-thing-dwim (&optional subthing)
-  "Insert a heading or list item as appropriate; indent if SUBTHING."
-  (interactive "P")
-  (if (org-in-item-p)
-      (progn (org-insert-item)
-             (if subthing (org-shiftmetaright)))
-    (air-org-insert-heading subthing)))
+  "Insert a heading or list item as appropriate; indent if SUBTHING.
+
+With two prefix arguments, always insert a heading."
+       (interactive "P")
+       (if (and (org-in-item-p)
+                (not (equal subthing '(16))))
+           (progn (org-insert-item)
+                  (if subthing (org-shiftmetaright)))
+         (air-org-insert-heading (equal subthing '(4)))))
 
 (defun air-org-toggle-checkbox-dwim (&optional toggle-presence)
   "Toggle checkbox presence and state, when TOGGLE-PRESENCE, do that."
