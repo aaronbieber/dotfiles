@@ -902,10 +902,10 @@ TAG is chosen interactively from the global tags completion table."
 (use-package org-evil
   :ensure t
   :config
-  (evil-define-minor-mode-key 'normal 'org-evil-heading-mode
-    "@" 'org-refile)
-  (evil-define-minor-mode-key 'normal 'org-evil-heading-mode
-    "#" 'org-add-note))
+  (evil-define-minor-mode-key 'normal 'org-evil-heading-mode "@" 'org-refile)
+  (evil-define-minor-mode-key 'normal 'org-evil-heading-mode "#" 'org-add-note)
+  (evil-define-minor-mode-key 'normal 'org-evil-heading-mode "+" 'org-shiftup)
+  (evil-define-minor-mode-key 'normal 'org-evil-heading-mode "=" 'org-shiftdown))
 
 (use-package org-bullets
   :ensure t
