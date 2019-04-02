@@ -17,7 +17,7 @@
 
 ;; Also add all directories within "lisp"
 ;; I use this for packages I'm actively working on, mostly.
-(let ((files (directory-files-and-attributes "~/.emacs.d/lisp" t)))
+(let ((files (directory-files-and-attributes (expand-file-name "lisp" user-emacs-directory) t)))
   (dolist (file files)
     (let ((filename (car file))
           (dir (nth 1 file)))
