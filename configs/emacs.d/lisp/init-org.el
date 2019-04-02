@@ -888,9 +888,10 @@ TAG is chosen interactively from the global tags completion table."
 
               ;; Settings for non-agenda modes only
               (when (not (eq major-mode 'org-agenda-mode))
-                (if (buffer-file-name)
-                    (and (require 'periodic-commit-minor-mode)
-                         (periodic-commit-minor-mode t)))
+                (ignore-errors
+                  (if (buffer-file-name)
+                      (and (require 'periodic-commit-minor-mode)
+                           (periodic-commit-minor-mode t))))
                 (setq fill-column 100)
                 (org-evil-mode)
                 (visual-line-mode)
