@@ -220,12 +220,6 @@
 (eval-after-load 'wdired
   (add-hook 'wdired-mode-hook 'evil-normal-state))
 
-(use-package exec-path-from-shell
-  :ensure t
-  :config
-  (exec-path-from-shell-initialize)
-  (exec-path-from-shell-copy-env "GOPATH"))
-
 (use-package elpy
   :ensure t
   :config

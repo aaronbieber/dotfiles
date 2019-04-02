@@ -8,15 +8,20 @@
 (add-hook 'window-setup-hook
           (lambda ()
             (when (memq window-system '(mac ns))
+              (use-package exec-path-from-shell
+                :ensure t
+                :config
+                (exec-path-from-shell-initialize)
+                (exec-path-from-shell-copy-env "GOPATH"))
               (add-to-list 'default-frame-alist '(font . "Input Mono"))
               (set-face-attribute 'default nil :font "Input Mono" :weight 'light)
               (sanityinc/set-frame-font-size 14)
               (define-key global-map (kbd "<s-return>") 'toggle-frame-fullscreen))
 
-            (when (memq window-system '(x))
+            (when (memq window-system '(x w32))
               (add-to-list 'default-frame-alist '(font . "Hack"))
               (set-face-attribute 'default nil :font "Hack")
-              (sanityinc/set-frame-font-size 16))
+              (sanityinc/set-frame-font-size 18))
 
             (when (fboundp 'powerline-reset)
               (powerline-reset))))
