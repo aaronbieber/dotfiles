@@ -526,7 +526,10 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
 (use-package atomic-chrome
   :ensure t
   :config
-  (setq atomic-chrome-default-major-mode 'markdown-mode))
+  (setq atomic-chrome-default-major-mode 'markdown-mode)
+  (add-hook 'atomic-chrome-edit-mode-hook (lambda ()
+                                            (turn-off-auto-fill)
+                                            (visual-fill-column-mode t))))
 
 ;;; Helpers for GNUPG, which I use for encrypting/decrypting secrets.
 (require 'epa-file)
