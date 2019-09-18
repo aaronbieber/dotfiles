@@ -293,11 +293,14 @@ Skips the current entry unless SUBTREE is not nil."
   (let* ((deadline-timestamp (format-time-string "<%Y-%m-%d %a>"
                                                  (air-calendar-next-day-of-week 5)))
          (deadline (format "DEADLINE: %s\n\n" deadline-timestamp)))
-    (concat (format "* Week %02d\n\n" (org-days-to-iso-week (org-today)))
-            (concat "** TODO Care: \n" deadline
-                    "** TODO Mastery: \n" deadline
-                    "** TODO Recognition: \n" deadline
-                    "** TODO Purpose: \n" deadline))))
+    (concat (format "* Week %02d\n" (org-days-to-iso-week (org-today)))
+            "\n"
+            "See notes at [[file:~/Dropbox%20(personal)/org/notes.org::*Nine%20Minutes%20on%20Monday][Nine Minutes on Monday]].\n"
+            "\n"
+            "** TODO Care: \n" deadline
+            "** TODO Mastery: \n" deadline
+            "** TODO Recognition: \n" deadline
+            "** TODO Purpose: \n" deadline)))
 
 (defun air-org-set-category-property (value)
   "Set the category property of the current item to VALUE."
@@ -539,52 +542,53 @@ TAG is chosen interactively from the global tags completion table."
           (sequence "IDEA")))
   (setq org-blank-before-new-entry '((heading . t)
                                      (plain-list-item . t)))
+
+  (defun air--org-bullet-daily-log-filename ()
+    "Return the filename of today's Bullet Journal Daily Log."
+    (format-time-string "%Y-%m-%d.org"))
+
   (setq org-capture-templates
-        `(("t" "An incoming GTD item." entry
+        `(
+          ("m" "Nine Minutes on Monday" entry
            (file "gtd/inbox.org")
-           ,(concat "* IDEA %?\n"
-                    ":PROPERTIES:\n"
-                    ":ORDERED:  t\n"
-                    ":CREATED:  %u\n"
-                    ":END:\n")
+           (function air-org-nmom-capture-template)
            :empty-lines 1)
 
-          ("h" "An incoming personal GTD item." entry
-           (file "personal/inbox.org")
+          ("t" "An incoming task or note." entry
+           (file "gtd/inbox.org")
            ,(concat "* %?\n"
                     ":PROPERTIES:\n"
-                    ":ORDERED:  t\n"
                     ":CREATED:  %u\n"
                     ":END:\n")
            :empty-lines 1)
 
-        ("r" "A Reminder (tickler)." entry
-         (file "gtd/tickler.org")
-         "* %?\nSCHEDULED: %^t"
-         :empty-lines 1)
+          ("r" "A Reminder (tickler)." entry
+           (file "gtd/tickler.org")
+           "* %?\nSCHEDULED: %^t"
+           :empty-lines 1)
 
-        ("l" "A link to read later." entry
-         (file "gtd/reading.org")
-         ,(concat "* TODO %:annotation\n"
-                  ":PROPERTIES:\n"
-                  ":CREATED:  %u\n"
-                  ":END:\n\n"
-                  "%i")
-         :empty-lines 1)
+          ("l" "A link to read later." entry
+           (file "gtd/reading.org")
+           ,(concat "* TODO %:annotation\n"
+                    ":PROPERTIES:\n"
+                    ":CREATED:  %u\n"
+                    ":END:\n\n"
+                    "%i")
+           :empty-lines 1)
 
-        ("n" "A note." entry
-         (file "notes.org")
-         ,(concat "* %?\n"
-                  ":PROPERTIES:\n"
-                  ":CREATED:  %u\n"
-                  ":END:\n\n"))
+          ("n" "A note." entry
+           (file "notes.org")
+           ,(concat "* %?\n"
+                    ":PROPERTIES:\n"
+                    ":CREATED:  %u\n"
+                    ":END:\n\n"))
 
-        ("o" "A personal note." entry
-         (file "personal/notes.org")
-         ,(concat "* %?\n"
-                  ":PROPERTIES:\n"
-                  ":CREATED:  %u\n"
-                  ":END:\n\n"))))
+          ("o" "A personal note." entry
+           (file "personal/notes.org")
+           ,(concat "* %?\n"
+                    ":PROPERTIES:\n"
+                    ":CREATED:  %u\n"
+                    ":END:\n\n"))))
 
   (setq org-directory
         (if (file-directory-p (expand-file-name "~/Dropbox (personal)"))
@@ -615,7 +619,8 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-refile-targets `((,(expand-file-name "notes.org" org-directory) :maxlevel . 2)
                              (,(expand-file-name "gtd/inbox.org" org-directory) :maxlevel . 2)
                              (,(expand-file-name "gtd/someday.org" org-directory) :maxlevel . 2)
-                             (,(expand-file-name "gtd/tickler.org" org-directory) :maxlevel . 2)))
+                             (,(expand-file-name "gtd/tickler.org" org-directory) :maxlevel . 2)
+                             (,(expand-file-name "gtd/team.org" org-directory) :maxlevel . 3)))
   (setq org-refile-use-outline-path 'file)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-outline-path-complete-in-steps nil)
