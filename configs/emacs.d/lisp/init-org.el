@@ -538,7 +538,7 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-modules
         '(org-bbdb org-bibtex org-docview org-habit org-info org-w3m))
   (setq org-todo-keywords
-        '((sequence "TODO" "WAITING(!)" "SOMEDAY(!)" "|" "DONE(!)" "CANCELED(!)")
+        '((sequence "TODO" "NEXT" "WAITING(!)" "|" "DONE(!)" "CANCELED(!)")
           (sequence "IDEA")))
   (setq org-blank-before-new-entry '((heading . t)
                                      (plain-list-item . t)))
@@ -633,34 +633,60 @@ TAG is chosen interactively from the global tags completion table."
                         ("@home" . ?h)))
   (setq org-agenda-skip-scheduled-if-done t)
 
+  (defun air-format-project-prefix ()
+    (let ((outline-list (org-get-outline-path)))
+      (concat
+       "  "
+       (cadr outline-list)
+       (if (> (length outline-list) 2) " → ..." "")
+       " → ")))
+
+  (setq org-agenda-time-grid
+        (quote
+         ((daily today remove-match)
+          (900 1100 1300 1500 1700)
+          "......" "----------------")))
+
   (setq org-agenda-custom-commands
-        '(("d" "GTD immediate tasks"
-           ((todo "TODO"
-                  ((org-agenda-skip-function '(or (air-org-skip-if-habit)
-                                                  (org-agenda-skip-if nil '(scheduled
-                                                                            deadline))))
-                   (org-agenda-overriding-header "Immediate tasks")
-                   (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
-                                           (expand-file-name "notes.org" org-directory)))))
-            (todo "WAITING"
-                  ((org-agenda-skip-function 'air-org-skip-if-habit)
-                   (org-agenda-overriding-header "Waiting for")
-                   (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)))))
-            (agenda ""
+        '(("d" "Omnibus agenda"
+           ((agenda ""
                     ((org-agenda-span 1)
-                     (org-agenda-use-time-grid nil)
+                     (org-agenda-time-grid (quote
+                                                ((daily today remove-match)
+                                                 (800 1000 1200 1400 1600)
+                                                 "•••" "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯")))
                      (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
                                              (expand-file-name "gtd/team.org" org-directory)
                                              (expand-file-name "gtd/tickler.org" org-directory)
-                                             (expand-file-name "diary.org" org-directory))))))
-           ((org-agenda-compact-blocks t)))
-
-          ("h" "Home/personal tasks"
-           ((todo "TODO"
+                                             (expand-file-name "hubspot.org" org-directory)
+                                             (expand-file-name "diary.org" org-directory)))))
+            (tags-todo "-project+TODO=\"NEXT\""
                        ((org-agenda-skip-function '(or (air-org-skip-if-habit)
-                                                       (org-agenda-skip-if nil '(scheduled))))
-                        (org-agenda-overriding-header "Immediate tasks")
-                        (org-agenda-files (list (expand-file-name "personal/inbox.org" org-directory)))))))
+                                                       (org-agenda-skip-if nil '(scheduled
+                                                                                 deadline))))
+                        (org-agenda-overriding-header "Current tasks")
+                        (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
+                                                (expand-file-name "orgzly/inbox.org" org-directory)
+                                                (expand-file-name "notes.org" org-directory)))))
+            (tags-todo "-project+TODO=\"TODO\""
+                       ((org-agenda-skip-function '(or (air-org-skip-if-habit)
+                                                       (org-agenda-skip-if nil '(scheduled
+                                                                                 deadline))))
+                        (org-agenda-overriding-header "Upcoming tasks")
+                        (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
+                                                (expand-file-name "orgzly/inbox.org" org-directory)
+                                                (expand-file-name "notes.org" org-directory)))))
+            (tags-todo "project+work+TODO=\"TODO\""
+                       ((org-agenda-overriding-header "Work Projects")
+                        (org-agenda-prefix-format "%(air-format-project-prefix)")))
+            (tags-todo "project+home"
+                       ((org-agenda-overriding-header "Personal Projects")
+                        (org-agenda-prefix-format "%(air-format-project-prefix)")))
+            (todo "WAITING"
+                  ((org-agenda-skip-function 'air-org-skip-if-habit)
+                   (org-agenda-overriding-header "Waiting for")
+                   (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory))))))
+           ((org-agenda-compact-blocks t)))
 
           ("r" "Inbox review"
            ((agenda "" ((org-agenda-span 8)
@@ -677,21 +703,6 @@ TAG is chosen interactively from the global tags completion table."
             (todo "" ((org-agenda-files (list (expand-file-name "gtd/reading.org" org-directory)))
                       (org-agenda-overriding-header (concat "Reading list "
                                                             (make-string 87 ?-))))))
-           ((org-agenda-compact-blocks t)))
-
-          ("e" "Personal inbox review"
-           ((agenda "" ((org-agenda-span 8)
-                        (org-agenda-files (list (expand-file-name "personal/inbox.org" org-directory)))))
-            (stuck "" ((org-stuck-projects
-                        '("+LEVEL=1/-DONE-CANCELED"
-                          ("TODO" "WAITING" "SOMEDAY") nil ""))
-                       (org-agenda-overriding-header (concat "Stuck projects and new items"
-                                                             (make-string 72 ?-)))
-                       (org-agenda-files (list (expand-file-name "personal/inbox.org" org-directory)))))
-            (todo "SOMEDAY"
-                  ((org-agenda-overriding-header (concat "Maybe someday is today... "
-                                                         (make-string 74 ?-)))
-                   (org-agenda-files (list (expand-file-name "personal/inbox.org" org-directory))))))
            ((org-agenda-compact-blocks t)))))
 
   (add-to-list 'org-structure-template-alist
@@ -781,7 +792,7 @@ TAG is chosen interactively from the global tags completion table."
   (add-hook 'org-agenda-mode-hook
             (lambda ()
               (setq org-habit-graph-column 50)
-              (define-key org-agenda-mode-map (kbd "@")   'air-org-agenda-filter-tag-interactive)
+              (define-key org-agenda-mode-map (kbd "@")   'org-agenda-refile)
               (define-key org-agenda-mode-map (kbd "/")   'counsel-grep-or-swiper)
               (define-key org-agenda-mode-map (kbd "H")   'beginning-of-buffer)
               (define-key org-agenda-mode-map (kbd "J")   'air-org-agenda-next-header)
