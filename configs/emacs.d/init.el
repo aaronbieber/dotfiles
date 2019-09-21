@@ -768,10 +768,7 @@ is the buffer location at which the function was found."
 (when (memq window-system '(mac ns))
   (setq ns-use-srgb-colorspace nil))
 
-;; (load-theme 'sanityinc-tomorrow-day)
-;; (load-theme 'sanityinc-tomorrow-day-overrides)
-(load-theme 'challenger-deep)
-(load-theme 'challenger-deep-overrides)
+(load-theme 'gruvbox)
 
 (use-package smart-mode-line
   :ensure t
