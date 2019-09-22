@@ -7,6 +7,10 @@
 ;;
 ;;; Code:
 
+(set-language-environment 'utf-8)
+(setq locale-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(prefer-coding-system 'utf-8)
 
 ;; Leave this here, or package.el will just add it again.
 (package-initialize)
@@ -768,7 +772,10 @@ is the buffer location at which the function was found."
 (when (memq window-system '(mac ns))
   (setq ns-use-srgb-colorspace nil))
 
-(load-theme 'gruvbox)
+(use-package gruvbox-theme
+  :ensure t
+  :config
+  (load-theme 'gruvbox))
 
 (use-package smart-mode-line
   :ensure t
