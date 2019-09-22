@@ -104,6 +104,8 @@
   (evil-define-key 'normal global-map (kbd "\\ c")    (tiny-menu-run-item "org-captures"))
   (evil-define-key 'normal global-map (kbd "\\ h")    (tiny-menu-run-item "org-personal-captures"))
   (evil-define-key 'normal global-map (kbd "\\ l")    (tiny-menu-run-item "org-links"))
+  (evil-define-key 'normal global-map (kbd "C-=")     'sanityinc/increase-default-font-height)
+  (evil-define-key 'normal global-map (kbd "C--")     'sanityinc/decrease-default-font-height)
 
   (defun minibuffer-keyboard-quit ()
     "Abort recursive edit.
