@@ -654,7 +654,7 @@ TAG is chosen interactively from the global tags completion table."
                      (org-agenda-time-grid (quote
                                                 ((daily today remove-match)
                                                  (800 1000 1200 1400 1600)
-                                                 "•••" "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯")))
+                                                 "•••" "-----------------------------------------------------")))
                      (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
                                              (expand-file-name "gtd/team.org" org-directory)
                                              (expand-file-name "gtd/tickler.org" org-directory)
