@@ -141,7 +141,7 @@
                             (?n "Notes" (lambda () (interactive) (air-pop-to-org-notes nil)))
                             (?v "Vault" (lambda () (interactive) (air-pop-to-org-vault nil))))))
           ("org-captures" ("Org Captures"
-                           ((?c "Task"          (lambda () (interactive) (org-capture nil "t")))
+                           ((?c "Task"          (lambda () (interactive) (org-capture nil "c")))
                             (?p "Personal task" (lambda () (interactive) (org-capture nil "p")))))))))
 
 ;;; Larger package-specific configurations.
