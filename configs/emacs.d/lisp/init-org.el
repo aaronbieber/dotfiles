@@ -225,6 +225,16 @@ the entire subtree."
         end
       nil)))
 
+(defun air-org-skip-if-categorized (categories &optional subtree)
+  "Skip an agenda entry if it has any category in CATEGORIES.
+
+Skip the current entry unless SUBTREE is not nil."
+  (let ((end (if subtree (save-excursion (org-end-of-subtree t))
+               (save-excursion (progn (outline-next-heading) (1- (point)))))))
+    (if (member (org-get-category) categories)
+        end
+      nil)))
+
 (defun air-org-skip-if-priority (priority &optional subtree)
   "Skip an agenda item if it has a priority of PRIORITY.
 
@@ -357,15 +367,6 @@ FORCE-HEADING is non-nil."
       (org-insert-subheading t)
     (org-insert-todo-heading t t))
   (org-schedule nil (format-time-string "%Y-%m-%d")))
-
-(defun air-org-task-capture (&optional vanilla)
-  "Capture a task with my default template.
-
-If VANILLA is non-nil, run the standard `org-capture'."
-  (interactive "P")
-  (if vanilla
-      (org-capture)
-    (org-capture nil "t")))
 
 (defun air-org-tickler-capture (&optional vanilla)
   "Capture a new scheduled (tickler) item.
@@ -548,11 +549,10 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-modules
         '(org-bbdb org-bibtex org-docview org-habit org-info org-w3m))
   (setq org-todo-keywords
-        '((sequence "TODO" "NEXT" "WAITING(!)" "|" "DONE(!)" "CANCELED(!)")
-          (sequence "IDEA")))
+        '((sequence "TODO" "WAITING(!)" "|" "DONE(!)" "CANCELED(!)")))
   (setq org-blank-before-new-entry '((heading . t)
                                      (plain-list-item . t)))
-  (setq org-stuck-projects '("+LEVEL=1+project/-DONE" ("TODO" "NEXT" "WAITING") nil ""))
+  (setq org-stuck-projects '("+project/-DONE" ("TODO" "NEXT" "WAITING") nil ""))
 
   (defun air--org-bullet-daily-log-filename ()
     "Return the filename of today's Bullet Journal Daily Log."
@@ -565,9 +565,17 @@ TAG is chosen interactively from the global tags completion table."
            (function air-org-nmom-capture-template)
            :empty-lines 1)
 
-          ("t" "An incoming task or note." entry
-           (file "gtd/inbox.org")
-           ,(concat "* %?\n"
+          ("t" "An incoming work item." entry
+           (file+headline "gtd/inbox.org" "Work")
+           ,(concat "* TODO %?\n"
+                    ":PROPERTIES:\n"
+                    ":CREATED:  %u\n"
+                    ":END:\n")
+           :empty-lines 1)
+
+          ("p" "An incoming personal item." entry
+           (file+headline "gtd/inbox.org" "Home")
+           ,(concat "* TODO %?\n"
                     ":PROPERTIES:\n"
                     ":CREATED:  %u\n"
                     ":END:\n")
@@ -662,9 +670,9 @@ TAG is chosen interactively from the global tags completion table."
 
   (setq org-agenda-time-grid
         (quote
-         ((daily today remove-match)
-          (900 1100 1300 1500 1700)
-          "......" "----------------")))
+         ((daily today)
+          (800 1000 1200 1400 1600)
+          " │" "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")))
 
   (defun air--org-separating-heading (heading)
     "Print HEADING padded with characters to create a separator."
@@ -676,10 +684,6 @@ TAG is chosen interactively from the global tags completion table."
         '(("d" "Omnibus agenda"
            ((agenda ""
                     ((org-agenda-span 1)
-                     (org-agenda-time-grid (quote
-                                                ((daily today remove-match)
-                                                 (800 1000 1200 1400 1600)
-                                                 " │" "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")))
                      (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
                                              (expand-file-name "gtd/team.org" org-directory)
                                              (expand-file-name "gtd/tickler.org" org-directory)
@@ -703,11 +707,11 @@ TAG is chosen interactively from the global tags completion table."
                         (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
                                                 (expand-file-name "orgzly/inbox.org" org-directory)
                                                 (expand-file-name "notes.org" org-directory)))))
-            (tags "project+work/-DONE"
+            (tags "project+CATEGORY=\"work\"/-DONE"
                        ((org-agenda-overriding-header (air--org-separating-heading "Work Projects"))
                         (org-agenda-dim-blocked-tasks nil)
                         (org-agenda-prefix-format "%(air--format-project-prefix)")))
-            (tags "project+home/-DONE"
+            (tags "project+CATEGORY=\"home\"/-DONE"
                        ((org-agenda-overriding-header (air--org-separating-heading "Personal Projects"))
                         (org-agenda-dim-blocked-tasks nil)
                         (org-agenda-prefix-format "%(air--format-project-prefix)")))
@@ -722,24 +726,30 @@ TAG is chosen interactively from the global tags completion table."
                    (org-agenda-prefix-format "%(air--format-for-meetings-prefix)")))
             (stuck ""
                    ((org-agenda-overriding-header (air--org-separating-heading "Stuck Projects")))))
-           ((org-agenda-compact-blocks t)))
+           ((org-use-property-inheritance t)
+            (org-agenda-compact-blocks t)))
 
           ("r" "Inbox review"
-           ((agenda "" ((org-agenda-span 8)
-                        (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)))))
-            (stuck "" ((org-stuck-projects
-                        '("+LEVEL=1/-DONE-CANCELED"
-                          ("TODO" "WAITING" "SOMEDAY") nil ""))
-                       (org-agenda-overriding-header (concat "Stuck projects and new items"
-                                                             (make-string 72 ?-)))
-                       (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)))))
-            (todo "SOMEDAY"
-                  ((org-agenda-overriding-header (concat "Maybe someday is today... "
-                                                         (make-string 74 ?-)))))
+           ((agenda "" ((org-agenda-span 2)
+                        (org-agenda-time-grid nil)
+                        (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
+                                                (expand-file-name "gtd/team.org" org-directory)
+                                                (expand-file-name "gtd/tickler.org" org-directory)
+                                                (expand-file-name "hubspot.org" org-directory)
+                                                (expand-file-name "diary.org" org-directory)))))
+            (tags-todo "+CATEGORY=\"work\"+TODO=\"TODO\""
+                       ((org-agenda-overriding-header (air--org-separating-heading "Work"))))
+            (tags-todo "+CATEGORY=\"home\"+TODO=\"TODO\""
+                       ((org-agenda-overriding-header (air--org-separating-heading "Home"))
+                        (org-agenda-skip-function '(org-agenda-skip-if nil '(scheduled deadline)))))
+            (todo "TODO"
+                  ((org-agenda-overriding-header (air--org-separating-heading "Uncategorized"))
+                   (org-agenda-skip-function '(air-org-skip-if-categorized '("home" "work")))))
             (todo "" ((org-agenda-files (list (expand-file-name "gtd/reading.org" org-directory)))
                       (org-agenda-overriding-header (concat "Reading list "
                                                             (make-string 87 ?-))))))
-           ((org-agenda-compact-blocks t)))))
+           ((org-use-property-inheritance t)
+            (org-agenda-compact-blocks t)))))
 
   (add-to-list 'org-structure-template-alist
                (list "p" (concat ":PROPERTIES:\n"

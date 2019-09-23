@@ -141,14 +141,11 @@
                             (?n "Notes"    (lambda () (interactive) (air-pop-to-org-notes nil)))
                             (?v "Vault" (lambda () (interactive) (air-pop-to-org-vault nil))))))
           ("org-captures" ("Org Captures"
-                           ((?c "Task/idea" air-org-task-capture)
-                            (?t "Tickler"   air-org-tickler-capture)
-                            (?n "Note"      (lambda () (interactive) (org-capture nil "n"))))))
+                           ((?c "Task"          (lambda () (interactive) (org-capture nil "t")))
+                            (?p "Personal task" (lambda () (interactive) (org-capture nil "p"))))))
           ("org-personal-captures" ("Org Personal Captures"
                                     ((?c "Task/idea" (lambda () (interactive (org-capture nil "h"))))
-                                     (?n "Note" (lambda () (interactive (org-capture nil "o")))))))
-
-          )))
+                                     (?n "Note" (lambda () (interactive (org-capture nil "o"))))))))))
 
 ;;; Larger package-specific configurations.
 (require 'init-fonts)
