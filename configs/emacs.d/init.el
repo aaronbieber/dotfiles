@@ -127,9 +127,9 @@
                             (?m "Managers"  air-org-display-managers)
                             (?e "Engineers" air-org-display-engineers))))
           ("org-agendas"  ("Org Agenda Views"
-                           ((?a "All"         air-pop-to-org-agenda-default)
-                            (?r "Review"      air-pop-to-org-agenda-review)
-                            (?h "Home"        air-pop-to-org-agenda-home)
+                           ((?a "All"    air-pop-to-org-agenda-default)
+                            (?r "Review" air-pop-to-org-agenda-review)
+                            (?h "Home"   air-pop-to-org-agenda-home)
                             )))
           ("org-links"    ("Org Links"
                            ((?c "Capture"      org-store-link)
@@ -137,15 +137,12 @@
                             (?L "Insert any"   org-insert-link)
                             (?i "Custom ID"    air-org-insert-custom-id-link))))
           ("org-files"    ("Org Files"
-                           ((?t "TODO"     (lambda () (air-pop-to-org-todo nil)))
-                            (?n "Notes"    (lambda () (interactive) (air-pop-to-org-notes nil)))
+                           ((?t "TODO"  (lambda () (air-pop-to-org-todo nil)))
+                            (?n "Notes" (lambda () (interactive) (air-pop-to-org-notes nil)))
                             (?v "Vault" (lambda () (interactive) (air-pop-to-org-vault nil))))))
           ("org-captures" ("Org Captures"
                            ((?c "Task"          (lambda () (interactive) (org-capture nil "t")))
-                            (?p "Personal task" (lambda () (interactive) (org-capture nil "p"))))))
-          ("org-personal-captures" ("Org Personal Captures"
-                                    ((?c "Task/idea" (lambda () (interactive (org-capture nil "h"))))
-                                     (?n "Note" (lambda () (interactive (org-capture nil "o"))))))))))
+                            (?p "Personal task" (lambda () (interactive) (org-capture nil "p")))))))))
 
 ;;; Larger package-specific configurations.
 (require 'init-fonts)
