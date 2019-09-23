@@ -684,6 +684,7 @@ TAG is chosen interactively from the global tags completion table."
         '(("d" "Omnibus agenda"
            ((agenda ""
                     ((org-agenda-span 1)
+                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo '("WAITING")))
                      (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
                                              (expand-file-name "gtd/team.org" org-directory)
                                              (expand-file-name "gtd/tickler.org" org-directory)
@@ -731,8 +732,7 @@ TAG is chosen interactively from the global tags completion table."
                   ((org-agenda-overriding-header (air--org-separating-heading "Uncategorized"))
                    (org-agenda-skip-function '(air-org-skip-if-categorized '("home" "work")))))
             (todo "" ((org-agenda-files (list (expand-file-name "gtd/reading.org" org-directory)))
-                      (org-agenda-overriding-header (concat "Reading list "
-                                                            (make-string 87 ?-))))))
+                      (org-agenda-overriding-header (air--org-separating-heading "Reading list")))))
            ((org-use-property-inheritance t)
             (org-agenda-compact-blocks t)))))
 
@@ -836,6 +836,7 @@ TAG is chosen interactively from the global tags completion table."
               (define-key org-agenda-mode-map (kbd "k")   'org-agenda-previous-item)
               (define-key org-agenda-mode-map (kbd "u")   'org-agenda-undo)
               (define-key org-agenda-mode-map (kbd "y")   'air-org-bulk-copy-headlines)
+              (define-key org-agenda-mode-map (kbd "S")   'org-agenda-schedule)
               (define-key org-agenda-mode-map (kbd "RET") 'org-agenda-switch-to)
 
               (define-prefix-command 'air-org-run-shortcuts)
