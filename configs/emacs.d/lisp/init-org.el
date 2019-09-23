@@ -565,7 +565,7 @@ TAG is chosen interactively from the global tags completion table."
            (function air-org-nmom-capture-template)
            :empty-lines 1)
 
-          ("t" "An incoming work item." entry
+          ("c" "An incoming work item." entry
            (file+headline "gtd/inbox.org" "Work")
            ,(concat "* TODO %?\n"
                     ":PROPERTIES:\n"
@@ -689,24 +689,6 @@ TAG is chosen interactively from the global tags completion table."
                                              (expand-file-name "gtd/tickler.org" org-directory)
                                              (expand-file-name "hubspot.org" org-directory)
                                              (expand-file-name "diary.org" org-directory)))))
-            (tags-todo "-project+TODO=\"NEXT\""
-                       ((org-agenda-skip-function '(or (air-org-skip-if-habit)
-                                                       (air-org-skip-tag-prefix "@")
-                                                       (org-agenda-skip-if nil '(scheduled
-                                                                                 deadline))))
-                        (org-agenda-overriding-header (air--org-separating-heading "Current tasks"))
-                        (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
-                                                (expand-file-name "orgzly/inbox.org" org-directory)
-                                                (expand-file-name "notes.org" org-directory)))))
-            (tags-todo "-project+TODO=\"TODO\""
-                       ((org-agenda-skip-function '(or (air-org-skip-if-habit)
-                                                       (air-org-skip-tag-prefix "@")
-                                                       (org-agenda-skip-if nil '(scheduled
-                                                                                 deadline))))
-                        (org-agenda-overriding-header (air--org-separating-heading "Upcoming tasks"))
-                        (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
-                                                (expand-file-name "orgzly/inbox.org" org-directory)
-                                                (expand-file-name "notes.org" org-directory)))))
             (tags "project+CATEGORY=\"work\"/-DONE"
                        ((org-agenda-overriding-header (air--org-separating-heading "Work Projects"))
                         (org-agenda-dim-blocked-tasks nil)
@@ -738,10 +720,13 @@ TAG is chosen interactively from the global tags completion table."
                                                 (expand-file-name "hubspot.org" org-directory)
                                                 (expand-file-name "diary.org" org-directory)))))
             (tags-todo "+CATEGORY=\"work\"+TODO=\"TODO\""
-                       ((org-agenda-overriding-header (air--org-separating-heading "Work"))))
+                       ((org-agenda-overriding-header (air--org-separating-heading "Work"))
+                        (org-agenda-skip-function '(or (org-agenda-skip-if nil '(scheduled deadline))
+                                                       (air-org-skip-tag-prefix "@")))))
             (tags-todo "+CATEGORY=\"home\"+TODO=\"TODO\""
                        ((org-agenda-overriding-header (air--org-separating-heading "Home"))
-                        (org-agenda-skip-function '(org-agenda-skip-if nil '(scheduled deadline)))))
+                        (org-agenda-skip-function '(or (org-agenda-skip-if nil '(scheduled deadline))
+                                                       (air-org-skip-tag-prefix "@")))))
             (todo "TODO"
                   ((org-agenda-overriding-header (air--org-separating-heading "Uncategorized"))
                    (org-agenda-skip-function '(air-org-skip-if-categorized '("home" "work")))))
@@ -845,11 +830,10 @@ TAG is chosen interactively from the global tags completion table."
               (define-key org-agenda-mode-map (kbd "K")   'air-org-agenda-previous-header)
               (define-key org-agenda-mode-map (kbd "M")   'org-agenda-bulk-unmark)
               (define-key org-agenda-mode-map (kbd "R")   'org-revert-all-org-buffers)
-              (define-key org-agenda-mode-map (kbd "c")   'air-org-agenda-capture)
+              (define-key org-agenda-mode-map (kbd "c")   (lambda () (interactive) (org-capture nil "c")))
+              (define-key org-agenda-mode-map (kbd "p")   (lambda () (interactive) (org-capture nil "p")))
               (define-key org-agenda-mode-map (kbd "j")   'org-agenda-next-item)
               (define-key org-agenda-mode-map (kbd "k")   'org-agenda-previous-item)
-              (define-key org-agenda-mode-map (kbd "n")   'org-agenda-next-date-line)
-              (define-key org-agenda-mode-map (kbd "p")   'org-agenda-previous-date-line)
               (define-key org-agenda-mode-map (kbd "u")   'org-agenda-undo)
               (define-key org-agenda-mode-map (kbd "y")   'air-org-bulk-copy-headlines)
               (define-key org-agenda-mode-map (kbd "RET") 'org-agenda-switch-to)
