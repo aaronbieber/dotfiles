@@ -162,19 +162,31 @@ Do not make the new window current unless FOCUS is set."
   (interactive "P")
   (air--org-display-tag "engineer" focus))
 
+(defun air-org-skip-tag-prefix (prefix &optional unless subtree)
+  "Skip entries with tags having string prefix PREFIX.
+
+If UNLESS is not nil, skip entries wihout tags having prefix PREFIX.
+
+Skip the current entry unless SUBTREE is not nil."
+       (let* ((end (if subtree (save-excursion (org-end-of-subtree t))
+                    (save-excursion (progn (outline-next-heading) (1- (point))))))
+              (tags (org-get-tags))
+              (has-prefix (seq-filter (lambda (tag) (string-prefix-p prefix tag)) tags)))
+         (if (xor has-prefix unless) end nil)))
+
 (defun air-org-skip-if-not-closed-today (&optional subtree)
   "Skip entries that were not closed today.
 
 Skip the current entry unless SUBTREE is not nil, in which case skip
 the entire subtree."
-  (let ((end (if subtree (save-excursion (org-end-of-subtree t))
-               (save-excursion (progn (outline-next-heading) (1- (point))))))
-        (today-prefix (format-time-string "%Y-%m-%d")))
-    (if (save-excursion
-          (and (re-search-forward org-closed-time-regexp end t)
-               (string= (substring (match-string-no-properties 1) 0 10) today-prefix)))
-        nil
-      end)))
+       (let ((end (if subtree (save-excursion (org-end-of-subtree t))
+                    (save-excursion (progn (outline-next-heading) (1- (point))))))
+             (today-prefix (format-time-string "%Y-%m-%d")))
+         (if (save-excursion
+               (and (re-search-forward org-closed-time-regexp end t)
+                    (string= (substring (match-string-no-properties 1) 0 10) today-prefix)))
+             nil
+           end)))
 
 (defun air-org-skip-if-not-closed-this-week (&optional subtree)
   "Skip entries that were not closed this week.
@@ -208,7 +220,7 @@ the entire subtree."
 Skip the current entry unless SUBTREE is not nil, in which case skip
 the entire subtree."
   (let ((end (if subtree (save-excursion (org-end-of-subtree t))
-                (save-excursion (progn (outline-next-heading) (1- (point)))))))
+               (save-excursion (progn (outline-next-heading) (1- (point)))))))
     (if (string= (org-entry-get nil "STYLE") "habit")
         end
       nil)))
@@ -220,7 +232,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C.
 
 Skips the current entry unless SUBTREE is not nil."
   (let ((end (if subtree (save-excursion (org-end-of-subtree t))
-                (save-excursion (progn (outline-next-heading) (1- (point))))))
+               (save-excursion (progn (outline-next-heading) (1- (point))))))
         (pri-value (* 1000 (- org-lowest-priority priority)))
         (pri-current (org-get-priority (thing-at-point 'line t))))
     (if (= pri-value pri-current)
@@ -242,16 +254,15 @@ Skips the current entry unless SUBTREE is not nil."
                                       nil t)
               (add-to-list 'air-all-org-custom-ids
                            `(,(match-string-no-properties 1)
-                             ,(concat file ":" (number-to-string (line-number-at-pos))))))))))
+                             ,(list file (line-number-at-pos)))))))))
     air-all-org-custom-ids))
 
 (defun air--org-find-custom-id (custom-id)
   "Return the location of CUSTOM-ID."
   (let* ((all-custom-ids (air--org-global-custom-ids)))
-    (let* ((val (cadr (assoc custom-id all-custom-ids)))
-           (id-parts (split-string val ":"))
+    (let* ((id-parts (cadr (assoc custom-id all-custom-ids)))
            (file (car id-parts))
-           (line (string-to-number (cadr id-parts))))
+           (line (cadr id-parts)))
       (with-current-buffer (org-get-agenda-file-buffer file)
         (goto-char (point-min))
         (forward-line line)
@@ -282,10 +293,9 @@ Skips the current entry unless SUBTREE is not nil."
                      "Custom ID: "
                      all-custom-ids)))
     (when custom-id
-      (let* ((val (cadr (assoc custom-id all-custom-ids)))
-             (id-parts (split-string val ":"))
+      (let* ((id-parts (cadr (assoc custom-id all-custom-ids)))
              (file (car id-parts))
-             (line (string-to-number (cadr id-parts))))
+             (line (cadr id-parts)))
         (org-insert-link nil (concat file "::#" custom-id) custom-id)))))
 
 (defun air-org-nmom-capture-template ()
@@ -542,6 +552,7 @@ TAG is chosen interactively from the global tags completion table."
           (sequence "IDEA")))
   (setq org-blank-before-new-entry '((heading . t)
                                      (plain-list-item . t)))
+  (setq org-stuck-projects '("+LEVEL=1+project/-DONE" ("TODO" "NEXT" "WAITING") nil ""))
 
   (defun air--org-bullet-daily-log-filename ()
     "Return the filename of today's Bullet Journal Daily Log."
@@ -632,8 +643,9 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-tag-alist '(("@cal" . ?c)
                         ("@home" . ?h)))
   (setq org-agenda-skip-scheduled-if-done t)
+  (setq org-agenda-hide-tags-regexp "project\\|work\\|home\\|@.*")
 
-  (defun air-format-project-prefix ()
+  (defun air--format-project-prefix ()
     (let ((outline-list (org-get-outline-path)))
       (concat
        "  "
@@ -641,11 +653,24 @@ TAG is chosen interactively from the global tags completion table."
        (if (> (length outline-list) 2) " → ..." "")
        " → ")))
 
+  (defun air--format-for-meetings-prefix ()
+    (let ((id (car (seq-filter (lambda (tag) (string-prefix-p "@" tag)) (org-get-tags)))))
+      (if id
+          (format "  %-10s " (substring id 0 (min (length id) 10)))
+        "                  "
+        )))
+
   (setq org-agenda-time-grid
         (quote
          ((daily today remove-match)
           (900 1100 1300 1500 1700)
           "......" "----------------")))
+
+  (defun air--org-separating-heading (heading)
+    "Print HEADING padded with characters to create a separator."
+    (concat heading
+            " "
+            (make-string (- 78 (length heading)) ?―)))
 
   (setq org-agenda-custom-commands
         '(("d" "Omnibus agenda"
@@ -654,7 +679,7 @@ TAG is chosen interactively from the global tags completion table."
                      (org-agenda-time-grid (quote
                                                 ((daily today remove-match)
                                                  (800 1000 1200 1400 1600)
-                                                 "•••" "-----------------------------------------------------")))
+                                                 " │" "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")))
                      (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
                                              (expand-file-name "gtd/team.org" org-directory)
                                              (expand-file-name "gtd/tickler.org" org-directory)
@@ -662,30 +687,41 @@ TAG is chosen interactively from the global tags completion table."
                                              (expand-file-name "diary.org" org-directory)))))
             (tags-todo "-project+TODO=\"NEXT\""
                        ((org-agenda-skip-function '(or (air-org-skip-if-habit)
+                                                       (air-org-skip-tag-prefix "@")
                                                        (org-agenda-skip-if nil '(scheduled
                                                                                  deadline))))
-                        (org-agenda-overriding-header "Current tasks")
+                        (org-agenda-overriding-header (air--org-separating-heading "Current tasks"))
                         (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
                                                 (expand-file-name "orgzly/inbox.org" org-directory)
                                                 (expand-file-name "notes.org" org-directory)))))
             (tags-todo "-project+TODO=\"TODO\""
                        ((org-agenda-skip-function '(or (air-org-skip-if-habit)
+                                                       (air-org-skip-tag-prefix "@")
                                                        (org-agenda-skip-if nil '(scheduled
                                                                                  deadline))))
-                        (org-agenda-overriding-header "Upcoming tasks")
+                        (org-agenda-overriding-header (air--org-separating-heading "Upcoming tasks"))
                         (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
                                                 (expand-file-name "orgzly/inbox.org" org-directory)
                                                 (expand-file-name "notes.org" org-directory)))))
-            (tags-todo "project+work+TODO=\"TODO\""
-                       ((org-agenda-overriding-header "Work Projects")
-                        (org-agenda-prefix-format "%(air-format-project-prefix)")))
-            (tags-todo "project+home"
-                       ((org-agenda-overriding-header "Personal Projects")
-                        (org-agenda-prefix-format "%(air-format-project-prefix)")))
+            (tags "project+work/-DONE"
+                       ((org-agenda-overriding-header (air--org-separating-heading "Work Projects"))
+                        (org-agenda-dim-blocked-tasks nil)
+                        (org-agenda-prefix-format "%(air--format-project-prefix)")))
+            (tags "project+home/-DONE"
+                       ((org-agenda-overriding-header (air--org-separating-heading "Personal Projects"))
+                        (org-agenda-dim-blocked-tasks nil)
+                        (org-agenda-prefix-format "%(air--format-project-prefix)")))
             (todo "WAITING"
                   ((org-agenda-skip-function 'air-org-skip-if-habit)
-                   (org-agenda-overriding-header "Waiting for")
-                   (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory))))))
+                   (org-agenda-overriding-header (air--org-separating-heading "Waiting"))
+                   (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)))))
+            (todo "TODO"
+                  ((org-agenda-overriding-header (air--org-separating-heading "For meetings"))
+                   (org-agenda-skip-function '(air-org-skip-tag-prefix "@" t))
+                   (org-agenda-sorting-strategy '(tag-up))
+                   (org-agenda-prefix-format "%(air--format-for-meetings-prefix)")))
+            (stuck ""
+                   ((org-agenda-overriding-header (air--org-separating-heading "Stuck Projects")))))
            ((org-agenda-compact-blocks t)))
 
           ("r" "Inbox review"
