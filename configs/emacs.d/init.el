@@ -317,6 +317,10 @@
   (define-key helm-find-files-map (kbd "C-k") 'helm-find-files-up-one-level)
   (define-key helm-read-file-map (kbd "C-k")  'helm-find-files-up-one-level))
 
+(use-package helm-org
+  :ensure t
+  :commands helm-org-agenda-files-headings)
+
 (use-package company
   :ensure t
   :defer t
