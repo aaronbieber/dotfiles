@@ -643,9 +643,11 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-refile-use-outline-path 'file)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-outline-path-complete-in-steps nil)
-  (setq org-agenda-time-grid '((daily today require-timed)
-                               ""
-                               (800 1000 1200 1400 1600)))
+  (setq org-agenda-time-grid
+        (quote
+         ((daily today require-timed remove-match)
+          (800 1000 1200 1400 1600)
+          " │" "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")))
   (setq org-enforce-todo-dependencies t)
   (setq org-agenda-dim-blocked-tasks t)
   (setq org-tag-alist '(("@cal" . ?c)
@@ -657,9 +659,8 @@ TAG is chosen interactively from the global tags completion table."
     (let ((outline-list (org-get-outline-path)))
       (concat
        "  "
-       (cadr outline-list)
-       (if (> (length outline-list) 2) " → ..." "")
-       " → ")))
+       (if (> (length outline-list) 1)
+           (concat (cadr outline-list) " → ")))))
 
   (defun air--format-for-meetings-prefix ()
     (let ((id (car (seq-filter (lambda (tag) (string-prefix-p "@" tag)) (org-get-tags)))))
@@ -667,12 +668,6 @@ TAG is chosen interactively from the global tags completion table."
           (format "  %-10s " (substring id 0 (min (length id) 10)))
         "                  "
         )))
-
-  (setq org-agenda-time-grid
-        (quote
-         ((daily today)
-          (800 1000 1200 1400 1600)
-          " │" "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")))
 
   (defun air--org-separating-heading (heading)
     "Print HEADING padded with characters to create a separator."
