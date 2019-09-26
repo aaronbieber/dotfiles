@@ -715,6 +715,9 @@ TAG is chosen interactively from the global tags completion table."
                                                 (expand-file-name "gtd/tickler.org" org-directory)
                                                 (expand-file-name "hubspot.org" org-directory)
                                                 (expand-file-name "diary.org" org-directory)))))
+            (todo "TODO"
+                  ((org-agenda-overriding-header (air--org-separating-heading "Mobile (REFILE ↓)"))
+                   (org-agenda-files (list (expand-file-name "orgzly/inbox.org" org-directory)))))
             (tags-todo "+CATEGORY=\"work\"+TODO=\"TODO\""
                        ((org-agenda-overriding-header (air--org-separating-heading "Work"))
                         (org-agenda-skip-function '(or (org-agenda-skip-if nil '(scheduled deadline))
