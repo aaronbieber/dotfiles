@@ -162,14 +162,20 @@ Do not make the new window current unless FOCUS is set."
   (interactive "P")
   (air--org-display-tag "engineer" focus))
 
+(defun air--org-get-entry-end (&optional subtree)
+  "Get the position of the end of entry at point, or SUBTREE, if not nil."
+  (save-excursion
+    (progn
+      (if subtree (org-end-of-subtree t))
+      (outline-next-heading) (1- (point)))))
+
 (defun air-org-skip-tag-prefix (prefix &optional unless subtree)
   "Skip entries with tags having string prefix PREFIX.
 
 If UNLESS is not nil, skip entries wihout tags having prefix PREFIX.
 
 Skip the current entry unless SUBTREE is not nil."
-       (let* ((end (if subtree (save-excursion (org-end-of-subtree t))
-                    (save-excursion (progn (outline-next-heading) (1- (point))))))
+       (let* ((end (air--org-get-entry-end subtree))
               (tags (org-get-tags))
               (has-prefix (seq-filter (lambda (tag) (string-prefix-p prefix tag)) tags)))
          (if (xor has-prefix unless) end nil)))
@@ -179,8 +185,7 @@ Skip the current entry unless SUBTREE is not nil."
 
 Skip the current entry unless SUBTREE is not nil, in which case skip
 the entire subtree."
-       (let ((end (if subtree (save-excursion (org-end-of-subtree t))
-                    (save-excursion (progn (outline-next-heading) (1- (point))))))
+       (let ((end (air--org-get-entry-end subtree))
              (today-prefix (format-time-string "%Y-%m-%d")))
          (if (save-excursion
                (and (re-search-forward org-closed-time-regexp end t)
@@ -193,8 +198,7 @@ the entire subtree."
 
 Skip the current entry unless SUBTREE is not nil, in which case skip
 the entire subtree."
-  (let ((end (if subtree (save-excursion (org-end-of-subtree t))
-               (save-excursion (progn (outline-next-heading) (1- (point)))))))
+  (let ((end (air--org-get-entry-end subtree)))
     (if (not (save-excursion (re-search-forward org-closed-time-regexp end t)))
         end
       (let* ((now (current-time))
@@ -215,13 +219,16 @@ the entire subtree."
           end)))))
 
 (defun air-org-skip-if-habit (&optional subtree)
-  "Skip an agenda entry if it has a STYLE property equal to \"habit\".
+  "Skip an agenda entry (or SUBTREE, if not nil) if it is a habit."
+  (let ((end (air--org-get-entry-end subtree)))
+    (if (org-is-habit-p)
+        end
+      nil)))
 
-Skip the current entry unless SUBTREE is not nil, in which case skip
-the entire subtree."
-  (let ((end (if subtree (save-excursion (org-end-of-subtree t))
-               (save-excursion (progn (outline-next-heading) (1- (point)))))))
-    (if (string= (org-entry-get nil "STYLE") "habit")
+(defun air-org-skip-if-not-habit (&optional subtree)
+  "Skip an agenda entry (or SUBTREE, if not nil) if it is not a habit."
+  (let ((end (air--org-get-entry-end subtree)))
+    (if (not (org-is-habit-p))
         end
       nil)))
 
@@ -229,8 +236,7 @@ the entire subtree."
   "Skip an agenda entry if it has any category in CATEGORIES.
 
 Skip the current entry unless SUBTREE is not nil."
-  (let ((end (if subtree (save-excursion (org-end-of-subtree t))
-               (save-excursion (progn (outline-next-heading) (1- (point)))))))
+  (let ((end (air--org-get-entry-end subtree)))
     (if (member (org-get-category) categories)
         end
       nil)))
@@ -241,8 +247,7 @@ Skip the current entry unless SUBTREE is not nil."
 PRIORITY may be one of the characters ?A, ?B, or ?C.
 
 Skips the current entry unless SUBTREE is not nil."
-  (let ((end (if subtree (save-excursion (org-end-of-subtree t))
-               (save-excursion (progn (outline-next-heading) (1- (point))))))
+  (let ((end (air--org-get-entry-end subtree))
         (pri-value (* 1000 (- org-lowest-priority priority)))
         (pri-current (org-get-priority (thing-at-point 'line t))))
     (if (= pri-value pri-current)
