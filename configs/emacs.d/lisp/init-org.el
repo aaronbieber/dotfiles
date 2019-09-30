@@ -678,13 +678,15 @@ TAG is chosen interactively from the global tags completion table."
     "Print HEADING padded with characters to create a separator."
     (concat heading
             " "
-            (make-string (- 78 (length heading)) ?―)))
+            (make-string (- 78 (length heading)) ?―))
+    heading)
 
   (setq org-agenda-custom-commands
         '(("d" "Omnibus agenda"
            ((agenda ""
                     ((org-agenda-span 1)
-                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo '("WAITING")))
+                     (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo '("WAITING"))
+                                                    (air-org-skip-if-habit)))
                      (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
                                              (expand-file-name "gtd/team.org" org-directory)
                                              (expand-file-name "gtd/tickler.org" org-directory)
@@ -703,14 +705,20 @@ TAG is chosen interactively from the global tags completion table."
                    (org-agenda-overriding-header (air--org-separating-heading "Waiting"))
                    (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)))))
             (todo "TODO"
-                  ((org-agenda-overriding-header (air--org-separating-heading "For meetings"))
+                  ((org-agenda-overriding-header (air--org-separating-heading "For Meetings"))
                    (org-agenda-skip-function '(air-org-skip-tag-prefix "@" t))
                    (org-agenda-sorting-strategy '(tag-up))
                    (org-agenda-prefix-format "%(air--format-for-meetings-prefix)")))
+            (agenda ""
+                    ((org-agenda-overriding-header "Habits")
+                     (org-agenda-compact-blocks nil)
+                     (org-agenda-span 1)
+                     (org-agenda-skip-function 'air-org-skip-if-not-habit)))
             (stuck ""
                    ((org-agenda-overriding-header (air--org-separating-heading "Stuck Projects")))))
            ((org-use-property-inheritance t)
-            (org-agenda-compact-blocks t)))
+            (org-agenda-block-separator ?╌)
+            (org-agenda-compact-blocks nil)))
 
           ("r" "Inbox review"
            ((agenda "" ((org-agenda-span 2)
