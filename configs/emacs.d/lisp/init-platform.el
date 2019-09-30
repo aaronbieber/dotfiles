@@ -26,6 +26,9 @@
             (when (fboundp 'powerline-reset)
               (powerline-reset))))
 
+(if (eq window-system 'w32)
+    (setq ispell-program-name "~/hunspell/bin/hunspell.exe"))
+
 ;; Display emoji on Macs where the font is already there.
 (when (memq window-system '(mac))
   (set-fontset-font t 'unicode "Apple Color Emoji" nil 'prepend))
