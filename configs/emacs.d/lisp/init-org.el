@@ -659,6 +659,9 @@ TAG is chosen interactively from the global tags completion table."
                         ("@home" . ?h)))
   (setq org-agenda-skip-scheduled-if-done t)
   (setq org-agenda-hide-tags-regexp "project\\|work\\|home\\|@.*")
+  (setq org-habit-today-glyph ?o)
+  (setq org-habit-completed-glyph ?✓)
+  (setq org-habit-show-all-today t)
 
   (defun air--format-project-prefix ()
     (let ((outline-list (org-get-outline-path)))
@@ -712,6 +715,7 @@ TAG is chosen interactively from the global tags completion table."
             (agenda ""
                     ((org-agenda-overriding-header "Habits")
                      (org-agenda-compact-blocks nil)
+                     (org-agenda-time-grid nil)
                      (org-agenda-span 1)
                      (org-agenda-skip-function 'air-org-skip-if-not-habit)))
             (stuck ""
