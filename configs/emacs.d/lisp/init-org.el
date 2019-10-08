@@ -660,15 +660,28 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-agenda-skip-scheduled-if-done t)
   (setq org-agenda-hide-tags-regexp "project\\|work\\|home\\|@.*")
   (setq org-habit-today-glyph ?o)
-  (setq org-habit-completed-glyph ?✓)
+  (setq org-habit-completed-glyph ?*)
   (setq org-habit-show-all-today t)
 
-  (defun air--format-project-prefix ()
+  (defun air--full-project-prefix ()
     (let ((outline-list (org-get-outline-path)))
       (concat
        "  "
        (if (> (length outline-list) 1)
            (concat (cadr outline-list) " → ")))))
+
+  (defun air--fixed-project-prefix ()
+    (let* ((outline-list (org-get-outline-path))
+           (max-len 15)
+           (project (if (> (length outline-list) 1)
+                        (cadr outline-list)
+                      (org-get-category)))
+           (project-trimmed (if (> (length project) max-len)
+                                (substring project 0 max-len)
+                              project)))
+      (concat "  "
+              (make-string (- max-len (length project-trimmed)) 32)
+              project-trimmed ": ")))
 
   (defun air--format-for-meetings-prefix ()
     (let ((id (car (seq-filter (lambda (tag) (string-prefix-p "@" tag)) (org-get-tags)))))
@@ -698,11 +711,11 @@ TAG is chosen interactively from the global tags completion table."
             (tags "project+CATEGORY=\"work\"/-DONE"
                        ((org-agenda-overriding-header (air--org-separating-heading "Work Projects"))
                         (org-agenda-dim-blocked-tasks nil)
-                        (org-agenda-prefix-format "%(air--format-project-prefix)")))
+                        (org-agenda-prefix-format "%(air--full-project-prefix)")))
             (tags "project+CATEGORY=\"home\"/-DONE"
                        ((org-agenda-overriding-header (air--org-separating-heading "Personal Projects"))
                         (org-agenda-dim-blocked-tasks nil)
-                        (org-agenda-prefix-format "%(air--format-project-prefix)")))
+                        (org-agenda-prefix-format "%(air--full-project-prefix)")))
             (todo "WAITING"
                   ((org-agenda-skip-function 'air-org-skip-if-habit)
                    (org-agenda-overriding-header (air--org-separating-heading "Waiting"))
@@ -737,10 +750,12 @@ TAG is chosen interactively from the global tags completion table."
                    (org-agenda-files (list (expand-file-name "orgzly/inbox.org" org-directory)))))
             (tags-todo "+CATEGORY=\"work\"+TODO=\"TODO\""
                        ((org-agenda-overriding-header (air--org-separating-heading "Work"))
+                        (org-agenda-prefix-format "%(air--fixed-project-prefix)")
                         (org-agenda-skip-function '(or (org-agenda-skip-if nil '(scheduled deadline))
                                                        (air-org-skip-tag-prefix "@")))))
             (tags-todo "+CATEGORY=\"home\"+TODO=\"TODO\""
                        ((org-agenda-overriding-header (air--org-separating-heading "Home"))
+                        (org-agenda-prefix-format "%(air--fixed-project-prefix)")
                         (org-agenda-skip-function '(or (org-agenda-skip-if nil '(scheduled deadline))
                                                        (air-org-skip-tag-prefix "@")))))
             (todo "TODO"
