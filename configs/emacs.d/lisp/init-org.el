@@ -435,10 +435,10 @@ If VANILLA is non-nil, run the standard `org-capture'."
   (interactive "P")
   (air--pop-to-org-agenda-view "d" split))
 
-(defun air-pop-to-org-agenda-review (&optional nosplit)
+(defun air-pop-to-org-agenda-review (&optional split)
   "Pop to the default agenda in a split window unless NOSPLIT."
   (interactive "P")
-  (air--pop-to-org-agenda-view "r" (not nosplit)))
+  (air--pop-to-org-agenda-view "r" split))
 
 (defun air-pop-to-org-agenda-home (&optional nosplit)
   "Pop to the personal agenda in a split unless NOSPLIT."
@@ -687,8 +687,7 @@ TAG is chosen interactively from the global tags completion table."
     (let ((id (car (seq-filter (lambda (tag) (string-prefix-p "@" tag)) (org-get-tags)))))
       (if id
           (format "  %-10s " (substring id 0 (min (length id) 10)))
-        "                  "
-        )))
+        "                  ")))
 
   (defun air--org-separating-heading (heading)
     "Print HEADING padded with characters to create a separator."
@@ -721,6 +720,8 @@ TAG is chosen interactively from the global tags completion table."
                    (org-agenda-prefix-format "%(air--format-for-meetings-prefix)")))
             (agenda ""
                     ((org-agenda-overriding-header "Habits")
+                     (org-agenda-sorting-strategy '(tag-up))
+                     (org-agenda-prefix-format "  ")
                      (org-agenda-compact-blocks nil)
                      (org-agenda-time-grid nil)
                      (org-agenda-span 1)
@@ -748,12 +749,14 @@ TAG is chosen interactively from the global tags completion table."
                        ((org-agenda-overriding-header (air--org-separating-heading "Work"))
                         (org-agenda-prefix-format "%(air--fixed-project-prefix)")
                         (org-agenda-skip-function '(or (org-agenda-skip-if nil '(scheduled deadline))
-                                                       (air-org-skip-tag-prefix "@")))))
+                                                       (air-org-skip-tag-prefix "@")))
+                        (org-agenda-prefix-format "%(air--format-review-prefix)")))
             (tags-todo "+CATEGORY=\"home\"+TODO=\"TODO\""
                        ((org-agenda-overriding-header (air--org-separating-heading "Home"))
                         (org-agenda-prefix-format "%(air--fixed-project-prefix)")
                         (org-agenda-skip-function '(or (org-agenda-skip-if nil '(scheduled deadline))
-                                                       (air-org-skip-tag-prefix "@")))))
+                                                       (air-org-skip-tag-prefix "@")))
+                        (org-agenda-prefix-format "%(air--format-review-prefix)")))
             (todo "TODO"
                   ((org-agenda-overriding-header (air--org-separating-heading "Uncategorized"))
                    (org-agenda-skip-function '(air-org-skip-if-categorized '("home" "work")))))
