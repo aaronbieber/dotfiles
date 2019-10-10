@@ -709,14 +709,6 @@ TAG is chosen interactively from the global tags completion table."
                                              (expand-file-name "gtd/tickler.org" org-directory)
                                              (expand-file-name "hubspot.org" org-directory)
                                              (expand-file-name "diary.org" org-directory)))))
-            (tags "project+CATEGORY=\"work\"/-DONE"
-                       ((org-agenda-overriding-header (air--org-separating-heading "Work Projects"))
-                        (org-agenda-dim-blocked-tasks nil)
-                        (org-agenda-prefix-format "%(air--full-project-prefix)")))
-            (tags "project+CATEGORY=\"home\"/-DONE"
-                       ((org-agenda-overriding-header (air--org-separating-heading "Personal Projects"))
-                        (org-agenda-dim-blocked-tasks nil)
-                        (org-agenda-prefix-format "%(air--full-project-prefix)")))
             (todo "WAITING"
                   ((org-agenda-skip-function 'air-org-skip-if-habit)
                    (org-agenda-prefix-format "%(air--fixed-project-prefix)")
