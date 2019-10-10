@@ -672,16 +672,16 @@ TAG is chosen interactively from the global tags completion table."
 
   (defun air--fixed-project-prefix ()
     (let* ((outline-list (org-get-outline-path))
-           (max-len 15)
+           (max-len 12)
            (project (if (> (length outline-list) 1)
                         (cadr outline-list)
                       (org-get-category)))
            (project-trimmed (if (> (length project) max-len)
-                                (substring project 0 max-len)
+                                (string-trim (substring project 0 max-len))
                               project)))
       (concat "  "
               (make-string (- max-len (length project-trimmed)) 32)
-              project-trimmed ": ")))
+              project-trimmed (if (> (length project-trimmed) 0) ": "))))
 
   (defun air--format-for-meetings-prefix ()
     (let ((id (car (seq-filter (lambda (tag) (string-prefix-p "@" tag)) (org-get-tags)))))
@@ -701,6 +701,7 @@ TAG is chosen interactively from the global tags completion table."
         '(("d" "Omnibus agenda"
            ((agenda ""
                     ((org-agenda-span 1)
+                     (org-agenda-prefix-format "%(air--fixed-project-prefix)%?-12t% s")
                      (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo '("WAITING"))
                                                     (air-org-skip-if-habit)))
                      (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
@@ -718,6 +719,7 @@ TAG is chosen interactively from the global tags completion table."
                         (org-agenda-prefix-format "%(air--full-project-prefix)")))
             (todo "WAITING"
                   ((org-agenda-skip-function 'air-org-skip-if-habit)
+                   (org-agenda-prefix-format "%(air--fixed-project-prefix)")
                    (org-agenda-overriding-header (air--org-separating-heading "Waiting"))
                    (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)))))
             (todo "TODO"
@@ -740,6 +742,8 @@ TAG is chosen interactively from the global tags completion table."
           ("r" "Inbox review"
            ((agenda "" ((org-agenda-span 2)
                         (org-agenda-time-grid nil)
+                        (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo '("WAITING"))
+                                                       (air-org-skip-if-habit)))
                         (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
                                                 (expand-file-name "gtd/team.org" org-directory)
                                                 (expand-file-name "gtd/tickler.org" org-directory)
