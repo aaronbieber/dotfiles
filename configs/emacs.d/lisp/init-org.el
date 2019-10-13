@@ -178,7 +178,7 @@ Skip the current entry unless SUBTREE is not nil."
        (let* ((end (air--org-get-entry-end subtree))
               (tags (org-get-tags))
               (has-prefix (seq-filter (lambda (tag) (string-prefix-p prefix tag)) tags)))
-         (if (xor has-prefix unless) end nil)))
+         (if (org-xor has-prefix unless) end nil)))
 
 (defun air-org-skip-if-not-closed-today (&optional subtree)
   "Skip entries that were not closed today.
