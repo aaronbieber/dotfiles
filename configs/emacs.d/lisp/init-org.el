@@ -749,14 +749,12 @@ TAG is chosen interactively from the global tags completion table."
                        ((org-agenda-overriding-header (air--org-separating-heading "Work"))
                         (org-agenda-prefix-format "%(air--fixed-project-prefix)")
                         (org-agenda-skip-function '(or (org-agenda-skip-if nil '(scheduled deadline))
-                                                       (air-org-skip-tag-prefix "@")))
-                        (org-agenda-prefix-format "%(air--format-review-prefix)")))
+                                                       (air-org-skip-tag-prefix "@")))))
             (tags-todo "+CATEGORY=\"home\"+TODO=\"TODO\""
                        ((org-agenda-overriding-header (air--org-separating-heading "Home"))
                         (org-agenda-prefix-format "%(air--fixed-project-prefix)")
                         (org-agenda-skip-function '(or (org-agenda-skip-if nil '(scheduled deadline))
-                                                       (air-org-skip-tag-prefix "@")))
-                        (org-agenda-prefix-format "%(air--format-review-prefix)")))
+                                                       (air-org-skip-tag-prefix "@")))))
             (todo "TODO"
                   ((org-agenda-overriding-header (air--org-separating-heading "Uncategorized"))
                    (org-agenda-skip-function '(air-org-skip-if-categorized '("home" "work")))))
