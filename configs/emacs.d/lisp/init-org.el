@@ -430,15 +430,15 @@ If VANILLA is non-nil, run the standard `org-capture'."
   (interactive "P")
   (air--pop-to-file (expand-file-name "gtd/inbox.org" org-directory) split))
 
-(defun air-pop-to-org-agenda-default (&optional split)
-  "Pop to the default agenda in the current window unless SPLIT."
+(defun air-pop-to-org-agenda-default (&optional nosplit)
+  "Pop to the default agenda in the current window unless NOSPLIT."
   (interactive "P")
-  (air--pop-to-org-agenda-view "d" split))
+  (air--pop-to-org-agenda-view "d" nosplit))
 
-(defun air-pop-to-org-agenda-review (&optional split)
+(defun air-pop-to-org-agenda-review (&optional nosplit)
   "Pop to the default agenda in a split window unless NOSPLIT."
   (interactive "P")
-  (air--pop-to-org-agenda-view "r" split))
+  (air--pop-to-org-agenda-view "r" nosplit))
 
 (defun air-pop-to-org-agenda-home (&optional nosplit)
   "Pop to the personal agenda in a split unless NOSPLIT."
