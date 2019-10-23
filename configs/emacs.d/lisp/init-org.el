@@ -802,14 +802,8 @@ TAG is chosen interactively from the global tags completion table."
              (end (org-element-property :end element)))
         (list end begin))))
 
-  (evil-define-text-object evil-org-outer-element (count &optional beg end type)
-    "One whole org element, from headline to final newline."
-    :type line
-    (air--org-element-motion count))
-
-  (evil-define-text-object evil-org-inner-element (count &optional beg end type)
-    "An Org subtree, minus its header and concluding line break.  Uses code from `org-mark-subtree`"
-    :type line
+  (defun air--org-inner-element-bounds (count)
+    "Return the bounds of the current element, minus its header and concluding line break."
     (let* ((outer-points (air--org-element-motion count))
            (outer-begin (cadr outer-points))
            (outer-end (car outer-points))
@@ -834,8 +828,32 @@ TAG is chosen interactively from the global tags completion table."
                   (point))))
       (list end begin)))
 
+  (evil-define-text-object evil-org-outer-element (count &optional beg end type)
+    "One whole org element, from headline to final newline."
+    :type line
+    (air--org-element-motion count))
+
+  (evil-define-text-object evil-org-inner-element (count &optional beg end type)
+    "An Org subtree, minus its header and concluding line break.  Uses code from `org-mark-subtree`"
+    :type line
+    (air--org-inner-element-bounds count))
+
   (define-key evil-outer-text-objects-map "*" 'evil-org-outer-element)
   (define-key evil-inner-text-objects-map "*" 'evil-org-inner-element)
+
+  (defun air-org-narrow-to-prose-dwim ()
+    "Narrow and activate a writing mode for the contents of the current element."
+    (interactive)
+    (if (not (eq major-mode 'org-mode))
+        (error "Narrow to prose only works in Org Mode"))
+    (if (buffer-narrowed-p)
+        (progn (olivetti-mode 0)
+               (widen)
+               (if (member 'visual-fill-column-mode minor-mode-list)
+                  (visual-fill-column-adjust)))
+      (let ((bounds (air--org-inner-element-bounds 0)))
+        (narrow-to-region (cadr bounds) (car bounds))
+        (olivetti-mode t))))
 
   (evil-leader/set-key-for-mode 'org-mode
     "$"  'org-archive-subtree
