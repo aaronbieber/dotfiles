@@ -990,5 +990,11 @@ TAG is chosen interactively from the global tags completion table."
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
   (setq org-bullets-bullet-list '("•")))
 
+(use-package ox-clip
+  :ensure t
+  :defer t
+  :config
+  (evil-define-key 'visual org-mode-map (kbd "gy") 'ox-clip-formatted-copy))
+
 (provide 'init-org)
 ;;; init-org.el ends here
