@@ -706,7 +706,6 @@ TAG is chosen interactively from the global tags completion table."
                      (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
                                              (expand-file-name "gtd/team.org" org-directory)
                                              (expand-file-name "gtd/tickler.org" org-directory)
-                                             (expand-file-name "hubspot.org" org-directory)
                                              (expand-file-name "diary.org" org-directory)))))
             (todo "WAITING"
                   ((org-agenda-skip-function 'air-org-skip-if-habit)
@@ -740,7 +739,6 @@ TAG is chosen interactively from the global tags completion table."
                         (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
                                                 (expand-file-name "gtd/team.org" org-directory)
                                                 (expand-file-name "gtd/tickler.org" org-directory)
-                                                (expand-file-name "hubspot.org" org-directory)
                                                 (expand-file-name "diary.org" org-directory)))))
             (todo "TODO"
                   ((org-agenda-overriding-header (air--org-separating-heading "Mobile (REFILE ↓)"))
