@@ -13,6 +13,7 @@
 (prefer-coding-system 'utf-8)
 
 ;; Leave this here, or package.el will just add it again.
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 (package-initialize)
 
 (require 'package)
