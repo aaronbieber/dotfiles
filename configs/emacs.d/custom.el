@@ -7,6 +7,7 @@
    [default bold shadow italic underline bold bold-italic bold])
  '(ansi-color-names-vector
    (vector "#d6d6d6" "#c82829" "#718c00" "#eab700" "#4271ae" "#8959a8" "#3e999f" "#4d4d4c"))
+ '(css-indent-offset 2)
  '(custom-safe-themes
    (quote
     ("91ce1e1533921a31778b95d1626371499e42d46833d703e25a07dcb8c283f4af" . t)))
