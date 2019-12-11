@@ -52,6 +52,9 @@
                   eshell-mode
                   flycheck-error-list-mode
                   git-rebase-mode
+                  hugo-mode
+                  hugo-server-mode
+                  hugo-process-mode
                   octopress-mode
                   octopress-server-mode
                   octopress-process-mode

@@ -171,6 +171,13 @@
 (add-to-list 'load-path (expand-file-name "fence-edit" user-emacs-directory))
 (require 'fence-edit)
 
+(add-to-list 'load-path (expand-file-name "hugo" user-emacs-directory))
+(require 'hugo)
+(require 'markdown-mode)
+(add-hook 'markdown-mode-hook
+          (lambda ()
+            (hugo-minor-mode t)))
+
 ;; Utilities
 (use-package s
   :ensure t
@@ -182,17 +189,6 @@
 ;; Org Mode
 (add-to-list 'load-path (expand-file-name "periodic-commit-minor-mode" user-emacs-directory))
 (require 'init-org)
-
-;; Just while I'm working on it.
-(add-to-list 'load-path (expand-file-name "octopress-mode" user-emacs-directory))
-(use-package octopress
-  :ensure t
-  :commands (octopress-status octopress-mode)
-  :config
-  (require 'markdown-mode)
-  (add-hook 'markdown-mode-hook
-            (lambda ()
-              (octopress-minor-mode t))))
 
 (use-package all-the-icons
   :ensure t)
