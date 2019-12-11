@@ -8,9 +8,9 @@
 ;;; Code:
 
 (set-language-environment 'utf-8)
-(setq locale-coding-system 'utf-8)
-(set-default-coding-systems 'utf-8)
-(prefer-coding-system 'utf-8)
+(setq locale-coding-system 'utf-8-unix)
+(set-default-coding-systems 'utf-8-unix)
+(prefer-coding-system 'utf-8-unix)
 
 (setq initial-scratch-message
       (concat
