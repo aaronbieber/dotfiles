@@ -5,6 +5,8 @@
 
 ;;; Code:
 (define-key global-map (kbd "C-c u")   'insert-char) ;; "u" for Unicode, get it?
+(define-key global-map (kbd "C-c 8")   (lambda () (interactive)
+                                         (set-buffer-file-coding-system 'utf-8-unix)))
 (define-key global-map (kbd "C-c s")   (lambda () (interactive) (ansi-term "zsh")))
 (define-key global-map (kbd "s-e")     'eval-buffer)
 (define-key global-map (kbd "C-}")     'air-cycle-theme)
