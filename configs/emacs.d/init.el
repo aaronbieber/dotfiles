@@ -7,9 +7,9 @@
 ;;
 ;;; Code:
 
-(set-language-environment 'utf-8)
-(setq locale-coding-system 'utf-8-unix)
+(setq-default buffer-file-coding-system 'utf-8-unix)
 (set-default-coding-systems 'utf-8-unix)
+(setq locale-coding-system 'utf-8-unix)
 (prefer-coding-system 'utf-8-unix)
 
 (setq initial-scratch-message
@@ -502,8 +502,7 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
   :config
   (setq magit-branch-arguments nil)
   (setq magit-push-always-verify nil)
-  (setq magit-last-seen-setup-instructions "1.4.0")
-  (magit-define-popup-switch 'magit-log-popup ?f "first parent" "--first-parent"))
+  (setq magit-last-seen-setup-instructions "1.4.0"))
 
 (require 'periodic-commit-minor-mode)
 
