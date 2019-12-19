@@ -407,7 +407,7 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
                                   (set-fill-column 80)
                                   (turn-on-auto-fill)
                                   ;; Don't wrap Liquid tags
-                                  (setq-local auto-fill-inhibit-regexp "{% [a-zA-Z]+")
+                                  (setq auto-fill-inhibit-regexp (rx "{" (? "{") (1+ (or "%" "<" " ")) (1+ letter)))
                                   (flyspell-mode))))
 
 (use-package php-extras :ensure t :defer t)
