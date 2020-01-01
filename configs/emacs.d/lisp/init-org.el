@@ -570,16 +570,16 @@ TAG is chosen interactively from the global tags completion table."
            (function air-org-nmom-capture-template)
            :empty-lines 1)
 
-          ("c" "An incoming work item." entry
-           (file+headline "gtd/inbox.org" "Work")
+          ("c" "An incoming task." entry
+           (file "gtd/tasks.org")
            ,(concat "* TODO %?\n"
                     ":PROPERTIES:\n"
                     ":CREATED:  %u\n"
                     ":END:\n")
            :empty-lines 1)
 
-          ("p" "An incoming personal item." entry
-           (file+headline "gtd/inbox.org" "Home")
+          ("b" "An incoming backlog item." entry
+           (file "gtd/backlog.org")
            ,(concat "* TODO %?\n"
                     ":PROPERTIES:\n"
                     ":CREATED:  %u\n"
@@ -640,11 +640,10 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-agenda-text-search-extra-files '(agenda-archives))
   (setq org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
                                (expand-file-name "gtd/team.org" org-directory)))
-  (setq org-refile-targets `((,(expand-file-name "notes.org" org-directory) :maxlevel . 2)
-                             (,(expand-file-name "gtd/inbox.org" org-directory) :maxlevel . 2)
-                             (,(expand-file-name "gtd/someday.org" org-directory) :maxlevel . 2)
-                             (,(expand-file-name "gtd/tickler.org" org-directory) :maxlevel . 2)
-                             (,(expand-file-name "gtd/team.org" org-directory) :maxlevel . 3)))
+  (setq org-refile-targets `((,(expand-file-name "gtd/tasks.org" org-directory) :maxlevel . 1)
+                             (,(expand-file-name "gtd/projects.org" org-directory) :maxlevel . 2)
+                             (,(expand-file-name "gtd/backlog.org" org-directory) :maxlevel . 1)
+                             (,(expand-file-name "gtd/habits.org" org-directory) :maxlevel . 1)))
   (setq org-refile-use-outline-path 'file)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-outline-path-complete-in-steps nil)
@@ -693,8 +692,7 @@ TAG is chosen interactively from the global tags completion table."
     "Print HEADING padded with characters to create a separator."
     (concat heading
             " "
-            (make-string (- 78 (length heading)) ?―))
-    heading)
+            (make-string (- 78 (length heading)) ? )))
 
   (setq org-agenda-custom-commands
         '(("d" "Omnibus agenda"
@@ -711,14 +709,21 @@ TAG is chosen interactively from the global tags completion table."
                   ((org-agenda-skip-function 'air-org-skip-if-habit)
                    (org-agenda-prefix-format "%(air--fixed-project-prefix)")
                    (org-agenda-overriding-header (air--org-separating-heading "Waiting"))
-                   (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)))))
+                   (org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory)
+                                           (expand-file-name "gtd/projects.org" org-directory)))))
             (todo "TODO"
                   ((org-agenda-overriding-header (air--org-separating-heading "For Meetings"))
                    (org-agenda-skip-function '(air-org-skip-tag-prefix "@" t))
                    (org-agenda-sorting-strategy '(tag-up))
                    (org-agenda-prefix-format "%(air--format-for-meetings-prefix)")))
+            (todo "TODO"
+                  ((org-agenda-overriding-header (air--org-separating-heading "Tasks"))
+                   (org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory)))
+                   (org-agenda-prefix-format "%(air--fixed-project-prefix)")
+                   (org-agenda-sorting-strategy '(category-up))))
             (agenda ""
-                    ((org-agenda-overriding-header "Habits")
+                    ((org-agenda-overriding-header (air--org-separating-heading "Habits"))
+                     (org-agenda-files (list (expand-file-name "gtd/habits.org" org-directory)))
                      (org-agenda-sorting-strategy '(tag-up))
                      (org-agenda-prefix-format "  ")
                      (org-agenda-compact-blocks nil)
@@ -728,7 +733,7 @@ TAG is chosen interactively from the global tags completion table."
             (stuck ""
                    ((org-agenda-overriding-header (air--org-separating-heading "Stuck Projects")))))
            ((org-use-property-inheritance t)
-            (org-agenda-block-separator ?╌)
+            (org-agenda-block-separator "")
             (org-agenda-compact-blocks nil)))
 
           ("r" "Inbox review"
@@ -743,23 +748,15 @@ TAG is chosen interactively from the global tags completion table."
             (todo "TODO"
                   ((org-agenda-overriding-header (air--org-separating-heading "Mobile (REFILE ↓)"))
                    (org-agenda-files (list (expand-file-name "orgzly/inbox.org" org-directory)))))
-            (tags-todo "+CATEGORY=\"work\"+TODO=\"TODO\""
-                       ((org-agenda-overriding-header (air--org-separating-heading "Work"))
-                        (org-agenda-prefix-format "%(air--fixed-project-prefix)")
-                        (org-agenda-skip-function '(or (org-agenda-skip-if nil '(scheduled deadline))
-                                                       (air-org-skip-tag-prefix "@")))))
-            (tags-todo "+CATEGORY=\"home\"+TODO=\"TODO\""
-                       ((org-agenda-overriding-header (air--org-separating-heading "Home"))
-                        (org-agenda-prefix-format "%(air--fixed-project-prefix)")
-                        (org-agenda-skip-function '(or (org-agenda-skip-if nil '(scheduled deadline))
-                                                       (air-org-skip-tag-prefix "@")))))
             (todo "TODO"
-                  ((org-agenda-overriding-header (air--org-separating-heading "Uncategorized"))
-                   (org-agenda-skip-function '(air-org-skip-if-categorized '("home" "work")))))
+                  ((org-agenda-overriding-header (air--org-separating-heading "Backlog"))
+                   (org-agenda-prefix-format "%(air--fixed-project-prefix)")
+                   (org-agenda-files (list (expand-file-name "gtd/backlog.org" org-directory)))))
             (todo "" ((org-agenda-files (list (expand-file-name "gtd/reading.org" org-directory)))
                       (org-agenda-overriding-header (air--org-separating-heading "Reading list")))))
            ((org-use-property-inheritance t)
-            (org-agenda-compact-blocks t)))))
+            (org-agenda-block-separator "")
+            (org-agenda-compact-blocks nil)))))
 
   (add-to-list 'org-structure-template-alist
                (list "p" (concat ":PROPERTIES:\n"
@@ -874,7 +871,6 @@ TAG is chosen interactively from the global tags completion table."
               (define-key org-agenda-mode-map (kbd "M")   'org-agenda-bulk-unmark)
               (define-key org-agenda-mode-map (kbd "R")   'org-revert-all-org-buffers)
               (define-key org-agenda-mode-map (kbd "c")   (lambda () (interactive) (org-capture nil "c")))
-              (define-key org-agenda-mode-map (kbd "p")   (lambda () (interactive) (org-capture nil "p")))
               (define-key org-agenda-mode-map (kbd "j")   'org-agenda-next-item)
               (define-key org-agenda-mode-map (kbd "k")   'org-agenda-previous-item)
               (define-key org-agenda-mode-map (kbd "u")   'org-agenda-undo)
@@ -990,7 +986,8 @@ TAG is chosen interactively from the global tags completion table."
                 (visual-line-mode)
                 (visual-fill-column-mode)
                 (flyspell-mode)
-                (org-indent-mode)))))
+                (org-indent-mode))))
+  (set-face-attribute 'org-agenda-structure nil :foreground "LightGray" :weight 'bold :underline t))
 
 (use-package org-evil
   :ensure t
