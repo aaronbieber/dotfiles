@@ -406,6 +406,7 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
                                   (visual-line-mode t)
                                   (set-fill-column 80)
                                   (turn-on-auto-fill)
+                                  (yas-minor-mode-on)
                                   ;; Don't wrap Liquid tags
                                   (setq auto-fill-inhibit-regexp (rx "{" (? "{") (1+ (or "%" "<" " ")) (1+ letter)))
                                   (flyspell-mode))))
@@ -461,12 +462,7 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
   :defer t
   :config
   (yas-reload-all)
-  (setq yas-snippet-dirs '("~/.emacs.d/snippets"
-                           "~/.emacs.d/remote-snippets"))
   (setq tab-always-indent 'complete)
-  (setq yas-prompt-functions '(yas-completing-prompt
-                               yas-ido-prompt
-                               yas-dropdown-prompt))
   (define-key yas-minor-mode-map (kbd "<escape>") 'yas-exit-snippet))
 
 (use-package yasnippet-snippets
