@@ -122,6 +122,17 @@
 (require 'init-platform)
 (require 'init-global-functions)
 
+(use-package gruvbox-theme
+  :ensure t
+  :config
+  (load-theme 'gruvbox))
+
+(use-package smart-mode-line
+  :ensure t
+  :config
+  (setq sml/theme 'dark)
+  (sml/setup))
+
 ;;; Required by init-maps, so it appears up here.
 (use-package tiny-menu
   :ensure t
@@ -154,8 +165,8 @@
                             (?n "Notes" (lambda () (interactive) (air-pop-to-org-notes nil)))
                             (?v "Vault" (lambda () (interactive) (air-pop-to-org-vault nil))))))
           ("org-captures" ("Org Captures"
-                           ((?c "Task"          (lambda () (interactive) (org-capture nil "c")))
-                            (?p "Personal task" (lambda () (interactive) (org-capture nil "p")))))))))
+                           ((?c "Task"    (lambda () (interactive) (org-capture nil "c")))
+                            (?b "Backlog" (lambda () (interactive) (org-capture nil "b")))))))))
 
 ;;; Larger package-specific configurations.
 (require 'init-fonts)
@@ -773,17 +784,6 @@ is the buffer location at which the function was found."
 ;;; used in OS X. Disable sRGB before setting up Powerline.
 (when (memq window-system '(mac ns))
   (setq ns-use-srgb-colorspace nil))
-
-(use-package gruvbox-theme
-  :ensure t
-  :config
-  (load-theme 'gruvbox))
-
-(use-package smart-mode-line
-  :ensure t
-  :config
-  (setq sml/theme 'dark)
-  (sml/setup))
 
 (server-start)
 
