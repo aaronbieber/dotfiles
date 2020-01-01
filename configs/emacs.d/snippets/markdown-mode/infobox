@@ -1,7 +1,6 @@
 # -*- mode: snippet; require-final-newline: nil -*-
 # name: The Octopress Infobox
 # key: infobox
-# binding: direct-keybinding
 # --
 {% infobox %}
 $0
