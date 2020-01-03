@@ -178,6 +178,15 @@ Skip the current entry unless SUBTREE is not nil."
               (has-prefix (seq-filter (lambda (tag) (string-prefix-p prefix tag)) tags)))
          (if (org-xor has-prefix unless) end nil)))
 
+(defun air-org-skip-tag (tag &optional subtree)
+  "Skip entries having TAG.
+
+Skip only the current entry unless SUBTREE is not nil."
+  (let* ((end (air--org-get-entry-end subtree))
+         (tags (org-get-tags))
+         (has-tag (member tag tags)))
+    (if has-tag end nil)))
+
 (defun air-org-skip-if-not-closed-today (&optional subtree)
   "Skip entries that were not closed today.
 
@@ -531,6 +540,12 @@ TAG is chosen interactively from the global tags completion table."
                 nil)))
     (air--org-swap-tags new)))
 
+(defun air-org-toggle-active-tag ()
+  "Toggle the presence of the `active' tag on the current item."
+  (interactive)
+  (org-agenda-set-tags "active")
+  (org-agenda-redo-all))
+
 ;;; Code:
 (use-package org
   :ensure t
@@ -552,10 +567,10 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-modules
         '(org-bbdb org-bibtex org-docview org-habit org-info org-w3m))
   (setq org-todo-keywords
-        '((sequence "TODO" "WAITING(!)" "|" "DONE(!)" "CANCELED(!)")))
+        '((sequence "TODO" "IN-PROGRESS" "WAITING(!)" "|" "DONE(!)" "CANCELED(!)")))
   (setq org-blank-before-new-entry '((heading . t)
                                      (plain-list-item . t)))
-  (setq org-stuck-projects '("+project/-DONE" ("TODO" "NEXT" "WAITING") nil ""))
+  (setq org-stuck-projects '("+LEVEL=1/-DONE" ("TODO" "IN-PROGRESS" "WAITING") nil ""))
 
   (defun air--org-bullet-daily-log-filename ()
     "Return the filename of today's Bullet Journal Daily Log."
@@ -636,7 +651,7 @@ TAG is chosen interactively from the global tags completion table."
 
   ;; Agenda configuration
   (setq org-agenda-text-search-extra-files '(agenda-archives))
-  (setq org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
+  (setq org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory)
                                (expand-file-name "gtd/team.org" org-directory)))
   (setq org-refile-targets `((,(expand-file-name "gtd/tasks.org" org-directory) :maxlevel . 1)
                              (,(expand-file-name "gtd/projects.org" org-directory) :maxlevel . 2)
@@ -667,9 +682,9 @@ TAG is chosen interactively from the global tags completion table."
        (if (> (length outline-list) 1)
            (concat (cadr outline-list) " → ")))))
 
-  (defun air--fixed-project-prefix ()
+  (defun air--fixed-project-prefix (&optional width)
     (let* ((outline-list (org-get-outline-path))
-           (max-len 12)
+           (max-len (or width 12))
            (project (if (> (length outline-list) 0)
                         (car (last outline-list))
                       (org-get-category (point) t)))
@@ -698,27 +713,25 @@ TAG is chosen interactively from the global tags completion table."
                     ((org-agenda-span 1)
                      (org-agenda-prefix-format "%(air--fixed-project-prefix)%?-12t% s")
                      (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo '("WAITING"))
-                                                    (air-org-skip-if-habit)))
-                     (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
-                                             (expand-file-name "gtd/team.org" org-directory)
-                                             (expand-file-name "gtd/tickler.org" org-directory)
-                                             (expand-file-name "diary.org" org-directory)))))
-            (todo "WAITING"
-                  ((org-agenda-skip-function 'air-org-skip-if-habit)
+                                                    (air-org-skip-if-habit)))))
+            (tags-todo "active/!-WAITING-DONE-CANCELED"
+                  ((org-agenda-overriding-header (air--org-separating-heading "Tasks"))
+                   (org-agenda-hide-tags-regexp "active")
+                   (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'scheduled 'deadline)))
                    (org-agenda-prefix-format "%(air--fixed-project-prefix)")
-                   (org-agenda-overriding-header (air--org-separating-heading "Waiting"))
-                   (org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory)
-                                           (expand-file-name "gtd/projects.org" org-directory)))))
+                   (org-agenda-sorting-strategy '(todo-state-down priority-down category-up))))
             (todo "TODO"
                   ((org-agenda-overriding-header (air--org-separating-heading "For Meetings"))
                    (org-agenda-skip-function '(air-org-skip-tag-prefix "@" t))
                    (org-agenda-sorting-strategy '(tag-up))
                    (org-agenda-prefix-format "%(air--format-for-meetings-prefix)")))
-            (todo "TODO"
-                  ((org-agenda-overriding-header (air--org-separating-heading "Tasks"))
-                   (org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory)))
+            (todo "WAITING"
+                  ((org-agenda-skip-function 'air-org-skip-if-habit)
                    (org-agenda-prefix-format "%(air--fixed-project-prefix)")
-                   (org-agenda-sorting-strategy '(category-up))))
+                   (org-agenda-overriding-header (air--org-separating-heading "Waiting"))))
+            (todo "" ((org-agenda-overriding-header (air--org-separating-heading "Reading list"))
+                      (org-agenda-prefix-format "%(air--fixed-project-prefix)")
+                      (org-agenda-files (list (expand-file-name "gtd/reading.org" org-directory)))))
             (agenda ""
                     ((org-agenda-overriding-header (air--org-separating-heading "Habits"))
                      (org-agenda-files (list (expand-file-name "gtd/habits.org" org-directory)))
@@ -729,7 +742,8 @@ TAG is chosen interactively from the global tags completion table."
                      (org-agenda-span 1)
                      (org-agenda-skip-function 'air-org-skip-if-not-habit)))
             (stuck ""
-                   ((org-agenda-overriding-header (air--org-separating-heading "Stuck Projects")))))
+                   ((org-agenda-overriding-header (air--org-separating-heading "Stuck Projects"))
+                    (org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory))))))
            ((org-use-property-inheritance t)
             (org-agenda-block-separator "")
             (org-agenda-compact-blocks nil)))
@@ -738,20 +752,15 @@ TAG is chosen interactively from the global tags completion table."
            ((agenda "" ((org-agenda-span 2)
                         (org-agenda-time-grid nil)
                         (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo '("WAITING"))
-                                                       (air-org-skip-if-habit)))
-                        (org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
-                                                (expand-file-name "gtd/team.org" org-directory)
-                                                (expand-file-name "gtd/tickler.org" org-directory)
-                                                (expand-file-name "diary.org" org-directory)))))
+                                                       (air-org-skip-if-habit)))))
             (todo "TODO"
                   ((org-agenda-overriding-header (air--org-separating-heading "Mobile (REFILE ↓)"))
                    (org-agenda-files (list (expand-file-name "orgzly/inbox.org" org-directory)))))
             (todo "TODO"
                   ((org-agenda-overriding-header (air--org-separating-heading "Backlog"))
+                   (org-agenda-skip-function '(air-org-skip-tag "active"))
                    (org-agenda-prefix-format "%(air--fixed-project-prefix)")
-                   (org-agenda-files (list (expand-file-name "gtd/backlog.org" org-directory)))))
-            (todo "" ((org-agenda-files (list (expand-file-name "gtd/reading.org" org-directory)))
-                      (org-agenda-overriding-header (air--org-separating-heading "Reading list")))))
+                   (org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory))))))
            ((org-use-property-inheritance t)
             (org-agenda-block-separator "")
             (org-agenda-compact-blocks nil)))))
@@ -862,6 +871,7 @@ TAG is chosen interactively from the global tags completion table."
             (lambda ()
               (setq org-habit-graph-column 50)
               (define-key org-agenda-mode-map (kbd "@")   'org-agenda-refile)
+              (define-key org-agenda-mode-map (kbd "A")   'air-org-toggle-active-tag)
               (define-key org-agenda-mode-map (kbd "/")   'counsel-grep-or-swiper)
               (define-key org-agenda-mode-map (kbd "H")   'beginning-of-buffer)
               (define-key org-agenda-mode-map (kbd "J")   'air-org-agenda-next-header)
