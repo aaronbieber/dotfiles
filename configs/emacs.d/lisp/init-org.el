@@ -119,18 +119,16 @@ the headlines."
 (defun air-org-helm-headings ()
   "Call `helm-org-agenda-files-headings' with a longer list of files."
   (interactive)
-  (let ((org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
-                                (expand-file-name "gtd/team.org" org-directory)
-                                (expand-file-name "notes.org" org-directory))))
+  (let ((org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory)
+                                (expand-file-name "gtd/team.org" org-directory))))
     (call-interactively 'helm-org-agenda-files-headings)))
 
 (defun air--org-display-tag (tag &optional focus)
   "Display entries tagged with TAG in a fit window.
 
 Do not make the new window current unless FOCUS is set."
-  (let ((org-agenda-files (list (expand-file-name "gtd/inbox.org" org-directory)
-                                (expand-file-name "gtd/team.org" org-directory)
-                                (expand-file-name "notes.org" org-directory))))
+  (let ((org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory)
+                                (expand-file-name "gtd/team.org" org-directory))))
     (org-tags-view nil tag))
   (fit-window-to-buffer)
   (unless focus
