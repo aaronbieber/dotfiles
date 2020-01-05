@@ -570,7 +570,7 @@ TAG is chosen interactively from the global tags completion table."
         '((sequence "TODO" "IN-PROGRESS" "WAITING(!)" "|" "DONE(!)" "CANCELED(!)")))
   (setq org-blank-before-new-entry '((heading . t)
                                      (plain-list-item . t)))
-  (setq org-stuck-projects '("+LEVEL=1/-DONE" ("TODO" "IN-PROGRESS" "WAITING") nil ""))
+  (setq org-stuck-projects '("+LEVEL=1/-DONE-TODO-IN\-PROGRESS-WAITING" () ("active") ""))
 
   (defun air--org-bullet-daily-log-filename ()
     "Return the filename of today's Bullet Journal Daily Log."
@@ -585,14 +585,14 @@ TAG is chosen interactively from the global tags completion table."
 
           ("c" "An incoming task." entry
            (file "gtd/tasks.org")
-           ,(concat "* TODO %?\n"
+           ,(concat "* TODO %? :active:\n"
                     ":PROPERTIES:\n"
                     ":CREATED:  %u\n"
                     ":END:\n")
            :empty-lines 1)
 
           ("b" "An incoming backlog item." entry
-           (file "gtd/backlog.org")
+           (file "gtd/tasks.org")
            ,(concat "* TODO %?\n"
                     ":PROPERTIES:\n"
                     ":CREATED:  %u\n"
@@ -675,6 +675,11 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-habit-completed-glyph ?*)
   (setq org-habit-show-all-today t)
 
+  (defun air--org-todo-state-change-handler ()
+    "Take an action when the TODO state changes."
+    (if (string= org-state "DONE")
+        (org-set-tags-to (delete "active" (org-get-tags)))))
+
   (defun air--full-project-prefix ()
     (let ((outline-list (org-get-outline-path)))
       (concat
@@ -742,7 +747,7 @@ TAG is chosen interactively from the global tags completion table."
                      (org-agenda-span 1)
                      (org-agenda-skip-function 'air-org-skip-if-not-habit)))
             (stuck ""
-                   ((org-agenda-overriding-header (air--org-separating-heading "Stuck Projects"))
+                   ((org-agenda-overriding-header (air--org-separating-heading "Waiting Projects"))
                     (org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory))))))
            ((org-use-property-inheritance t)
             (org-agenda-block-separator "")
@@ -900,6 +905,8 @@ TAG is chosen interactively from the global tags completion table."
   (add-hook 'org-log-buffer-setup-hook
             (lambda ()
               (evil-insert-state)))
+
+  (add-hook 'org-after-todo-state-change-hook 'air--org-todo-state-change-handler)
 
   (add-hook 'org-capture-mode-hook
             (lambda ()
