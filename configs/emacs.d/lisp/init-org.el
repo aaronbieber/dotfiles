@@ -756,6 +756,7 @@ fail."
   (setq org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory)
                                (expand-file-name "gtd/team.org" org-directory)))
   (setq org-refile-targets `((,(expand-file-name "gtd/tasks.org" org-directory) :maxlevel . 1)
+                             (,(expand-file-name "notes.org" org-directory) :maxlevel . 1)
                              (,(expand-file-name "gtd/projects.org" org-directory) :maxlevel . 2)
                              (,(expand-file-name "gtd/backlog.org" org-directory) :maxlevel . 1)
                              (,(expand-file-name "gtd/habits.org" org-directory) :maxlevel . 1)))
