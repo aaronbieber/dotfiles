@@ -777,7 +777,9 @@ TAG is chosen interactively from the global tags completion table."
                   ((org-agenda-overriding-header (air--org-separating-heading "Backlog"))
                    (org-agenda-skip-function '(air-org-skip-tag "active"))
                    (org-agenda-prefix-format "%(air--fixed-project-prefix)")
-                   (org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory))))))
+                   (org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory)))))
+            (tags "LEVEL=1/DONE"
+                  ((org-agenda-overriding-header (air--org-separating-heading "Completed")))))
            ((org-use-property-inheritance t)
             (org-agenda-block-separator "")
             (org-agenda-compact-blocks nil)))))
