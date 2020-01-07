@@ -688,7 +688,8 @@ TAG is chosen interactively from the global tags completion table."
 
   (defun air--org-todo-state-change-handler ()
     "Take an action when the TODO state changes."
-    (if (string= org-state "DONE")
+    (if (and (string= org-state "DONE")
+             (not (org-is-habit-p)))
         (org-set-tags-to (delete "active" (org-get-tags)))))
 
   (defun air--full-project-prefix ()
