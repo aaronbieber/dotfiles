@@ -543,8 +543,19 @@ TAG is chosen interactively from the global tags completion table."
 (defun air-org-toggle-active-tag ()
   "Toggle the presence of the `active' tag on the current item."
   (interactive)
-  (org-agenda-set-tags "active")
-  (org-agenda-redo-all))
+  (let* ((hdmarker (or (org-get-at-bol 'org-hd-marker)
+                       (org-agenda-error)))
+         (buffer (marker-buffer hdmarker))
+         (pos (marker-position hdmarker))
+         (inhibit-read-only t))
+    (org-agenda-set-tags "active")
+    (with-current-buffer buffer
+      (widen)
+      (goto-char pos)
+      (org-show-context 'agenda)
+      (org-set-tags nil t))
+    (beginning-of-line 1)
+    (org-agenda-redo-all)))
 
 ;;; Code:
 (use-package org
