@@ -587,6 +587,97 @@ TAG is chosen interactively from the global tags completion table."
     "Return the filename of today's Bullet Journal Daily Log."
     (format-time-string "%Y-%m-%d.org"))
 
+  (defvar summary-annotations
+    '("_" "@")
+    "Characters used to annotate progressive summarization of content.")
+
+  (defun air--within-annotated-region-p ()
+    "Returns non-nil if point is within an annotated region.
+
+Annotated regions are surrounded by one of the characters in `summary-annotations'."
+    (interactive)
+    (save-excursion
+      (forward-char 1)
+      (catch 'done
+        (mapcar (lambda (c)
+                  (let ((start (save-excursion (search-backward-regexp (concat c "\\w") (line-beginning-position) t)))
+                        (end (save-excursion (search-forward-regexp (concat "\\w" c) (line-end-position) t))))
+                    (if (and start end)
+                        (throw 'done (list c start end)))))
+                summary-annotations)
+        nil)))
+
+  (defun air-promote-summary ()
+    "Promote the summarization annotation at point.
+
+If a region is active, apply the lowest level summary
+annotation. Else, promote the surrounding summary annotation to the
+next level or fail."
+    (interactive)
+    (if (use-region-p)
+        (air--toggle-surrounding-chars (car summary-annotations))
+      (let ((annotation (air--within-annotated-region-p)))
+        (if (not annotation)
+            (user-error "Point is not within an annotated region")
+          (let* ((current (car annotation))
+                 (next (cadr (member current summary-annotations))))
+            (if (not next)
+                (user-error "Region is annotated at the highest level"))
+            (goto-char (cadr annotation))
+            (delete-char 1)
+            (insert next)
+            (goto-char (1- (caddr annotation)))
+            (delete-char 1)
+            (insert next))))))
+
+  (defun air-demote-summary ()
+    "Demote the summarization annotation at point.
+
+Demote the surrounding summary annotation to the next lowest level or
+fail."
+    (interactive)
+    (if (use-region-p)
+        (user-error "Demoting a summary cannot operate on a region")
+      (let ((annotation (air--within-annotated-region-p)))
+        (if (not annotation)
+            (user-error "Point is not within an annotated region")
+          (let* ((current (car annotation))
+                 (next (cadr (member current (reverse summary-annotations)))))
+            (goto-char (cadr annotation))
+            (delete-char 1)
+            (if next (insert next))
+            (goto-char (- (caddr annotation) (if next 1 2)))
+            (delete-char 1)
+            (if next (insert next)))))))
+
+  (defun air--toggle-surrounding-chars (chars &optional after-chars)
+    "Insert CHARS before and after the current region."
+    (if (not (use-region-p))
+        (user-error "Mark a region before inserting surrounding chars"))
+    (if (and after-chars
+             (not (= (length chars) (length after-chars))))
+        (user-error "CHARS and AFTER-CHARS must be equivalent in length"))
+    (let* ((cur-point (point))
+           (beg (region-beginning))
+           (end (region-end))
+           (after-chars (or after-chars chars))
+           (start-char (buffer-substring-no-properties beg (+ beg (length chars))))
+           (end-char (buffer-substring-no-properties end (+ end (length after-chars)))))
+      (if (and (string= start-char chars)
+               (string= end-char after-chars))
+          (progn
+            (goto-char end)
+            (delete-char (length after-chars))
+            (goto-char (1+ (- beg (length chars))))
+            (delete-char (length chars))
+            (goto-char (- cur-point (length chars))))
+        (progn
+          (goto-char end)
+          (insert after-chars)
+          (goto-char beg)
+          (insert chars)
+          (goto-char (+ (length chars) cur-point))))))
+
   (setq org-capture-templates
         `(
           ("m" "Nine Minutes on Monday" entry
@@ -986,6 +1077,9 @@ TAG is chosen interactively from the global tags completion table."
 
               (evil-define-key 'normal org-mode-map (kbd "[[")    'air-org-toggle-checkbox-dwim)
 
+              (evil-define-key '(normal visual) org-mode-map (kbd "+") 'air-promote-summary)
+              (evil-define-key 'normal org-mode-map          (kbd "=") 'air-demote-summary)
+
               ;; Navigation
               (define-key org-mode-map (kbd "M-h") 'org-up-element)
               (define-key org-mode-map (kbd "M-j") 'org-forward-heading-same-level)
@@ -1015,7 +1109,8 @@ TAG is chosen interactively from the global tags completion table."
                 (visual-line-mode)
                 (visual-fill-column-mode)
                 (flyspell-mode)
-                (org-indent-mode))))
+                (org-indent-mode)
+                (highlight-regexp "@.*?@" 'hi-blue))))
   (set-face-attribute 'org-agenda-structure nil :foreground "LightGray" :weight 'bold :underline t))
 
 (use-package org-evil
