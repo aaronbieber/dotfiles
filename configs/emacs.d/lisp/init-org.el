@@ -780,9 +780,24 @@ fail."
 
   (defun air--org-todo-state-change-handler ()
     "Take an action when the TODO state changes."
-    (if (and (string= org-state "DONE")
-             (not (org-is-habit-p)))
-        (org-set-tags-to (delete "active" (org-get-tags)))))
+    (cond ((and (string= org-state "DONE")
+                (not (org-is-habit-p)))
+           (org-set-tags-to (delete "active" (org-get-tags))))
+
+          ((string= org-state "WAITING")
+           (org-entry-put (point) "WAITING_FROM" (current-time-string)))))
+
+  (defun air--seconds-to-diff (seconds)
+    "Convert SECONDS into a human-readable time span."
+    (let* ((seconds (floor seconds))
+           (days (/ seconds 86400))
+           (day-seconds (% seconds 86400))
+           (hours (/ day-seconds 3600))
+           (hour-seconds (% day-seconds 3600))
+           (minutes (/ hour-seconds 60)))
+      (concat
+       (if (> days 0) (format "%sd" days)
+         (format "%sh" hours)))))
 
   (defun air--full-project-prefix ()
     (let ((outline-list (org-get-outline-path)))
@@ -797,12 +812,21 @@ fail."
            (project (if (> (length outline-list) 0)
                         (car (last outline-list))
                       (org-get-category (point) t)))
-           (project-trimmed (if (> (length project) max-len)
-                                (string-trim (substring project 0 max-len))
-                              project)))
+           (waiting-from (org-entry-get (point) "WAITING_FROM"))
+           (time-delta (if (and waiting-from
+                                (string= (org-get-todo-state) "WAITING"))
+                           (format " (%s)" (air--seconds-to-diff
+                                            (- (time-to-seconds (current-time))
+                                               (time-to-seconds (date-to-time waiting-from)))))
+                         ""))
+           (project-trimmed (concat (if (> (length project) max-len)
+                                        (string-trim (substring project 0 max-len))
+                                      project)
+                                    time-delta)))
       (concat "  "
-              (make-string (- max-len (length project-trimmed)) 32)
-              project-trimmed (if (> (length project-trimmed) 0) ": "))))
+              (make-string (- (+ max-len 5) (length project-trimmed)) 32)
+              project-trimmed
+              (if (> (length project-trimmed) 0) ": "))))
 
   (defun air--format-for-meetings-prefix ()
     (let ((id (car (seq-filter (lambda (tag) (string-prefix-p "@" tag)) (org-get-tags)))))
@@ -835,9 +859,10 @@ fail."
                    (org-agenda-sorting-strategy '(tag-up))
                    (org-agenda-prefix-format "%(air--format-for-meetings-prefix)")))
             (todo "WAITING"
-                  ((org-agenda-skip-function 'air-org-skip-if-habit)
-                   (org-agenda-prefix-format "%(air--fixed-project-prefix)")
-                   (org-agenda-overriding-header (air--org-separating-heading "Waiting"))))
+                  ((org-agenda-overriding-header (air--org-separating-heading "Waiting"))
+                   (org-agenda-skip-function 'air-org-skip-if-habit)
+                   (org-agenda-hide-tags-regexp "active")
+                   (org-agenda-prefix-format "%(air--fixed-project-prefix)")))
             (todo "" ((org-agenda-overriding-header (air--org-separating-heading "Reading list"))
                       (org-agenda-prefix-format "%(air--fixed-project-prefix)")
                       (org-agenda-files (list (expand-file-name "gtd/reading.org" org-directory)))))
