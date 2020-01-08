@@ -983,6 +983,7 @@ fail."
               (setq org-habit-graph-column 50)
               (define-key org-agenda-mode-map (kbd "@")   'org-agenda-refile)
               (define-key org-agenda-mode-map (kbd "A")   'air-org-toggle-active-tag)
+              (define-key org-agenda-mode-map (kbd "a")   'org-agenda-archive)
               (define-key org-agenda-mode-map (kbd "/")   'counsel-grep-or-swiper)
               (define-key org-agenda-mode-map (kbd "H")   'beginning-of-buffer)
               (define-key org-agenda-mode-map (kbd "J")   'air-org-agenda-next-header)
