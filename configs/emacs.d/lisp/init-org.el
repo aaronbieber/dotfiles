@@ -831,7 +831,7 @@ fail."
   (defun air--format-for-meetings-prefix ()
     (let ((id (car (seq-filter (lambda (tag) (string-prefix-p "@" tag)) (org-get-tags)))))
       (if id
-          (format "  %-10s " (substring id 0 (min (length id) 10)))
+          (format "  %17s: " (substring id 0 (min (length id) 10)))
         "                  ")))
 
   (defun air--org-separating-heading (heading)
@@ -850,12 +850,14 @@ fail."
             (tags-todo "active/!-WAITING-DONE-CANCELED"
                   ((org-agenda-overriding-header (air--org-separating-heading "Tasks"))
                    (org-agenda-hide-tags-regexp "active")
-                   (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'scheduled 'deadline)))
+                   (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'scheduled 'deadline)
+                                                  (air-org-skip-tag-prefix "@")))
                    (org-agenda-prefix-format "%(air--fixed-project-prefix)")
                    (org-agenda-sorting-strategy '(todo-state-down priority-down category-up))))
             (todo "TODO"
                   ((org-agenda-overriding-header (air--org-separating-heading "For Meetings"))
                    (org-agenda-skip-function '(air-org-skip-tag-prefix "@" t))
+                   (org-agenda-hide-tags-regexp ".")
                    (org-agenda-sorting-strategy '(tag-up))
                    (org-agenda-prefix-format "%(air--format-for-meetings-prefix)")))
             (todo "WAITING"
