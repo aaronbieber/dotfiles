@@ -581,7 +581,7 @@ TAG is chosen interactively from the global tags completion table."
         '((sequence "TODO" "IN-PROGRESS" "WAITING(!)" "|" "DONE(!)" "CANCELED(!)")))
   (setq org-blank-before-new-entry '((heading . t)
                                      (plain-list-item . t)))
-  (setq org-stuck-projects '("+LEVEL=1/-DONE-TODO-IN\-PROGRESS-WAITING" () ("active") ""))
+  (setq org-stuck-projects '("+LEVEL=1/-DONE-TODO-IN\-PROGRESS-WAITING-CANCELED" () ("active") ""))
 
   (defun air--org-bullet-daily-log-filename ()
     "Return the filename of today's Bullet Journal Daily Log."
