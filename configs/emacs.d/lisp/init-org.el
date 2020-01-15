@@ -782,7 +782,7 @@ fail."
     "Take an action when the TODO state changes."
     (cond ((and (string= org-state "DONE")
                 (not (org-is-habit-p)))
-           (org-set-tags-to (delete "active" (org-get-tags))))
+           (org-set-tags-to (delete "active" (delete "" (org-get-tags)))))
 
           ((string= org-state "WAITING")
            (org-entry-put (point) "WAITING_FROM" (current-time-string)))))
