@@ -253,5 +253,15 @@ Attempts to follow the Do What I Mean philosophy."
                "http://en.m.wikipedia.org/w/index.php?search="
                search-term)))
 
+(defun air--get-vc-root ()
+    "Get the root directory of the current VC project.
+
+This function assumes that the current buffer is visiting a file that
+is within a version controlled project."
+    (require 'vc)
+    (vc-call-backend
+     (vc-responsible-backend (buffer-file-name))
+     'root (buffer-file-name)))
+
 (provide 'init-global-functions)
 ;;; init-global-functions.el ends here

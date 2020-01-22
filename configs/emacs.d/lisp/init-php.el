@@ -80,6 +80,28 @@
   (flycheck-mode)
   (yas-minor-mode t))
 
+(defun find-php-functions-in-current-buffer ()
+  "Find lines that appear to be PHP functions in the buffer.
+
+This function performs a regexp forward search from the top
+\(point-min) of the buffer to the end, looking for lines that
+appear to be PHP function declarations.
+
+The return value of this function is a list of cons in which
+the car of each cons is the bare function name and the cdr
+is the buffer location at which the function was found."
+  (save-excursion
+    (goto-char (point-min))
+    (let (res)
+      (save-match-data
+        (while (re-search-forward  "^ *\\(public \\|private \\|protected \\|static \\)*?function \\([^{]+\\)" nil t)
+          (let* ((fn-name (save-match-data (match-string-no-properties 2)))
+                 (fn-location (save-match-data (match-beginning 0))))
+            (setq res
+                  (append res
+                          (list `(,fn-name . ,fn-location)))))))
+      res)))
+
 (defvar php-settings-groups
   '(("air"
      (lambda ()

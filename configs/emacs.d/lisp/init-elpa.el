@@ -1,31 +1,26 @@
-;;; Find and load the correct package.el
+;;; init-elpa.el --- Initialize my Elpa shit.
+;;; Commentary:
 
-;; When switching between Emacs 23 and 24, we always use the bundled package.el in Emacs 24
-(let ((package-el-site-lisp-dir
-       (expand-file-name "site-lisp/package" user-emacs-directory)))
-  (when (and (file-directory-p package-el-site-lisp-dir)
-             (> emacs-major-version 23))
-    (message "Removing local package.el from load-path to avoid shadowing bundled version")
-    (setq load-path (remove package-el-site-lisp-dir load-path))))
+;; This is mostly lifted from Steve Purcell's configuration.
 
+;;; Code:
 (require 'package)
 
 
 ;;; Standard package repositories
-(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/"))
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
-(add-to-list 'package-archives '("elpy" . "https://jorgenschaefer.github.io/packages/"))
-
-;;; Pin some packages to specific repositories.
-(setq package-pinned-packages '((gtags . "marmalade")
-                                (php-extras . "marmalade")))
+(setq package-archives '(;; Restore gnu back to https when they fix their cert.
+                         ("gnu" . "http://elpa.gnu.org/packages/")
+                         ("org" . "https://orgmode.org/elpa/")
+                         ("melpa" . "http://melpa.org/packages/")
+                         ("melpa-stable" . "http://stable.melpa.org/packages/")
+                         ("elpy" . "https://jorgenschaefer.github.io/packages/")))
 
 
 ;; If gpg cannot be found, signature checking will fail, so we
 ;; conditionally enable it according to whether gpg is available. We
 ;; re-run this check once $PATH has been configured
 (defun sanityinc/package-maybe-enable-signatures ()
+  "Conditionally enable signature checking if gpg is available."
   (setq package-check-signature (when (executable-find "gpg") 'allow-unsigned)))
 
 (sanityinc/package-maybe-enable-signatures)
@@ -86,3 +81,4 @@ locate PACKAGE."
 (add-hook 'package-menu-mode-hook 'sanityinc/maybe-widen-package-menu-columns)
 
 (provide 'init-elpa)
+;;; init-elpa.el ends here
