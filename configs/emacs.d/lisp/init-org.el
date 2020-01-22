@@ -982,18 +982,22 @@ fail."
   (define-key evil-inner-text-objects-map "*" 'evil-org-inner-element)
 
   (defun air-org-narrow-to-prose-dwim ()
-    "Narrow and activate a writing mode for the contents of the current element."
+    "Narrow and activate a writing mode.
+
+If the current buffer is visiting an Org Mode file, narrow to the Org
+element at point as well. If the view is already narrowed and the
+writing mode is already active, undo all of that."
     (interactive)
-    (if (not (eq major-mode 'org-mode))
-        (error "Narrow to prose only works in Org Mode"))
-    (if (buffer-narrowed-p)
+    (if (and (boundp 'writeroom-mode)
+             writeroom-mode)
         (progn (writeroom-mode 0)
                (widen)
                (if (member 'visual-fill-column-mode minor-mode-list)
                   (visual-fill-column-adjust)))
-      (let ((bounds (air--org-inner-element-bounds 0)))
-        (narrow-to-region (cadr bounds) (car bounds))
-        (writeroom-mode t))))
+      (if (eq major-mode 'org-mode)
+          (let ((bounds (air--org-inner-element-bounds 0)))
+            (narrow-to-region (cadr bounds) (car bounds))))
+      (writeroom-mode t)))
 
   (evil-leader/set-key-for-mode 'org-mode
     "$"  'org-archive-subtree
