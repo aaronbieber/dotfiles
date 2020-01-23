@@ -118,11 +118,6 @@
 (require 'init-platform)
 (require 'init-global-functions)
 
-(use-package gruvbox-theme
-  :ensure t
-  :config
-  (load-theme 'gruvbox))
-
 (use-package smart-mode-line
   :ensure t
   :config
@@ -428,23 +423,18 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
   (add-hook 'markdown-mode-hook (lambda ()
                                   (visual-line-mode t)
                                   (set-fill-column 80)
-                                  (turn-on-auto-fill)
                                   (yas-minor-mode-on)
                                   (hugo-minor-mode t)
+                                  (turn-on-auto-fill)
                                   ;; Don't wrap Liquid tags
                                   (setq auto-fill-inhibit-regexp (rx "{" (? "{") (1+ (or "%" "<" " ")) (1+ letter)))
                                   (flyspell-mode))))
 
-(use-package sublime-themes
-  :ensure t)
-
-(use-package color-theme-sanityinc-tomorrow
+(use-package solarized-theme
   :ensure t
-  :defer t)
-
-(use-package zenburn-theme
-  :ensure t
-  :defer t)
+  :config
+  (setq solarized-use-variable-pitch nil)
+  (load-theme 'solarized-wombat-dark t))
 
 (use-package web-mode
   :ensure t

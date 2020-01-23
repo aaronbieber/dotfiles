@@ -23,7 +23,7 @@
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
  '(package-selected-packages
    (quote
-    (gnu-elpa-keyring-update orgalist htmlize olivetti apples-mode applescript-mode magithub jade-mode yasnippet-snippets esh-autosuggest gruvbox-theme php-extras wgrep s tiny-menu writeroom-mode feature-mode buttercup mustache-mode challenger-deep-theme helm-make all-the-icons-dired all-the-icons rjsx-mode json-mode lua-mode helm-spotify-plus go-projectile jinja2-mode cyberpunk-theme go-mode org-evil jujube-theme smart-mode-line-powerline-theme smart-mode-line visual-fill-column websocket flycheck powerline evil key-chord color-theme-modern esup counsel-projectile restclient ox-reveal org-tree-slide epresent color-moccur xterm-color nlinum-relative company-shell pandoc-mode virtualenvwrapper counsel helm-swoop groovy-mode octopress zenburn-theme yaml-mode which-key wgrep-ag web-mode w3m use-package twittering-mode sunshine sublime-themes rainbow-mode powerline-evil org-bullets mmm-mode markdown-mode magit highlight-symbol helm-projectile gtags fullframe flycheck-package exec-path-from-shell evil-surround evil-leader evil-jumper evil-indent-textobject emmet-mode elpy dictionary color-theme-sanityinc-tomorrow bpr auto-complete ag)))
+    (ssh-agency dired gnu-elpa-keyring-update orgalist htmlize olivetti apples-mode applescript-mode magithub jade-mode yasnippet-snippets esh-autosuggest gruvbox-theme php-extras wgrep s tiny-menu writeroom-mode feature-mode buttercup mustache-mode challenger-deep-theme helm-make all-the-icons-dired all-the-icons rjsx-mode json-mode lua-mode helm-spotify-plus go-projectile jinja2-mode cyberpunk-theme go-mode org-evil jujube-theme smart-mode-line-powerline-theme smart-mode-line visual-fill-column websocket flycheck powerline evil key-chord color-theme-modern esup counsel-projectile restclient ox-reveal org-tree-slide epresent color-moccur xterm-color nlinum-relative company-shell pandoc-mode virtualenvwrapper counsel helm-swoop groovy-mode octopress zenburn-theme yaml-mode which-key wgrep-ag web-mode w3m use-package twittering-mode sunshine sublime-themes rainbow-mode powerline-evil org-bullets mmm-mode markdown-mode magit highlight-symbol helm-projectile gtags fullframe flycheck-package exec-path-from-shell evil-surround evil-leader evil-jumper evil-indent-textobject emmet-mode elpy dictionary color-theme-sanityinc-tomorrow bpr auto-complete ag)))
  '(safe-local-variable-values (quote ((css-indent-offset . 2) (no-byte-compile t)))))
 
 (custom-set-faces
@@ -31,5 +31,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((((class color) (min-colors 16777215)) (:background "#282828" :foreground "#fdf4c1")) (((class color) (min-colors 255)) (:background "#262626" :foreground "#ffffaf"))))
- '(term ((t (:foreground "ivory1")))))
+ '(default ((((class color) (min-colors 89)) (:foreground "#d3d0c8" :background "#2a2929"))))
+ '(org-habit-alert-future-face ((((class color) (min-colors 89)) (:background "#4c4436"))))
+ '(org-habit-clear-future-face ((((class color) (min-colors 89)) (:background "#40424a"))))
+ '(org-habit-overdue-face ((((class color) (min-colors 89)) (:background "#ffb4ac" :foreground "#4f4340"))))
+ '(org-habit-overdue-future-face ((((class color) (min-colors 89)) (:background "#4f4340"))))
+ '(org-habit-ready-face ((((class color) (min-colors 89)) (:background "#3d454c" :foreground "#8ac6f2"))))
+ '(org-habit-ready-future-face ((((class color) (min-colors 89)) (:background "#3d454c")))))
