@@ -187,6 +187,36 @@ Skip only the current entry unless SUBTREE is not nil."
          (has-tag (member tag tags)))
     (if has-tag end nil)))
 
+(defun air-org-skip-if-scheduled (&optional subtree)
+  "Skip entries scheduled in the future and not done.
+
+Skip the current entry unless SUBTREE is not nil, in which case skip
+the entire subtree."
+  (let ((end (air--org-get-entry-end subtree))
+        (skip (if subtree
+                  (air-org-any-entry-below #'air-entry-is-active)
+                (air-entry-is-active))))
+    (if skip end)))
+
+(defun air-entry-is-active ()
+  "Docstring."
+  (and (not (org-entry-is-done-p))
+       (or (member "active" (org-get-tags))
+           (org-agenda-skip-entry-if 'scheduled))))
+
+(defun air-org-any-entry-below (predicate)
+  "Return non-nil if PREDICATE is non-nil for any entry below the current entry."
+  (org-back-to-heading t)
+  (let ((level (funcall outline-level)))
+    (save-excursion
+      (catch 'non-nil
+        (while (and (progn
+                      (outline-next-heading)
+                      (> (funcall outline-level) level))
+                    (not (eobp)))
+          (if (funcall predicate)
+              (throw 'non-nil t)))))))
+
 (defun air-org-skip-if-not-closed-today (&optional subtree)
   "Skip entries that were not closed today.
 
@@ -877,6 +907,11 @@ fail."
                      (org-agenda-time-grid nil)
                      (org-agenda-span 1)
                      (org-agenda-skip-function 'air-org-skip-if-not-habit)))
+            (tags "+LEVEL=1/-DONE-TODO-IN\-PROGRESS-WAITING-CANCELED"
+                  ((org-agenda-overriding-header (air--org-separating-heading "Test Waiting"))
+                   (org-agenda-skip-function '(or (air-org-skip-if-scheduled t)
+                                                  (air-org-skip-tag "active" t)))
+                   (org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory)))))
             (stuck ""
                    ((org-agenda-overriding-header (air--org-separating-heading "Waiting Projects"))
                     (org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory))))))
