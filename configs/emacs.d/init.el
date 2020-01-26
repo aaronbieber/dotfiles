@@ -717,7 +717,17 @@ The IGNORED argument is... Ignored."
                             (setq sgml-basic-offset 2)
                             (setq indent-tabs-mode nil)))
 
-(server-start)
+(use-package server
+  :init
+  (progn
+    (when (equal window-system 'w32)
+      ;; Set EMACS_SERVER_FILE to `server-auth-dir'\`server-name'
+      ;; e.g. c:\Users\Aaron\emacs.d\server\server
+      (setq server-use-tcp t)))
+  :config
+  (or (eq (server-running-p) t)
+      (server-start)))
+
 
 (and (fboundp 'atomic-chrome-start-server)
   (atomic-chrome-start-server))

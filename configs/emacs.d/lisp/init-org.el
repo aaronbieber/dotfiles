@@ -736,13 +736,27 @@ fail."
            "* %?\nSCHEDULED: %^t"
            :empty-lines 1)
 
-          ("l" "A link to read later." entry
+          ("l" "Capture links to read later.")
+
+          ("ln" "A link to read later (no selection)." entry
            (file "gtd/reading.org")
-           ,(concat "* TODO %?\n"
+           ,(concat "* TODO %:annotation\n"
                     ":PROPERTIES:\n"
                     ":CREATED:  %u\n"
                     ":END:\n\n"
-                    "%i")
+                    "%:link\n\n"
+                    "%?")
+           :empty-lines 1)
+
+          ("ls" "A link to read later (selection)." entry
+           (file "gtd/reading.org")
+           ,(concat "* TODO %:annotation\n"
+                    ":PROPERTIES:\n"
+                    ":CREATED:  %u\n"
+                    ":END:\n\n"
+                    "%:link\n\n"
+                    "%i\n\n"
+                    "%?")
            :empty-lines 1)
 
           ("n" "A note." entry
