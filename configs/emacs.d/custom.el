@@ -32,9 +32,10 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((((class color) (min-colors 89)) (:foreground "#d3d0c8" :background "#2a2929"))))
- '(org-habit-alert-future-face ((((class color) (min-colors 89)) (:background "#4c4436"))))
+ '(org-habit-alert-future-face ((t (:background "orange2"))))
+ '(org-habit-clear-face ((t (:background "#40424a" :foreground "lime green"))))
  '(org-habit-clear-future-face ((((class color) (min-colors 89)) (:background "#40424a"))))
  '(org-habit-overdue-face ((((class color) (min-colors 89)) (:background "#ffb4ac" :foreground "#4f4340"))))
- '(org-habit-overdue-future-face ((((class color) (min-colors 89)) (:background "#4f4340"))))
+ '(org-habit-overdue-future-face ((t (:background "OrangeRed3"))))
  '(org-habit-ready-face ((((class color) (min-colors 89)) (:background "#3d454c" :foreground "#8ac6f2"))))
- '(org-habit-ready-future-face ((((class color) (min-colors 89)) (:background "#3d454c")))))
+ '(org-habit-ready-future-face ((t (:background "SeaGreen4")))))
