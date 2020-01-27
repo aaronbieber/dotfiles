@@ -3,9 +3,15 @@ PATH="/usr/local/bin:$PATH"
 [ -d "/usr/texbin" ]                  && PATH="/usr/texbin:$PATH"
 [ -d "/usr/local/share/npm/bin" ]     && PATH="/usr/local/share/npm/bin:$PATH"
 [ -d "/usr/local/sbin" ]              && PATH="/usr/local/sbin:$PATH"
+[ -d "$HOME/.local/bin" ]             && PATH="$PATH:$HOME/.local/bin"
 [ -d "$HOME/.composer/vendor/bin" ]   && PATH="$PATH:$HOME/.composer/vendor/bin"
 [ -d "$HOME/go/bin" ]                 && PATH="$PATH:$HOME/go/bin"
 [ -d "$HOME/Library/Python/2.7/bin" ] && PATH="$PATH:$HOME/Library/Python/2.7/bin"
+
+# Install with sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+if [ -d "/home/linuxbrew/.linuxbrew/bin/brew" ]; then
+  eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+fi
 
 if [ -d "$HOME/Library/Android/sdk" ]; then
   export ANDROID_HOME="$HOME/Library/Android/sdk"
@@ -36,8 +42,13 @@ export MANPATH="${NPM_PACKAGES}/share/man:$(manpath)"
 # Initialize rbenv if it exists on this system and isn't yet in our path.
 # This prevents path duplication in tmux when a sub-shell runs this script
 # again.
-if [ -d $HOME/.rbenv/shims ] && [[ ! "$PATH" =~ "rbenv" ]]; then
-  export PATH="$HOME/.rbenv/shims:$PATH"
+if [ -d $HOME/.rbenv/bin ] && [[ ! "$PATH" =~ "rbenv" ]]; then
+  export PATH="$HOME/.rbenv/bin:$PATH"
+
+  if [ -d "$HOME/.rbenv/plugins/ruby-build/bin" ]; then
+    export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"
+  fi
+
   type rbenv >/dev/null 2>&1
   [[ "$?" == 0 ]] && eval "$(rbenv init -)"
 fi
