@@ -145,4 +145,12 @@ else
   alias l="ls -lhF --group-directories-first --color=always"
 fi
 
+if [[ "$PATH" == *System32* ]]; then
+  cd
+  umask 022
+
+  eval $(/c/Users/Aaron/scoop/apps/ssh-agent-wsl/current/ssh-agent-wsl -r)
+  export DOCKER_HOST=tcp://localhost:2375
+fi
+
 # vim: set et ts=2 sw=2 tw=79 cc=+1 :
