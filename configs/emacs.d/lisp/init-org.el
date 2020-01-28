@@ -884,6 +884,15 @@ fail."
             " "
             (make-string (- 78 (length heading)) ? )))
 
+  (defun air--org-all-todo-keywords ()
+    "Return a list of all bare TODO keywords."
+    (let (kw)
+      (dolist (seq org-todo-keywords)
+        (setq kw (append kw
+                         (org-remove-keyword-keys
+                          (delete "|" (cdr seq))))))
+      kw))
+
   (setq org-agenda-custom-commands
         '(("d" "Omnibus agenda"
            ((agenda ""
@@ -892,12 +901,12 @@ fail."
                      (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo '("WAITING"))
                                                     (air-org-skip-if-habit)))))
             (tags-todo "active/!-WAITING-DONE-CANCELED"
-                  ((org-agenda-overriding-header (air--org-separating-heading "Tasks"))
-                   (org-agenda-hide-tags-regexp "active")
-                   (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'scheduled 'deadline)
-                                                  (air-org-skip-tag-prefix "@")))
-                   (org-agenda-prefix-format "%(air--fixed-project-prefix)")
-                   (org-agenda-sorting-strategy '(todo-state-down priority-down category-up))))
+                       ((org-agenda-overriding-header (air--org-separating-heading "Tasks"))
+                        (org-agenda-hide-tags-regexp "active")
+                        (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'scheduled 'deadline)
+                                                       (air-org-skip-tag-prefix "@")))
+                        (org-agenda-prefix-format "%(air--fixed-project-prefix)")
+                        (org-agenda-sorting-strategy '(todo-state-down priority-down category-up))))
             (todo "TODO"
                   ((org-agenda-overriding-header (air--org-separating-heading "For Meetings"))
                    (org-agenda-skip-function '(air-org-skip-tag-prefix "@" t))
@@ -921,14 +930,12 @@ fail."
                      (org-agenda-time-grid nil)
                      (org-agenda-span 1)
                      (org-agenda-skip-function 'air-org-skip-if-not-habit)))
-            (tags "+LEVEL=1/-DONE-TODO-IN\-PROGRESS-WAITING-CANCELED"
-                  ((org-agenda-overriding-header (air--org-separating-heading "Test Waiting"))
-                   (org-agenda-skip-function '(or (air-org-skip-if-scheduled t)
+            (tags "+LEVEL=1"
+                  ((org-agenda-overriding-header (air--org-separating-heading "Inactive Projects"))
+                   (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo (air--org-all-todo-keywords))
+                                                  (air-org-skip-if-scheduled t)
                                                   (air-org-skip-tag "active" t)))
-                   (org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory)))))
-            (stuck ""
-                   ((org-agenda-overriding-header (air--org-separating-heading "Waiting Projects"))
-                    (org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory))))))
+                   (org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory))))))
            ((org-use-property-inheritance t)
             (org-agenda-block-separator "")
             (org-agenda-compact-blocks nil)))
