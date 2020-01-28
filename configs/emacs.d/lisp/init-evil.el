@@ -180,6 +180,8 @@ is not used."
 (use-package evil
   :ensure t
   :commands (evil-mode evil-define-key)
+  :init
+  (setq evil-want-C-i-jump nil)
   :config
   (add-hook 'evil-mode-hook 'air--config-evil)
   (evil-mode 1)
