@@ -858,7 +858,7 @@ fail."
     (let* ((outline-list (org-get-outline-path))
            (max-len (or width 12))
            (project (if (> (length outline-list) 0)
-                        (car (last outline-list))
+                        (car outline-list)
                       (org-get-category (point) t)))
            (waiting-from (org-entry-get (point) "WAITING_FROM"))
            (time-delta (if (and waiting-from
