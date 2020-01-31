@@ -856,10 +856,16 @@ fail."
 
   (defun air--fixed-project-prefix (&optional width)
     (let* ((outline-list (org-get-outline-path))
-           (max-len (or width 12))
-           (project (if (> (length outline-list) 0)
-                        (car outline-list)
-                      (org-get-category (point) t)))
+           (max-len (or width 20))
+           (project (cond ((= (length outline-list) 1)
+                           (car outline-list))
+
+                          ((> (length outline-list) 1)
+                           (concat (car outline-list)
+                                   "➙"
+                                   (car (last outline-list))))
+
+                          (t "")))
            (waiting-from (org-entry-get (point) "WAITING_FROM"))
            (time-delta (if (and waiting-from
                                 (string= (org-get-todo-state) "WAITING"))
@@ -867,14 +873,17 @@ fail."
                                             (- (time-to-seconds (current-time))
                                                (time-to-seconds (date-to-time waiting-from)))))
                          ""))
-           (project-trimmed (concat (if (> (length project) max-len)
-                                        (string-trim (substring project 0 max-len))
-                                      project)
+           (total-len (+ (length project)
+                         (length time-delta)))
+           (substring-index (if (> total-len max-len)
+                                (- (length project) (- total-len max-len))
+                              (length project)))
+           (project-trimmed (concat (string-trim (substring project 0 substring-index))
                                     time-delta)))
-      (concat "  "
-              (make-string (- (+ max-len 6) (length project-trimmed)) 32)
+      (concat " "
+              (make-string (- max-len (length project-trimmed)) 32)
               project-trimmed
-              (if (> (length project-trimmed) 0) ": "))))
+              (if (> (length project-trimmed) 0) ": " "  "))))
 
   (defun air--format-for-meetings-prefix ()
     (let ((id (car (seq-filter (lambda (tag) (string-prefix-p "@" tag)) (org-get-tags)))))
