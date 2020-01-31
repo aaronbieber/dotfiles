@@ -868,7 +868,7 @@ fail."
                                       project)
                                     time-delta)))
       (concat "  "
-              (make-string (- (+ max-len 5) (length project-trimmed)) 32)
+              (make-string (- (+ max-len 6) (length project-trimmed)) 32)
               project-trimmed
               (if (> (length project-trimmed) 0) ": "))))
 
