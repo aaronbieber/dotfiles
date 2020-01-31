@@ -13,11 +13,15 @@
 (defun air-org-insert-first-link ()
   "Insert the first link in `org-stored-links', or do nothing."
   (interactive)
-  (let ((link (car org-stored-links)))
-    (org-insert-link nil (car link) (cadr link))))
+
+  (let* ((link (caar org-stored-links))
+         (link-parts (split-string link "::"))
+         (uri (car link-parts))
+         (title (cadr link-parts)))
+    (org-insert-link nil uri title)))
 
 (defun air--alist-key-match-p (list substring)
-  "Return t if any key in LIST contains SUBSTRING."
+  "Return t if any key in LIST should contain SUBSTRING."
   (let ((found))
     (dolist (item list)
       (if (string-match-p substring (car item))
