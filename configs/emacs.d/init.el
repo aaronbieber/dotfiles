@@ -342,7 +342,7 @@
 
 (use-package company
   :ensure t
-  :defer t
+  :defer 2
   :config
   (defun org-keyword-backend (command &optional arg &rest ignored)
     "Company backend for org keywords.
