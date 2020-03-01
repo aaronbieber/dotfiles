@@ -14,10 +14,9 @@
   "Insert the first link in `org-stored-links', or do nothing."
   (interactive)
 
-  (let* ((link (caar org-stored-links))
-         (link-parts (split-string link "::"))
-         (uri (car link-parts))
-         (title (cadr link-parts)))
+  (let* ((link (car org-stored-links))
+         (uri (car link))
+         (title (cadr link)))
     (org-insert-link nil uri title)))
 
 (defun air--alist-key-match-p (list substring)
