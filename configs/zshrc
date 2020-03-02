@@ -111,10 +111,10 @@ alias e="$EDITOR"
 export ALTERNATE_EDITOR=""
 
 ## Heuristic to compute location because I am lazy.
-if [[ `whoami` == "abieber" ]]; then
-  export MY_LOCATION="work"
-else
+if [[ `whoami` == "airborne" ]]; then
   export MY_LOCATION="home"
+else
+  export MY_LOCATION="work"
 fi
 
 if [ -f "$HOME/.zshrc_$MY_LOCATION" ]; then
@@ -152,5 +152,4 @@ if [[ "$PATH" == *System32* ]]; then
   eval $(/c/Users/Aaron/scoop/apps/ssh-agent-wsl/current/ssh-agent-wsl -r)
   export DOCKER_HOST=tcp://localhost:2375
 fi
-
 # vim: set et ts=2 sw=2 tw=79 cc=+1 :
