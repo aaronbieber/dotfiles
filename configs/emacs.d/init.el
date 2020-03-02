@@ -167,9 +167,6 @@
 (require 'init-w3m)
 (require 'init-flycheck)
 (require 'init-tmux)
-;(require 'init-gtags)
-;(require 'init-twitter)
-;(require 'init-php)
 
 ;; My packages (make sure they're cloned into "lisp")
 (require 'fence-edit)
