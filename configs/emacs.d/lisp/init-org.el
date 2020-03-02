@@ -734,6 +734,13 @@ fail."
                     ":END:\n")
            :empty-lines 1)
 
+          ("n" "A note." entry
+           (file "notes.org")
+           ,(concat "* %?\n"
+                    ":PROPERTIES:\n"
+                    ":CREATED:  %u\n"
+                    ":END:\n\n"))
+
           ("r" "A Reminder (tickler)." entry
            (file "gtd/tickler.org")
            "* %?\nSCHEDULED: %^t"
@@ -760,21 +767,7 @@ fail."
                     "%:link\n\n"
                     "%i\n\n"
                     "%?")
-           :empty-lines 1)
-
-          ("n" "A note." entry
-           (file "notes.org")
-           ,(concat "* %?\n"
-                    ":PROPERTIES:\n"
-                    ":CREATED:  %u\n"
-                    ":END:\n\n"))
-
-          ("o" "A personal note." entry
-           (file "personal/notes.org")
-           ,(concat "* %?\n"
-                    ":PROPERTIES:\n"
-                    ":CREATED:  %u\n"
-                    ":END:\n\n"))))
+           :empty-lines 1)))
 
   (setq org-directory
         (if (file-directory-p (expand-file-name "~/Dropbox (personal)"))

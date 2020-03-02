@@ -157,7 +157,8 @@
                             (?v "Vault" (lambda () (interactive) (air-pop-to-org-vault nil))))))
           ("org-captures" ("Org Captures"
                            ((?c "Task"    (lambda () (interactive) (org-capture nil "c")))
-                            (?b "Backlog" (lambda () (interactive) (org-capture nil "b")))))))))
+                            (?b "Backlog" (lambda () (interactive) (org-capture nil "b")))
+                            (?n "Note"    (lambda () (interactive) (org-capture nil "n")))))))))
 
 ;;; Larger package-specific configurations.
 (require 'init-fonts)
