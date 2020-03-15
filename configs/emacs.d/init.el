@@ -505,6 +505,7 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
   :defer t
   :config
   (projectile-mode)
+  (add-to-list 'projectile-globally-ignored-directories "node_modules")
   (setq projectile-enable-caching t)
   (setq projectile-mode-line
         '(:eval
