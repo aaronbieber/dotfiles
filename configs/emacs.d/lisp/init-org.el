@@ -794,7 +794,8 @@ fail."
   ;; Agenda configuration
   (setq org-agenda-text-search-extra-files '(agenda-archives))
   (setq org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory)
-                               (expand-file-name "gtd/team.org" org-directory)))
+                               (expand-file-name "gtd/team.org" org-directory)
+                               (expand-file-name "roam" org-directory)))
   (setq org-refile-targets `((,(expand-file-name "gtd/tasks.org" org-directory) :maxlevel . 1)
                              (,(expand-file-name "notes.org" org-directory) :maxlevel . 1)
                              (,(expand-file-name "gtd/projects.org" org-directory) :maxlevel . 2)
@@ -956,8 +957,7 @@ fail."
             (todo "TODO"
                   ((org-agenda-overriding-header (air--org-separating-heading "Backlog"))
                    (org-agenda-skip-function '(air-org-skip-tag "active"))
-                   (org-agenda-prefix-format "%(air--fixed-project-prefix)")
-                   (org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory)))))
+                   (org-agenda-prefix-format "%(air--fixed-project-prefix)")))
             (tags "LEVEL=1/DONE"
                   ((org-agenda-overriding-header (air--org-separating-heading "Completed")))))
            ((org-use-property-inheritance t)
@@ -1189,6 +1189,7 @@ writing mode is already active, undo all of that."
 
               (require 'ox)
               (require 'ox-beamer)
+              (require 'ox-md)
               (setf org-export-dispatch-use-expert-ui t)
               (add-to-list 'org-export-filter-bold-functions 'air--beamer-bold)
 
@@ -1226,6 +1227,19 @@ writing mode is already active, undo all of that."
   :defer t
   :config
   (evil-define-key 'visual org-mode-map (kbd "gy") 'ox-clip-formatted-copy))
+
+(use-package org-roam
+  :hook
+  (after-init . org-roam-mode)
+  :custom
+  (org-roam-directory (expand-file-name "~/Dropbox/org/roam"))
+  :bind (:map org-roam-mode-map
+              (("C-c r r" . org-roam)
+               ("C-c r f" . org-roam-find-file)
+               ("C-c r b" . org-roam-switch-to-buffer)
+               ("C-c r g" . org-roam-graph))
+              :map org-mode-map
+              (("C-c r i" . org-roam-insert))))
 
 (provide 'init-org)
 ;;; init-org.el ends here
