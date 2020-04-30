@@ -503,23 +503,6 @@ list-specific key maps."
       (insert (concat " " char " "))
     (insert char)))
 
-(defun air--org-swap-tags (tags)
-  "Replace any tags on the current headline with TAGS.
-
-The assumption is that TAGS will be a string conforming to Org Mode's
-tag format specifications, or nil to remove all tags."
-  (let ((old-tags (org-get-tags-string))
-        (tags (if tags
-                  (concat " " tags)
-                "")))
-    (save-excursion
-      (beginning-of-line)
-      (re-search-forward
-       (concat "[ \t]*" (regexp-quote old-tags) "[ \t]*$")
-       (line-end-position) t)
-      (replace-match tags)
-      (org-set-tags t))))
-
 (defun air-org-goto-first-child ()
   "Goto the first child, even if it is invisible.
 
@@ -571,7 +554,7 @@ TAG is chosen interactively from the global tags completion table."
                               ":"))
          (new (if (> (length new-tags) 1) (concat " :" new-tags ":")
                 nil)))
-    (air--org-swap-tags new)))
+    (org-set-tags new)))
 
 (defun air-org-toggle-active-tag ()
   "Toggle the presence of the `active' tag on the current item."
