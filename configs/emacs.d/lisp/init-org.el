@@ -778,6 +778,7 @@ fail."
   (setq org-agenda-text-search-extra-files '(agenda-archives))
   (setq org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory)
                                (expand-file-name "gtd/team.org" org-directory)
+                               (expand-file-name "gtd/reading.org" org-directory)
                                (expand-file-name "roam" org-directory)))
   (setq org-refile-targets `((,(expand-file-name "gtd/tasks.org" org-directory) :maxlevel . 1)
                              (,(expand-file-name "notes.org" org-directory) :maxlevel . 1)
@@ -889,7 +890,7 @@ fail."
                      (org-agenda-prefix-format "%(air--fixed-project-prefix)%?-12t% s")
                      (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo '("WAITING"))
                                                     (air-org-skip-if-habit)))))
-            (tags-todo "active/!-WAITING-DONE-CANCELED"
+            (tags-todo "active-reading/!-WAITING-DONE-CANCELED"
                        ((org-agenda-overriding-header (air--org-separating-heading "Tasks"))
                         (org-agenda-hide-tags-regexp "active")
                         (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'scheduled 'deadline)
@@ -907,9 +908,9 @@ fail."
                    (org-agenda-skip-function 'air-org-skip-if-habit)
                    (org-agenda-hide-tags-regexp "active")
                    (org-agenda-prefix-format "%(air--fixed-project-prefix)")))
-            (todo "" ((org-agenda-overriding-header (air--org-separating-heading "Reading list"))
-                      (org-agenda-prefix-format "%(air--fixed-project-prefix)")
-                      (org-agenda-files (list (expand-file-name "gtd/reading.org" org-directory)))))
+            (tags "reading/-DONE" ((org-agenda-overriding-header (air--org-separating-heading "Reading list"))
+                                   (org-agenda-hide-tags-regexp "reading\\|active")
+                                   (org-agenda-prefix-format "%(air--fixed-project-prefix)")))
             (agenda ""
                     ((org-agenda-overriding-header (air--org-separating-heading "Habits"))
                      (org-agenda-files (list (expand-file-name "gtd/habits.org" org-directory)))
@@ -947,24 +948,24 @@ fail."
             (org-agenda-block-separator "")
             (org-agenda-compact-blocks nil)))))
 
-  (add-to-list 'org-structure-template-alist
-               (list "p" (concat ":PROPERTIES:\n"
-                                 "?\n"
-                                 ":END:")))
+  ;; (add-to-list 'org-structure-template-alist
+  ;;              (list "p" (concat ":PROPERTIES:\n"
+  ;;                                "?\n"
+  ;;                                ":END:")))
 
-  (add-to-list 'org-structure-template-alist
-               (list "eb" (concat ":EXPORT_FILE_NAME: ?\n"
-                                  ":EXPORT_TITLE:\n"
-                                  ":EXPORT_BEAMER_HEADER: \\subtitle{}\n"
-                                  ":EXPORT_AUTHOR: Aaron Bieber\n"
-                                  ":EXPORT_OPTIONS: H:1 toc:nil\n"
-                                  ":EXPORT_BEAMER_THEME: wayfair\n"
-                                  ":EXPORT_LATEX_CLASS: beamer")))
+  ;; (add-to-list 'org-structure-template-alist
+  ;;              (list "eb" (concat ":EXPORT_FILE_NAME: ?\n"
+  ;;                                 ":EXPORT_TITLE:\n"
+  ;;                                 ":EXPORT_BEAMER_HEADER: \\subtitle{}\n"
+  ;;                                 ":EXPORT_AUTHOR: Aaron Bieber\n"
+  ;;                                 ":EXPORT_OPTIONS: H:1 toc:nil\n"
+  ;;                                 ":EXPORT_BEAMER_THEME: wayfair\n"
+  ;;                                 ":EXPORT_LATEX_CLASS: beamer")))
 
-  (add-to-list 'org-structure-template-alist
-               (list "eh" (concat ":EXPORT_FILE_NAME: ?\n"
-                                  ":EXPORT_TITLE:\n"
-                                  ":EXPORT_OPTIONS: toc:nil html-postamble:nil num:nil")))
+  ;; (add-to-list 'org-structure-template-alist
+  ;;              (list "eh" (concat ":EXPORT_FILE_NAME: ?\n"
+  ;;                                 ":EXPORT_TITLE:\n"
+  ;;                                 ":EXPORT_OPTIONS: toc:nil html-postamble:nil num:nil")))
 
   (set-face-attribute 'org-upcoming-deadline nil :foreground "gold1")
 
