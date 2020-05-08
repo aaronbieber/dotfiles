@@ -1044,6 +1044,12 @@ writing mode is already active, undo all of that."
             (narrow-to-region (cadr bounds) (car bounds))))
       (writeroom-mode t)))
 
+  (defun air-roam-grep (search-term)
+    "Search for a string in `org-roam-directory'."
+    (interactive (list (deadgrep--read-search-term)))
+    (let ((deadgrep-project-root-function (list 'lambda '() org-roam-directory)))
+      (deadgrep search-term)))
+
   (evil-leader/set-key-for-mode 'org-mode
     "$"  'org-archive-subtree
     "a"  'org-agenda
@@ -1221,9 +1227,15 @@ writing mode is already active, undo all of that."
               (("C-c r r" . org-roam)
                ("C-c r f" . org-roam-find-file)
                ("C-c r b" . org-roam-switch-to-buffer)
+               ("C-c r s" . air-roam-grep)
                ("C-c r g" . org-roam-graph))
               :map org-mode-map
-              (("C-c r i" . org-roam-insert))))
+              (("C-c r i" . org-roam-insert)))
+  :config
+  (setq org-roam-graph-viewer (lambda (file)
+                                (call-process "c:/Program Files/Mozilla Firefox/firefox.exe" nil 0 nil
+                                              (concat "file://" file))))
+  (setq org-roam-graph-executable "c:/Users/Aaron/scoop/shims/dot.exe"))
 
 (provide 'init-org)
 ;;; init-org.el ends here
