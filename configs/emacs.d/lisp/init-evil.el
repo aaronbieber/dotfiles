@@ -60,7 +60,8 @@
                   octopress-process-mode
                   org-capture-mode
                   sunshine-mode
-                  term-mode))
+                  term-mode
+                  deadgrep-mode))
     (add-to-list 'evil-emacs-state-modes mode))
 
   (delete 'term-mode evil-insert-state-modes)

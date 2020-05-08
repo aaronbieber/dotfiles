@@ -307,6 +307,9 @@
   (setq ag-reuse-buffers t)
   (setq ag-reuse-window t))
 
+(use-package deadgrep
+  :ensure t)
+
 (use-package js2-mode
   :ensure t
   :defer t
