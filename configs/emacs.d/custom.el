@@ -11,6 +11,9 @@
  '(custom-safe-themes
    (quote
     ("91ce1e1533921a31778b95d1626371499e42d46833d703e25a07dcb8c283f4af" . t)))
+ '(epg-gpg-home-directory "c:/Users/Aaron/AppData/Roaming/GnuPG")
+ '(epg-gpg-program "c:/Users/Aaron/PRograms/GnuPG/bin/gpg.exe")
+ '(epg-gpgconf-program "c:/Users/Aaron/Programs/GnuPG/bin/gpgconf.exe")
  '(fci-rule-color "#d6d6d6")
  '(flycheck-color-mode-line-face-to-color (quote mode-line-buffer-id))
  '(flycheck-python-flake8-executable "flake8")
@@ -21,9 +24,10 @@
  '(org-modules
    (quote
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
+ '(org-roam-directory "c:/Users/Aaron/Dropbox/org/roam")
  '(package-selected-packages
    (quote
-    (org-roam emacsql-sqlite ox-hugo ssh-agency dired gnu-elpa-keyring-update orgalist htmlize olivetti apples-mode applescript-mode magithub jade-mode yasnippet-snippets esh-autosuggest gruvbox-theme php-extras wgrep s tiny-menu writeroom-mode feature-mode buttercup mustache-mode challenger-deep-theme helm-make all-the-icons-dired all-the-icons rjsx-mode json-mode lua-mode helm-spotify-plus go-projectile jinja2-mode cyberpunk-theme go-mode org-evil jujube-theme smart-mode-line-powerline-theme smart-mode-line visual-fill-column websocket flycheck powerline evil key-chord color-theme-modern esup counsel-projectile restclient ox-reveal org-tree-slide epresent color-moccur xterm-color nlinum-relative company-shell pandoc-mode virtualenvwrapper counsel helm-swoop groovy-mode octopress zenburn-theme yaml-mode which-key wgrep-ag web-mode w3m use-package twittering-mode sunshine sublime-themes rainbow-mode powerline-evil org-bullets mmm-mode markdown-mode magit highlight-symbol helm-projectile gtags fullframe flycheck-package exec-path-from-shell evil-surround evil-leader evil-jumper evil-indent-textobject emmet-mode elpy dictionary color-theme-sanityinc-tomorrow bpr auto-complete ag)))
+    (deadgrep org-roam emacsql-sqlite ox-hugo ssh-agency dired gnu-elpa-keyring-update orgalist htmlize olivetti apples-mode applescript-mode magithub jade-mode yasnippet-snippets esh-autosuggest gruvbox-theme php-extras wgrep s tiny-menu writeroom-mode feature-mode buttercup mustache-mode challenger-deep-theme helm-make all-the-icons-dired all-the-icons rjsx-mode json-mode lua-mode helm-spotify-plus go-projectile jinja2-mode cyberpunk-theme go-mode org-evil jujube-theme smart-mode-line-powerline-theme smart-mode-line visual-fill-column websocket flycheck powerline evil key-chord color-theme-modern esup counsel-projectile restclient ox-reveal org-tree-slide epresent color-moccur xterm-color nlinum-relative company-shell pandoc-mode virtualenvwrapper counsel helm-swoop groovy-mode octopress zenburn-theme yaml-mode which-key wgrep-ag web-mode w3m use-package twittering-mode sunshine sublime-themes rainbow-mode powerline-evil org-bullets mmm-mode markdown-mode magit highlight-symbol helm-projectile gtags fullframe flycheck-package exec-path-from-shell evil-surround evil-leader evil-jumper evil-indent-textobject emmet-mode elpy dictionary color-theme-sanityinc-tomorrow bpr auto-complete ag)))
  '(safe-local-variable-values (quote ((css-indent-offset . 2) (no-byte-compile t)))))
 
 (custom-set-faces
@@ -32,6 +36,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((((class color) (min-colors 89)) (:foreground "#d3d0c8" :background "#2a2929"))))
+ '(deadgrep-filename-face ((t (:foreground "gold" :underline t))))
+ '(deadgrep-match-face ((t (:background "#2f2f2d" :foreground "lime green"))))
  '(org-habit-alert-future-face ((t (:background "orange2"))))
  '(org-habit-clear-face ((t (:background "#40424a" :foreground "lime green"))))
  '(org-habit-clear-future-face ((((class color) (min-colors 89)) (:background "#40424a"))))
