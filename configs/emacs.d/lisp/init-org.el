@@ -568,8 +568,7 @@ TAG is chosen interactively from the global tags completion table."
     (with-current-buffer buffer
       (widen)
       (goto-char pos)
-      (org-show-context 'agenda)
-      (org-set-tags nil t))
+      (org-show-context 'agenda))
     (beginning-of-line 1)
     (org-agenda-redo-all)))
 
