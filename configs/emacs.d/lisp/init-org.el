@@ -769,6 +769,7 @@ fail."
   (setq org-ellipsis " …")
   (setq org-export-initial-scope 'subtree)
   (setq org-export-with-section-numbers nil)
+  (setq org-export-with-toc nil)
   (setq org-use-tag-inheritance nil) ;; Use the list form, which happens to be blank
   (setq org-todo-keyword-faces
         '(("OPEN" . org-done)
