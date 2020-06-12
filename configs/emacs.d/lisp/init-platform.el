@@ -21,7 +21,7 @@
             (when (memq window-system '(x w32))
               (add-to-list 'default-frame-alist '(font . "Hack"))
               (set-face-attribute 'default nil :font "Hack")
-              (sanityinc/set-frame-font-size 18))
+              (sanityinc/set-frame-font-size 20))
 
             (when (fboundp 'powerline-reset)
               (powerline-reset))))
