@@ -987,15 +987,21 @@ fail."
              (end (org-element-property :end element)))
         (list end begin))))
 
-  (defun air--org-inner-element-bounds (count)
-    "Return the bounds of the current element, minus its header and concluding line break."
+  (defun air--org-inner-element-bounds (count &optional notrim)
+    "Return the bounds of the current element's content.
+
+Traverses up the element tree COUNT elements and returns the bounds of
+that element's content minus its header and concluding line break.
+
+If NOTRIM is non-nil, include leading blank lines in the content."
     (let* ((outer-points (air--org-element-motion count))
            (outer-begin (cadr outer-points))
            (outer-end (car outer-points))
            (begin (save-excursion
                     (goto-char outer-begin)
                     (next-line)
-                    (while (and (< (point) outer-end)
+                    (while (and (not notrim)
+                                (< (point) outer-end)
                                 (string-match-p "^\\s-*$"
                                                 (buffer-substring (line-beginning-position)
                                                                   (line-end-position))))
@@ -1040,7 +1046,7 @@ writing mode is already active, undo all of that."
                (if (member 'visual-fill-column-mode minor-mode-list)
                   (visual-fill-column-adjust)))
       (if (eq major-mode 'org-mode)
-          (let ((bounds (air--org-inner-element-bounds 0)))
+          (let ((bounds (air--org-inner-element-bounds 0 t)))
             (narrow-to-region (cadr bounds) (car bounds))))
       (writeroom-mode t)))
 
