@@ -138,9 +138,7 @@
                             (?i "ID"        air-org-goto-custom-id)
                             (?k "Keyword"   org-search-view)
                             (?h "Headings"  air-org-helm-headings)
-                            (?d "Directs"   air-org-display-directs)
-                            (?m "Managers"  air-org-display-managers)
-                            (?e "Engineers" air-org-display-engineers))))
+                            (?s "Search"    air-org-grep))))
           ("org-agendas"  ("Org Agenda Views"
                            ((?a "All"    air-pop-to-org-agenda-default)
                             (?r "Review" air-pop-to-org-agenda-review)

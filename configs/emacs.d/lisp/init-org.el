@@ -1056,6 +1056,12 @@ writing mode is already active, undo all of that."
     (let ((deadgrep-project-root-function (list 'lambda '() org-roam-directory)))
       (deadgrep search-term)))
 
+  (defun air-org-grep (search-term)
+    "Search for a string in `org-directory'."
+    (interactive (list (deadgrep--read-search-term)))
+    (let ((deadgrep-project-root-function (list 'lambda '() org-directory)))
+      (deadgrep search-term)))
+
   (evil-leader/set-key-for-mode 'org-mode
     "$"  'org-archive-subtree
     "a"  'org-agenda
