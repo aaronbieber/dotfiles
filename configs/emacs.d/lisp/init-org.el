@@ -777,6 +777,7 @@ fail."
   ;; Agenda configuration
   (setq org-agenda-text-search-extra-files '(agenda-archives))
   (setq org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory)
+                               (expand-file-name "notes.org" org-directory)
                                (expand-file-name "gtd/team.org" org-directory)
                                (expand-file-name "gtd/reading.org" org-directory)
                                (expand-file-name "roam" org-directory)))
