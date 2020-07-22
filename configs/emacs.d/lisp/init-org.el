@@ -843,7 +843,7 @@ fail."
                                    "➙"
                                    (car (last outline-list))))
 
-                          (t "")))
+                          (t (org-get-category))))
            (waiting-from (org-entry-get (point) "WAITING_FROM"))
            (time-delta (if (and waiting-from
                                 (string= (org-get-todo-state) "WAITING"))
