@@ -190,22 +190,30 @@ Skip only the current entry unless SUBTREE is not nil."
          (has-tag (member tag tags)))
     (if has-tag end nil)))
 
-(defun air-org-skip-if-scheduled (&optional subtree)
-  "Skip entries scheduled in the future and not done.
+(defun air-org-skip-if-active (&optional subtree)
+  "Skip entries with an :active: tag.
 
 Skip the current entry unless SUBTREE is not nil, in which case skip
 the entire subtree."
-  (let ((end (air--org-get-entry-end subtree))
-        (skip (if subtree
-                  (air-org-any-entry-below #'air-entry-is-active)
-                (air-entry-is-active))))
-    (if skip end)))
+  (if (air--entry-is-active)
+      (air--org-get-entry-end subtree)))
 
-(defun air-entry-is-active ()
-  "Docstring."
+(defun air--entry-is-active ()
+  "Return non-nil if the current entry is not DONE and is marked :active:."
   (and (not (org-entry-is-done-p))
-       (or (member "active" (org-get-tags))
-           (org-agenda-skip-entry-if 'scheduled))))
+       (member "active" (org-get-tags))))
+
+(defun air-org-skip-if-scheduled (&optional subtree)
+  "Skip entries that are scheduled.
+
+Skip the current entry unless SUBTREE is not nil, in which case skip
+the entire subtree."
+  (if (air--entry-is-scheduled)
+      (air--org-get-entry-end subtree)))
+
+(defun air--entry-is-scheduled ()
+  "Return non-nil if the current entry has a `SCHEDULED' property."
+  (org-agenda-skip-if t '(scheduled)))
 
 (defun air-org-any-entry-below (predicate)
   "Return non-nil if PREDICATE is non-nil for any entry below the current entry."
@@ -939,9 +947,10 @@ fail."
             (todo "TODO"
                   ((org-agenda-overriding-header (air--org-separating-heading "Mobile (REFILE ↓)"))
                    (org-agenda-files (list (expand-file-name "orgzly/inbox.org" org-directory)))))
-            (todo "TODO"
+            (tags-todo "-active-reading/!+TODO=\"TODO\"|+TODO=\"IN-PROGRESS\""
                   ((org-agenda-overriding-header (air--org-separating-heading "Backlog"))
-                   (org-agenda-skip-function '(air-org-skip-tag "active"))
+                   (org-agenda-skip-function '(or (air-org-skip-if-scheduled t)
+                                                  (air-org-skip-tag-prefix "@")))
                    (org-agenda-prefix-format "%(air--fixed-project-prefix)")))
             (tags "LEVEL=1/DONE"
                   ((org-agenda-overriding-header (air--org-separating-heading "Completed")))))
