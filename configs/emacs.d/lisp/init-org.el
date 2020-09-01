@@ -947,7 +947,7 @@ fail."
             (todo "TODO"
                   ((org-agenda-overriding-header (air--org-separating-heading "Mobile (REFILE ↓)"))
                    (org-agenda-files (list (expand-file-name "orgzly/inbox.org" org-directory)))))
-            (tags-todo "-active-reading/!+TODO=\"TODO\"|+TODO=\"IN-PROGRESS\""
+            (tags-todo "-active-reading+TODO=\"TODO\"|TODO=\"IN-PROGRESS\""
                   ((org-agenda-overriding-header (air--org-separating-heading "Backlog"))
                    (org-agenda-skip-function '(or (air-org-skip-if-scheduled t)
                                                   (air-org-skip-tag-prefix "@")))
@@ -955,6 +955,7 @@ fail."
             (tags "LEVEL=1/DONE"
                   ((org-agenda-overriding-header (air--org-separating-heading "Completed")))))
            ((org-use-property-inheritance t)
+            (org-agenda-tag-filter-preset '("-active" "-reading"))
             (org-agenda-block-separator "")
             (org-agenda-compact-blocks nil)))))
 
@@ -1213,7 +1214,7 @@ writing mode is already active, undo all of that."
   :ensure t
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-  (setq org-bullets-bullet-list '("•")))
+  (setq org-bullets-bullet-list '("⋄" "•" "◦")))
 
 (use-package ox-clip
   :ensure t
@@ -1221,24 +1222,26 @@ writing mode is already active, undo all of that."
   :config
   (evil-define-key 'visual org-mode-map (kbd "gy") 'ox-clip-formatted-copy))
 
-(use-package org-roam
-  :hook
-  (after-init . org-roam-mode)
-  :custom
-  (org-roam-directory (expand-file-name "~/Dropbox/org/roam"))
-  :bind (:map org-roam-mode-map
-              (("C-c r r" . org-roam)
-               ("C-c r f" . org-roam-find-file)
-               ("C-c r b" . org-roam-switch-to-buffer)
-               ("C-c r s" . air-roam-grep)
-               ("C-c r g" . org-roam-graph))
-              :map org-mode-map
-              (("C-c r i" . org-roam-insert)))
-  :config
-  (setq org-roam-graph-viewer (lambda (file)
-                                (call-process "c:/Program Files/Mozilla Firefox/firefox.exe" nil 0 nil
-                                              (concat "file://" file))))
-  (setq org-roam-graph-executable "c:/Users/Aaron/scoop/shims/dot.exe"))
+;; (use-package org-roam
+;;   :hook
+;;   (after-init . org-roam-mode)
+;;   :custom
+;;   (org-roam-directory (expand-file-name "~/Dropbox/org/roam"))
+;;   :bind (:map org-roam-mode-map
+;;               (("C-c r r" . org-roam)
+;;                ("C-c r f" . org-roam-find-file)
+;;                ("C-c r b" . org-roam-switch-to-buffer)
+;;                ("C-c r s" . air-roam-grep)
+;;                ("C-c r g" . org-roam-graph))
+;;               :map org-mode-map
+;;               (("C-c r i" . org-roam-insert)))
+;;   :config
+;;   (if (eq window-system 'w32)
+;;       (setq emacsql-sqlite3-executable "c:/Users/Aaron/scoop/shims/sqlite3.exe"))
+;;   (setq org-roam-graph-viewer (lambda (file)
+;;                                 (call-process "c:/Program Files/Mozilla Firefox/firefox.exe" nil 0 nil
+;;                                               (concat "file://" file))))
+;;   (setq org-roam-graph-executable "c:/Users/Aaron/scoop/shims/dot.exe"))
 
 (provide 'init-org)
 ;;; init-org.el ends here
