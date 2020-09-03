@@ -601,7 +601,7 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-modules
         '(org-bbdb org-bibtex org-docview org-habit org-info org-w3m))
   (setq org-todo-keywords
-        '((sequence "TODO" "IN-PROGRESS" "WAITING(!)" "|" "DONE(!)" "CANCELED(!)")))
+        '((sequence "TODO(t)" "IN-PROGRESS(p)" "WAITING(w!)" "|" "DONE(d!)" "CANCELED(c!)")))
   (setq org-blank-before-new-entry '((heading . t)
                                      (plain-list-item . t)))
   (setq org-stuck-projects '("+LEVEL=1/-DONE-TODO-IN\-PROGRESS-WAITING-CANCELED" () ("active") ""))
@@ -766,9 +766,9 @@ fail."
   (setq org-default-notes-file (expand-file-name "gtd/inbox.org" org-directory))
 
   ;; Logging of state changes
-  (setq org-log-done (quote time))
-  (setq org-log-redeadline (quote time))
-  (setq org-log-reschedule (quote time))
+  ;; (setq org-log-done (quote time))
+  ;; (setq org-log-redeadline (quote time))
+  ;; (setq org-log-reschedule (quote time))
   (setq org-log-into-drawer t)
 
   (setq org-pretty-entities t)
@@ -804,8 +804,13 @@ fail."
           " │" "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")))
   (setq org-enforce-todo-dependencies t)
   (setq org-agenda-dim-blocked-tasks t)
-  (setq org-tag-alist '(("@cal" . ?c)
-                        ("@home" . ?h)))
+
+  ;; Tagging
+  (setq org-tag-alist '(("active" . ?a)
+                        ("reading" . ?r)))
+  (setq org-fast-tag-selection-include-todo t)
+  (setq org-fast-tag-selection-single-key t)
+
   (setq org-agenda-skip-scheduled-if-done t)
   (setq org-agenda-hide-tags-regexp "project\\|work\\|home\\|@.*")
   (setq org-habit-today-glyph ?o)
@@ -813,7 +818,12 @@ fail."
   (setq org-habit-show-all-today t)
 
   (defun air--org-todo-state-change-handler ()
-    "Take an action when the TODO state changes."
+    "Take an action when the TODO state changes.
+
+When the state changes to DONE, remove the `active' tag.
+
+When the state changes to WAITING, add a property WAITING_FROM with
+the current timestamp."
     (cond ((and (string= org-state "DONE")
                 (not (org-is-habit-p)))
            (org-set-tags-to (delete "active" (delete "" (org-get-tags)))))
