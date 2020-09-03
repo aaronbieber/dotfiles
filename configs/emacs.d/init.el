@@ -134,15 +134,15 @@
                            ((?r "This buffer"     revert-buffer)
                             (?o "All Org buffers" org-revert-all-org-buffers))))
           ("org-things"   ("Org Things"
-                           ((?t "Tag"       air-org-display-any-tag)
-                            (?i "ID"        air-org-goto-custom-id)
-                            (?k "Keyword"   org-search-view)
-                            (?h "Headings"  air-org-helm-headings)
-                            (?s "Search"    air-org-grep))))
+                           ((?t "Tag"        air-org-display-any-tag)
+                            (?i "ID"         air-org-goto-custom-id)
+                            (?k "Keyword"    org-search-view)
+                            (?h "Headings"   air-org-helm-headings)
+                            (?o "One-on-one" air-org-split-to-topics)
+                            (?s "Search"     air-org-grep))))
           ("org-agendas"  ("Org Agenda Views"
                            ((?a "All"    air-pop-to-org-agenda-default)
                             (?r "Review" air-pop-to-org-agenda-review)
-                            (?h "Home"   air-pop-to-org-agenda-home)
                             )))
           ("org-links"    ("Org Links"
                            ((?c "Capture"      org-store-link)

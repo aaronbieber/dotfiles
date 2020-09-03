@@ -364,6 +364,38 @@ Skips the current entry unless SUBTREE is not nil."
              (line (cadr id-parts)))
         (org-insert-link nil (concat file "::#" custom-id) custom-id)))))
 
+(defun air-org-split-to-topics ()
+  "Split the window to a custom ID and related topics entry."
+  (interactive)
+  (let ((topics-loc (air--org-find-custom-id "major-topics"))
+        (person-loc (air--org-find-custom-id (completing-read
+                                              "Custom ID: "
+                                              (air--org-global-custom-ids))))
+        (this-scroll-margin
+         (min (max 0 scroll-margin)
+              (truncate (/ (window-body-height) 4.0)))))
+    (when (and topics-loc person-loc)
+      (pop-to-buffer (car topics-loc))
+      (widen)
+      (goto-char (cadr topics-loc))
+      (search-forward "Current" nil t)
+      (if (not (org-at-heading-p))
+          (org-back-to-heading))
+      (org-show-subtree)
+      (org-narrow-to-subtree)
+      (fit-window-to-buffer)
+
+      (pop-to-buffer (car person-loc))
+      (widen)
+      (goto-char (cadr person-loc))
+      (search-forward "One-on-one" nil t)
+      (if (not (org-at-heading-p))
+          (org-back-to-heading))
+      (recenter this-scroll-margin)
+      (outline-hide-subtree)
+      (outline-show-children 2)
+      (org-narrow-to-subtree))))
+
 (defun air-org-nmom-capture-template ()
   "Return a Nine Minutes on Monday weekly agenda template suitable for capture."
   (let* ((deadline-timestamp (format-time-string "<%Y-%m-%d %a>"
@@ -490,11 +522,6 @@ If VANILLA is non-nil, run the standard `org-capture'."
   "Pop to the default agenda in a split window unless NOSPLIT."
   (interactive "P")
   (air--pop-to-org-agenda-view "r" nosplit))
-
-(defun air-pop-to-org-agenda-home (&optional nosplit)
-  "Pop to the personal agenda in a split unless NOSPLIT."
-  (interactive "P")
-  (air--pop-to-org-agenda-view "h" (not nosplit)))
 
 (defun air--pop-to-org-agenda-view (key &optional split)
   "Visit the org agenda KEY, in the current window or a SPLIT."
