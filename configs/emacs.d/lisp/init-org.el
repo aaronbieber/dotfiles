@@ -327,11 +327,14 @@ Skips the current entry unless SUBTREE is not nil."
            (file (car id-parts))
            (line (cadr id-parts)))
       (with-current-buffer (org-get-agenda-file-buffer file)
-        (goto-char (point-min))
-        (forward-line line)
-        (org-reveal)
-        (org-up-element)
-        (list (current-buffer) (point))))))
+        (save-excursion
+          (save-restriction
+            (widen)
+            (goto-char (point-min))
+            (forward-line line)
+            (org-reveal)
+            (org-up-element)
+            (list (current-buffer) (point))))))))
 
 (defun air-org-goto-custom-id (&optional split)
   "Go to the location of a custom ID read interactively, maybe in a SPLIT."
