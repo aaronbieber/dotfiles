@@ -891,7 +891,10 @@ the current timestamp."
                                    "➙"
                                    (car (last outline-list))))
 
-                          (t (org-get-category))))
+                          ((org-get-category)
+                           (org-get-category))
+
+                          (t "")))
            (waiting-from (org-entry-get (point) "WAITING_FROM"))
            (time-delta (if (and waiting-from
                                 (string= (org-get-todo-state) "WAITING"))
