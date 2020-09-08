@@ -13,8 +13,8 @@
                 :config
                 (exec-path-from-shell-initialize)
                 (exec-path-from-shell-copy-env "GOPATH"))
-              (add-to-list 'default-frame-alist '(font . "Input Mono"))
-              (set-face-attribute 'default nil :font "Input Mono" :weight 'light)
+              (add-to-list 'default-frame-alist '(font . "Input"))
+              (set-face-attribute 'default nil :font "Input" :weight 'light)
               (sanityinc/set-frame-font-size 14)
               (define-key global-map (kbd "<s-return>") 'toggle-frame-fullscreen))
 

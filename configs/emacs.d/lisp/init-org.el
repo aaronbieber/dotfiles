@@ -367,34 +367,47 @@ Skips the current entry unless SUBTREE is not nil."
 (defun air-org-split-to-topics ()
   "Split the window to a custom ID and related topics entry."
   (interactive)
-  (let ((topics-loc (air--org-find-custom-id "major-topics"))
-        (person-loc (air--org-find-custom-id (completing-read
-                                              "Custom ID: "
-                                              (air--org-global-custom-ids))))
-        (this-scroll-margin
-         (min (max 0 scroll-margin)
-              (truncate (/ (window-body-height) 4.0)))))
+  (let* ((person-id (completing-read
+                     "Custom ID: "
+                     (air--org-global-custom-ids)))
+         (topics-loc (air--org-find-custom-id "major-topics"))
+         (person-loc (air--org-find-custom-id person-id))
+         (this-scroll-margin
+          (min (max 0 scroll-margin)
+               (truncate (/ (window-body-height) 4.0))))
+         (original-window (selected-window)))
     (when (and topics-loc person-loc)
-      (pop-to-buffer (car topics-loc))
-      (widen)
-      (goto-char (cadr topics-loc))
-      (search-forward "Current" nil t)
-      (if (not (org-at-heading-p))
-          (org-back-to-heading))
-      (org-show-subtree)
-      (org-narrow-to-subtree)
-      (fit-window-to-buffer)
+      (delete-other-windows)
 
-      (pop-to-buffer (car person-loc))
-      (widen)
-      (goto-char (cadr person-loc))
-      (search-forward "One-on-one" nil t)
-      (if (not (org-at-heading-p))
-          (org-back-to-heading))
-      (recenter this-scroll-margin)
-      (outline-hide-subtree)
-      (outline-show-children 2)
-      (org-narrow-to-subtree))))
+      (org-tags-view t person-id)
+      (fit-window-to-buffer nil nil nil nil nil t)
+      (select-window original-window)
+
+      (display-buffer-same-window (car person-loc) '())
+      (with-current-buffer (car person-loc)
+        (widen)
+        (goto-char (cadr person-loc))
+        (search-forward "One-on-one" nil t)
+        (if (not (org-at-heading-p))
+            (org-back-to-heading))
+        (outline-hide-subtree)
+        (outline-show-children 2)
+        (org-narrow-to-subtree))
+
+      (let ((topics-window (display-buffer-below-selected
+                            (car topics-loc) '())))
+        (with-current-buffer (car topics-loc)
+          (widen)
+          (goto-char (cadr topics-loc))
+          (search-forward "Current" nil t)
+          (if (not (org-at-heading-p))
+              (org-back-to-heading))
+          (org-show-subtree)
+          (org-narrow-to-subtree)
+          (select-window topics-window)
+          (fit-window-to-buffer
+           nil nil nil nil nil t)))
+      (select-window original-window))))
 
 (defun air-org-nmom-capture-template ()
   "Return a Nine Minutes on Monday weekly agenda template suitable for capture."
