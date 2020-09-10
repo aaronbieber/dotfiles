@@ -831,7 +831,7 @@ fail."
                                (expand-file-name "notes.org" org-directory)
                                (expand-file-name "gtd/team.org" org-directory)
                                (expand-file-name "gtd/reading.org" org-directory)
-                               (expand-file-name "roam" org-directory)))
+                               (expand-file-name "gk-roam" org-directory)))
   (setq org-refile-targets `((,(expand-file-name "gtd/tasks.org" org-directory) :maxlevel . 2)
                              (,(expand-file-name "notes.org" org-directory) :maxlevel . 2)
                              (,(expand-file-name "gtd/projects.org" org-directory) :maxlevel . 2)
@@ -1298,6 +1298,13 @@ writing mode is already active, undo all of that."
 ;;                                 (call-process "c:/Program Files/Mozilla Firefox/firefox.exe" nil 0 nil
 ;;                                               (concat "file://" file))))
 ;;   (setq org-roam-graph-executable "c:/Users/Aaron/scoop/shims/dot.exe"))
+
+(use-package gk-roam
+  :config
+  (global-set-key (kbd "C-c r r") 'gk-roam-index)
+  (global-set-key (kbd "C-c r f") 'gk-roam-find)
+  (global-set-key (kbd "C-c r i") 'gk-roam-insert-link-dwim)
+  (global-set-key (kbd "C-c r u") 'gk-roam-update))
 
 (provide 'init-org)
 ;;; init-org.el ends here

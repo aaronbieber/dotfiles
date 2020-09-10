@@ -434,7 +434,7 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
   :config
   (setq solarized-use-variable-pitch nil)
   (setq solarized-scale-org-headlines nil)
-  (load-theme 'solarized-wombat-dark t))
+  (load-theme 'solarized-zenburn t))
 
 (use-package web-mode
   :ensure t
