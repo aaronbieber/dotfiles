@@ -379,11 +379,12 @@ Skips the current entry unless SUBTREE is not nil."
     (when (and topics-loc person-loc)
       (delete-other-windows)
 
-      (org-tags-view t person-id)
-      (fit-window-to-buffer nil nil nil nil nil t)
-      (select-window original-window)
+      (let ((org-agenda-window-setup 'current-window))
+        (org-tags-view t person-id))
 
-      (display-buffer-same-window (car person-loc) '())
+      (display-buffer (car person-loc)
+                      '(display-buffer-at-bottom))
+
       (with-current-buffer (car person-loc)
         (widen)
         (goto-char (cadr person-loc))
@@ -394,20 +395,28 @@ Skips the current entry unless SUBTREE is not nil."
         (outline-show-children 2)
         (org-narrow-to-subtree))
 
-      (let ((topics-window (display-buffer-below-selected
-                            (car topics-loc) '())))
-        (with-current-buffer (car topics-loc)
-          (widen)
-          (goto-char (cadr topics-loc))
-          (search-forward "Current" nil t)
-          (if (not (org-at-heading-p))
-              (org-back-to-heading))
-          (org-show-subtree)
-          (org-narrow-to-subtree)
-          (select-window topics-window)
-          (fit-window-to-buffer
-           nil nil nil nil nil t)))
-      (select-window original-window))))
+      ;; This is the tags buffer because `display-buffer-at-bottom'
+      ;; does not select the window
+      (fit-window-to-buffer nil nil nil nil nil t)
+
+      (display-buffer (car topics-loc)
+                      '(display-buffer-at-bottom))
+
+      (windmove-down)
+      (windmove-down)
+
+      (with-current-buffer (car topics-loc)
+        (widen)
+        (goto-char (cadr topics-loc))
+        (search-forward "Current" nil t)
+        (if (not (org-at-heading-p))
+            (org-back-to-heading))
+        (org-show-subtree)
+        (org-narrow-to-subtree))
+
+      (fit-window-to-buffer)
+      (windmove-up))))
+
 
 (defun air-org-nmom-capture-template ()
   "Return a Nine Minutes on Monday weekly agenda template suitable for capture."
