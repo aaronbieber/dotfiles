@@ -1283,29 +1283,11 @@ writing mode is already active, undo all of that."
   :config
   (evil-define-key 'visual org-mode-map (kbd "gy") 'ox-clip-formatted-copy))
 
-;; (use-package org-roam
-;;   :hook
-;;   (after-init . org-roam-mode)
-;;   :custom
-;;   (org-roam-directory (expand-file-name "~/Dropbox/org/roam"))
-;;   :bind (:map org-roam-mode-map
-;;               (("C-c r r" . org-roam)
-;;                ("C-c r f" . org-roam-find-file)
-;;                ("C-c r b" . org-roam-switch-to-buffer)
-;;                ("C-c r s" . air-roam-grep)
-;;                ("C-c r g" . org-roam-graph))
-;;               :map org-mode-map
-;;               (("C-c r i" . org-roam-insert)))
-;;   :config
-;;   (if (eq window-system 'w32)
-;;       (setq emacsql-sqlite3-executable "c:/Users/Aaron/scoop/shims/sqlite3.exe"))
-;;   (setq org-roam-graph-viewer (lambda (file)
-;;                                 (call-process "c:/Program Files/Mozilla Firefox/firefox.exe" nil 0 nil
-;;                                               (concat "file://" file))))
-;;   (setq org-roam-graph-executable "c:/Users/Aaron/scoop/shims/dot.exe"))
-
 (use-package gk-roam
   :config
+  (setq gk-roam-root-dir "~/Dropbox/org/gk-roam/")
+  (setq gk-roam-pub-dir "~/Dropbox/org/gk-roam/site/")
+  (setq gk-roam-require-tags nil)
   (global-set-key (kbd "C-c r r") 'gk-roam-index)
   (global-set-key (kbd "C-c r f") 'gk-roam-find)
   (global-set-key (kbd "C-c r i") 'gk-roam-insert-link-dwim)
