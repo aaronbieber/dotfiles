@@ -191,23 +191,33 @@ Skip only the current entry unless SUBTREE is not nil."
 (defun air-org-skip-if-active (&optional subtree)
   "Skip entries with an :active: tag.
 
-Skip the current entry unless SUBTREE is not nil, in which case skip
-the entire subtree."
-  (if (air--entry-is-active)
-      (air--org-get-entry-end subtree)))
+If SUBTREE is not nil, check the entire subtree for `:active:' tags
+and skip the subtree if any are found."
+  (let ((end (air--org-get-entry-end subtree)))
+    (and (re-search-forward (rx bol (+ "*") (*? anychar) ":active:") end t)
+         end)))
 
 (defun air--entry-is-active ()
   "Return non-nil if the current entry is not DONE and is marked :active:."
   (and (not (org-entry-is-done-p))
        (member "active" (org-get-tags))))
 
-(defun air-org-skip-if-scheduled (&optional subtree)
+(defun air-org-skip-if-scheduled (&optional subtree ignore-date)
   "Skip entries that are scheduled.
 
 Skip the current entry unless SUBTREE is not nil, in which case skip
-the entire subtree."
-  (if (air--entry-is-scheduled)
-      (air--org-get-entry-end subtree)))
+the entire subtree.
+
+If IGNORE-DATE is nil, only skip entries that are scheduled to occur
+on a future date (not inclusive of today).  If not nil, skip any entry
+with a scheduled date regardless of its value."
+  (let ((end (air--org-get-entry-end subtree)))
+    (save-excursion
+      (catch :skip
+        (while (re-search-forward org-scheduled-time-regexp end t)
+          (if (or ignore-date
+                  (> (org-time-stamp-to-now (match-string 1)) 0))
+              (throw :skip end)))))))
 
 (defun air--entry-is-scheduled ()
   "Return non-nil if the current entry has a `SCHEDULED' property."
@@ -990,9 +1000,11 @@ the current timestamp."
                      (org-agenda-skip-function 'air-org-skip-if-not-habit)))
             (tags "+LEVEL=1"
                   ((org-agenda-overriding-header (air--org-separating-heading "Inactive Projects"))
-                   (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo (air--org-all-todo-keywords))
-                                                  (air-org-skip-if-scheduled t)
-                                                  (air-org-skip-tag "active" t)))
+                   (org-agenda-skip-function '(or
+                                               ;; Non-todo top-level headings only
+                                               (org-agenda-skip-entry-if 'todo (air--org-all-todo-keywords))
+                                               (air-org-skip-if-scheduled t)
+                                               (air-org-skip-if-active t)))
                    (org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory))))))
            ((org-use-property-inheritance t)
             (org-agenda-block-separator "")
