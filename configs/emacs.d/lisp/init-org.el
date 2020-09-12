@@ -165,10 +165,8 @@ Do not make the new window current unless FOCUS is set."
 
 (defun air--org-get-entry-end (&optional subtree)
   "Get the position of the end of entry at point, or SUBTREE, if not nil."
-  (save-excursion
-    (progn
-      (if subtree (org-end-of-subtree t))
-      (outline-next-heading) (1- (point)))))
+  (if subtree (save-excursion (org-end-of-subtree t) (point))
+    (org-entry-end-position)))
 
 (defun air-org-skip-tag-prefix (prefix &optional unless subtree)
   "Skip entries with tags having string prefix PREFIX.
