@@ -551,15 +551,6 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
   (mmm-add-mode-ext-class 'markdown-mode nil 'markdown-cl)
   (mmm-add-mode-ext-class 'markdown-mode nil 'markdown-php))
 
-(use-package undo-tree
-  :ensure t
-  :defer t
-  :diminish t
-  :config
-  (setq undo-tree-auto-save-history t)
-  (setq undo-tree-history-directory-alist
-        (list (cons "." (expand-file-name "undo-tree-history" user-emacs-directory)))))
-
 (use-package atomic-chrome
   :ensure t
   :defer t
