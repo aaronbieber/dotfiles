@@ -911,15 +911,12 @@ the current timestamp."
            (max-len (or width 20))
            (project (cond ((= (length outline-list) 1)
                            (car outline-list))
-
                           ((> (length outline-list) 1)
                            (concat (car outline-list)
-                                   "➙"
+                                   "→"
                                    (car (last outline-list))))
-
                           ((org-get-category)
                            (org-get-category))
-
                           (t "")))
            (waiting-from (org-entry-get (point) "WAITING_FROM"))
            (time-delta (if (and waiting-from
