@@ -962,6 +962,7 @@ the current timestamp."
         '(("d" "Omnibus agenda"
            ((agenda ""
                     ((org-agenda-span 1)
+                     (org-agenda-hide-tags-regexp "active")
                      (org-agenda-prefix-format "%(air--fixed-project-prefix)%?-12t% s")
                      (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo '("WAITING"))
                                                     (air-org-skip-if-habit)))))
