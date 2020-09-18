@@ -12,9 +12,10 @@ configs/xmonad/*
 # Ignore all of emacs.d, which is mostly compiled/downloaded scripts.
 configs/emacs.d/*
 *.elc
+
 # But don't ignore these specific locations.
 !configs/emacs.d/eshell/alias
-!configs/emacs.d/lisp
+!configs/emacs.d/lisp/*.el
 !configs/emacs.d/snippets
 !configs/emacs.d/init.el
 !configs/emacs.d/custom.el
