@@ -679,9 +679,7 @@ The IGNORED argument is... Ignored."
                                             (kill-this-buffer)
                                             (if (not (one-window-p))
                                                 (delete-window))))
-  (set (make-local-variable 'pcomplete-ignore-case) t)
-  (set (make-local-variable 'company-backends)
-       '((esh-autosuggest))))
+  (set (make-local-variable 'pcomplete-ignore-case) t))
 
 (add-hook 'eshell-mode-hook 'air--eshell-mode-hook)
 
