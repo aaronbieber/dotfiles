@@ -864,7 +864,6 @@ fail."
   ;; Tagging
   (setq org-tag-alist '(("active" . ?a)
                         ("reading" . ?r)))
-  (setq org-fast-tag-selection-include-todo t)
   (setq org-fast-tag-selection-single-key t)
 
   (setq org-agenda-skip-scheduled-if-done t)
@@ -1274,6 +1273,8 @@ writing mode is already active, undo all of that."
 (use-package org-evil
   :ensure t
   :config
+  (evil-define-minor-mode-key 'normal 'org-evil-heading-mode ":" 'org-set-tags-command)
+  (evil-define-minor-mode-key 'normal 'org-evil-heading-mode "t" 'org-todo)
   (evil-define-minor-mode-key 'normal 'org-evil-heading-mode "@" 'org-refile)
   (evil-define-minor-mode-key 'normal 'org-evil-heading-mode "#" 'org-add-note)
   (evil-define-minor-mode-key 'normal 'org-evil-heading-mode "+" 'org-shiftup)
