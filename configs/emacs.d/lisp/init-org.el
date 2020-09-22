@@ -974,7 +974,8 @@ the current timestamp."
                         (org-agenda-sorting-strategy '(todo-state-down priority-down category-up))))
             (todo "TODO"
                   ((org-agenda-overriding-header (air--org-separating-heading "For Meetings"))
-                   (org-agenda-skip-function '(air-org-skip-tag-prefix "@" t))
+                   (org-agenda-skip-function '(or (air-org-skip-tag-prefix "@" t)
+                                                  (air-org-skip-if-scheduled t)))
                    (org-agenda-hide-tags-regexp ".")
                    (org-agenda-sorting-strategy '(tag-up))
                    (org-agenda-prefix-format "%(air--format-for-meetings-prefix)")))
@@ -1008,7 +1009,7 @@ the current timestamp."
             (org-agenda-compact-blocks nil)))
 
           ("r" "Inbox review"
-           ((agenda "" ((org-agenda-span 2)
+           ((agenda "" ((org-agenda-span 14)
                         (org-agenda-time-grid nil)
                         (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo '("WAITING"))
                                                        (air-org-skip-if-habit)))))
