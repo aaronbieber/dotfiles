@@ -850,6 +850,13 @@ fail."
                              (,(expand-file-name "gtd/projects.org" org-directory) :maxlevel . 2)
                              (,(expand-file-name "gtd/backlog.org" org-directory) :maxlevel . 1)
                              (,(expand-file-name "gtd/habits.org" org-directory) :maxlevel . 1)))
+  ;; Headings between agenda blocks
+  (set-face-attribute 'org-agenda-structure nil
+                      :foreground "LightGray"
+                      :weight 'bold
+                      :underline nil
+                      :box nil)
+  (setq org-agenda-tags-column -89)
   (setq org-refile-use-outline-path 'file)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-outline-path-complete-in-steps nil)
@@ -946,7 +953,7 @@ the current timestamp."
     "Print HEADING padded with characters to create a separator."
     (concat heading
             " "
-            (make-string (- 78 (length heading)) ? )))
+            (make-string (- 80 (length heading)) ? )))
 
   (defun air--org-all-todo-keywords ()
     "Return a list of all bare TODO keywords."
@@ -1268,8 +1275,7 @@ writing mode is already active, undo all of that."
                 (visual-fill-column-mode)
                 (flyspell-mode)
                 (org-indent-mode)
-                (highlight-regexp "@.*?@" 'hi-blue))))
-  (set-face-attribute 'org-agenda-structure nil :foreground "LightGray" :weight 'bold :underline t))
+                (highlight-regexp "@.*?@" 'hi-blue)))))
 
 (use-package org-evil
   :ensure t
