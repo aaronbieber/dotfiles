@@ -13,11 +13,24 @@
 (defun air-org-insert-first-link ()
   "Insert the first link in `org-stored-links', or do nothing."
   (interactive)
-
   (let* ((link (car org-stored-links))
          (uri (car link))
          (title (cadr link)))
     (org-insert-link nil uri title)))
+
+(defun air-org-insert-link-dwim ()
+  "Attempt to insert a link as the user wanted, without asking.
+
+If the first entry of the kill ring starts with a protocol string,
+prompt for link text and insert a link pointing to that
+URL.  Otherwise, attempt to insert the first entry in
+`org-stored-links'.  If neither is possible, do nothing."
+  (interactive)
+  (if (string-match "^https?://" (current-kill 0 t))
+      (if-let ((url (current-kill 0 t))
+               (text (read-string "Link text: ")))
+          (org-insert-link nil (current-kill 0 t) text))
+    (call-interactively 'air-org-insert-first-link)))
 
 (defun air--alist-key-match-p (list substring)
   "Return t if any key in LIST should contain SUBSTRING."
