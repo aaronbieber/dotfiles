@@ -146,7 +146,7 @@
                             )))
           ("org-links"    ("Org Links"
                            ((?c "Capture"      org-store-link)
-                            (?l "Insert first" air-org-insert-first-link)
+                            (?l "Insert DWIM"  air-org-insert-link-dwim)
                             (?L "Insert any"   org-insert-link)
                             (?i "Custom ID"    air-org-insert-custom-id-link))))
           ("org-files"    ("Org Files"
