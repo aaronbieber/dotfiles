@@ -984,6 +984,7 @@ the current timestamp."
                      (org-agenda-hide-tags-regexp "active")
                      (org-agenda-prefix-format "%(air--fixed-project-prefix)%?-12t% s")
                      (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo '("WAITING"))
+                                                    (air-org-skip-tag-prefix "@")
                                                     (air-org-skip-if-habit)))))
             (tags-todo "active-reading/!-WAITING-DONE-CANCELED"
                        ((org-agenda-overriding-header (air--org-separating-heading "Tasks"))
