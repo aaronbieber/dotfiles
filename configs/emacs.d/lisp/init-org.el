@@ -28,7 +28,9 @@ URL.  Otherwise, attempt to insert the first entry in
   (interactive)
   (if (string-match "^https?://" (current-kill 0 t))
       (if-let ((url (current-kill 0 t))
-               (text (read-string "Link text: ")))
+               (text (read-string (concat "Text for '"
+                                          (substring url 0 (min (length url) 50))
+                                          "': "))))
           (org-insert-link nil (current-kill 0 t) text))
     (call-interactively 'air-org-insert-first-link)))
 
