@@ -7,13 +7,13 @@
 ;; This must run after window setup or it seems to have no effect.
 (add-hook 'window-setup-hook
           (lambda ()
-            (when (memq window-system '(mac ns))
+            (when (eq system-type 'darwin)
               (use-package exec-path-from-shell
                 :ensure t
                 :config
                 (exec-path-from-shell-initialize)
                 (exec-path-from-shell-copy-env "GOPATH"))
-              (set-face-attribute 'default nil :font "Input" :weight 'light)
+              (set-face-attribute 'default nil :font "JetBrains Mono")
               (sanityinc/set-frame-font-size 14)
               (define-key global-map (kbd "<s-return>") 'toggle-frame-fullscreen))
 
