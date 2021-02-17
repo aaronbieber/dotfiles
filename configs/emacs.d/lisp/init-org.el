@@ -677,6 +677,25 @@ TAG is chosen interactively from the global tags completion table."
                                      (plain-list-item . t)))
   (setq org-stuck-projects '("+LEVEL=1/-DONE-TODO-IN\-PROGRESS-WAITING-CANCELED" () ("active") ""))
 
+  (setq org-file-apps
+        '((auto-mode . emacs)
+          ("\\.mm\\'" . default)
+          ;; Use https://github.com/cpbotha/xdg-open-wsl
+          ("\\.x?html?\\'" . "xdg-open %s")
+          ("\\.pdf\\'" . default)))
+
+  ;; fix org-open-file for wsl by temporarily replacing
+  ;; start-process-shell-command with call-process-shell-command if we
+  ;; don't do this, emacs on WSL will block forever trying to open
+  ;; exported file with windows handler
+  (defun wsl-fix-org-open-file (orig-org-open-file &rest args)
+    ;; temporarily replace function, see
+    ;; https://endlessparentheses.com/understanding-letf-and-how-it-replaces-flet.html
+    (cl-letf (((symbol-function 'start-process-shell-command) #'call-process-shell-command))
+      (apply orig-org-open-file args)))
+
+  (advice-add #'org-open-file :around #'wsl-fix-org-open-file)
+
   (defun air--org-bullet-daily-log-filename ()
     "Return the filename of today's Bullet Journal Daily Log."
     (format-time-string "%Y-%m-%d.org"))
