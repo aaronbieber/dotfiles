@@ -137,8 +137,8 @@ the headlines."
 (defun air-org-helm-headings ()
   "Call `helm-org-agenda-files-headings' with a longer list of files."
   (interactive)
-  (let ((org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory)
-                                (expand-file-name "gtd/team.org" org-directory))))
+  (let ((org-agenda-files (seq-filter (lambda (e) (string-match-p "\\.org\\'" e))
+                                      org-agenda-files)))
     (call-interactively 'helm-org-agenda-files-headings)))
 
 (defun air--org-display-tag (tag &optional focus)
