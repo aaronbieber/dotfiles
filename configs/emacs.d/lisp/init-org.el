@@ -946,16 +946,102 @@ the current timestamp."
        (if (> (length outline-list) 1)
            (concat (cadr outline-list) " → ")))))
 
+  (defun air--get-task-size-val (&optional pom)
+    "Get the task size index for the entry at point."
+    (let* ((task-size-allowed-values (org-property-get-allowed-values pom "TASKSIZE" t))
+           (task-size (org-entry-get pom "TASKSIZE"))
+           (task-size-tail (member (list task-size) task-size-allowed-values)))
+      (if (and task-size task-size-tail)
+          (1+ (- (length task-size-allowed-values)
+                 (length task-size-tail))))))
+
+  (defun air--org-agenda-cmp-user-defined (a b)
+    "Compare agenda entries for sorting, my way."
+    (let* ((a-pos (get-text-property 0 'org-marker a))
+           (b-pos (get-text-property 0 'org-marker b))
+           (ts-a (or (air--get-task-size-val a-pos) 100))
+           (ts-b (or (air--get-task-size-val b-pos) 100)))
+      (cond ((= ts-a ts-b) nil)
+            ((> ts-a ts-b) +1)
+            ((< ts-a ts-b) -1))))
+
+  (setq org-agenda-cmp-user-defined #'air--org-agenda-cmp-user-defined)
+
+  (defun air-org-agenda-task-size-inc (&optional redo)
+    "Increment the task size of the current agenda item.
+
+If the current item does not have a task size, add one with the
+minimum value.
+
+Redraw the agenda if REDO is non-nil."
+    (interactive)
+    (let* ((marker (or (org-get-at-bol 'org-marker)
+                       (org-agenda-error)))
+           (buffer (marker-buffer marker))
+           (pos (marker-position marker))
+           (inhibit-read-only t)
+           (task-size-allowed-values (org-property-get-allowed-values marker "TASKSIZE" t))
+           (task-size-val (air--get-task-size-val marker))
+           (task-size (if task-size-val
+                          (car (nth (1- task-size-val) task-size-allowed-values))))
+           (new-size-index (if (not task-size-val)
+                               0
+                             (if (< task-size-val (length task-size-allowed-values))
+                                 task-size-val
+                               (1- (length task-size-allowed-values)))))
+           (new-size (car (nth new-size-index task-size-allowed-values))))
+      (if (not (equal task-size new-size))
+          (progn
+            (org-with-remote-undo buffer
+              (with-current-buffer buffer
+                (widen)
+                (goto-char pos)
+                (org-show-context 'agenda)
+                (org-set-property "TaskSize" new-size)))
+            (if redo (call-interactively 'org-agenda-redo-all))
+            (message "Set task size to %s" new-size))
+        (message "Task size already at maximum."))))
+
+  (defun air-org-agenda-task-size-dec (&optional redo)
+    "Decrement the task size of the current agenda item.
+
+If the current item does not have a task size, add one with the
+maximum value.
+
+Redraw the agenda if REDO is non-nil."
+    (interactive)
+    (let* ((marker (or (org-get-at-bol 'org-marker)
+                       (org-agenda-error)))
+           (buffer (marker-buffer marker))
+           (pos (marker-position marker))
+           (inhibit-read-only t)
+           (task-size-allowed-values (org-property-get-allowed-values marker "TASKSIZE" t))
+           (task-size-val (air--get-task-size-val marker))
+           (task-size (if task-size-val
+                          (car (nth (1- task-size-val) task-size-allowed-values))))
+           (new-size-index (if (not task-size-val)
+                               (1- (length task-size-allowed-values))
+                             (if (< task-size-val 2)
+                                 0
+                               (- task-size-val 2))))
+           (new-size (car (nth new-size-index task-size-allowed-values))))
+      (progn
+        (org-with-remote-undo buffer
+          (with-current-buffer buffer
+            (widen)
+            (goto-char pos)
+            (org-show-context 'agenda)
+            (if (not (equal task-size new-size))
+                (progn
+                  (message "Set task size to %s" new-size)
+                  (org-set-property "TaskSize" new-size))
+              (org-delete-property "TaskSize"))))
+        (if redo (call-interactively 'org-agenda-redo-all)))))
+
   (defun air--fixed-project-prefix (&optional width)
     (let* ((outline-list (org-get-outline-path))
            (max-len (or width 20))
-           (project (cond ((= (length outline-list) 1)
-                           (car outline-list))
-                          ((> (length outline-list) 1)
-                           (concat (car outline-list)
-                                   "→"
-                                   (car (last outline-list))))
-                          ((org-get-category)
+           (project (cond ((org-get-category)
                            (org-get-category))
                           (t "")))
            (waiting-from (org-entry-get (point) "WAITING_FROM"))
@@ -965,6 +1051,16 @@ the current timestamp."
                                             (- (time-to-seconds (current-time))
                                                (time-to-seconds (date-to-time waiting-from)))))
                          ""))
+           (effort-allowed-values (org-property-get-allowed-values nil "TASKSIZE" t))
+           (effort (org-entry-get nil "TASKSIZE"))
+           (effort-index (- (length effort-allowed-values)
+                            (length (member (list effort) effort-allowed-values))))
+           (effort-string (if effort
+                              (concat "("
+                                      (make-string (1+ effort-index) ?*)
+                                      (make-string (- (length effort-allowed-values) effort-index 1) ? )
+                                      ")")
+                            (make-string (+ 2 effort-index) ? )))
            (total-len (+ (length project)
                          (length time-delta)))
            (substring-index (if (> total-len max-len)
@@ -975,6 +1071,8 @@ the current timestamp."
       (concat " "
               (make-string (- max-len (length project-trimmed)) 32)
               project-trimmed
+              " "
+              effort-string
               (if (> (length project-trimmed) 0) ": " "  "))))
 
   (defun air--format-for-meetings-prefix ()
@@ -1013,7 +1111,7 @@ the current timestamp."
                         (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'scheduled 'deadline)
                                                        (air-org-skip-tag-prefix "@")))
                         (org-agenda-prefix-format "%(air--fixed-project-prefix)")
-                        (org-agenda-sorting-strategy '(todo-state-down priority-down category-up))))
+                        (org-agenda-sorting-strategy '(todo-state-down priority-down user-defined-up))))
             (todo "TODO"
                   ((org-agenda-overriding-header (air--org-separating-heading "For Meetings"))
                    (org-agenda-skip-function '(or (air-org-skip-tag-prefix "@" t)
@@ -1194,6 +1292,8 @@ writing mode is already active, undo all of that."
               (define-key org-agenda-mode-map (kbd "y")   'air-org-bulk-copy-headlines)
               (define-key org-agenda-mode-map (kbd "S")   'org-agenda-schedule)
               (define-key org-agenda-mode-map (kbd "RET") 'org-agenda-switch-to)
+              (define-key org-agenda-mode-map (kbd ")")   'air-org-agenda-task-size-inc)
+              (define-key org-agenda-mode-map (kbd "(")   'air-org-agenda-task-size-dec)
 
               (define-prefix-command 'air-org-run-shortcuts)
               (define-key air-org-run-shortcuts "a" (tiny-menu-run-item "org-agendas"))
