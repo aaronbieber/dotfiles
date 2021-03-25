@@ -1273,6 +1273,28 @@ writing mode is already active, undo all of that."
     "s"  'org-schedule
     "t"  'air-org-set-tags)
 
+  (defun air--handle-tag-change (&optional args)
+    "If any tag has an `@' prefix, remove any `active' tag.
+
+Meant to be used as an `org-after-tags-change-hook' to prevent the
+coexistence of a person tag and the active tag, because all
+person-tagged items are assumed to be active.
+
+This is only important because the presence of the active tag can
+break the alphabetization of person-tagged items, causing them to
+appear out of order in the agenda."
+    (let* ((cur-tags (org-get-tags nil t))
+           (has-name (delq ""
+                           (mapcar
+                            (lambda (e) (if (string-prefix-p "@" e)
+                                            e
+                                          ""))
+                            cur-tags))))
+      (if has-name
+          (org-set-tags (delete "active" cur-tags)))))
+
+  (add-hook 'org-after-tags-change-hook #'air--handle-tag-change)
+
   (add-hook 'org-agenda-mode-hook
             (lambda ()
               (setq org-habit-graph-column 50)
