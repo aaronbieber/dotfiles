@@ -36,6 +36,14 @@
                     browse-url-generic-args '("/c" "start")
                     browse-url-browser-function #'browse-url-generic))
 
+            ;; Using media keys when Emacs has focus rings the bell
+            ;; and displays errors otherwise.
+            (global-set-key (kbd "<XF86AudioRaiseVolume>") (lambda () (interactive)))
+            (global-set-key (kbd "<XF86AudioLowerVolume>") (lambda () (interactive)))
+            (global-set-key (kbd "<XF86AudioNext>") (lambda () (interactive)))
+            (global-set-key (kbd "<XF86AudioPrev>") (lambda () (interactive)))
+            (global-set-key (kbd "<XF86AudioPlay>") (lambda () (interactive)))
+
             (when (fboundp 'powerline-reset)
               (powerline-reset))))
 
