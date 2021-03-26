@@ -1132,7 +1132,7 @@ Redraw the agenda if REDO is non-nil."
                    (org-agenda-skip-function 'air-org-skip-if-habit)
                    (org-agenda-hide-tags-regexp "active")
                    (org-agenda-prefix-format "%(air--fixed-project-prefix)")))
-            (tags "reading/-DONE" ((org-agenda-overriding-header (air--org-separating-heading "Reading list"))
+            (tags "reading/-DONE-CANCELED" ((org-agenda-overriding-header (air--org-separating-heading "Reading list"))
                                    (org-agenda-hide-tags-regexp "reading\\|active")
                                    (org-agenda-prefix-format "%(air--fixed-project-prefix)")))
             (agenda ""
