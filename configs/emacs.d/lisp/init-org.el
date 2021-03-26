@@ -946,13 +946,15 @@ the current timestamp."
        (if (> (length outline-list) 1)
            (concat (cadr outline-list) " → ")))))
 
-  (defun air--get-task-size-val (&optional pom)
+  (defvar air-org-task-size-allowed-values '(("S") ("M") ("L") ("XL"))
+    "Permitted task size values for any entry.")
+
+  (defun air--get-task-size-val (pom)
     "Get the task size index for the entry at point."
-    (let* ((task-size-allowed-values (org-property-get-allowed-values pom "TASKSIZE" t))
-           (task-size (org-entry-get pom "TASKSIZE"))
-           (task-size-tail (member (list task-size) task-size-allowed-values)))
+    (let* ((task-size (org-entry-get pom "TASKSIZE"))
+           (task-size-tail (member (list task-size) air-org-task-size-allowed-values)))
       (if (and task-size task-size-tail)
-          (1+ (- (length task-size-allowed-values)
+          (1+ (- (length air-org-task-size-allowed-values)
                  (length task-size-tail))))))
 
   (defun air--org-agenda-cmp-user-defined (a b)
@@ -967,6 +969,23 @@ the current timestamp."
 
   (setq org-agenda-cmp-user-defined #'air--org-agenda-cmp-user-defined)
 
+  (defun air-org-task-size-inc ()
+    "Increment the task size of the entry at point."
+    (let* ((task-size-val (air--get-task-size-val (point)))
+           (task-size (if task-size-val
+                          (car (nth (1- task-size-val) air-org-task-size-allowed-values))))
+           (new-size-index (if (not task-size-val)
+                               0
+                             (if (< task-size-val (length air-org-task-size-allowed-values))
+                                 task-size-val
+                               (1- (length air-org-task-size-allowed-values)))))
+           (new-size (car (nth new-size-index air-org-task-size-allowed-values))))
+      (if (not (equal task-size new-size))
+          (progn
+            (org-set-property "TaskSize" new-size)
+            (message "Set task size to %s" new-size))
+        (message "Task size already at maximum."))))
+
   (defun air-org-agenda-task-size-inc (&optional redo)
     "Increment the task size of the current agenda item.
 
@@ -979,28 +998,32 @@ Redraw the agenda if REDO is non-nil."
                        (org-agenda-error)))
            (buffer (marker-buffer marker))
            (pos (marker-position marker))
-           (inhibit-read-only t)
-           (task-size-allowed-values (org-property-get-allowed-values marker "TASKSIZE" t))
-           (task-size-val (air--get-task-size-val marker))
+           (inhibit-read-only t))
+      (org-with-remote-undo buffer
+        (with-current-buffer buffer
+          (widen)
+          (goto-char pos)
+          (org-show-context 'agenda)
+          (air-org-task-size-inc)))
+      (if redo (call-interactively 'org-agenda-redo-all))))
+
+  (defun air-org-task-size-dec ()
+    "Decrement the task size of the entry at point."
+    (let* ((task-size-val (air--get-task-size-val (point)))
            (task-size (if task-size-val
-                          (car (nth (1- task-size-val) task-size-allowed-values))))
+                          (car (nth (1- task-size-val) air-org-task-size-allowed-values))))
            (new-size-index (if (not task-size-val)
-                               0
-                             (if (< task-size-val (length task-size-allowed-values))
-                                 task-size-val
-                               (1- (length task-size-allowed-values)))))
-           (new-size (car (nth new-size-index task-size-allowed-values))))
+                               (1- (length air-org-task-size-allowed-values))
+                             (if (< task-size-val 2)
+                                 0
+                               (- task-size-val 2))))
+           (new-size (car (nth new-size-index air-org-task-size-allowed-values))))
+
       (if (not (equal task-size new-size))
           (progn
-            (org-with-remote-undo buffer
-              (with-current-buffer buffer
-                (widen)
-                (goto-char pos)
-                (org-show-context 'agenda)
-                (org-set-property "TaskSize" new-size)))
-            (if redo (call-interactively 'org-agenda-redo-all))
-            (message "Set task size to %s" new-size))
-        (message "Task size already at maximum."))))
+            (message "Set task size to %s" new-size)
+            (org-set-property "TaskSize" new-size))
+        (org-delete-property "TaskSize"))))
 
   (defun air-org-agenda-task-size-dec (&optional redo)
     "Decrement the task size of the current agenda item.
@@ -1014,29 +1037,14 @@ Redraw the agenda if REDO is non-nil."
                        (org-agenda-error)))
            (buffer (marker-buffer marker))
            (pos (marker-position marker))
-           (inhibit-read-only t)
-           (task-size-allowed-values (org-property-get-allowed-values marker "TASKSIZE" t))
-           (task-size-val (air--get-task-size-val marker))
-           (task-size (if task-size-val
-                          (car (nth (1- task-size-val) task-size-allowed-values))))
-           (new-size-index (if (not task-size-val)
-                               (1- (length task-size-allowed-values))
-                             (if (< task-size-val 2)
-                                 0
-                               (- task-size-val 2))))
-           (new-size (car (nth new-size-index task-size-allowed-values))))
-      (progn
-        (org-with-remote-undo buffer
-          (with-current-buffer buffer
-            (widen)
-            (goto-char pos)
-            (org-show-context 'agenda)
-            (if (not (equal task-size new-size))
-                (progn
-                  (message "Set task size to %s" new-size)
-                  (org-set-property "TaskSize" new-size))
-              (org-delete-property "TaskSize"))))
-        (if redo (call-interactively 'org-agenda-redo-all)))))
+           (inhibit-read-only t))
+      (org-with-remote-undo buffer
+        (with-current-buffer buffer
+          (widen)
+          (goto-char pos)
+          (org-show-context 'agenda)
+          (air-org-task-size-dec)))
+      (if redo (call-interactively 'org-agenda-redo-all))))
 
   (defun air--fixed-project-prefix (&optional width)
     (let* ((outline-list (org-get-outline-path))
@@ -1053,14 +1061,14 @@ Redraw the agenda if REDO is non-nil."
                          ""))
            (effort-allowed-values (org-property-get-allowed-values nil "TASKSIZE" t))
            (effort (org-entry-get nil "TASKSIZE"))
-           (effort-index (- (length effort-allowed-values)
-                            (length (member (list effort) effort-allowed-values))))
+           (effort-index (- (length air-org-task-size-allowed-values)
+                            (length (member (list effort) air-org-task-size-allowed-values))))
            (effort-string (if effort
                               (concat "("
                                       (make-string (1+ effort-index) ?*)
-                                      (make-string (- (length effort-allowed-values) effort-index 1) ? )
+                                      (make-string (- (length air-org-task-size-allowed-values) effort-index 1) ? )
                                       ")")
-                            (make-string (+ 2 effort-index) ? )))
+                            (concat "(" (make-string (length air-org-task-size-allowed-values) ? ) ")")))
            (total-len (+ (length project)
                          (length time-delta)))
            (substring-index (if (> total-len max-len)
@@ -1442,7 +1450,13 @@ appear out of order in the agenda."
   (evil-define-minor-mode-key 'normal 'org-evil-heading-mode "@" 'org-refile)
   (evil-define-minor-mode-key 'normal 'org-evil-heading-mode "#" 'org-add-note)
   (evil-define-minor-mode-key 'normal 'org-evil-heading-mode "+" 'org-shiftup)
-  (evil-define-minor-mode-key 'normal 'org-evil-heading-mode "=" 'org-shiftdown))
+  (evil-define-minor-mode-key 'normal 'org-evil-heading-mode "=" 'org-shiftdown)
+  (evil-define-minor-mode-key 'normal 'org-evil-heading-mode "(" (lambda ()
+                                                                   (interactive)
+                                                                   (air-org-task-size-dec)))
+  (evil-define-minor-mode-key 'normal 'org-evil-heading-mode ")" (lambda ()
+                                                                   (interactive)
+                                                                   (air-org-task-size-inc))))
 
 (use-package org-bullets
   :ensure t
