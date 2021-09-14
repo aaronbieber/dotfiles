@@ -1409,11 +1409,12 @@ appear out of order in the agenda."
                 "Call `company-complete' then `org-cycle'."
                 (interactive)
                 (or (and (looking-back "\\w" (line-beginning-position))
-                         (or (org-try-structure-completion)
+                         (or (and (org-at-table-p)
+                                  (call-interactively 'org-table-next-field))
                              (company-complete)))
                     (org-cycle)))
-              (evil-define-key 'normal org-mode-map (kbd "<tab>") 'org-cycle)
-              (evil-define-key 'insert org-mode-map (kbd "<tab>") 'complete-or-org-cycle)
+              ;;(evil-define-key 'normal org-mode-map (kbd "<tab>") 'org-cycle)
+              ;;(evil-define-key 'insert org-mode-map (kbd "<tab>") 'complete-or-org-cycle)
 
               (evil-define-key 'normal org-mode-map (kbd "C-,")   'org-metaleft)
               (evil-define-key 'normal org-mode-map (kbd "C-.")   'org-metaright)
