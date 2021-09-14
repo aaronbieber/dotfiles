@@ -1493,15 +1493,25 @@ appear out of order in the agenda."
   :config
   (evil-define-key 'visual org-mode-map (kbd "gy") 'ox-clip-formatted-copy))
 
-(use-package gk-roam
-  :config
-  (setq gk-roam-root-dir "~/Dropbox/org/gk-roam/")
-  (setq gk-roam-pub-dir "~/Dropbox/org/gk-roam/site/")
-  (setq gk-roam-require-tags nil)
-  (global-set-key (kbd "C-c r r") 'gk-roam-index)
-  (global-set-key (kbd "C-c r f") 'gk-roam-find)
-  (global-set-key (kbd "C-c r i") 'gk-roam-insert-link-dwim)
-  (global-set-key (kbd "C-c r u") 'gk-roam-update))
+(use-package db :ensure t)
+(use-package gkroam
+  :hook (after-init . gkroam-mode)
+  :init
+  (setq gkroam-root-dir "~/Dropbox/org/gkroam/")
+  (setq gkroam-cache-dir "~/Dropbox/org/gkroam/cache/")
+  (setq gkroam-prettify-page-flag t
+        gkroam-title-height 200
+        gkroam-show-brackets-flag nil
+        gkroam-use-default-filename t)
+  :bind
+  (:map gkroam-mode-map
+        (("C-c r r" . gkroam-index)
+         ("C-c r d" . gkroam-daily)
+         ("C-c r f" . gkroam-find)
+         ("C-c r i" . gkroam-insert)
+         ("C-c r u" . gkroam-update)
+         ("C-c r U" . gkroam-update-all)
+         ("C-c r R" . gkroam-rebuild-caches))))
 
 (provide 'init-org)
 ;;; init-org.el ends here
