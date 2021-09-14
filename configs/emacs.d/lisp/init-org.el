@@ -710,11 +710,14 @@ TAG is chosen interactively from the global tags completion table."
 Annotated regions are surrounded by one of the characters in `summary-annotations'."
     (interactive)
     (save-excursion
-      (forward-char 1)
       (catch 'done
         (mapcar (lambda (c)
-                  (let ((start (save-excursion (search-backward-regexp (concat c "\\w") (line-beginning-position) t)))
-                        (end (save-excursion (search-forward-regexp (concat "\\w" c) (line-end-position) t))))
+                  (let* ((end (save-excursion
+                                ;;(backward-char 1)
+                                (search-forward-regexp (concat "[^\\s]" c) (line-end-position) t)))
+                         (start (save-excursion (goto-char (min (+ (point) 2) (- (or end (point)) 1)))
+                                                (forward-char 1)
+                                                (search-backward-regexp (concat c "[^\\s]") (line-beginning-position) t))))
                     (if (and start end)
                         (throw 'done (list c start end)))))
                 summary-annotations)
@@ -727,21 +730,30 @@ If a region is active, apply the lowest level summary
 annotation. Else, promote the surrounding summary annotation to the
 next level or fail."
     (interactive)
-    (if (use-region-p)
-        (air--toggle-surrounding-chars (car summary-annotations))
-      (let ((annotation (air--within-annotated-region-p)))
-        (if (not annotation)
-            (user-error "Point is not within an annotated region")
-          (let* ((current (car annotation))
-                 (next (cadr (member current summary-annotations))))
-            (if (not next)
-                (user-error "Region is annotated at the highest level"))
-            (goto-char (cadr annotation))
-            (delete-char 1)
-            (insert next)
-            (goto-char (1- (caddr annotation)))
-            (delete-char 1)
-            (insert next))))))
+    (save-excursion
+      (let* ((region (use-region-p))
+             (annotation (air--within-annotated-region-p))
+             (start (or (and region (region-beginning))
+                        (cadr annotation)))
+             (end (or (and region (+ 2 (region-end)))
+                      (caddr annotation))))
+
+        (if (and (not start) (not end))
+            (user-error "Point is not within an annotation or no region is active")
+          (progn
+            (or (and region
+                     (air--toggle-surrounding-chars (car summary-annotations)))
+                (let* ((current (car annotation))
+                       (next (cadr (member current summary-annotations))))
+                  (if (not next)
+                      (user-error "Region is annotated at the highest level"))
+                  (goto-char start)
+                  (delete-char 1)
+                  (insert next)
+                  (goto-char (1- end))
+                  (delete-char 1)
+                  (insert next)))
+            (air--propertize-summary-annotation start end))))))
 
   (defun air-demote-summary ()
     "Demote the summarization annotation at point.
@@ -749,19 +761,30 @@ next level or fail."
 Demote the surrounding summary annotation to the next lowest level or
 fail."
     (interactive)
-    (if (use-region-p)
-        (user-error "Demoting a summary cannot operate on a region")
-      (let ((annotation (air--within-annotated-region-p)))
-        (if (not annotation)
-            (user-error "Point is not within an annotated region")
-          (let* ((current (car annotation))
-                 (next (cadr (member current (reverse summary-annotations)))))
-            (goto-char (cadr annotation))
-            (delete-char 1)
-            (if next (insert next))
-            (goto-char (- (caddr annotation) (if next 1 2)))
-            (delete-char 1)
-            (if next (insert next)))))))
+    (save-excursion
+      (if (use-region-p)
+          (user-error "Demoting a summary cannot operate on a region")
+        (let ((annotation (air--within-annotated-region-p)))
+          (if (not annotation)
+              (user-error "Point is not within an annotated region")
+            (let* ((current (car annotation))
+                   (next (cadr (member current (reverse summary-annotations)))))
+              (goto-char (cadr annotation))
+              (delete-char 1)
+              (if next (insert next))
+              (goto-char (- (caddr annotation) (if next 1 2)))
+              (delete-char 1)
+              (if next (insert next))))))))
+
+  (defun air--propertize-summary-annotation (&optional start end)
+    "Apply text properties to summary annotation at point."
+    (let ((annotation (air--within-annotated-region-p)))
+      (if (and (not annotation)
+               (and (not start) (not end)))
+          (user-error "Point is not within an annotated region")
+        (let ((fstart (or start (cadr annotation)))
+              (fend (or end (caddr annotation))))
+          (put-text-property fstart fend 'font-lock-face '(:inherit t :background "#f5f5a3" :foreground "black"))))))
 
   (defun air--toggle-surrounding-chars (chars &optional after-chars)
     "Insert CHARS before and after the current region."
@@ -1439,8 +1462,7 @@ appear out of order in the agenda."
                 (visual-line-mode)
                 (visual-fill-column-mode)
                 (flyspell-mode)
-                (org-indent-mode)
-                (highlight-regexp "@.*?@" 'hi-blue)))))
+                (org-indent-mode)))))
 
 (use-package org-evil
   :ensure t
