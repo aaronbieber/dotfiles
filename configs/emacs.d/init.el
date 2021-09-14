@@ -124,6 +124,15 @@
   (setq sml/theme 'dark)
   (sml/setup))
 
+(use-package org-journal
+  :ensure t
+  :defer 2
+  :config
+  (global-set-key (kbd "C-c C-j") (lambda ()
+                                    (interactive)
+                                    (org-journal-new-entry t)))
+  (setq org-journal-dir "~/Dropbox/org/journal"))
+
 ;;; Required by init-maps, so it appears up here.
 (use-package tiny-menu
   :ensure t
