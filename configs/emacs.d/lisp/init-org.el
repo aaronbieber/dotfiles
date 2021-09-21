@@ -61,7 +61,7 @@ This exports as a Beamer PDF and opens it, because that's what I always do."
              (setq failed t)))
        (if failed
            (message "No exportable heading found.")
-         (org-open-file (org-beamer-export-to-pdf nil t)))))))
+         (org-open-file (org-html-export-to-html nil t)))))))
 
 (defun air--beamer-bold (contents backend info)
   "Beamer export filter to use the correct LaTeX markup for bold.
