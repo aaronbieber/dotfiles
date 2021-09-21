@@ -898,10 +898,10 @@ fail."
   ;; Agenda configuration
   (setq org-agenda-text-search-extra-files '(agenda-archives))
   (setq org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory)
+                               (expand-file-name "gtd/15-5.org" org-directory)
                                (expand-file-name "notes.org" org-directory)
                                (expand-file-name "gtd/team.org" org-directory)
-                               (expand-file-name "gtd/reading.org" org-directory)
-                               (expand-file-name "gk-roam" org-directory)))
+                               (expand-file-name "gtd/reading.org" org-directory)))
   (setq org-refile-targets `((,(expand-file-name "gtd/tasks.org" org-directory) :maxlevel . 2)
                              (,(expand-file-name "notes.org" org-directory) :maxlevel . 2)
                              (,(expand-file-name "gtd/projects.org" org-directory) :maxlevel . 2)
