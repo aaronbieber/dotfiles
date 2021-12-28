@@ -162,10 +162,11 @@
                            ((?t "TODO"  (lambda () (air-pop-to-org-todo nil)))
                             (?n "Notes" (lambda () (interactive) (air-pop-to-org-notes nil)))
                             (?v "Vault" (lambda () (interactive) (air-pop-to-org-vault nil))))))
-          ("org-captures" ("Org Captures"
+          ("org-captures" ("Create"
                            ((?c "Task"    (lambda () (interactive) (org-capture nil "c")))
                             (?b "Backlog" (lambda () (interactive) (org-capture nil "b")))
-                            (?n "Note"    (lambda () (interactive) (org-capture nil "n")))))))))
+                            (?n "Note"    (lambda () (interactive) (org-capture nil "n")))
+                            (?j "Journal" org-journal-new-entry)))))))
 
 ;;; Larger package-specific configurations.
 (require 'init-fonts)
