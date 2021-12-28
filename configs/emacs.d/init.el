@@ -728,6 +728,9 @@ The IGNORED argument is... Ignored."
   (or (eq (server-running-p) t)
       (server-start)))
 
+(use-package keychain-environment
+  :ensure t
+  :config (keychain-refresh-environment))
 
 (and (fboundp 'atomic-chrome-start-server)
   (atomic-chrome-start-server))
