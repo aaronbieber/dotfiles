@@ -45,7 +45,8 @@
   "Configure evil mode."
 
   ;; Use Emacs state in these additional modes.
-  (dolist (mode '(ag-mode
+  (dolist (mode '(calendar-mode
+                  ag-mode
                   custom-mode
                   custom-new-theme-mode
                   dired-mode
@@ -62,7 +63,7 @@
                   sunshine-mode
                   term-mode
                   deadgrep-mode))
-    (add-to-list 'evil-emacs-state-modes mode))
+    (evil-set-initial-state mode 'emacs))
 
   (delete 'term-mode evil-insert-state-modes)
   (delete 'eshell-mode evil-insert-state-modes)
