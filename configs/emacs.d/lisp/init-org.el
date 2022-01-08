@@ -4,7 +4,7 @@
 ;; Basic Org Mode configuration, assuming presence of Evil & Evil Leader.
 
 ;; Defaults
-(defcustom air-org-root-location "~/Dropbox/org"
+(defcustom air-org-root-location "~/syncthing/org"
   "The root location where Org files are stored."
   :type 'directory
   :group 'air-org)
@@ -872,10 +872,7 @@ fail."
                     "%?")
            :empty-lines 1)))
 
-  (setq org-directory
-        (if (file-directory-p (expand-file-name "~/Dropbox (personal)"))
-            "~/Dropbox (personal)/org"
-          "~/Dropbox/org"))
+  (setq org-directory "~/syncthing/org")
   (setq org-default-notes-file (expand-file-name "gtd/inbox.org" org-directory))
 
   ;; Logging of state changes
@@ -1497,8 +1494,8 @@ appear out of order in the agenda."
 (use-package gkroam
   :hook (after-init . gkroam-mode)
   :init
-  (setq gkroam-root-dir "~/Dropbox/org/gkroam/")
-  (setq gkroam-cache-dir "~/Dropbox/org/gkroam/cache/")
+  (setq gkroam-root-dir "~/syncthing/org/gkroam/")
+  (setq gkroam-cache-dir "~/syncthing/org/gkroam/cache/")
   (setq gkroam-prettify-page-flag t
         gkroam-title-height 200
         gkroam-show-brackets-flag nil
