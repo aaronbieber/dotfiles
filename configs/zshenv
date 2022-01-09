@@ -64,19 +64,11 @@ fi
 ## I don't know why this isn't configured by default.
 export LD_LIBRARY_PATH=/usr/local/lib
 
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/airborne/google-cloud-sdk/path.zsh.inc' ]; then
-  source '/Users/airborne/google-cloud-sdk/path.zsh.inc';
-fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/airborne/google-cloud-sdk/completion.zsh.inc' ]; then
-  source '/Users/airborne/google-cloud-sdk/completion.zsh.inc';
-fi
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# Removed because it starts *very* slowly; if I start doing more Node I'll
+# end up back in here and see this and put it back. Maybe.
+# export NVM_DIR="$HOME/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # Finally, remove duplicate PATH entries.
 typeset -a paths result
