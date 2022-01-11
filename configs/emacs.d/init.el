@@ -128,10 +128,9 @@
   :ensure t
   :defer 2
   :config
-  (global-set-key (kbd "C-c C-j") (lambda ()
-                                    (interactive)
-                                    (org-journal-new-entry t)))
-  (setq org-journal-dir "~/Dropbox/org/journal"))
+  (setq org-journal-date-format "%A, %x\n\n")
+  (setq org-journal-time-format "%R\n\n")
+  (setq org-journal-dir "~/syncthing/org/journal"))
 
 ;;; Required by init-maps, so it appears up here.
 (use-package tiny-menu
