@@ -35,17 +35,17 @@ with percentage."
 (defun air-open-eshell (arg)
   "Start the Emacs shell.
 
-With one prefix argument ARG, start the shell in the current window.
-With two prefix arguments, force the creation of a new session.
-With three prefix arguments, create a new session in the current window."
+With a prefix argument ARG, attempt to find the git root of the
+current buffer's file and open the shell there."
   (interactive "p")
-  (let ((same-window (or (= arg 4)
-                         (= arg 64)))
-        (new-session (or (= arg 16)
-                         (= arg 64))))
-    (if same-window
-        (eshell new-session)
-      (let ((buf (eshell new-session)))
+  (let* ((git-root (vc-git-root ""))
+         (pwd (if (= arg 4)
+                  git-root
+                (or (file-name-directory buffer-file-name)
+                    (getenv "HOME")))))
+    (with-temp-buffer
+      (cd pwd)
+      (let ((buf (eshell)))
         (switch-to-buffer (other-buffer buf))
         (switch-to-buffer-other-window buf)))))
 
