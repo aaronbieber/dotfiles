@@ -147,7 +147,6 @@
                             (?i "ID"         air-org-goto-custom-id)
                             (?k "Keyword"    org-search-view)
                             (?h "Headings"   air-org-helm-headings)
-                            (?o "One-on-one" air-org-split-to-topics)
                             (?s "Search"     air-org-grep))))
           ("org-agendas"  ("Org Agenda Views"
                            ((?a "All"    air-pop-to-org-agenda-default)
