@@ -128,6 +128,7 @@
   :ensure t
   :defer 2
   :config
+  (setq org-journal-file-format "%Y%m%d.org")
   (setq org-journal-date-format "%A, %x\n\n")
   (setq org-journal-time-format "%R\n\n")
   (setq org-journal-dir "~/syncthing/org/journal"))
