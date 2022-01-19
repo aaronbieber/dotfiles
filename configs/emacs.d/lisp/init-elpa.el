@@ -8,13 +8,13 @@
 
 
 ;;; Standard package repositories
-(setq package-archives '(;; Restore gnu back to https when they fix their cert.
-                         ("gnu" . "http://elpa.gnu.org/packages/")
-                         ("org" . "https://orgmode.org/elpa/")
+(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
                          ("melpa" . "http://melpa.org/packages/")
                          ("melpa-stable" . "http://stable.melpa.org/packages/")
                          ("elpy" . "https://jorgenschaefer.github.io/packages/")))
 
+(assq-delete-all 'org package--builtins)
+(assq-delete-all 'org package--builtin-versions)
 
 ;; If gpg cannot be found, signature checking will fail, so we
 ;; conditionally enable it according to whether gpg is available. We
