@@ -39,9 +39,11 @@ With a prefix argument ARG, attempt to find the git root of the
 current buffer's file and open the shell there."
   (interactive "p")
   (let* ((git-root (vc-git-root ""))
-         (pwd (if (= arg 4)
+         (pwd (if (and (= arg 4)
+                       git-root)
                   git-root
-                (or (file-name-directory buffer-file-name)
+                (or (and buffer-file-name
+                         (file-name-directory buffer-file-name))
                     (getenv "HOME")))))
     (with-temp-buffer
       (cd pwd)
