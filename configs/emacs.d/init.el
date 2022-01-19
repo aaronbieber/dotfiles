@@ -149,14 +149,16 @@
                             (?h "Headings"   air-org-helm-headings)
                             (?s "Search"     air-org-grep))))
           ("org-agendas"  ("Org Agenda Views"
-                           ((?a "All"    air-pop-to-org-agenda-default)
-                            (?r "Review" air-pop-to-org-agenda-review)
+                           ((?a "All"      air-pop-to-org-agenda-default)
+                            (?r "Review"   air-pop-to-org-agenda-review)
+                            (?c "Calendar" calendar)
                             )))
           ("org-links"    ("Org Links"
-                           ((?c "Capture"      org-store-link)
-                            (?l "Insert DWIM"  air-org-insert-link-dwim)
-                            (?L "Insert any"   org-insert-link)
-                            (?i "Custom ID"    air-org-insert-custom-id-link))))
+                           ((?c "Capture"        org-store-link)
+                            (?l "Insert DWIM"    air-org-insert-link-dwim)
+                            (?L "Insert any"     org-insert-link)
+                            (?i "Custom ID"      air-org-insert-custom-id-link)
+                            (?t "Toggle display" org-toggle-link-display))))
           ("org-files"    ("Org Files"
                            ((?t "TODO"  (lambda () (air-pop-to-org-todo nil)))
                             (?n "Notes" (lambda () (interactive) (air-pop-to-org-notes nil)))
