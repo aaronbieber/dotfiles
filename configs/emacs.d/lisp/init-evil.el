@@ -183,10 +183,14 @@ is not used."
   :ensure t
   :commands (evil-mode evil-define-key)
   :init
-  (setq evil-want-C-i-jump nil)
+  (setq evil-want-C-i-jump nil) ;; preserves org <tab> cycling
+  (setq evil-undo-system 'undo-fu)
   :config
   (add-hook 'evil-mode-hook 'air--config-evil)
   (evil-mode 1)
+
+  (use-package undo-fu
+    :ensure t)
 
   (use-package evil-leader
     :ensure t
