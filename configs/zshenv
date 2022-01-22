@@ -38,6 +38,7 @@ NPM_PACKAGES="${HOME}/.node_modules"
 PATH="$NPM_PACKAGES/bin:$PATH"
 unset MANPATH
 export MANPATH="${NPM_PACKAGES}/share/man:$(manpath)"
+export NODE_OPTIONS=--openssl-legacy-provider
 
 # Initialize rbenv if it exists on this system and isn't yet in our path.
 # This prevents path duplication in tmux when a sub-shell runs this script
