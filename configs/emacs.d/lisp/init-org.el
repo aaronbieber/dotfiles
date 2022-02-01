@@ -1494,9 +1494,10 @@ appear out of order in the agenda."
 (use-package gkroam
   :hook (after-init . gkroam-mode)
   :init
-  (setq gkroam-root-dir "~/syncthing/org/gkroam/")
-  (setq gkroam-cache-dir "~/syncthing/org/gkroam/cache/")
-  (setq gkroam-prettify-page-flag t
+  (setq gkroam-root-dir "~/syncthing/org/gkroam/"
+        gkroam-cache-dir "~/syncthing/org/gkroam/cache/"
+        gkroam-prettify-page-flag t
+        gkroam-window-margin nil
         gkroam-title-height 200
         gkroam-show-brackets-flag nil
         gkroam-use-default-filename t)
