@@ -1452,11 +1452,13 @@ appear out of order in the agenda."
               ;; Settings for non-agenda modes only
               (when (not (eq major-mode 'org-agenda-mode))
                 (ignore-errors
-                  (if (buffer-file-name)
-                      (and (require 'periodic-commit-minor-mode)
-                           (periodic-commit-minor-mode t))))
+                  (and (buffer-file-name)
+                       (string-prefix-p (expand-file-name org-directory) (buffer-file-name))
+                       (require 'periodic-commit-minor-mode)
+                       (periodic-commit-minor-mode t)))
                 (setq fill-column 100)
                 (org-evil-mode)
+                (hugo-minor-mode)
                 (visual-line-mode)
                 (visual-fill-column-mode)
                 (flyspell-mode)
