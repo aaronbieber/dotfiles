@@ -932,6 +932,8 @@ fail."
   (setq org-habit-today-glyph ?o)
   (setq org-habit-completed-glyph ?*)
   (setq org-habit-show-all-today t)
+  (setq org-habit-preceding-days 25)
+  (setq org-habit-following-days 5)
 
   (defun air--org-todo-state-change-handler ()
     "Take an action when the TODO state changes.
