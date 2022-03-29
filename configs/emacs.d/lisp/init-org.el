@@ -1173,6 +1173,7 @@ Redraw the agenda if REDO is non-nil."
                                                (air-org-skip-if-active t)))
                    (org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory))))))
            ((org-use-property-inheritance t)
+            (org-deadline-warning-days 7)
             (org-agenda-block-separator "")
             (org-agenda-compact-blocks nil)))
 
