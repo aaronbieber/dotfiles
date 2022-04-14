@@ -30,7 +30,7 @@
                         "Linux.*microsoft.*Linux"
                         (shell-command-to-string "uname -a")))
               (set-face-attribute 'default nil :font "JetBrainsMono Nerd Font Mono")
-              (sanityinc/set-frame-font-size 17)
+              (sanityinc/set-frame-font-size 20)
 
               (setq browse-url-generic-program "/c/Windows/system32/cmd.exe"
                     browse-url-generic-args '("/c" "start")
