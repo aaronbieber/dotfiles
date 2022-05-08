@@ -672,7 +672,7 @@ TAG is chosen interactively from the global tags completion table."
   (setq org-modules
         '(org-bbdb org-bibtex org-docview org-habit org-info org-w3m))
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "IN-PROGRESS(p)" "WAITING(w!)" "|" "DONE(d!)" "CANCELED(c!)")))
+        '((sequence "TODO(t)" "DOING(o)" "LATER(l)" "WAITING(w!)" "|" "DONE(d!)" "CANCELED(c!)")))
   (setq org-blank-before-new-entry '((heading . t)
                                      (plain-list-item . t)))
   (setq org-stuck-projects '("+LEVEL=1/-DONE-TODO-IN\-PROGRESS-WAITING-CANCELED" () ("active") ""))
@@ -895,7 +895,8 @@ fail."
   ;; Agenda configuration
   (setq org-agenda-text-search-extra-files '(agenda-archives))
   (setq org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory)
-                               (expand-file-name "gtd/15-5.org" org-directory)
+                               (expand-file-name "~/syncthing/logseq/journals")
+                               (expand-file-name "~/syncthing/logseq/pages")
                                (expand-file-name "notes.org" org-directory)
                                (expand-file-name "gtd/team.org" org-directory)
                                (expand-file-name "gtd/reading.org" org-directory)))
@@ -1130,12 +1131,11 @@ Redraw the agenda if REDO is non-nil."
         '(("d" "Omnibus agenda"
            ((agenda ""
                     ((org-agenda-span 1)
-                     (org-agenda-hide-tags-regexp "active")
                      (org-agenda-prefix-format "%(air--fixed-project-prefix)%?-12t% s")
                      (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo '("WAITING"))
                                                     (air-org-skip-tag-prefix "@")
                                                     (air-org-skip-if-habit)))))
-            (tags-todo "active-reading/!-WAITING-DONE-CANCELED"
+            (tags-todo "-reading/!-WAITING-DONE-CANCELED-LATER"
                        ((org-agenda-overriding-header (air--org-separating-heading "Tasks"))
                         (org-agenda-hide-tags-regexp "active")
                         (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'scheduled 'deadline)
@@ -1184,16 +1184,11 @@ Redraw the agenda if REDO is non-nil."
                         (org-agenda-time-grid nil)
                         (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo '("WAITING"))
                                                        (air-org-skip-if-habit)))))
-            (todo "TODO"
-                  ((org-agenda-overriding-header (air--org-separating-heading "Mobile (REFILE ↓)"))
-                   (org-agenda-files (list (expand-file-name "orgzly/inbox.org" org-directory)))))
-            (tags-todo "-active-reading+TODO=\"TODO\"|TODO=\"IN-PROGRESS\""
+            (tags-todo "-reading+TODO=\"LATER\""
                   ((org-agenda-overriding-header (air--org-separating-heading "Backlog"))
                    (org-agenda-skip-function '(or (air-org-skip-if-scheduled t)
                                                   (air-org-skip-tag-prefix "@")))
-                   (org-agenda-prefix-format "%(air--fixed-project-prefix)")))
-            (tags "LEVEL=1/DONE"
-                  ((org-agenda-overriding-header (air--org-separating-heading "Completed")))))
+                   (org-agenda-prefix-format "%(air--fixed-project-prefix)"))))
            ((org-use-property-inheritance t)
             (org-agenda-tag-filter-preset '("-active" "-reading"))
             (org-agenda-block-separator "")
