@@ -54,5 +54,12 @@
 (when (memq window-system '(mac))
   (set-fontset-font t 'unicode "Apple Color Emoji" nil 'prepend))
 
+(if (not window-system)
+    (progn
+      (define-key function-key-map "\eOA" 'previous-line)
+      (define-key function-key-map "\eOB" 'next-line)
+      (define-key function-key-map "\eOC" 'forward-char)
+      (define-key function-key-map "\eOD" 'backward-char)))
+
 (provide 'init-platform)
 ;;; init-platform.el ends here

@@ -208,5 +208,11 @@ is not used."
 
   (air--apply-evil-other-package-configs))
 
+(use-package evil-terminal-cursor-changer
+  :config
+  (setq etcc-term-type-override 'xterm)
+  (unless (display-graphic-p)
+    (evil-terminal-cursor-changer-activate)))
+
 (provide 'init-evil)
 ;;; init-evil.el ends here
