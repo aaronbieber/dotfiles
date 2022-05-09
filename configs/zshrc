@@ -23,7 +23,7 @@ t
 ZSH=$HOME/.oh-my-zsh
 
 # Set my terminal if I'm not in tmux.
-[[ "$TMUX" == "" ]] && TERM=xterm-256color
+[[ "$TMUX" == "" ]] && TERM=rxvt-unicode-256color
 
 # Disable autosetting terminal title.
 DISABLE_AUTO_TITLE="true"
