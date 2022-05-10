@@ -1460,6 +1460,7 @@ appear out of order in the agenda."
                 (visual-line-mode)
                 (visual-fill-column-mode)
                 (flyspell-mode)
+                (auto-revert-mode t)
                 (org-indent-mode)))))
 
 (use-package org-evil
