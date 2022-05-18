@@ -823,7 +823,7 @@ fail."
 
           ("c" "An incoming task." entry
            (file "gtd/tasks.org")
-           ,(concat "* TODO %? :active:\n"
+           ,(concat "* TODO %?\n"
                     ":PROPERTIES:\n"
                     ":CREATED:  %u\n"
                     ":END:\n")
@@ -831,7 +831,7 @@ fail."
 
           ("b" "An incoming backlog item." entry
            (file "gtd/tasks.org")
-           ,(concat "* TODO %?\n"
+           ,(concat "* LATER %?\n"
                     ":PROPERTIES:\n"
                     ":CREATED:  %u\n"
                     ":END:\n")
