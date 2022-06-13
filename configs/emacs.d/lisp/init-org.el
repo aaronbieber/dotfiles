@@ -1139,7 +1139,8 @@ Redraw the agenda if REDO is non-nil."
                        ((org-agenda-overriding-header (air--org-separating-heading "Tasks"))
                         (org-agenda-hide-tags-regexp "active")
                         (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'scheduled 'deadline)
-                                                       (air-org-skip-tag-prefix "@")))
+                                                       (air-org-skip-tag-prefix "@")
+                                                       (org-agenda-skip-if nil '(regexp "#Area/Coaching/Blog"))))
                         (org-agenda-prefix-format "%(air--fixed-project-prefix)")
                         (org-agenda-sorting-strategy '(todo-state-down priority-down user-defined-up))))
             (todo "TODO"
