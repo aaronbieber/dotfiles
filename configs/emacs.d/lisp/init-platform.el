@@ -34,7 +34,9 @@
 
               (setq browse-url-generic-program "/c/Windows/system32/cmd.exe"
                     browse-url-generic-args '("/c" "start")
-                    browse-url-browser-function #'browse-url-generic))
+                    browse-url-browser-function #'browse-url-generic)
+
+              (set-frame-size (selected-frame) 80 40))
 
             ;; Using media keys when Emacs has focus rings the bell
             ;; and displays errors otherwise.
