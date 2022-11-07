@@ -81,6 +81,7 @@ while [[ ${#paths} -gt 0 ]]; do
   [[ -z ${paths[(r)$p]} ]] && result+="$p"
 done
 
+export DISPLAY=$(grep nameserver /etc/resolv.conf | awk '{print $2}'):0
 clean_path=${(j+:+)result}
 export PATH
 export PATH=$clean_path
