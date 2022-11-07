@@ -1181,15 +1181,15 @@ Redraw the agenda if REDO is non-nil."
             (org-agenda-compact-blocks nil)))
 
           ("r" "Inbox review"
-           ((agenda "" ((org-agenda-span 14)
+           ((tags-todo "-reading+TODO=\"LATER\""
+                       ((org-agenda-overriding-header (air--org-separating-heading "Backlog"))
+                        (org-agenda-skip-function '(or (air-org-skip-if-scheduled t)
+                                                       (air-org-skip-tag-prefix "@")))
+                        (org-agenda-prefix-format "%(air--fixed-project-prefix)")))
+            (agenda "" ((org-agenda-span 14)
                         (org-agenda-time-grid nil)
                         (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'todo '("WAITING"))
-                                                       (air-org-skip-if-habit)))))
-            (tags-todo "-reading+TODO=\"LATER\""
-                  ((org-agenda-overriding-header (air--org-separating-heading "Backlog"))
-                   (org-agenda-skip-function '(or (air-org-skip-if-scheduled t)
-                                                  (air-org-skip-tag-prefix "@")))
-                   (org-agenda-prefix-format "%(air--fixed-project-prefix)"))))
+                                                       (air-org-skip-if-habit))))))
            ((org-use-property-inheritance t)
             (org-agenda-tag-filter-preset '("-active" "-reading"))
             (org-agenda-block-separator "")
