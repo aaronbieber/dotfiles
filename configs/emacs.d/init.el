@@ -718,6 +718,11 @@ The IGNORED argument is... Ignored."
                             (setq sgml-basic-offset 2)
                             (setq indent-tabs-mode nil)))
 
+(use-package xclip
+  :ensure t
+  :config
+  (xclip-mode 1))
+
 (use-package server
   :init
   (progn
