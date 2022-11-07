@@ -497,9 +497,9 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
   :ensure t
   :defer t
   :config
-  ;;(yas-reload-all)
   (setq tab-always-indent 'complete)
-  (define-key yas-minor-mode-map (kbd "<escape>") 'yas-exit-snippet))
+  (define-key yas-minor-mode-map (kbd "<escape>") 'yas-exit-snippet)
+  (yas-global-mode 1))
 
 (use-package yasnippet-snippets
   :ensure t
