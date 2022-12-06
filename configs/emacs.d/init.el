@@ -179,7 +179,9 @@
 
 ;; My packages (make sure they're cloned into "lisp")
 (require 'fence-edit)
-(require 'hugo)
+(use-package hugo
+  :defer t
+  :bind (("C-c h s" . hugo-status)))
 (require 'periodic-commit-minor-mode)
 
 ;; Utilities
