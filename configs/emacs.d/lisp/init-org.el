@@ -1173,7 +1173,7 @@ Redraw the agenda if REDO is non-nil."
                                                ;; Non-todo top-level headings only
                                                (org-agenda-skip-entry-if 'todo (air--org-all-todo-keywords))
                                                (air-org-skip-if-scheduled t)
-                                               (air-org-skip-if-active t)))
+                                               (org-agenda-skip-if t '(todo ("WAITING" "TODO")))))
                    (org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory))))))
            ((org-use-property-inheritance t)
             (org-deadline-warning-days 7)
