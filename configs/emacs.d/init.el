@@ -432,6 +432,13 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
   (define-key markdown-mode-map (kbd "C-c 5")      'markdown-insert-header-atx-5)
   (define-key markdown-mode-map (kbd "C-c 6")      'markdown-insert-header-atx-6)
 
+  (defun air--in-markdown-link-p ()
+    (save-excursion
+      (and (eq major-mode 'markdown-mode)
+           (re-search-backward "\\[" (line-beginning-position) t)
+           (re-search-forward  "\\][[(]" (line-end-position) t))))
+  (add-to-list 'fill-nobreak-predicate 'air--in-markdown-link-p)
+
   (add-hook 'markdown-mode-hook (lambda ()
                                   (visual-line-mode t)
                                   (set-fill-column 80)
