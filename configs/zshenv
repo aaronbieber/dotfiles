@@ -5,7 +5,7 @@ PATH="/usr/local/bin:$PATH"
 [ -d "/usr/local/sbin" ]              && PATH="/usr/local/sbin:$PATH"
 [ -d "$HOME/.local/bin" ]             && PATH="$PATH:$HOME/.local/bin"
 [ -d "$HOME/.composer/vendor/bin" ]   && PATH="$PATH:$HOME/.composer/vendor/bin"
-[ -d "$HOME/go/bin" ]                 && PATH="$PATH:$HOME/go/bin"
+[ -d "/usr/local/go/bin" ]            && PATH="$PATH:/usr/local/go/bin"
 [ -d "$HOME/Library/Python/2.7/bin" ] && PATH="$PATH:$HOME/Library/Python/2.7/bin"
 
 # Install with sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
@@ -38,7 +38,6 @@ NPM_PACKAGES="${HOME}/.node_modules"
 PATH="$NPM_PACKAGES/bin:$PATH"
 unset MANPATH
 export MANPATH="${NPM_PACKAGES}/share/man:$(manpath)"
-export NODE_OPTIONS=--openssl-legacy-provider
 
 # Initialize rbenv if it exists on this system and isn't yet in our path.
 # This prevents path duplication in tmux when a sub-shell runs this script
