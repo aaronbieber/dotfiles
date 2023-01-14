@@ -180,6 +180,7 @@
 ;; My packages (make sure they're cloned into "lisp")
 (require 'fence-edit)
 (require 'hugo)
+(setq hugo-default-server-flags '(drafts future))
 (global-set-key (kbd "C-c h s") 'hugo-status)
 (require 'periodic-commit-minor-mode)
 
