@@ -439,6 +439,19 @@ COMMAND, ARG, IGNORED are the arguments required by the variable
            (re-search-forward  "\\][[(]" (line-end-position) t))))
   (add-to-list 'fill-nobreak-predicate 'air--in-markdown-link-p)
 
+  (defun air--before-markdown-insert-list-item (&optional arg)
+    "Insert a newline before a markdown list item
+
+Okay so it's two newlines, but that's because markdown list items are
+inserted on the current line if the current line is blank, and the
+goal is to have a blank line between list items."
+    (if (markdown-list-item-at-point-p)
+        (insert "\n\n")))
+
+  (advice-add 'markdown-insert-list-item
+              :before
+              'air--before-markdown-insert-list-item)
+
   (add-hook 'markdown-mode-hook (lambda ()
                                   (visual-line-mode t)
                                   (set-fill-column 80)
