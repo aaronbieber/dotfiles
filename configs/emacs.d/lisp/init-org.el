@@ -1515,5 +1515,13 @@ appear out of order in the agenda."
          ("C-c r U" . gkroam-update-all)
          ("C-c r R" . gkroam-rebuild-caches))))
 
+(use-package org-recur
+  :ensure t
+  :hook ((org-mode . org-recur-mode)
+         (org-agenda-mode . org-recur-agenda-mode))
+  :demand t
+  :config
+  (define-key org-recur-agenda-mode-map (kbd "d") 'org-recur-finish))
+
 (provide 'init-org)
 ;;; init-org.el ends here
