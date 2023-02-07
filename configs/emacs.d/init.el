@@ -84,6 +84,7 @@
 (setq tab-width 4)
 (setq tramp-default-method "ssh")
 (setq tramp-syntax 'simplified)
+(setq sentence-end-double-space nil)
 
 ;; Allow "confusing" functions
 (put 'narrow-to-region 'disabled nil)
