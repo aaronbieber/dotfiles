@@ -696,6 +696,16 @@ TAG is chosen interactively from the global tags completion table."
 
   (advice-add #'org-open-file :around #'wsl-fix-org-open-file)
 
+  (defadvice evil-jump-backward (around maybe-jump-to-markdown-footnote activate)
+    "Jump to the current markdown footnote's text, if possible.
+
+Otherwise, jump backward as usual."
+    (if (and (fboundp 'markdown-footnote-text-positions)
+             (fboundp 'markdown-footnote-return)
+             (markdown-footnote-text-positions))
+        (markdown-footnote-return)
+      ad-do-it))
+
   (defun air--org-bullet-daily-log-filename ()
     "Return the filename of today's Bullet Journal Daily Log."
     (format-time-string "%Y-%m-%d.org"))
