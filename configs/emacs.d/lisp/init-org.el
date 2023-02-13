@@ -941,6 +941,9 @@ fail."
 
 When the state changes to DONE, remove the `active' tag.
 
+If the item is an `org-recur' heading, call `org-recur-finish' and
+restore state to TODO.
+
 When the state changes to WAITING, add a property WAITING_FROM with
 the current timestamp."
     (cond ((and (string= org-state "DONE")
@@ -949,6 +952,25 @@ the current timestamp."
 
           ((string= org-state "WAITING")
            (org-entry-put (point) "WAITING_FROM" (current-time-string)))))
+
+  (defun air--org-todo-state-change-recur-handler ()
+    "Handle recurring stuffs."
+    (when (and (not (org-is-habit-p))
+               (or (string= org-state "DONE")
+                   (string= org-state "CANCELED")))
+      (air--org-maybe-recur)))
+
+  (defun air--org-maybe-recur ()
+    "Reschedule and reset todo state if item is a `recur' heading."
+    (when (air--is-recur-p)
+      (org-recur-finish)
+      (org-todo (org-get-todo-sequence-head "DONE"))))
+
+  (defun air--is-recur-p ()
+    "Is heading at point an org-recur item?"
+    (save-excursion
+      (beginning-of-line)
+      (re-search-forward org-recur--regexp (line-end-position) t)))
 
   (defun air--seconds-to-diff (seconds)
     "Convert SECONDS into a human-readable time span."
@@ -1362,6 +1384,7 @@ appear out of order in the agenda."
               (evil-insert-state)))
 
   (add-hook 'org-after-todo-state-change-hook 'air--org-todo-state-change-handler)
+  (add-hook 'org-after-todo-state-change-hook 'air--org-todo-state-change-recur-handler)
 
   (add-hook 'org-capture-mode-hook
             (lambda ()
