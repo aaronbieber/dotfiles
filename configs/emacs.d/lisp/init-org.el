@@ -706,6 +706,14 @@ Otherwise, jump backward as usual."
         (markdown-footnote-return)
       ad-do-it))
 
+  (defadvice org-agenda-redo-all (after org-agenda-redo-scroll activate)
+    "Scroll the agenda window to the top after redrawing.
+
+This is basically the opposite of the default behavior, which is to
+center point in the window. My agenda is never taller than my window,
+so I prefer to be able to see the whole agenda at once."
+    (set-window-start (selected-window) 1))
+
   (defun air--org-bullet-daily-log-filename ()
     "Return the filename of today's Bullet Journal Daily Log."
     (format-time-string "%Y-%m-%d.org"))
