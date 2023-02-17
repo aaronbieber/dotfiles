@@ -1383,6 +1383,7 @@ appear out of order in the agenda."
               (define-key org-agenda-mode-map (kbd "y")   'air-org-bulk-copy-headlines)
               (define-key org-agenda-mode-map (kbd "S")   'org-agenda-schedule)
               (define-key org-agenda-mode-map (kbd "RET") 'org-agenda-switch-to)
+              (define-key org-agenda-mode-map (kbd "ESC") 'keyboard-escape-quit)
               (define-key org-agenda-mode-map (kbd ")")   'air-org-agenda-task-size-inc)
               (define-key org-agenda-mode-map (kbd "(")   'air-org-agenda-task-size-dec)
 
@@ -1392,7 +1393,9 @@ appear out of order in the agenda."
               (define-key air-org-run-shortcuts "f" (tiny-menu-run-item "org-files"))
               (define-key air-org-run-shortcuts "l" (tiny-menu-run-item "org-links"))
               (define-key air-org-run-shortcuts "t" (tiny-menu-run-item "org-things"))
-              (define-key org-agenda-mode-map (kbd "\\") air-org-run-shortcuts)))
+              (define-key org-agenda-mode-map (kbd "\\") air-org-run-shortcuts)
+              (and (fboundp 'yas-minor-mode)
+                   (yas-minor-mode 0))))
 
   ;; This is the hook called after a TODO or state change note capture
   ;; window has been configured. We use it here simply to enter insert
