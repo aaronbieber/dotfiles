@@ -6,7 +6,7 @@
  '(ansi-color-faces-vector
    [default bold shadow italic underline bold bold-italic bold])
  '(ansi-color-names-vector
-   (vector "#d6d6d6" "#c82829" "#718c00" "#eab700" "#4271ae" "#8959a8" "#3e999f" "#4d4d4c"))
+   ["#4F4F4F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#6F6F6F"])
  '(css-indent-offset 2)
  '(custom-safe-themes
    '("91ce1e1533921a31778b95d1626371499e42d46833d703e25a07dcb8c283f4af" . t))
@@ -30,7 +30,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((((class color) (min-colors 89)) (:foreground "#d3d0c8" :background "#2a2929"))))
+ '(default ((t (:family "JetBrainsMono Nerd Font Mono" :foundry "JB  " :slant normal :weight normal :height 128 :width normal))))
  '(deadgrep-filename-face ((t (:foreground "gold" :underline t))))
  '(deadgrep-match-face ((t (:background "#2f2f2d" :foreground "lime green"))))
  '(italic ((t (:slant italic))))
