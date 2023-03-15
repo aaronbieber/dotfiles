@@ -1124,16 +1124,6 @@ Redraw the agenda if REDO is non-nil."
                                             (- (time-to-seconds (current-time))
                                                (time-to-seconds (date-to-time waiting-from)))))
                          ""))
-           (effort-allowed-values (org-property-get-allowed-values nil "TASKSIZE" t))
-           (effort (org-entry-get nil "TASKSIZE"))
-           (effort-index (- (length air-org-task-size-allowed-values)
-                            (length (member (list effort) air-org-task-size-allowed-values))))
-           (effort-string (if effort
-                              (concat "("
-                                      (make-string (1+ effort-index) ?*)
-                                      (make-string (- (length air-org-task-size-allowed-values) effort-index 1) ? )
-                                      ")")
-                            (concat "(" (make-string (length air-org-task-size-allowed-values) ? ) ")")))
            (total-len (+ (length project)
                          (length time-delta)))
            (substring-index (if (> total-len max-len)
@@ -1144,8 +1134,6 @@ Redraw the agenda if REDO is non-nil."
       (concat " "
               (make-string (- max-len (length project-trimmed)) 32)
               project-trimmed
-              " "
-              effort-string
               (if (> (length project-trimmed) 0) ": " "  "))))
 
   (defun air--format-for-meetings-prefix ()
@@ -1197,9 +1185,6 @@ Redraw the agenda if REDO is non-nil."
                    (org-agenda-skip-function 'air-org-skip-if-habit)
                    (org-agenda-hide-tags-regexp "active")
                    (org-agenda-prefix-format "%(air--fixed-project-prefix)")))
-            (tags "reading/-DONE-CANCELED" ((org-agenda-overriding-header (air--org-separating-heading "Reading list"))
-                                   (org-agenda-hide-tags-regexp "reading\\|active")
-                                   (org-agenda-prefix-format "%(air--fixed-project-prefix)")))
             (agenda ""
                     ((org-agenda-overriding-header (air--org-separating-heading "Habits"))
                      (org-agenda-files (list (expand-file-name "gtd/habits.org" org-directory)))
@@ -1208,15 +1193,7 @@ Redraw the agenda if REDO is non-nil."
                      (org-agenda-compact-blocks nil)
                      (org-agenda-time-grid nil)
                      (org-agenda-span 1)
-                     (org-agenda-skip-function 'air-org-skip-if-not-habit)))
-            (tags "+LEVEL=1"
-                  ((org-agenda-overriding-header (air--org-separating-heading "Inactive Projects"))
-                   (org-agenda-skip-function '(or
-                                               ;; Non-todo top-level headings only
-                                               (org-agenda-skip-entry-if 'todo (air--org-all-todo-keywords))
-                                               (air-org-skip-if-scheduled t)
-                                               (org-agenda-skip-if t '(todo ("WAITING" "TODO")))))
-                   (org-agenda-files (list (expand-file-name "gtd/tasks.org" org-directory))))))
+                     (org-agenda-skip-function 'air-org-skip-if-not-habit))))
            ((org-use-property-inheritance t)
             (org-deadline-warning-days 7)
             (org-agenda-block-separator "")
