@@ -1392,7 +1392,7 @@ appear out of order in the agenda."
               (define-key air-org-run-shortcuts "c" (tiny-menu-run-item "org-captures"))
               (define-key air-org-run-shortcuts "f" (tiny-menu-run-item "org-files"))
               (define-key air-org-run-shortcuts "l" (tiny-menu-run-item "org-links"))
-              (define-key air-org-run-shortcuts "t" (tiny-menu-run-item "org-things"))
+              (define-key air-org-run-shortcuts "g" (tiny-menu-run-item "org-goto"))
               (define-key org-agenda-mode-map (kbd "\\") air-org-run-shortcuts)
               (and (fboundp 'yas-minor-mode)
                    (yas-minor-mode 0))))

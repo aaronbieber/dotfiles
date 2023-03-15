@@ -143,7 +143,10 @@
         '(("reverts"      ("Revert"
                            ((?r "This buffer"     revert-buffer)
                             (?o "All Org buffers" org-revert-all-org-buffers))))
-          ("org-things"   ("Org Things"
+          ("theme"        ("Theme"
+                           ((?l "Light"      (lambda () (air-set-theme :light)))
+                            (?d "Dark"       (lambda () (air-set-theme :dark))))))
+          ("org-goto"     ("Goto"
                            ((?t "Tag"        air-org-display-any-tag)
                             (?i "ID"         air-org-goto-custom-id)
                             (?k "Keyword"    org-search-view)
@@ -463,12 +466,34 @@ goal is to have a blank line between list items."
                                   (setq auto-fill-inhibit-regexp (rx "{" (? "{") (1+ (or "%" "<" " ")) (1+ letter)))
                                   (flyspell-mode))))
 
+(defun air-set-theme (mode)
+  "Set a theme for MODE `:dark' or `:light'."
+  (setq custom--inhibit-theme-enable nil)
+  (let ((face-height (face-attribute 'default :height)))
+    (while (> (length custom-enabled-themes) 0)
+      (disable-theme (car custom-enabled-themes)))
+    (cond ((eq mode :dark)
+           (if (> (length custom-enabled-themes) 0)
+               (disable-theme (car custom-enabled-themes)))
+           (load-theme 'solarized-wombat-dark t)
+           (custom-theme-set-faces
+            'solarized-wombat-dark
+            '(markdown-comment-face ((t (:foreground "#757575"))))
+            '(markdown-inline-code-face ((t (:foreground "#757575"))))
+            '(markdown-metadata-key-face ((t (:foreground "#757575"))))
+            '(org-agenda-structure ((t (:background "#353535")))))
+           (set-background-color "#222222"))
+          ((eq mode :light)
+           (message "Enabling light theme.")
+           (load-theme 'solarized-light-high-contrast t)))
+    (set-face-attribute 'default nil :height face-height)))
+
 (use-package solarized-theme
   :ensure t
   :config
   (setq solarized-use-variable-pitch nil)
   (setq solarized-scale-org-headlines nil)
-  (load-theme 'solarized-zenburn t))
+  (air-set-theme :dark))
 
 (use-package web-mode
   :ensure t
