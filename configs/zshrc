@@ -149,7 +149,12 @@ else
   alias l="ls -lhF --group-directories-first --color=always"
 fi
 
-eval "$(keychain -q --eval id_rsa)"
-eval "$(starship init zsh)"
+if type "keychain" > /dev/null; then
+  eval "$(keychain -q --eval id_rsa)"
+fi
+
+if type "starship" > /dev/null; then
+  eval "$(starship init zsh)"
+fi
 
 # vim: set et ts=2 sw=2 tw=79 cc=+1 :
