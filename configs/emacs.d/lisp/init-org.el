@@ -1225,8 +1225,8 @@ Redraw the agenda if REDO is non-nil."
              ((org-before-first-heading-p) (user-error "Not in a subtree"))
              (t (outline-previous-visible-heading 1))))
 
-      (decf count)
-      (when count (while (and (> count 0) (org-up-heading-safe)) (decf count)))
+      (cl-decf count)
+      (when count (while (and (> count 0) (org-up-heading-safe)) (cl-decf count)))
 
       ;; extract the beginning and end of the tree
       (let* ((element (org-element-at-point))
