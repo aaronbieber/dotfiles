@@ -210,6 +210,7 @@ is not used."
   (air--apply-evil-other-package-configs))
 
 (use-package evil-terminal-cursor-changer
+  :ensure t
   :config
   (setq etcc-term-type-override 'xterm)
   (unless (display-graphic-p)
