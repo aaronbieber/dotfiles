@@ -12,54 +12,40 @@ then
   return
 fi
 
+if [ -f "$HOME/bin/antigen.zsh" ]; then
+  source "$HOME/bin/antigen.zsh"
+  antigen use oh-my-zsh
+
+  antigen bundle tmux
+  export ZSH_TMUX_AUTOSTART=true
+  export ZSH_TMUX_FIXTERM=true
+
+  antigen bundle colored-man-pages
+  antigen bundle common-aliases
+  antigen bundle emacs
+  antigen bundle gpg-agent
+  antigen bundle python
+  antigen bundle starship
+  antigen bundle sudo
+  antigen bundle timer
+  antigen bundle vi-mode
+
+  antigen bundle keychain
+  zstyle :omz:plugins:keychain options --quiet
+
+  antigen bundle "MichaelAquilina/zsh-autoswitch-virtualenv"
+  antigen apply
+fi
+
 source ~/.zsh_functions
 
 # Reattach or start a new Tmux.
 # This function name is short because I want to call it this way
 # interactively.
-t
-
-# Path to your oh-my-zsh configuration.
-ZSH=$HOME/.oh-my-zsh
+#t
 
 # Set my terminal if I'm not in tmux.
 [[ "$TMUX" == "" ]] && TERM=rxvt-unicode-256color
-
-# Disable autosetting terminal title.
-DISABLE_AUTO_TITLE="true"
-
-# Disable command autocorrection.
-DISABLE_CORRECTION="true"
-
-# Display red dots while waiting for completion.
-COMPLETION_WAITING_DOTS="true"
-
-# Disable marking untracked files under VCS as dirty. This makes repository
-# status check for large repositories much, much faster.
-DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Load these oh-my-zsh plugins.
-plugins=(git colorize themes virtualenv)
-
-# If virtualenvwrapper is installed, also activate that plugin and make sure
-# things are set up to work properly.
-#
-# If it is NOT installed, you should `brew install
-# pyenv-virtualenvwrapper` and then reopen your shell a couple of
-# times for these checks to pass and set things up.
-vnw_script="/usr/local/bin/virtualenvwrapper.sh"
-if [[ -e "$vnw_script" ]]; then
-  source "$vnw_script"
-fi
-
-vew_on_path=$(type virtualenvwrapper >/dev/null; echo $?)
-if [[ "$vew_on_path" -eq 0 || -e "$vnw_script" ]]; then
-  if [[ ! -d "$HOME/.virtualenvs" ]]; then
-    mkdir "$HOME/.virtualenvs"
-  fi
-  export WORKON_HOME="$HOME/.virtualenvs"
-  plugins=($plugins virtualenvwrapper)
-fi
 
 # Configure zsh options #######################################################
 setopt autolist       # Display completion candidates immediately.
@@ -74,41 +60,19 @@ setopt listtypes      # When listing files that are possible completions,
                       # indicate their types with a trailing character.
 setopt nolistbeep     # No bell on ambiguous completion!!
 
-# I like my slow locomotive.
-unalias sl > /dev/null 2>&1
-
-source $ZSH/oh-my-zsh.sh
-source $HOME/.zsh_prompt
-
-# Use VI mode.
-bindkey -v
-bindkey '^R' history-incremental-search-backward
-
-# Adjust widget behaviors. ####################################################
 # While selecting from menu completion, pressing enter accepts the selection
 # and executes the command.
 bindkey -M menuselect '^M' .accept-line
 
-function nicediff {
-  diff -W `tput cols` -y "$@" | colordiff | less
-}
-
 ### Aliases.
-## Tmux:
-alias ta="tmux attach"
-alias tad="tmux attach -d"
-alias tl="tmux ls"
 alias urldecode='python -c "import sys, urllib as ul; print ul.unquote_plus(sys.argv[1])"'
 alias ssh='ssh -A'
 alias cpr="rsync -aP"
 
 command -v xdg-open >/dev/null 2>&1 && alias open="xdg-open"
 
-## Emacs:
-export EDITOR="$HOME/bin/editor"
-export VISUAL="$HOME/bin/editor"
-alias e="$EDITOR"
-export ALTERNATE_EDITOR=""
+export EDITOR="vim"
+export VISUAL="vim"
 
 ## Heuristic to compute location because I am lazy.
 if [[ `whoami` == "airborne" ]]; then
@@ -125,36 +89,5 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# OS X things.
-if [[ `uname` == "Darwin" ]]; then
-  function top() {
-    if [ $# -eq 0 ]; then
-      /usr/bin/top -o cpu
-    else
-      /usr/bin/top "$@"
-    fi
-  }
-
-  # Always use:
-  #   l: List in long format
-  #   h: Sizes in human-readable form
-  #   F: Dir, symlink, executable, etc., symbols
-  #   G: Colorize!
-  alias l="ls -lhFG"
-  alias la="ls -lhFGA"   # All files
-  alias ltr="ls -lhFGtr" # By time, reverse
-  alias lsr="ls -lhFGSr" # By size, reverse
-else
-  # Non-OS X things.
-  alias l="ls -lhF --group-directories-first --color=always"
-fi
-
-if type "keychain" > /dev/null; then
-  eval "$(keychain -q --eval id_rsa)"
-fi
-
-if type "starship" > /dev/null; then
-  eval "$(starship init zsh)"
-fi
-
+motd
 # vim: set et ts=2 sw=2 tw=79 cc=+1 :
