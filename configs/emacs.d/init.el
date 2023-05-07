@@ -521,7 +521,7 @@ goal is to have a blank line between list items."
               (flycheck-mode)))
 
   (add-hook 'web-mode-before-auto-complete-hooks
-            '(lambda ()
+            (lambda ()
                (let ((web-mode-cur-language (web-mode-language-at-pos)))
                  (if (string= web-mode-cur-language "php")
                      (yas-activate-extra-mode 'php-mode)
