@@ -16,22 +16,24 @@ if [ -f "$HOME/bin/antigen.zsh" ]; then
   source "$HOME/bin/antigen.zsh"
   antigen use oh-my-zsh
 
-  antigen bundle tmux
-  export ZSH_TMUX_AUTOSTART=true
-  export ZSH_TMUX_FIXTERM=true
+  # Do not load these in SSH sessions.
+  if [ -z "$SSH_CLIENT" ]; then
+    antigen bundle tmux
+    export ZSH_TMUX_AUTOSTART=true
+    export ZSH_TMUX_FIXTERM=true
 
-  antigen bundle colored-man-pages
+    antigen bundle gpg-agent
+    antigen bundle keychain
+    zstyle :omz:plugins:keychain options --quiet
+  fi
+
   antigen bundle common-aliases
   antigen bundle emacs
-  antigen bundle gpg-agent
   antigen bundle python
   antigen bundle starship
   antigen bundle sudo
   antigen bundle timer
   antigen bundle vi-mode
-
-  antigen bundle keychain
-  zstyle :omz:plugins:keychain options --quiet
 
   antigen bundle "MichaelAquilina/zsh-autoswitch-virtualenv"
   antigen apply
