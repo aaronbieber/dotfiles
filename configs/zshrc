@@ -25,17 +25,19 @@ if [ -f "$HOME/bin/antigen.zsh" ]; then
     antigen bundle gpg-agent
     antigen bundle keychain
     zstyle :omz:plugins:keychain options --quiet
+
+    antigen bundle nvm
+    antigen bundle python
+    antigen bundle "MichaelAquilina/zsh-autoswitch-virtualenv"
   fi
 
   antigen bundle common-aliases
   antigen bundle emacs
-  antigen bundle python
   antigen bundle starship
   antigen bundle sudo
   antigen bundle timer
   antigen bundle vi-mode
 
-  antigen bundle "MichaelAquilina/zsh-autoswitch-virtualenv"
   antigen apply
 fi
 
