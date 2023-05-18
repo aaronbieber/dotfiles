@@ -26,7 +26,6 @@ if [ -f "$HOME/bin/antigen.zsh" ]; then
     antigen bundle keychain
     zstyle :omz:plugins:keychain options --quiet
 
-    antigen bundle nvm
     antigen bundle python
     antigen bundle "MichaelAquilina/zsh-autoswitch-virtualenv"
   fi
@@ -88,10 +87,6 @@ fi
 if [ -f "$HOME/.zshrc_$MY_LOCATION" ]; then
   source "$HOME/.zshrc_$MY_LOCATION"
 fi
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 motd
 # vim: set et ts=2 sw=2 tw=79 cc=+1 :
