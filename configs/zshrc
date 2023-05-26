@@ -19,7 +19,7 @@ if [ -f "$HOME/bin/antigen.zsh" ]; then
   # Do not load these in SSH sessions.
   if [ -z "$SSH_CLIENT" ]; then
     antigen bundle tmux
-    export ZSH_TMUX_AUTOSTART=true
+    #export ZSH_TMUX_AUTOSTART=true
     export ZSH_TMUX_FIXTERM=true
 
     antigen bundle gpg-agent
