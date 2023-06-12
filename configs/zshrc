@@ -24,6 +24,8 @@ if [ -f "$HOME/bin/antigen.zsh" ]; then
 
     antigen bundle gpg-agent
     antigen bundle keychain
+    zstyle :omz:plugins:keychain agents ssh
+    zstyle :omz:plugins:keychain identities id_rsa
     zstyle :omz:plugins:keychain options --quiet
 
     antigen bundle python
