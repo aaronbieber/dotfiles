@@ -67,6 +67,7 @@ setopt nolistbeep     # No bell on ambiguous completion!!
 
 # While selecting from menu completion, pressing enter accepts the selection
 # and executes the command.
+zmodload -i zsh/complist
 bindkey -M menuselect '^M' .accept-line
 
 ### Aliases.
