@@ -8,6 +8,7 @@ PATH="/usr/local/bin:$PATH"
 [ -d "$HOME/.local/bin" ]             && PATH="$PATH:$HOME/.local/bin"
 [ -d "$HOME/.composer/vendor/bin" ]   && PATH="$PATH:$HOME/.composer/vendor/bin"
 [ -d "/usr/local/go/bin" ]            && PATH="$PATH:/usr/local/go/bin"
+[ -d "$HOME/go/bin" ]                 && PATH="$PATH:$HOME/go/bin"
 [ -d "$HOME/Library/Python/2.7/bin" ] && PATH="$PATH:$HOME/Library/Python/2.7/bin"
 
 # curl https://get.volta.sh | bash -s -- --skip-setup
