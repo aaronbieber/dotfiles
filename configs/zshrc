@@ -33,7 +33,6 @@ if [ -f "$HOME/bin/antigen.zsh" ]; then
   fi
 
   antigen bundle common-aliases
-  #antigen bundle emacs
   antigen bundle starship
   antigen bundle sudo
   antigen bundle timer
