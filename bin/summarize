@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Pipe text content to Claude Code for summarization
+
+set -euo pipefail
+
+# Read all input from stdin
+input=$(cat)
+
+# Check if we received any input
+if [ -z "$input" ]; then
+    echo "Error: No input provided. Please pipe content to this script." >&2
+    echo "Example: cat file.txt | summarize" >&2
+    exit 1
+fi
+
+# Send to Claude Code for summarization
+claude -p "Please provide a concise summary of the following text:
+
+$input"
