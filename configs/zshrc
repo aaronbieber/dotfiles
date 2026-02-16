@@ -12,6 +12,16 @@ then
   return
 fi
 
+# Auto-start tmux for interactive sessions.
+# Skip when launching Emacs from a Windows shortcut (zsh -lic "emacs &!").
+if command -v tmux &>/dev/null && [ -z "$TMUX" ] && [[ $- == *i* ]] && [[ "$ZSH_EXECUTION_STRING" != *emacs* ]]; then
+  if tmux has-session 2>/dev/null; then
+    exec tmux attach-session
+  else
+    exec tmux new-session
+  fi
+fi
+
 if [ -f "$HOME/bin/antigen.zsh" ]; then
   source "$HOME/bin/antigen.zsh"
   antigen use oh-my-zsh
@@ -91,3 +101,4 @@ if [ -f "$HOME/.zshrc_$MY_LOCATION" ]; then
 fi
 
 # vim: set et ts=2 sw=2 tw=79 cc=+1 :
+
