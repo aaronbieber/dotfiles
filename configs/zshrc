@@ -14,12 +14,17 @@ fi
 
 # Auto-start tmux for interactive sessions.
 # Skip when launching Emacs from a Windows shortcut (zsh -lic "emacs &!").
-if command -v tmux &>/dev/null && [ -z "$TMUX" ] && [[ $- == *i* ]] && [[ "$ZSH_EXECUTION_STRING" != *emacs* ]] && [[ "$TERM_PROGRAM" != "vscode" ]]; then
+# Skip when NOTMUX=1, which is set after a deliberate detach so subshells
+# opened in the bare session don't auto-reattach.
+if command -v tmux &>/dev/null && [ -z "$TMUX" ] && [ -z "$NOTMUX" ] && [[ $- == *i* ]] && [[ "$ZSH_EXECUTION_STRING" != *emacs* ]] && [[ "$TERM_PROGRAM" != "vscode" ]]; then
   if tmux has-session 2>/dev/null; then
-    exec tmux attach-session
+    tmux attach-session
   else
-    exec tmux new-session
+    tmux new-session
   fi
+  # Tmux exited (detach or last window closed). Mark this shell so child
+  # shells don't loop back into tmux.
+  export NOTMUX=1
 fi
 
 if [ -f "$HOME/bin/antigen.zsh" ]; then
