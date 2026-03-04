@@ -42,7 +42,10 @@ if [ -f "$HOME/bin/antigen.zsh" ]; then
   if [ -z "$SSH_CLIENT" ] || [ -z "$SSH_AUTH_SOCK" ]; then
     antigen bundle keychain
     zstyle :omz:plugins:keychain agents ssh
-    zstyle :omz:plugins:keychain identities id_ed25519
+    local _keychain_ids=()
+    [ -f "$HOME/.ssh/id_ed25519" ] && _keychain_ids+=(id_ed25519)
+    [ -f "$HOME/.ssh/id_rsa" ]     && _keychain_ids+=(id_rsa)
+    zstyle :omz:plugins:keychain identities $_keychain_ids
     zstyle :omz:plugins:keychain options --quiet
   fi
 
