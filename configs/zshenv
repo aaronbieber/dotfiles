@@ -71,7 +71,7 @@ if [ -d $HOME/go ]; then
   fi
 fi
 
-## I don't know why this isn't configured by default.
+# I don't know why this isn't configured by default.
 export LD_LIBRARY_PATH=/usr/local/lib
 
 # Removed because it starts *very* slowly; if I start doing more Node I'll
@@ -90,8 +90,10 @@ while [[ ${#paths} -gt 0 ]]; do
   [[ -z ${paths[(r)$p]} ]] && result+="$p"
 done
 
-#export DISPLAY=$(ip route | grep default | awk '{print $3}'):0.0
 export DISPLAY=127.0.0.1:0.0
 clean_path=${(j+:+)result}
 export PATH
 export PATH=$clean_path
+
+# Source machine-local environment variables (not committed to git).
+[ -f "$HOME/.zshenv_local" ] && source "$HOME/.zshenv_local"

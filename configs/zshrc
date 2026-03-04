@@ -14,7 +14,7 @@ fi
 
 # Auto-start tmux for interactive sessions.
 # Skip when launching Emacs from a Windows shortcut (zsh -lic "emacs &!").
-if command -v tmux &>/dev/null && [ -z "$TMUX" ] && [[ $- == *i* ]] && [[ "$ZSH_EXECUTION_STRING" != *emacs* ]]; then
+if command -v tmux &>/dev/null && [ -z "$TMUX" ] && [[ $- == *i* ]] && [[ "$ZSH_EXECUTION_STRING" != *emacs* ]] && [[ "$TERM_PROGRAM" != "vscode" ]]; then
   if tmux has-session 2>/dev/null; then
     exec tmux attach-session
   else
@@ -33,13 +33,17 @@ if [ -f "$HOME/bin/antigen.zsh" ]; then
     export ZSH_TMUX_FIXTERM=true
 
     antigen bundle gpg-agent
-    antigen bundle keychain
-    zstyle :omz:plugins:keychain agents ssh
-    zstyle :omz:plugins:keychain identities id_rsa
-    zstyle :omz:plugins:keychain options --quiet
 
     antigen bundle python
     antigen bundle "MichaelAquilina/zsh-autoswitch-virtualenv"
+  fi
+
+  # Load keychain unless SSH agent forwarding is already providing a socket.
+  if [ -z "$SSH_CLIENT" ] || [ -z "$SSH_AUTH_SOCK" ]; then
+    antigen bundle keychain
+    zstyle :omz:plugins:keychain agents ssh
+    zstyle :omz:plugins:keychain identities id_ed25519
+    zstyle :omz:plugins:keychain options --quiet
   fi
 
   antigen bundle common-aliases
@@ -57,9 +61,6 @@ source ~/.zsh_functions
 # This function name is short because I want to call it this way
 # interactively.
 #t
-
-# Set my terminal if I'm not in tmux.
-[[ "$TMUX" == "" ]] && TERM=rxvt-unicode-256color
 
 # Configure zsh options #######################################################
 setopt autolist       # Display completion candidates immediately.
