@@ -53,13 +53,14 @@ if [ -f "$HOME/bin/antigen.zsh" ]; then
 
   # Load keychain directly (bypasses antigen caching issues).
   if (( $+commands[keychain] )); then
-    if [ -n "$PREFER_LOCAL_AGENT" ] || [ -z "$SSH_CLIENT" ] || [ -z "$SSH_AUTH_SOCK" ]; then
+    if [ -n "$PREFER_LOCAL_AGENT" ] || [ -z "$SSH_CLIENT" ] || [ ! -S "$SSH_AUTH_SOCK" ]; then
       local _keychain_ids=()
       [ -f "$HOME/.ssh/id_ed25519" ] && _keychain_ids+=(id_ed25519)
       [ -f "$HOME/.ssh/id_rsa" ]     && _keychain_ids+=(id_rsa)
       keychain --quiet ${_keychain_ids[@]}
-      local _kc_host=${SHORT_HOST:-${(%):-%m}}
+      local _kc_host=${SHORT_HOST:-$(hostname)}
       [ -f "$HOME/.keychain/${_kc_host}-sh" ] && . "$HOME/.keychain/${_kc_host}-sh"
+      [[ -n "$TMUX" ]] && tmux setenv SSH_AUTH_SOCK "$SSH_AUTH_SOCK"
     fi
   fi
 fi
