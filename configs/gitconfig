@@ -27,6 +27,7 @@
     bclean = "!f() { DEFAULT=$(git default); git branch --merged ${1-$DEFAULT} | grep -v " ${1-$DEFAULT}$" | xargs git branch -d; }; f"
     update = "!f() { DEFAULT=$(git default); git fetch && git merge origin/${1-$DEFAULT}; }; f"
     trim = !git branch --format '%(refname:lstrip=2) %(upstream:track)' | grep '\\[gone\\]' | awk '{print $1}' | xargs git branch -D
+    pfl = push --force-with-lease
 [color]
     branch = auto
     diff = auto
