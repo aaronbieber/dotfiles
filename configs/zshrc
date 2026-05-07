@@ -55,8 +55,9 @@ if [ -f "$HOME/bin/antigen.zsh" ]; then
   if (( $+commands[keychain] )); then
     if [ -n "$PREFER_LOCAL_AGENT" ] || [ -z "$SSH_CLIENT" ] || [ ! -S "$SSH_AUTH_SOCK" ]; then
       local _keychain_ids=()
-      [ -f "$HOME/.ssh/id_ed25519" ] && _keychain_ids+=(id_ed25519)
-      [ -f "$HOME/.ssh/id_rsa" ]     && _keychain_ids+=(id_rsa)
+      [ -f "$HOME/.ssh/id_ed25519_work" ] && _keychain_ids+=(id_ed25519_work)
+      [ -f "$HOME/.ssh/id_ed25519" ]      && _keychain_ids+=(id_ed25519)
+      [ -f "$HOME/.ssh/id_rsa" ]          && _keychain_ids+=(id_rsa)
       keychain --quiet ${_keychain_ids[@]}
       local _kc_host=${SHORT_HOST:-$(hostname)}
       [ -f "$HOME/.keychain/${_kc_host}-sh" ] && . "$HOME/.keychain/${_kc_host}-sh"
@@ -110,6 +111,12 @@ fi
 if [ -f "$HOME/.zshrc_$MY_LOCATION" ]; then
   source "$HOME/.zshrc_$MY_LOCATION"
 fi
+
+autoload -U add-zsh-hook
+function _set_terminal_title() {
+  printf '\033]0;%s\007' "${PWD/$HOME/~}"
+}
+add-zsh-hook precmd _set_terminal_title
 
 # vim: set et ts=2 sw=2 tw=79 cc=+1 :
 
