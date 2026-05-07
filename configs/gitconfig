@@ -8,9 +8,11 @@
     co = checkout
     br = branch
     cm = !git add -A && git commit -m
-    lg1 = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+    lg1 = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%<(60,trunc)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
     lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
     lg3 = log --graph --abbrev-commit --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --all
+    lgm = log --graph --abbrev-commit --decorate --simplify-by-decoration --all --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%<(60,trunc)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
+    lgb = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%<(60,trunc)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' origin/main HEAD
     pup = "!BRANCH=$(git rev-parse --abbrev-ref HEAD); git push -u origin $BRANCH"
     lg = !git lg1
     cob = checkout -b
@@ -26,6 +28,7 @@
     default = !git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'
     bclean = "!f() { DEFAULT=$(git default); git branch --merged ${1-$DEFAULT} | grep -v " ${1-$DEFAULT}$" | xargs git branch -d; }; f"
     update = "!f() { DEFAULT=$(git default); git fetch && git merge origin/${1-$DEFAULT}; }; f"
+    rupdate = "!f() { DEFAULT=$(git default); git fetch && git rebase origin/${1-$DEFAULT}; }; f"
     trim = !git branch --format '%(refname:lstrip=2) %(upstream:track)' | grep '\\[gone\\]' | awk '{print $1}' | xargs git branch -D
     pfl = push --force-with-lease
 [color]
