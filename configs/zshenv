@@ -87,6 +87,7 @@ while [[ ${#paths} -gt 0 ]]; do
   [[ -z ${paths[(r)$p]} ]] && result+="$p"
 done
 
+export DISPLAY=:0
 clean_path=${(j+:+)result}
 export PATH
 export PATH=$clean_path
