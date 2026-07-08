@@ -1,0 +1,348 @@
+#!/bin/zsh
+#
+# zsh_pickers: interactive pickers for quickly changing local context.
+#
+# The core of this file is _pick, a generic ANSI list selector (fuzzy filter,
+# arrow keys, 256 colors). Everything else is a thin "picker" built on top of
+# it. Pickers run in the current shell, so they are free to cd, switch
+# branches, or mutate any other shell state.
+#
+# To add a new picker:
+#
+#   1. Build an array of items. Each item is a plain string, or
+#      "LABEL${_PK_SEP}VALUE", or "LABEL${_PK_SEP}VALUE${_PK_SEP}MATCH".
+#      LABEL is what's displayed (ANSI colors welcome; keep it to one line
+#      that fits the terminal width). VALUE is what _pick prints to stdout
+#      when that row is chosen. MATCH is the text the filter runs against —
+#      pass just the meaningful part (a branch name, not the whole row) so
+#      decorative columns can't produce surprise matches; it defaults to
+#      the whole label with colors stripped.
+#   2. choice="$(_pick --prompt "verb" --header "context" -- "${items[@]}")" \
+#        || return $?
+#   3. Act on $choice.
+#
+# _pick draws on /dev/tty and prints only the selection to stdout, so it
+# composes with command substitution. It returns 130 on cancel (esc/^C) and
+# 1 when there is nothing to pick.
+#
+# Keys: ↑/↓ or ^P/^N move, PgUp/PgDn jump, Home/End, ⏎ selects, esc cancels,
+# any printable character filters (fuzzy subsequence, smart-case), backspace
+# deletes, ^U clears the filter. Rows whose MATCH text contains the filter
+# as a contiguous substring rank above scattered subsequence matches.
+
+# Label/value separator (ASCII unit separator) and the shared palette.
+typeset -g _PK_SEP=$'\x1f'
+typeset -g _PK_RESET=$'\e[0m'
+typeset -g _PK_BAR=$'\e[48;5;236m'      # selection bar background
+typeset -g _PK_PTR=$'\e[1;38;5;213m'    # selection pointer
+typeset -g _PK_DIM=$'\e[38;5;243m'      # hints, secondary columns
+typeset -g _PK_INPUT=$'\e[38;5;222m'    # the filter string as you type
+typeset -g _PK_CNT=$'\e[38;5;179m'      # match counter
+typeset -g _PK_CYAN=$'\e[38;5;117m'     # primary column
+typeset -g _PK_GREEN=$'\e[38;5;114m'    # "you are here" marker
+
+# Recompute the filtered index list. Runs in _pick's scope (zsh dynamic
+# scoping): reads filter/mtexts/total, writes match/cur/top. Substring
+# matches rank above scattered subsequence matches; ties keep input order.
+function _pick__refilter () {
+  emulate -L zsh
+  setopt extendedglob
+  match=()
+  integer i
+  if [[ -z "$filter" ]]; then
+    for (( i = 1; i <= total; i++ )); do match+=($i); done
+  else
+    local lit="${(b)filter}" pat='*' ch
+    for ch in "${(@s::)filter}"; do pat+="${(b)ch}*"; done
+    local -a subs fuzzy
+    if [[ "$filter" == "${(L)filter}" ]]; then
+      # All-lowercase filter matches case-insensitively (smart case).
+      for (( i = 1; i <= total; i++ )); do
+        if [[ "${mtexts[i]}" == (#i)*${~lit}* ]]; then
+          subs+=($i)
+        elif [[ "${mtexts[i]}" == (#i)${~pat} ]]; then
+          fuzzy+=($i)
+        fi
+      done
+    else
+      for (( i = 1; i <= total; i++ )); do
+        if [[ "${mtexts[i]}" == *${~lit}* ]]; then
+          subs+=($i)
+        elif [[ "${mtexts[i]}" == ${~pat} ]]; then
+          fuzzy+=($i)
+        fi
+      done
+    fi
+    match=($subs $fuzzy)
+  fi
+  (( cur > $#match )) && cur=$#match
+  (( cur < 1 )) && cur=1
+  top=1
+}
+
+# Paint one frame and park the cursor back at the frame's top-left, so both
+# the next repaint and the final erase start from a known position. Runs in
+# _pick's scope.
+function _pick__draw () {
+  emulate -L zsh
+  setopt extendedglob
+  integer row idx
+  local out="" lbl
+
+  (( cur < top )) && top=cur
+  (( cur > top + height - 1 )) && top=$(( cur - height + 1 ))
+  (( top < 1 )) && top=1
+
+  [[ -n "$header" ]] && out+=$'\e[2K'"  ${_PK_DIM}${header}${_PK_RESET}"$'\r\n'
+  out+=$'\e[2K'" 🔎 ${prompt} ${_PK_INPUT}${filter}${_PK_RESET}${_PK_DIM}▏${_PK_RESET}"$'\r\n'
+
+  for (( row = 0; row < height; row++ )); do
+    idx=$(( top + row ))
+    out+=$'\e[2K'
+    if (( $#match == 0 && row == 0 )); then
+      out+="     ${_PK_DIM}∅ no matches${_PK_RESET}"
+    elif (( idx <= $#match )); then
+      lbl="${labels[match[idx]]}"
+      if (( idx == cur )); then
+        # Re-apply the bar background after any reset inside the label.
+        lbl="${lbl//$_PK_RESET/${_PK_RESET}${_PK_BAR}}"
+        out+="${_PK_BAR}${_PK_PTR} ❯ ${_PK_RESET}${_PK_BAR}${lbl} ${_PK_RESET}"
+      else
+        out+="   ${lbl}"
+      fi
+    fi
+    out+=$'\r\n'
+  done
+
+  out+=$'\e[2K'"  ${_PK_CNT}${#match}/${total}${_PK_RESET}"
+  out+="${_PK_DIM} · ↑↓ move · ⏎ select · esc cancel · type to filter${_PK_RESET}"
+  out+=$'\r\e['"$(( frame - 1 ))"'A'
+  print -rn -- "$out" > /dev/tty
+}
+
+# _pick [--prompt TEXT] [--header TEXT] [--height N] -- ITEM ...
+function _pick () {
+  emulate -L zsh
+  setopt extendedglob localtraps
+
+  local prompt="pick" header=""
+  integer height=12
+  while (( $# )); do
+    case "$1" in
+      --prompt) prompt="$2"; shift 2 ;;
+      --header) header="$2"; shift 2 ;;
+      --height) height="$2"; shift 2 ;;
+      --) shift; break ;;
+      *) break ;;
+    esac
+  done
+  (( $# > 0 )) || { print -u2 "_pick: no items"; return 1 }
+  [[ -r /dev/tty && -w /dev/tty ]] || { print -u2 "_pick: no tty"; return 1 }
+
+  local -a labels values mtexts parts
+  local item lbl
+  for item in "$@"; do
+    parts=("${(@ps:$_PK_SEP:)item}")
+    lbl="${parts[1]}"
+    labels+=("$lbl")
+    values+=("${parts[2]:-$lbl}")
+    mtexts+=("${parts[3]:-${lbl//$'\e'\[[0-9;]#m/}}")
+  done
+
+  integer total=$#labels
+  integer maxh=$(( ${LINES:-24} - 6 ))
+  (( maxh < 3 )) && maxh=3
+  (( height > maxh )) && height=maxh
+  (( height > total )) && height=total
+  (( height < 1 )) && height=1
+  integer frame=$(( height + 2 ))
+  [[ -n "$header" ]] && (( frame += 1 ))
+
+  local filter="" key seq result=""
+  integer cur=1 top=1 done=0 cancel=0
+  local -a match
+
+  trap 'cancel=1; done=1' INT
+
+  {
+    print -rn -- $'\e[?25l\e[?7l' > /dev/tty  # hide cursor, disable wrap
+    _pick__refilter
+    while (( ! done )); do
+      _pick__draw
+      read -sk1 key < /dev/tty || { cancel=1; break }
+      case "$key" in
+        $'\r'|$'\n')
+          (( $#match > 0 )) && { result="${values[match[cur]]}"; done=1 }
+          ;;
+        $'\e')
+          seq=""
+          read -sk1 -t 0.25 seq < /dev/tty
+          if [[ "$seq" == "[" || "$seq" == "O" ]]; then
+            seq=""
+            read -sk1 -t 0.25 seq < /dev/tty
+            case "$seq" in
+              A) (( cur > 1 )) && (( cur -= 1 )) ;;
+              B) (( cur < $#match )) && (( cur += 1 )) ;;
+              H) (( $#match > 0 )) && cur=1 ;;
+              F) (( $#match > 0 )) && cur=$#match ;;
+              5) read -sk1 -t 0.25 seq < /dev/tty
+                 (( cur -= height )); (( cur < 1 )) && cur=1 ;;
+              6) read -sk1 -t 0.25 seq < /dev/tty
+                 (( cur += height )); (( cur > $#match )) && cur=$#match
+                 (( cur < 1 )) && cur=1 ;;
+              1|4|7|8) read -sk1 -t 0.25 seq < /dev/tty ;;
+            esac
+          else
+            cancel=1; done=1  # bare escape
+          fi
+          ;;
+        $'\x10') (( cur > 1 )) && (( cur -= 1 )) ;;          # ^P
+        $'\x0e') (( cur < $#match )) && (( cur += 1 )) ;;    # ^N
+        $'\x15') [[ -n "$filter" ]] && { filter=""; _pick__refilter } ;;
+        $'\x7f'|$'\b') [[ -n "$filter" ]] && { filter="${filter%?}"; _pick__refilter } ;;
+        $'\x03') cancel=1; done=1 ;;
+        [[:print:]]) filter+="$key"; _pick__refilter ;;
+      esac
+    done
+  } always {
+    print -rn -- $'\e[J\e[?7h\e[?25h' > /dev/tty  # erase frame, restore
+  }
+
+  (( cancel )) && return 130
+  [[ -n "$result" ]] || return 1
+  print -r -- "$result"
+}
+
+# gb: switch to a local branch, most recently committed first.
+function gb () {
+  emulate -L zsh
+  git rev-parse --git-dir > /dev/null 2>&1 \
+    || { print -u2 "gb: not inside a git repository"; return 1 }
+
+  local current="$(git symbolic-ref --short -q HEAD)"
+  local -a raw
+  raw=(${(f)"$(git for-each-ref refs/heads --sort=-committerdate \
+      --format='%(refname:short)'$'\t''%(committerdate:relative)'$'\t''%(contents:subject)')"})
+  (( $#raw > 0 )) || { print -u2 "gb: no local branches"; return 1 }
+
+  integer bw=0
+  local line branch
+  for line in "${raw[@]}"; do
+    branch="${line%%$'\t'*}"
+    (( $#branch > bw )) && bw=$#branch
+  done
+  (( bw > 36 )) && bw=36
+  integer sw=$(( ${COLUMNS:-100} - bw - 28 ))
+
+  local rest when subj name marker
+  local -a items
+  for line in "${raw[@]}"; do
+    branch="${line%%$'\t'*}"
+    rest="${line#*$'\t'}"
+    when="${rest%%$'\t'*}"
+    subj="${rest#*$'\t'}"
+    name="$branch"
+    (( $#name > bw )) && name="${name[1,bw-1]}…"
+    if (( sw > 8 )); then
+      (( $#subj > sw )) && subj="${subj[1,sw-1]}…"
+    else
+      subj=""
+    fi
+    if [[ "$branch" == "$current" ]]; then
+      marker="${_PK_GREEN}✦${_PK_RESET}"
+    else
+      marker=" "
+    fi
+    items+=("${marker} ${_PK_CYAN}${(r:$bw:)name}${_PK_RESET}  ${_PK_DIM}${(r:14:)when}${_PK_RESET} ${subj}${_PK_SEP}${branch}${_PK_SEP}${branch}")
+  done
+
+  local repo="$(git rev-parse --show-toplevel 2>/dev/null)"
+  local choice
+  choice="$(_pick --prompt "switch to branch" \
+      --header "⎇  ${${repo:t}:-$PWD:t} · local branches, newest commit first" \
+      -- "${items[@]}")" || return $?
+  git switch "$choice"
+}
+
+# gwt: cd into one of this repository's worktrees.
+function gwt () {
+  emulate -L zsh
+  git rev-parse --git-dir > /dev/null 2>&1 \
+    || { print -u2 "gwt: not inside a git repository"; return 1 }
+
+  local -a lines paths branches
+  lines=(${(f)"$(git worktree list --porcelain)"})
+  local l wt="" br=""
+  for l in "${lines[@]}"; do
+    if [[ "$l" == "worktree "* ]]; then
+      [[ -n "$wt" ]] && { paths+=("$wt"); branches+=("${br:-?}") }
+      wt="${l#worktree }"
+      br=""
+    elif [[ "$l" == "branch refs/heads/"* ]]; then
+      br="${l#branch refs/heads/}"
+    elif [[ "$l" == "detached" ]]; then
+      br="(detached)"
+    elif [[ "$l" == "bare" ]]; then
+      br="(bare)"
+    fi
+  done
+  [[ -n "$wt" ]] && { paths+=("$wt"); branches+=("${br:-?}") }
+  (( $#paths > 0 )) || { print -u2 "gwt: no worktrees"; return 1 }
+
+  local here="$(git rev-parse --show-toplevel 2>/dev/null)"
+  integer bw=0 i
+  for (( i = 1; i <= $#branches; i++ )); do
+    (( ${#branches[i]} > bw )) && bw=${#branches[i]}
+  done
+  (( bw > 36 )) && bw=36
+
+  local icon marker disp
+  local -a items
+  for (( i = 1; i <= $#paths; i++ )); do
+    if (( i == 1 )); then icon="🌳"; else icon="🌿"; fi
+    if [[ "${paths[i]}" == "$here" ]]; then
+      marker="${_PK_GREEN}✦${_PK_RESET}"
+    else
+      marker=" "
+    fi
+    disp="${branches[i]}"
+    (( ${#disp} > bw )) && disp="${disp[1,bw-1]}…"
+    items+=("${marker} ${icon} ${_PK_CYAN}${(r:$bw:)disp}${_PK_RESET}  ${_PK_DIM}${paths[i]/#$HOME/~}${_PK_RESET}${_PK_SEP}${paths[i]}${_PK_SEP}${branches[i]} ${paths[i]}")
+  done
+
+  local choice
+  choice="$(_pick --prompt "cd to worktree" --header "🌲 git worktrees" \
+      -- "${items[@]}")" || return $?
+  cd "$choice" && print -r -- "🌿 ${PWD/#$HOME/~}"
+}
+
+# tms: switch to (or attach) a tmux session.
+function tms () {
+  emulate -L zsh
+  (( $+commands[tmux] )) || { print -u2 "tms: tmux is not installed"; return 1 }
+
+  local -a raw
+  raw=(${(f)"$(tmux list-sessions \
+      -F '#{session_name}'$'\t''#{session_windows}'$'\t''#{?session_attached,●,}' 2>/dev/null)"})
+  (( $#raw > 0 )) || { print -u2 "tms: no tmux sessions running"; return 1 }
+
+  local line name rest wins att noun
+  local -a items
+  for line in "${raw[@]}"; do
+    name="${line%%$'\t'*}"
+    rest="${line#*$'\t'}"
+    wins="${rest%%$'\t'*}"
+    att="${rest#*$'\t'}"
+    if [[ "$wins" == "1" ]]; then noun="window"; else noun="windows"; fi
+    items+=("  💻 ${_PK_CYAN}${(r:20:)name}${_PK_RESET} ${_PK_DIM}${wins} ${noun}${_PK_RESET} ${_PK_GREEN}${att}${_PK_RESET}${_PK_SEP}${name}${_PK_SEP}${name}")
+  done
+
+  local choice
+  choice="$(_pick --prompt "tmux session" --header "💻 tmux sessions" \
+      -- "${items[@]}")" || return $?
+  if [[ -n "$TMUX" ]]; then
+    tmux switch-client -t "$choice"
+  else
+    tmux attach-session -t "$choice"
+  fi
+}

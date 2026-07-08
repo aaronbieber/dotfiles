@@ -67,6 +67,7 @@ if [ -f "$HOME/bin/antigen.zsh" ]; then
 fi
 
 source ~/.zsh_functions
+source ~/.zsh_pickers
 
 # Reattach or start a new Tmux.
 # This function name is short because I want to call it this way
