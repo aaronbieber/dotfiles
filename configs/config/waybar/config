@@ -1,0 +1,66 @@
+{
+    "position": "top",
+    "height": 30,
+    "spacing": 4,
+
+    "modules-left": ["sway/workspaces", "sway/mode", "sway/scratchpad"],
+    "modules-center": ["sway/window"],
+    "modules-right": ["custom/theme", "custom/vpn", "wireplumber", "network", "battery", "clock", "tray"],
+
+    "sway/mode": {
+        "format": "{}"
+    },
+    "sway/scratchpad": {
+        "format": "{icon} {count}",
+        "show-empty": false,
+        "format-icons": ["", ""],
+        "tooltip": true,
+        "tooltip-format": "{app}: {title}"
+    },
+    "wireplumber": {
+        "format": "{volume}% 🔊",
+        "format-muted": "muted 🔇",
+        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+    },
+    "custom/theme": {
+        "exec": "~/.config/waybar/scripts/theme-status.sh",
+        "return-type": "json",
+        "interval": 30,
+        "signal": 9,
+        "on-click": "~/.config/waybar/scripts/theme-toggle.sh",
+        "tooltip": true
+    },
+    "custom/vpn": {
+        "exec": "~/.config/waybar/scripts/vpn-status.sh",
+        "return-type": "json",
+        "interval": 5,
+        "signal": 8,
+        "on-click": "~/.config/waybar/scripts/vpn-toggle.sh",
+        "tooltip": true
+    },
+    "network": {
+        "format-wifi": "{essid} ({signalStrength}%) 📶",
+        "format-ethernet": "{ipaddr}/{cidr} 🖧",
+        "format-linked": "{ifname} (No IP)",
+        "format-disconnected": "Disconnected ⚠",
+        "tooltip-format": "{ifname} via {gwaddr}"
+    },
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{capacity}% {icon}",
+        "format-charging": "{capacity}% ⚡",
+        "format-plugged": "{capacity}% 🔌",
+        "format-icons": ["▁", "▂", "▄", "▆", "█"]
+    },
+    "clock": {
+        "format": "{:%Y-%m-%d %I:%M:%S %p}",
+        "interval": 1,
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+    "tray": {
+        "spacing": 10
+    }
+}

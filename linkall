@@ -46,6 +46,12 @@ echo "Creating symlinks for all configuration files in $SCRIPTPATH."
 echo ""
 
 for dotfile in `find $SCRIPTPATH -mindepth 1 -maxdepth 1`; do
+  # configs/config holds ~/.config/* apps and is linked separately below,
+  # one symlink per app rather than a single ~/.config symlink.
+  if [[ "${dotfile##*/}" == "config" ]]; then
+    continue
+  fi
+
   if [[ "${dotfile##*/}" == "bashrc" ]]; then
     linkfile=".bash_profile"
   else
@@ -77,6 +83,27 @@ for dotfile in `find $SCRIPTPATH -mindepth 1 -maxdepth 1`; do
     fi
   fi
   echo " $dotfile -> $linkfile... "
+done
+
+echo ""
+echo "Creating symlinks for ~/.config apps in $SCRIPTPATH/config."
+echo ""
+
+for xdgapp in `find $SCRIPTPATH/config -mindepth 1 -maxdepth 1`; do
+  linkfile="$HOME/.config/${xdgapp##*/}"
+
+  if [ -e "$linkfile" ]; then
+    echo -n "${yellow}Exists${reset}"
+  else
+    ln -s $LNOPTS "$xdgapp" "$linkfile" > /dev/null 2>&1
+
+    if [ $? -eq 0 ]; then
+      echo -n "${green}OK${reset}    "
+    else
+      echo -n "${red}Failed${reset}"
+    fi
+  fi
+  echo " $xdgapp -> $linkfile... "
 done
 
 if [ ! -d "$HOME/bin" ]; then
