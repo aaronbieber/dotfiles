@@ -94,3 +94,4 @@ export PATH=$clean_path
 
 # Source machine-local environment variables (not committed to git).
 [ -f "$HOME/.zshenv_local" ] && source "$HOME/.zshenv_local"
+. "$HOME/.cargo/env"

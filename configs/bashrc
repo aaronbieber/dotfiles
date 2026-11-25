@@ -329,3 +329,4 @@ if [ "$?" == 0 ]; then
 	fortune -s | sed -e 's/^/| /'
 	echo "|"
 fi
+. "$HOME/.cargo/env"
