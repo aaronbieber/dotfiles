@@ -94,13 +94,18 @@ bindkey -M menuselect '^M' .accept-line
 
 ### Aliases.
 alias urldecode='python -c "import sys, urllib as ul; print ul.unquote_plus(sys.argv[1])"'
-alias ssh='ssh -A'
 alias cpr="rsync -aP"
 
 command -v xdg-open >/dev/null 2>&1 && alias open="xdg-open"
 
 export EDITOR="vim"
 export VISUAL="vim"
+
+# Android SDK (used for WearOS climbing tracker dev)
+export ANDROID_HOME="$HOME/android-sdk"
+export ANDROID_SDK_ROOT="$ANDROID_HOME"
+export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
+export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
 
 ## Heuristic to compute location because I am lazy.
 if [[ `whoami` == "airborne" ]]; then
